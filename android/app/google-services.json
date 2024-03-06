@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "381590860204",
+    "project_id": "meet-up-fa7dd",
+    "storage_bucket": "meet-up-fa7dd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381590860204:android:2989ca55390f2ed9f88a09",
+        "android_client_info": {
+          "package_name": "com.example.meet_up"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUOvn8tlhc03eh08YUyAdoxkoPewz7zgM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
