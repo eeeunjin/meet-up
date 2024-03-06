@@ -11,6 +11,13 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
+  cloud_firestore: ^4.15.7
+  firebase_core: ^2.26.0
+  flutter_screenutil: ^5.9.0
+  go_router: ^13.2.0
+  firebase_auth: ^4.17.7
+  provider: ^6.1.2
+  dotenv: ^4.2.0
 
 dev_dependencies:
   flutter_test:
