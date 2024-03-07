@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginMain extends StatelessWidget {
   const LoginMain({super.key});
@@ -8,17 +10,21 @@ class LoginMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _body(),
+      body: _body(context),
     );
   }
 
-  _body() {
+  Widget _body(BuildContext context) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _loginButton(),
+          GestureDetector(
+              onTap: () {
+                context.push('/phoneNum');
+              },
+              child: _loginButton()),
           SizedBox(
             // 여백
             height: 40.h,
@@ -46,6 +52,7 @@ class LoginMain extends StatelessWidget {
       width: 286.w,
       height: 56.64.h,
       decoration: BoxDecoration(
+        color: Colors.grey,
         borderRadius: BorderRadiusDirectional.circular(16.r),
       ),
       child: const Center(child: Text('회원가입')),
