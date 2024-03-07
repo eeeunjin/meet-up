@@ -9,8 +9,10 @@ class LoginMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _body(context),
+    return SafeArea(
+      child: Scaffold(
+        body: _body(context),
+      ),
     );
   }
 

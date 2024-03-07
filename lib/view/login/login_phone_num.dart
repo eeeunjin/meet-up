@@ -8,8 +8,10 @@ class LoginPhoneNum extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _body(context),
+    return SafeArea(
+      child: Scaffold(
+        body: _body(context),
+      ),
     );
   }
 
@@ -17,7 +19,7 @@ class LoginPhoneNum extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 18.h, left: 9.w),
+          padding: EdgeInsets.only(top: 24.h, left: 9.w),
           child: Row(
             children: [
               _back(context),
