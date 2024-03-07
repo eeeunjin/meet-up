@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meet_up/firebase_options.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return ScreenUtilInit(
+      designSize: const Size(393, 852),
+      builder: (_, context) => MaterialApp(
+        theme: ThemeData(
+            // themedata 설정
+            ),
+        debugShowCheckedModeBanner: false, // Debug 배너 없애기
+      ),
+    );
   }
 }
