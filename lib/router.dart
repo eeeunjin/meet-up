@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/view/login/login_main.dart';
 import 'package:meet_up/view/login/login_phone_num.dart';
+import 'package:meet_up/view/sign_up/sign_up_main.dart';
 
 final router = GoRouter(routes: [
   // 초기 화면
@@ -15,6 +16,13 @@ final router = GoRouter(routes: [
     path: '/phoneNum',
     builder: (context, state) {
       return const LoginPhoneNum();
+    },
+  ),
+
+  GoRoute(
+    path: '/signUp',
+    builder: (context, state) {
+      return SignUpMain();
     },
   ),
 ]);
