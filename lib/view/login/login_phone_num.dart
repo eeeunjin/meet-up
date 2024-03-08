@@ -8,10 +8,8 @@ class LoginPhoneNum extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: _body(context),
-      ),
+    return Scaffold(
+      body: SafeArea(child: _body(context)),
     );
   }
 

@@ -27,8 +27,9 @@ class MyApp extends StatelessWidget {
         // Go Router 설정
         routerConfig: router,
         theme: ThemeData(
-            // themedata 설정
-            ),
+          // themedata 설정
+          scaffoldBackgroundColor: Colors.white,
+        ),
         debugShowCheckedModeBanner: false, // Debug 배너 없애기
       ),
     );
