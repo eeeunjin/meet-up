@@ -2,36 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/image.dart';
+import 'package:meet_up/view_model/login/login_view_model.dart';
+import 'package:provider/provider.dart';
 
 class LoginPhoneNum extends StatelessWidget {
   const LoginPhoneNum({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(child: _body(context)),
+    return ChangeNotifierProvider(
+      create: (_) => LoginViewModel(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false, // 키보드 오버플로우 해결
+        body: SafeArea(child: _body(context)),
+      ),
     );
   }
 
   Widget _body(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: EdgeInsets.only(top: 24.h, left: 9.w),
-          child: Row(
-            children: [
-              _back(context),
-              SizedBox(
-                // 여백
-                width: 119.w,
-              ),
-              Text(
-                '로그인',
-                style: TextStyle(fontSize: 22.sp),
-              ),
-            ],
-          ),
-        )
+          child:
+              // header
+              _header(context),
+        ),
+        // contents
+        SizedBox(
+          height: 30.h,
+        ),
+        _main(),
+        SizedBox(
+          height: 520.h,
+        ),
+        _bottom(),
       ],
     );
   }
@@ -44,6 +50,60 @@ class LoginPhoneNum extends StatelessWidget {
         width: 40.w,
         height: 40.h,
       ),
+    );
+  }
+
+  Widget _header(BuildContext context) {
+    return Row(
+      children: [
+        _back(context),
+        SizedBox(
+          // 여백
+          width: 119.w,
+        ),
+        Text(
+          '로그인',
+          style: TextStyle(fontSize: 22.sp),
+        ),
+      ],
+    );
+  }
+
+  Widget _main() {
+    return Column(
+      children: [
+        Text(
+          '휴대폰 번호를 입력해주세요',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.sp),
+        ),
+        Consumer<LoginViewModel>(
+          builder: (context, viewModel, child) => TextFormField(
+            controller: viewModel.controller,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: '휴대폰 번호',
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color:
+                      viewModel.isPhoneNumberValid ? Colors.green : Colors.red,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _bottom() {
+    return Container(
+      width: double.infinity,
+      height: 60.h,
+      decoration: BoxDecoration(
+        color: const Color(0xFFD9D9D9),
+        borderRadius: BorderRadius.circular(32.r),
+      ),
+      child: const Center(child: Text('다음')),
     );
   }
 }
