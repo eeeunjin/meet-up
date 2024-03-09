@@ -8,16 +8,14 @@ class LoginViewModel with ChangeNotifier {
   }
 
   void _handleTextChange() {
-    String text = controller.text;
-    bool isValid = text.startsWith('010') && text.length == 11;
-    if (isValid != _isPhoneNumberValid) {
-      _isPhoneNumberValid = isValid;
-      notifyListeners();
-    }
+    notifyListeners();
   }
 
-  bool get isPhoneNumberValid => _isPhoneNumberValid;
-  bool _isPhoneNumberValid = false;
+  bool get isPhoneNumberValid {
+    String text = controller.text;
+    // 번호가 '010'으로 시작하고 길이가 11자인지 확인합니다.
+    return text.startsWith('010') && text.length == 11;
+  }
 
   @override
   void dispose() {

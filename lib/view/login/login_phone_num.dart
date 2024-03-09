@@ -37,7 +37,7 @@ class LoginPhoneNum extends StatelessWidget {
         SizedBox(
           height: 520.h,
         ),
-        _bottom(),
+        _bottom(context),
       ],
     );
   }
@@ -84,6 +84,12 @@ class LoginPhoneNum extends StatelessWidget {
               labelText: '휴대폰 번호',
               border: const OutlineInputBorder(),
               // 11자 + 010으로 시작하는지
+              enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                color: viewModel.controller.text.isNotEmpty
+                    ? (viewModel.isPhoneNumberValid ? Colors.green : Colors.red)
+                    : Colors.black,
+              )),
               focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                       color: viewModel.isPhoneNumberValid
@@ -97,15 +103,26 @@ class LoginPhoneNum extends StatelessWidget {
     );
   }
 
-  Widget _bottom() {
-    return Container(
-      width: double.infinity,
-      height: 60.h,
-      decoration: BoxDecoration(
-        color: const Color(0xFFD9D9D9),
-        borderRadius: BorderRadius.circular(32.r),
+  Widget _bottom(BuildContext context) {
+    return Consumer<LoginViewModel>(
+      builder: (context, viewModel, child) => GestureDetector(
+        onTap: () {
+          if (viewModel.isPhoneNumberValid) {
+            context.push('/loginVerification');
+          }
+        },
+        child: Container(
+          width: double.infinity,
+          height: 60.h,
+          decoration: BoxDecoration(
+            color: viewModel.isPhoneNumberValid
+                ? Colors.green
+                : const Color(0xFFD9D9D9),
+            borderRadius: BorderRadius.circular(32.r),
+          ),
+          child: const Center(child: Text('다음')),
+        ),
       ),
-      child: const Center(child: Text('다음')),
     );
   }
 }
