@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_view_model.dart';
 
 class SignUpMain extends StatelessWidget {
@@ -9,35 +12,61 @@ class SignUpMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('회원가입'),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 20.0),
-              const Text(
-                '인증번호를 입력해주세요',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20.0),
-              _VerificationCodeInputField(viewModel: viewModel),
-              const SizedBox(height: 12.0),
-              _ResendCodeButton(viewModel: viewModel),
-              const SizedBox(height: 20.0),
-              _ConfirmButton(),
-              const SizedBox(height: 20.0),
-            ],
+      body: SafeArea(child: _body(context)),
+    );
+  }
+
+  Widget _body(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // header
+        _header(context),
+        // 내용
+        const SizedBox(height: 20.0),
+        const Text(
+          '인증번호를 입력해주세요',
+          style: TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
           ),
         ),
+        const SizedBox(height: 20.0),
+        _VerificationCodeInputField(viewModel: viewModel),
+        const SizedBox(height: 12.0),
+        _ResendCodeButton(viewModel: viewModel),
+        const SizedBox(height: 20.0),
+        _ConfirmButton(),
+        const SizedBox(height: 20.0),
+      ],
+    );
+  }
+
+  Widget _back(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.pop(), // 뒤로가기
+      child: Image.asset(
+        ImagePath.back,
+        width: 40.w,
+        height: 40.h,
       ),
+    );
+  }
+
+  Widget _header(BuildContext context) {
+    return Row(
+      children: [
+        _back(context),
+        SizedBox(
+          // 여백
+          width: 119.w,
+        ),
+        Text(
+          '회원가입',
+          style: TextStyle(fontSize: 22.sp),
+        ),
+      ],
     );
   }
 }
