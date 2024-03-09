@@ -1,5 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:meet_up/firebase_options.dart';
+import 'package:meet_up/service/remote/firebase_options.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
