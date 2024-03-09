@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/image.dart';
-import 'package:meet_up/view_model/login/login_view_model.dart';
+import 'package:meet_up/view_model/sign_up/sign_up_view_model.dart';
 import 'package:provider/provider.dart';
 
-class LoginPhoneNum extends StatelessWidget {
-  const LoginPhoneNum({super.key});
+class SignUpPhone extends StatelessWidget {
+  const SignUpPhone({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => LoginViewModel(),
+      create: (_) => SignUpViewModel(),
       child: Scaffold(
         resizeToAvoidBottomInset: false, // 키보드 오버플로우 해결
         body: SafeArea(child: _body(context)),
@@ -37,7 +37,7 @@ class LoginPhoneNum extends StatelessWidget {
         SizedBox(
           height: 520.h,
         ),
-        _bottom(context),
+        _bottom(),
       ],
     );
   }
@@ -62,7 +62,7 @@ class LoginPhoneNum extends StatelessWidget {
           width: 119.w,
         ),
         Text(
-          '로그인',
+          '회원가입',
           style: TextStyle(fontSize: 22.sp),
         ),
       ],
@@ -76,26 +76,15 @@ class LoginPhoneNum extends StatelessWidget {
           '휴대폰 번호를 입력해주세요',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.sp),
         ),
-        Consumer<LoginViewModel>(
+        Consumer<SignUpViewModel>(
           builder: (context, viewModel, child) => TextFormField(
-            controller: viewModel.controller,
             keyboardType: TextInputType.number,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: '휴대폰 번호',
-              border: const OutlineInputBorder(),
+              border: OutlineInputBorder(),
               // 11자 + 010으로 시작하는지
-              enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                color: viewModel.controller.text.isNotEmpty
-                    ? (viewModel.isPhoneNumberValid ? Colors.green : Colors.red)
-                    : Colors.black,
-              )),
               focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      color: viewModel.isPhoneNumberValid
-                          ? Colors.green
-                          : Colors.red,
-                      width: 2.0)),
+                  borderSide: BorderSide(color: Colors.red, width: 2.0)),
             ),
           ),
         ),
@@ -103,26 +92,15 @@ class LoginPhoneNum extends StatelessWidget {
     );
   }
 
-  Widget _bottom(BuildContext context) {
-    return Consumer<LoginViewModel>(
-      builder: (context, viewModel, child) => GestureDetector(
-        onTap: () {
-          if (viewModel.isPhoneNumberValid) {
-            context.push('/loginVerification');
-          }
-        },
-        child: Container(
-          width: double.infinity,
-          height: 60.h,
-          decoration: BoxDecoration(
-            color: viewModel.isPhoneNumberValid
-                ? Colors.green
-                : const Color(0xFFD9D9D9),
-            borderRadius: BorderRadius.circular(32.r),
-          ),
-          child: const Center(child: Text('다음')),
-        ),
+  Widget _bottom() {
+    return Container(
+      width: double.infinity,
+      height: 60.h,
+      decoration: BoxDecoration(
+        color: const Color(0xFFD9D9D9),
+        borderRadius: BorderRadius.circular(32.r),
       ),
+      child: const Center(child: Text('다음')),
     );
   }
 }

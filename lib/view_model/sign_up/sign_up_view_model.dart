@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-class VerificationCodeViewModel with ChangeNotifier {
+class SignUpViewModel with ChangeNotifier {
   int _remainingTime = 180; // 3분
   bool _canResendCode = true; // 재전송 가능 여부
   late Timer _timer;
 
-  VerificationCodeViewModel() {
+  SignUpViewModel() {
     _startTimer();
   }
 

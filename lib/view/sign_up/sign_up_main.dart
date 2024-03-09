@@ -3,40 +3,39 @@ import 'package:meet_up/view_model/sign_up/sign_up_view_model.dart';
 import 'package:provider/provider.dart';
 
 class SignUpMain extends StatelessWidget {
-  const SignUpMain({Key? key}) : super(key: key);
+  final SignUpViewModel viewModel = SignUpViewModel();
+
+  SignUpMain({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => VerificationCodeViewModel(),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('회원가입'),
-        ),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 20.0),
-                const Text(
-                  '인증번호를 입력해주세요',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('회원가입'),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 20.0),
+              const Text(
+                '인증번호를 입력해주세요',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 20.0),
-                _VerificationCodeInputField(),
-                const SizedBox(height: 12.0),
-                _ResendCodeButton(),
-                const SizedBox(height: 20.0),
-                _ConfirmButton(),
-                const SizedBox(height: 20.0),
-              ],
-            ),
+              ),
+              const SizedBox(height: 20.0),
+              _VerificationCodeInputField(viewModel: viewModel),
+              const SizedBox(height: 12.0),
+              _ResendCodeButton(viewModel: viewModel),
+              const SizedBox(height: 20.0),
+              _ConfirmButton(),
+              const SizedBox(height: 20.0),
+            ],
           ),
         ),
       ),
@@ -45,9 +44,14 @@ class SignUpMain extends StatelessWidget {
 }
 
 class _VerificationCodeInputField extends StatelessWidget {
+  final SignUpViewModel viewModel;
+
+  const _VerificationCodeInputField({Key? key, required this.viewModel})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<VerificationCodeViewModel>(context);
+    final viewModel = Provider.of<SignUpViewModel>(context);
     return Stack(
       alignment: Alignment.centerRight,
       children: [
@@ -72,9 +76,14 @@ class _VerificationCodeInputField extends StatelessWidget {
 }
 
 class _ResendCodeButton extends StatelessWidget {
+  final SignUpViewModel viewModel;
+
+  const _ResendCodeButton({Key? key, required this.viewModel})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<VerificationCodeViewModel>(context);
+    final viewModel = Provider.of<SignUpViewModel>(context);
     return Row(
       children: [
         GestureDetector(
