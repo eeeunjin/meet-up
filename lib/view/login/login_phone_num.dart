@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/image.dart';
@@ -25,6 +26,7 @@ class LoginPhoneNum extends StatelessWidget {
     final double keyboardOpen = MediaQuery.of(context).viewInsets.bottom;
     // 키보드 올라왔으면 패딩 30, 내려갔으면 80
     final double bottomPadding = keyboardOpen > 0 ? 30.0 : 80.0.h;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -102,14 +104,16 @@ class LoginPhoneNum extends StatelessWidget {
                   border: const OutlineInputBorder(),
                   // 11자 + 010으로 시작하는지
                   enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16.r),
                       borderSide: BorderSide(
                           color: viewModel.controller.text.isNotEmpty
                               ? (viewModel.isPhoneNumberValid
                                   ? Colors.green
                                   : Colors.red)
-                              : Colors.black,
+                              : const Color(0xFFD2D8F8),
                           width: 2.5.w)),
                   focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16.r),
                       borderSide: BorderSide(
                           color: viewModel.isPhoneNumberValid
                               ? Colors.green
