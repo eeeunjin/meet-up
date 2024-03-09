@@ -5,7 +5,7 @@ import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_view_model.dart';
 
 class SignUpMain extends StatelessWidget {
-  final VerificationCodeViewModel viewModel = VerificationCodeViewModel();
+  final SignUpViewModel viewModel = SignUpViewModel();
 
   SignUpMain({Key? key}) : super(key: key);
 
@@ -72,7 +72,7 @@ class SignUpMain extends StatelessWidget {
 }
 
 class _VerificationCodeInputField extends StatelessWidget {
-  final VerificationCodeViewModel viewModel;
+  final SignUpViewModel viewModel;
 
   const _VerificationCodeInputField({Key? key, required this.viewModel})
       : super(key: key);
@@ -103,7 +103,7 @@ class _VerificationCodeInputField extends StatelessWidget {
 }
 
 class _ResendCodeButton extends StatelessWidget {
-  final VerificationCodeViewModel viewModel;
+  final SignUpViewModel viewModel;
 
   const _ResendCodeButton({Key? key, required this.viewModel})
       : super(key: key);

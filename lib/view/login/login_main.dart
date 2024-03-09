@@ -30,7 +30,7 @@ class LoginMain extends StatelessWidget {
           ),
           GestureDetector(
               onTap: () {
-                context.push('/signUp');
+                context.push('/signUpPhone');
               },
               child: _signUpButton()),
         ],
