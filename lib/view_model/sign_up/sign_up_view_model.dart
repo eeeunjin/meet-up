@@ -14,13 +14,10 @@ class SignUpViewModel with ChangeNotifier {
   bool get canResendCode => _canResendCode;
 
   void _startTimer() {
-    if (_timer.isActive) {
-      _timer.cancel(); // 이전 타이머가 동작 중이면 취소
-    }
     const oneSecond = Duration(seconds: 1);
     _timer = Timer.periodic(oneSecond, (timer) {
       if (_remainingTime <= 0) {
-        _timer.cancel();
+        timer.cancel();
         _canResendCode = true; // 타이머가 종료되면 재전송 가능 상태로 변경
         notifyListeners(); // UI에 변경 사항 알림
       } else {
@@ -46,5 +43,11 @@ class SignUpViewModel with ChangeNotifier {
     String minutesStr = (seconds ~/ 60).toString().padLeft(2, '0');
     String secondsStr = (seconds % 60).toString().padLeft(2, '0');
     return '$minutesStr : $secondsStr';
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 }
