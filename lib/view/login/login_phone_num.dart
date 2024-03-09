@@ -82,12 +82,13 @@ class LoginPhoneNum extends StatelessWidget {
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               labelText: '휴대폰 번호',
-              border: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color:
-                      viewModel.isPhoneNumberValid ? Colors.green : Colors.red,
-                ),
-              ),
+              border: const OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: viewModel.isPhoneNumberValid
+                          ? Colors.green
+                          : Colors.red,
+                      width: 2.0)),
             ),
           ),
         ),
