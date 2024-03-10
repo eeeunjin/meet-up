@@ -62,10 +62,10 @@ class _NextButtonState extends State<NextButton> {
                   ? Colors.white
                   : (widget.enable
                       ? const Color(0xFF76E84E)
-                      : const Color(0xFF6C6C6C)),
+                      : const Color(0xFFE6E6E6)),
               shape: RoundedRectangleBorder(
                   side: widget.whiteButton
-                      ? BorderSide(width: 1.r, color: const Color(0xFF6C6C6C))
+                      ? BorderSide(width: 1.r, color: const Color(0xFFE6E6E6))
                       : BorderSide.none,
                   borderRadius: BorderRadius.circular(19.r)),
             ),
