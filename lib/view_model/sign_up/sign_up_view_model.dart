@@ -19,12 +19,18 @@ class SignUpViewModel with ChangeNotifier {
       if (_remainingTime <= 0) {
         timer.cancel();
         _canResendCode = true; // 타이머가 종료되면 재전송 가능 상태로 변경
-        notifyListeners(); // UI에 변경 사항 알림
+        notifyListeners();
       } else {
         _remainingTime--;
-        notifyListeners(); // UI에 변경 사항 알림
+        notifyListeners();
       }
     });
+  }
+
+  void resetTimer() {
+    _remainingTime = 180; // 타이머 초기화
+    _canResendCode = true; // 재전송 가능 상태로 변경
+    notifyListeners();
   }
 
   void resendCode() {
@@ -33,7 +39,7 @@ class SignUpViewModel with ChangeNotifier {
       _remainingTime = 180; // 타이머 초기화
       _canResendCode = false; // 재전송 중으로 상태 변경
       _startTimer(); // 타이머 재시작
-      notifyListeners(); // UI에 변경 사항 알림
+      notifyListeners();
     }
   }
 
@@ -49,5 +55,14 @@ class SignUpViewModel with ChangeNotifier {
   void dispose() {
     _timer.cancel();
     super.dispose();
+  }
+
+  bool _isPhoneNumberValid = false;
+
+  bool get isPhoneNumberValid => _isPhoneNumberValid;
+
+  void checkPhoneNumber(String value) {
+    _isPhoneNumberValid = value.length == 11;
+    notifyListeners();
   }
 }
