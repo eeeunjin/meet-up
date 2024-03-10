@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/image.dart';
@@ -6,14 +7,14 @@ import 'package:meet_up/view_model/sign_up/sign_up_view_model.dart';
 import 'package:provider/provider.dart';
 
 class SignUpPhone extends StatelessWidget {
-  const SignUpPhone({super.key});
+  const SignUpPhone({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => SignUpViewModel(),
       child: Scaffold(
-        resizeToAvoidBottomInset: false, // 키보드 오버플로우 해결
+        resizeToAvoidBottomInset: false,
         body: SafeArea(child: _body(context)),
       ),
     );
@@ -25,26 +26,23 @@ class SignUpPhone extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.only(top: 24.h, left: 9.w),
-          child:
-              // header
-              _header(context),
+          child: _header(context),
         ),
-        // contents
-        SizedBox(
-          height: 30.h,
-        ),
+        SizedBox(height: 30.h),
         _main(),
-        SizedBox(
-          height: 520.h,
-        ),
-        _bottom(),
+        SizedBox(height: 520.h),
+        _bottom(context),
       ],
     );
   }
 
   Widget _back(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.pop(), // 뒤로가기
+      onTap: () {
+        // 휴대폰 번호 입력 창으로 돌아갈 때 타이머 초기화
+        Provider.of<SignUpViewModel>(context, listen: false).resendCode();
+        context.pop();
+      },
       child: Image.asset(
         ImagePath.back,
         width: 40.w,
@@ -57,10 +55,7 @@ class SignUpPhone extends StatelessWidget {
     return Row(
       children: [
         _back(context),
-        SizedBox(
-          // 여백
-          width: 119.w,
-        ),
+        SizedBox(width: 119.w),
         Text(
           '회원가입',
           style: TextStyle(fontSize: 22.sp),
@@ -79,28 +74,49 @@ class SignUpPhone extends StatelessWidget {
         Consumer<SignUpViewModel>(
           builder: (context, viewModel, child) => TextFormField(
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(11),
+            ],
+            decoration: InputDecoration(
               labelText: '휴대폰 번호',
-              border: OutlineInputBorder(),
-              // 11자 + 010으로 시작하는지
+              border: const OutlineInputBorder(),
               focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red, width: 2.0)),
+                borderSide: BorderSide(
+                  color:
+                      viewModel.isPhoneNumberValid ? Colors.green : Colors.red,
+                  width: 2.0,
+                ),
+              ),
             ),
+            onChanged: (value) {
+              viewModel.checkPhoneNumber(value);
+            },
           ),
         ),
       ],
     );
   }
 
-  Widget _bottom() {
-    return Container(
-      width: double.infinity,
-      height: 60.h,
-      decoration: BoxDecoration(
-        color: const Color(0xFFD9D9D9),
-        borderRadius: BorderRadius.circular(32.r),
+  Widget _bottom(BuildContext context) {
+    return Consumer<SignUpViewModel>(
+      builder: (context, viewModel, child) => Container(
+        width: double.infinity,
+        height: 60.h,
+        decoration: BoxDecoration(
+          color: viewModel.isPhoneNumberValid
+              ? Colors.green
+              : const Color(0xFFD9D9D9),
+          borderRadius: BorderRadius.circular(32.r),
+        ),
+        child: TextButton(
+          onPressed: viewModel.isPhoneNumberValid
+              ? () {
+                  GoRouter.of(context).go('/signUpVerification');
+                }
+              : null,
+          child: const Center(child: Text('다음')),
+        ),
       ),
-      child: const Center(child: Text('다음')),
     );
   }
 }
