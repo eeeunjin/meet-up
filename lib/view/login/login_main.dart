@@ -33,6 +33,15 @@ class LoginMain extends StatelessWidget {
                 context.push('/signUpPhone');
               },
               child: _signUpButton()),
+          SizedBox(
+            // 여백
+            height: 40.h,
+          ),
+          GestureDetector(
+              onTap: () {
+                context.push('/signUpDetail');
+              },
+              child: _detailSettingButton()),
         ],
       ),
     );
@@ -59,6 +68,18 @@ class LoginMain extends StatelessWidget {
         borderRadius: BorderRadiusDirectional.circular(16.r),
       ),
       child: const Center(child: Text('회원가입')),
+    );
+  }
+
+  Widget _detailSettingButton() {
+    return Container(
+      width: 286.w,
+      height: 56.64.h,
+      decoration: BoxDecoration(
+        color: Colors.red,
+        borderRadius: BorderRadiusDirectional.circular(16.r),
+      ),
+      child: const Center(child: Text('회원가입 세부설정')),
     );
   }
 }

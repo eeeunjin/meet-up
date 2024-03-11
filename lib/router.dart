@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:meet_up/view/login/login_main.dart';
 import 'package:meet_up/view/login/login_phone_num.dart';
 import 'package:meet_up/view/login/login_verification.dart';
+import 'package:meet_up/view/sign_up/sign_up_detail.dart';
 import 'package:meet_up/view/sign_up/sign_up_main.dart';
 import 'package:meet_up/view/sign_up/sign_up_phone.dart';
 
@@ -37,6 +38,12 @@ final router = GoRouter(routes: [
     path: '/signUpPhone',
     builder: (context, state) {
       return const SignUpPhone();
+    },
+  ),
+  GoRoute(
+    path: '/signUpDetail',
+    builder: (context, state) {
+      return const SignUpDetail();
     },
   ),
 ]);
