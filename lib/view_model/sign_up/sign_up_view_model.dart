@@ -5,6 +5,7 @@ class SignUpViewModel with ChangeNotifier {
   int _remainingTime = 180; // 3분
   bool _canResendCode = true; // 재전송 가능 여부
   late Timer _timer;
+  String _verificationCode = '';
 
   SignUpViewModel() {
     _startTimer();
@@ -65,4 +66,16 @@ class SignUpViewModel with ChangeNotifier {
     _isPhoneNumberValid = value.length == 11;
     notifyListeners();
   }
+
+  // 인증번호를 설정하고 버튼 색상 변경
+  void setCode(String code) {
+    _verificationCode = code;
+    notifyListeners();
+  }
+
+  // 6자리 이상의 인증번호인지 확인하여 반환
+  bool get isCodeValid => _verificationCode.length >= 6;
+
+  // 인증번호를 가져옴
+  String get verificationCode => _verificationCode;
 }

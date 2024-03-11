@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/image.dart';
+import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -38,11 +39,7 @@ class SignUpPhone extends StatelessWidget {
 
   Widget _back(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        // 휴대폰 번호 입력 창으로 돌아갈 때 타이머 초기화
-        Provider.of<SignUpViewModel>(context, listen: false).resendCode();
-        context.pop();
-      },
+      onTap: () => context.pop(), // 뒤로가기
       child: Image.asset(
         ImagePath.back,
         width: 40.w,
@@ -108,13 +105,20 @@ class SignUpPhone extends StatelessWidget {
               : const Color(0xFFD9D9D9),
           borderRadius: BorderRadius.circular(32.r),
         ),
-        child: TextButton(
-          onPressed: viewModel.isPhoneNumberValid
-              ? () {
-                  GoRouter.of(context).go('/signUpVerification');
-                }
-              : null,
-          child: const Center(child: Text('다음')),
+        child: NextButton(
+          onTap: () {
+            if (viewModel.isPhoneNumberValid) {
+              context.push('/signUpVerification');
+            }
+          },
+          text: '다음',
+          height: 60.h,
+          fontSize: 18.sp,
+          enable: viewModel.isPhoneNumberValid,
+          textStyle: TextStyle(
+            color: viewModel.isPhoneNumberValid ? Colors.white : Colors.black,
+            fontSize: 18.sp,
+          ),
         ),
       ),
     );
