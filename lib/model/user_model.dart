@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Firebase - User Document 데이터 모델
-class User {
+class UserModel {
   // 닉네임
   String nickname;
   // 프로필 아이콘
@@ -25,7 +25,7 @@ class User {
   // 전화번호
   String phoneNumber;
 
-  User({
+  UserModel({
     required this.nickname,
     required this.profileIcon,
     required this.birthday,
@@ -40,7 +40,7 @@ class User {
   });
 
   /// json 형식으로 된 정보를 변수 값으로 등록할 때 쓰는 Constructor
-  User.fromJson(Map<String, Object?> json)
+  UserModel.fromJson(Map<String, Object?> json)
       : this(
           nickname: json['nickname']! as String,
           profileIcon: json['profileIcon']! as int,

@@ -2,16 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_up/model/user_model.dart';
-import 'package:meet_up/service/remote/firebase_service.dart';
+import 'package:meet_up/repository/user_repository.dart';
 
 // collection 정보 한 번 읽어오는 함수 테스트
 Future<void> collectionReadTest() async {
-  FirebaseRefs firebaseRefs = FirebaseRefs();
-  FirebaseCRUD firebaseCRUD = FirebaseCRUD();
-
-  // 유저들의 docRef 정보들을 List 형식으로 불러오도록 함
-  List<User> users =
-      await firebaseCRUD.readCollection(colRef: firebaseRefs.colRefUser);
+  UserRepository userRepository = UserRepository();
+  List<UserModel> users = await userRepository.readUserCollection();
   for (var user in users) {
     debugPrint(user.nickname);
   }
@@ -19,35 +15,34 @@ Future<void> collectionReadTest() async {
 
 // collection 스트림 정보 읽어오는 함수 테스트
 Future<void> collectionStreamReadTest() async {
-  FirebaseRefs firebaseRefs = FirebaseRefs();
-  FirebaseCRUD firebaseCRUD = FirebaseCRUD();
+  UserRepository userRepository = UserRepository();
 
-  final userCollectionStream =
-      firebaseCRUD.readCollectionStream(colRef: firebaseRefs.colRefUser);
+  final userCollectionStream = userRepository.readUserCollectionStream();
 
   // 스트림을 구독
-  userCollectionStream.listen((QuerySnapshot<Object?> snapshot) {
-    // 스트림에서 받은 데이터 처리
-    for (DocumentChange<Object?> change in snapshot.docChanges) {
-      // 변경 유형에 따라 데이터 처리
-      if (change.type == DocumentChangeType.added) {
-        // 문서 추가
-        debugPrint('Added document: ${change.doc.data()}');
-      } else if (change.type == DocumentChangeType.modified) {
-        // 문서 수정
-        debugPrint('Modified document: ${change.doc.data()}');
-      } else if (change.type == DocumentChangeType.removed) {
-        // 문서 삭제
-        debugPrint('Removed document: ${change.doc.data()}');
+  userCollectionStream.listen(
+    (QuerySnapshot<Object?> snapshot) {
+      // 스트림에서 받은 데이터 처리
+      for (DocumentChange<Object?> change in snapshot.docChanges) {
+        // 변경 유형에 따라 데이터 처리
+        if (change.type == DocumentChangeType.added) {
+          // 문서 추가
+          debugPrint('Added document: ${change.doc.data()}');
+        } else if (change.type == DocumentChangeType.modified) {
+          // 문서 수정
+          debugPrint('Modified document: ${change.doc.data()}');
+        } else if (change.type == DocumentChangeType.removed) {
+          // 문서 삭제
+          debugPrint('Removed document: ${change.doc.data()}');
+        }
       }
-    }
-  });
+    },
+  );
 }
 
 // document 정보 추가하는 함수 테스트
 Future<void> documentCreateTest() async {
-  FirebaseRefs firebaseRefs = FirebaseRefs();
-  FirebaseCRUD firebaseCRUD = FirebaseCRUD();
+  UserRepository userRepository = UserRepository();
 
   // 새로운 User 정보를 생성하여 새로운 docRef에 저장
   // 지역 정보
@@ -56,59 +51,52 @@ Future<void> documentCreateTest() async {
     "siGunGu": "서면",
   };
   // 새로운 유저 모델 정보
-  User newUser = User(
+  UserModel newUser = UserModel(
       nickname: "minsu",
       profileIcon: 2,
       birthday: Timestamp.now(),
-      gender: "male",
+      gender: "man",
       region: region,
       job: "student",
-      personalityRelationship: ["1", "2", "3"],
-      personalitySelf: ["1", "2", "3"],
-      interest: ["1", "2", "3"],
-      purpose: ["1", "2", "3"],
-      phoneNumber: "123123");
+      personalityRelationship: ["사교적인", "친절한", "자신감있는"],
+      personalitySelf: ["계획적인", "안정적인", "열정적인"],
+      interest: ["운동", "음악", "독서"],
+      purpose: ["친목", "자기성찰", "기록"],
+      phoneNumber: "01012341234");
 
   // 새로운 유저 정보를 새로운 docRef 주소에 전달하여 생성
-  await firebaseCRUD.createDocument<User>(
-    docRef: firebaseRefs.colRefUser.doc(), // doc() 메서드를 통해 UID Auto Generate
-    data: newUser,
-  );
+  await userRepository.createUserDocument(data: newUser);
 }
 
 // document 정보 읽는 함수 테스트
 Future<void> documentReadTest() async {
-  FirebaseRefs firebaseRefs = FirebaseRefs();
-  FirebaseCRUD firebaseCRUD = FirebaseCRUD();
+  UserRepository userRepository = UserRepository();
 
   // 읽고 싶은 docRef의 주소를 전달하여 user 정보 불러오기
-  User? user = await firebaseCRUD.readDocument<User>(
-      docRef: firebaseRefs.colRefUser.doc("testUID"));
-  print(user!.nickname);
+  UserModel? user = await userRepository.readUserDocument(docID: "testUID");
+  debugPrint(user.nickname);
 }
 
 // document 정보 업데이트 하는 함수 테스트
 Future<void> documentUpdateTest() async {
-  FirebaseRefs firebaseRefs = FirebaseRefs();
-  FirebaseCRUD firebaseCRUD = FirebaseCRUD();
+  UserRepository userRepository = UserRepository();
 
   // 원하는 변경 데이터 json 파일 형식으로 지정
   Map<String, dynamic> myMap = {
-    'nickname': 'mingu',
-    'job': 'student',
+    'nickname': 'imnotamingu',
   };
 
   // 변경을 원하는 docRef 주소와 변경을 원하는 data를 전달
-  await firebaseCRUD.updateDocument(
-      docRef: firebaseRefs.colRefUser.doc("testUID"), data: myMap);
+  await userRepository.updateUserDocument(
+    docID: "testUID",
+    data: myMap,
+  );
 }
 
 // document 정보 지우는 함수 테스트
 Future<void> documentDeleteTest() async {
-  FirebaseRefs firebaseRefs = FirebaseRefs();
-  FirebaseCRUD firebaseCRUD = FirebaseCRUD();
+  UserRepository userRepository = UserRepository();
 
   // 제거를 원하는 docRef의 주소를 전달
-  await firebaseCRUD.deleteDocument(
-      docRef: firebaseRefs.colRefUser.doc("NxUMhojToi89SvRFOzoB"));
+  await userRepository.deleteUserData(docID: "kMCp0M25JblNhWGsYGg8");
 }

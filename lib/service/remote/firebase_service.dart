@@ -30,8 +30,8 @@ class FirebaseCRUD {
 
       // 불러온 documents 들의 정보를 list로 매핑해서 반환하기
       return querySnapshot.docs.map((doc) {
-        if (T == User) {
-          return User.fromJson(doc.data() as Map<String, Object?>) as T;
+        if (T == UserModel) {
+          return UserModel.fromJson(doc.data() as Map<String, Object?>) as T;
         } else {
           // 지정하지 않은 형식의 모델 값이 들어오면 에러를 반환
           throw Exception("Unsupported document type.");
@@ -60,8 +60,8 @@ class FirebaseCRUD {
     try {
       // data가 존재하는 경우
       if (data != null) {
-        if (T == User) {
-          User user = data as User;
+        if (T == UserModel) {
+          UserModel user = data as UserModel;
           await docRef.set(user.toJson());
           return true;
         } else {
@@ -80,7 +80,7 @@ class FirebaseCRUD {
   }
 
   /// 도큐먼트 정보를 읽어오는 함수
-  Future<T?> readDocument<T>({required DocumentReference docRef}) async {
+  Future<T> readDocument<T>({required DocumentReference docRef}) async {
     try {
       // get 메서드를 이용하여 docRef의 snapshot 정보를 가져오기
       DocumentSnapshot snapshot = await docRef.get();
@@ -90,8 +90,8 @@ class FirebaseCRUD {
 
       // 데이터가 존재하는 경우
       if (data != null) {
-        if (T == User) {
-          return User.fromJson(data) as T;
+        if (T == UserModel) {
+          return UserModel.fromJson(data) as T;
         }
         // 다른 모델에 대한 처리 추가
         // else if (T == OtherModel) {
@@ -118,7 +118,7 @@ class FirebaseCRUD {
   }) async {
     try {
       // data<json 정보>를 update() 메서드에 전달
-      await docRef.update(data); 
+      await docRef.update(data);
       return true;
     } catch (err) {
       // 업데이트 작업 실패 시 에러 메시지 출력 및 실패 반환
