@@ -106,30 +106,22 @@ class _LoginPhoneNumState extends State<LoginPhoneNum> {
                 children: [
                   TextFormField(
                     onChanged: (value) {
-                      if (value.isNotEmpty) {
-                        if (!_isTextFieldFocused) {
-                          setState(() {
-                            _isTextFieldFocused = true;
-                          });
-                        }
-                      } else {
-                        if (_isTextFieldFocused) {
-                          setState(() {
-                            _isTextFieldFocused = false;
-                          });
-                        }
-                      }
-                    },
-                    onTap: () {
-                      if (!_isTextFieldFocused) {
+                      bool shouldFieldBeFocused =
+                          value.isNotEmpty || _isTextFieldFocused;
+                      if (_isTextFieldFocused != shouldFieldBeFocused) {
                         setState(() {
-                          _isTextFieldFocused = true;
+                          _isTextFieldFocused = shouldFieldBeFocused;
                         });
                       }
                     },
-                    onFieldSubmitted: (value) {
+                    onTap: () {
                       setState(() {
                         _isTextFieldFocused = true;
+                      });
+                    },
+                    onFieldSubmitted: (value) {
+                      setState(() {
+                        _isTextFieldFocused = false;
                       });
                     },
                     controller: viewModel.controller,
@@ -155,7 +147,7 @@ class _LoginPhoneNumState extends State<LoginPhoneNum> {
                               width: 2.5.w)),
                     ),
                   ),
-                  if (!_isTextFieldFocused)
+                  if (!_isTextFieldFocused && viewModel.controller.text.isEmpty)
                     Positioned(
                       top: 13.h,
                       left: 18.w,
