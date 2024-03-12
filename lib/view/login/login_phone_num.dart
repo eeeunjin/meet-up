@@ -135,7 +135,7 @@ class LoginPhoneNum extends StatelessWidget {
         child: NextButton(
           onTap: () {
             if (viewModel.isPhoneNumberValid) {
-              context.push('/loginVerification');
+              context.push('/signUpVerification');
             }
           },
           text: '다음',

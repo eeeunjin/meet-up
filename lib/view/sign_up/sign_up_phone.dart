@@ -121,6 +121,7 @@ class SignUpPhone extends StatelessWidget {
           ),
         ),
       ),
+      child: const Center(child: Text('다음')),
     );
   }
 }

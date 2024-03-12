@@ -5,24 +5,26 @@ class SignUpViewModel with ChangeNotifier {
   int _remainingTime = 180; // 3분
   bool _canResendCode = true; // 재전송 가능 여부
   late Timer _timer;
-  String _verificationCode = '';
+  String _verificationCode = ''; // 인증번호 변수
 
   SignUpViewModel() {
-    _startTimer();
+    startTimer();
   }
 
   int get remainingTime => _remainingTime;
   bool get canResendCode => _canResendCode;
 
-  void _startTimer() {
+  void startTimer() {
     const oneSecond = Duration(seconds: 1);
     _timer = Timer.periodic(oneSecond, (timer) {
       if (_remainingTime <= 0) {
         timer.cancel();
         _canResendCode = true; // 타이머가 종료되면 재전송 가능 상태로 변경
+        notifyListeners(); // UI에 변경 사항 알림
         notifyListeners();
       } else {
         _remainingTime--;
+        notifyListeners(); // UI에 변경 사항 알림
         notifyListeners();
       }
     });
@@ -39,14 +41,15 @@ class SignUpViewModel with ChangeNotifier {
       // 재전송 가능한 상태일 때만 재전송을 수행
       _remainingTime = 180; // 타이머 초기화
       _canResendCode = false; // 재전송 중으로 상태 변경
-      _startTimer(); // 타이머 재시작
+      startTimer(); // 타이머 재시작
+      notifyListeners(); // UI에 변경 사항 알림
       notifyListeners();
     }
   }
 
-  String get formattedRemainingTime => _formatTime(_remainingTime);
+  String get formattedRemainingTime => formatTime(_remainingTime);
 
-  String _formatTime(int seconds) {
+  String formatTime(int seconds) {
     String minutesStr = (seconds ~/ 60).toString().padLeft(2, '0');
     String secondsStr = (seconds % 60).toString().padLeft(2, '0');
     return '$minutesStr : $secondsStr';
@@ -73,7 +76,7 @@ class SignUpViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  // 6자리 이상의 인증번호인지 확인하여 반환
+  // 6자리 이상의 인증번호인지 확인
   bool get isCodeValid => _verificationCode.length >= 6;
 
   // 인증번호를 가져옴
