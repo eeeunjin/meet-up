@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meet_up/loginPhoneTestPage_view_model.dart';
+import 'package:meet_up/login_phone_test_view_model.dart';
 import 'package:provider/provider.dart';
 
 class LoginPhonePage extends StatelessWidget {
