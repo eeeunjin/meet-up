@@ -181,7 +181,7 @@ class _LoginPhoneNumState extends State<LoginPhoneNum> {
         child: NextButton(
           onTap: () {
             if (viewModel.isPhoneNumberValid) {
-              context.push('/loginVerification');
+              context.push('/signUpVerification');
             }
           },
           text: '다음',

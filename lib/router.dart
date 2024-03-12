@@ -31,7 +31,7 @@ final router = GoRouter(routes: [
   GoRoute(
     path: '/signUpVerification',
     builder: (context, state) {
-      return SignUpMain();
+      return const SignUpMain();
     },
   ),
   GoRoute(
