@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_up/model/user_model.dart';
 
@@ -137,5 +138,34 @@ class FirebaseCRUD {
       debugPrint("Error deleting document: $err");
       return false;
     }
+  }
+}
+
+///
+/// Firebase Auth 관련 함수들을 모아놓은 클래스
+///
+class FirebaseAUTH {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  /// 전화번호 인증을 위한 메서드
+  Future<void> verifyPhoneNumber({
+    required String phoneNumber,
+    required Function(PhoneAuthCredential) verificationCompleted,
+    required Function(FirebaseAuthException) verificationFailed,
+    required Function(String, int?) codeSent,
+    required Function(String) codeAutoRetrievalTimeout,
+  }) async {
+    await _auth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      verificationCompleted: verificationCompleted,
+      verificationFailed: verificationFailed,
+      codeSent: codeSent,
+      codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+    );
+  }
+
+  /// 해당 전화 번호와 smsCode를 확인하여 만들어진 credential을 전송하여 로그인 및 회원 가입하는 메서드
+  Future<void> signInWithCredential(PhoneAuthCredential credential) async {
+    await _auth.signInWithCredential(credential);
   }
 }
