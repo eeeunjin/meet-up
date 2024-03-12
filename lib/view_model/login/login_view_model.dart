@@ -2,9 +2,17 @@ import 'package:flutter/material.dart';
 
 class LoginViewModel with ChangeNotifier {
   final TextEditingController controller = TextEditingController();
+  bool _isTextFieldFocused = false;
+
+  bool get isTextFieldFocused => _isTextFieldFocused;
 
   LoginViewModel() {
     controller.addListener(_handleTextChange);
+  }
+
+  void updateFocusState(bool isFocused) {
+    _isTextFieldFocused = isFocused;
+    notifyListeners();
   }
 
   void _handleTextChange() {

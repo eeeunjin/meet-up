@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SignUpDetailViewModel with ChangeNotifier {
+  // gender
   Gender _selectedGender = Gender.none;
 
   Gender get selectedGender => _selectedGender;
@@ -11,7 +12,18 @@ class SignUpDetailViewModel with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  //datepicker
+  DateTime _selectedDate = DateTime.now();
+
+  DateTime get selectedDate => _selectedDate;
+
+  void setDate(DateTime date) {
+    if (_selectedDate != date) {
+      _selectedDate = date;
+      notifyListeners();
+    }
+  }
 }
 
-// An enum to define the gender options
 enum Gender { none, female, male }

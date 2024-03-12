@@ -7,8 +7,15 @@ import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/login/login_view_model.dart';
 import 'package:provider/provider.dart';
 
-class LoginPhoneNum extends StatelessWidget {
-  const LoginPhoneNum({super.key});
+class LoginPhoneNum extends StatefulWidget {
+  const LoginPhoneNum({Key? key}) : super(key: key);
+
+  @override
+  _LoginPhoneNumState createState() => _LoginPhoneNumState();
+}
+
+class _LoginPhoneNumState extends State<LoginPhoneNum> {
+  bool _isTextFieldFocused = false;
 
   @override
   Widget build(BuildContext context) {
@@ -95,31 +102,70 @@ class LoginPhoneNum extends StatelessWidget {
             child: SizedBox(
               width: 339.w,
               height: 74.h,
-              child: TextFormField(
-                controller: viewModel.controller,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: '휴대폰 번호',
-                  hintStyle: TextStyle(fontSize: 12.sp),
-                  border: const OutlineInputBorder(),
-                  // 11자 + 010으로 시작하는지
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16.r),
-                      borderSide: BorderSide(
-                          color: viewModel.controller.text.isNotEmpty
-                              ? (viewModel.isPhoneNumberValid
+              child: Stack(
+                children: [
+                  TextFormField(
+                    onChanged: (value) {
+                      if (value.isNotEmpty) {
+                        if (!_isTextFieldFocused) {
+                          setState(() {
+                            _isTextFieldFocused = true;
+                          });
+                        }
+                      } else {
+                        if (_isTextFieldFocused) {
+                          setState(() {
+                            _isTextFieldFocused = false;
+                          });
+                        }
+                      }
+                    },
+                    onTap: () {
+                      if (!_isTextFieldFocused) {
+                        setState(() {
+                          _isTextFieldFocused = true;
+                        });
+                      }
+                    },
+                    onFieldSubmitted: (value) {
+                      setState(() {
+                        _isTextFieldFocused = true;
+                      });
+                    },
+                    controller: viewModel.controller,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      // 11자 + 010으로 시작하는지
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16.r),
+                          borderSide: BorderSide(
+                              color: viewModel.controller.text.isNotEmpty
+                                  ? (viewModel.isPhoneNumberValid
+                                      ? Colors.green
+                                      : Colors.red)
+                                  : const Color(0xFFD2D8F8),
+                              width: 2.5.w)),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16.r),
+                          borderSide: BorderSide(
+                              color: viewModel.isPhoneNumberValid
                                   ? Colors.green
-                                  : Colors.red)
-                              : const Color(0xFFD2D8F8),
-                          width: 2.5.w)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16.r),
-                      borderSide: BorderSide(
-                          color: viewModel.isPhoneNumberValid
-                              ? Colors.green
-                              : Colors.red,
-                          width: 2.5.w)),
-                ),
+                                  : Colors.red,
+                              width: 2.5.w)),
+                    ),
+                  ),
+                  if (!_isTextFieldFocused)
+                    Positioned(
+                      top: 13.h,
+                      left: 18.w,
+                      child: Text(
+                        "휴대폰 번호",
+                        style: TextStyle(
+                            fontSize: 12.sp, color: const Color(0xFF8D8D8D)),
+                      ),
+                    ),
+                ],
               ),
             ),
           ),

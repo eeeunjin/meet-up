@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:meet_up/view/widget/dob_date_picker_widget.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +17,13 @@ class SignUpDetailContents extends StatelessWidget {
           height: 55.h,
         ),
         _dateOfBirth(),
+        SizedBox(
+          height: 55.h,
+        ),
         _address(),
+        SizedBox(
+          height: 55.h,
+        ),
         _affiliation(),
       ],
     );
@@ -127,6 +134,15 @@ class SignUpDetailContents extends StatelessWidget {
             "추후 수정이 불가합니다",
             style: TextStyle(fontSize: 12.sp, color: const Color(0xFF868686)),
           ),
+          SizedBox(height: 24.h),
+          // datepicker
+          Center(
+            child: Container(
+              width: 274.w,
+              height: 114.h,
+              color: Colors.black,
+            ),
+          ),
         ],
       ),
     );
@@ -142,7 +158,15 @@ class SignUpDetailContents extends StatelessWidget {
             "거주지를 선택해주세요.",
             style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: 24.h),
+          // addresspicker
+          Center(
+            child: Container(
+              width: 274.w,
+              height: 114.h,
+              color: Colors.black,
+            ),
+          ),
         ],
       ),
     );
