@@ -1,10 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+
 import 'package:go_router/go_router.dart';
+
 import 'package:meet_up/view_model/sign_up/sign_up_view_model.dart';
 import 'package:provider/provider.dart';
 
 class SignUpMain extends StatelessWidget {
-  const SignUpMain({Key? key}) : super(key: key);
+  const SignUpMain({super.key});
 
   @override
   Widget build(BuildContext context) {
