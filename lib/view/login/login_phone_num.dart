@@ -183,7 +183,7 @@ class _LoginPhoneNumState extends State<LoginPhoneNum> {
           textStyle: TextStyle(
             color: viewModel.isPhoneNumberValid ? Colors.white : Colors.black,
             fontSize: 18.sp,
-          ),
+          ), // backgroundColor: null,
         ),
       ),
     );

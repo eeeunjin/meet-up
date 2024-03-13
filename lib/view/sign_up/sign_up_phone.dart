@@ -10,8 +10,15 @@ import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_view_model.dart';
 import 'package:provider/provider.dart';
 
-class SignUpPhone extends StatelessWidget {
-  const SignUpPhone({super.key});
+class SignUpPhone extends StatefulWidget {
+  const SignUpPhone({Key? key}) : super(key: key);
+
+  @override
+  _SignUpPhoneState createState() => _SignUpPhoneState();
+}
+
+class _SignUpPhoneState extends State<SignUpPhone> {
+  bool _isTextFieldFocused = false;
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +32,7 @@ class SignUpPhone extends StatelessWidget {
   }
 
   Widget _body(BuildContext context) {
-    // 키패드 올라왔을 때
     final double keyboardOpen = MediaQuery.of(context).viewInsets.bottom;
-    // 키보드 올라왔으면 패딩 30, 내려갔으면 80
     final double bottomPadding = keyboardOpen > 0 ? 30.0 : 80.0.h;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +54,7 @@ class SignUpPhone extends StatelessWidget {
 
   Widget _back(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.pop(), // 뒤로가기
+      onTap: () => context.pop(),
       child: Image.asset(
         ImagePath.back,
         width: 40.w,
@@ -82,45 +87,69 @@ class SignUpPhone extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.sp),
           ),
         ),
-        SizedBox(
-          height: 32.h,
-        ),
+        SizedBox(height: 32.h),
         Consumer<SignUpViewModel>(
           builder: (context, viewModel, child) => Center(
             child: SizedBox(
               width: 339.w,
               height: 74.h,
-              child: TextFormField(
-                controller: viewModel.controller,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(11),
-                ],
-                decoration: InputDecoration(
-                  hintText: '휴대폰 번호',
-                  hintStyle: TextStyle(fontSize: 12.sp),
-                  border: const OutlineInputBorder(),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16.r),
-                    borderSide: BorderSide(
-                        color: viewModel.controller.text.isNotEmpty
-                            ? (viewModel.isPhoneNumberValid
-                                ? Colors.green
-                                : Colors.red)
-                            : const Color(0xFFD2D8F8),
-                        width: 2.5.w),
+              child: Stack(
+                children: [
+                  TextFormField(
+                    onChanged: (value) {
+                      bool shouldFieldBeFocused =
+                          value.isNotEmpty || _isTextFieldFocused;
+                      if (_isTextFieldFocused != shouldFieldBeFocused) {
+                        setState(() {
+                          _isTextFieldFocused = shouldFieldBeFocused;
+                        });
+                      }
+                      // 입력된 번호가 010을 포함하고 11자리인 경우에 대한 조건 추가
+                      viewModel.checkPhoneNumber(value);
+                    },
+                    onTap: () {
+                      setState(() {
+                        _isTextFieldFocused = true;
+                      });
+                    },
+                    onFieldSubmitted: (value) {
+                      setState(() {
+                        _isTextFieldFocused = false;
+                      });
+                    },
+                    controller: viewModel.controller,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(11),
+                    ],
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.r),
+                        borderSide: BorderSide(
+                            color: viewModel.controller.text.isNotEmpty
+                                ? (viewModel.isPhoneNumberValid
+                                    ? Colors.green
+                                    : Colors.red)
+                                : const Color(0xFFD2D8F8),
+                            width: 2.5.w),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16.r),
+                          borderSide: BorderSide(
+                              color: viewModel.isPhoneNumberValid
+                                  ? Colors.green
+                                  : Colors.red,
+                              width: 2.5.w)),
+                      hintText: _isTextFieldFocused
+                          ? ''
+                          : '휴대폰 번호', // 힌트 텍스트를 표시하는 조건 추가
+                      hintStyle: TextStyle(
+                          fontSize: 12.sp,
+                          color: const Color(0xFF8D8D8D)), // 힌트 텍스트 스타일 추가
+                    ),
                   ),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16.r),
-                      borderSide: BorderSide(
-                          color: viewModel.isPhoneNumberValid
-                              ? Colors.green
-                              : Colors.red,
-                          width: 2.5.w)),
-                ),
-                onChanged: (value) {
-                  viewModel.checkPhoneNumber(value);
-                },
+                ],
               ),
             ),
           ),
@@ -133,12 +162,6 @@ class SignUpPhone extends StatelessWidget {
     return Consumer<SignUpViewModel>(
       builder: (context, viewModel, child) => Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
-        // child: NextButton(
-        //   color: viewModel.isPhoneNumberValid
-        //       ? Colors.green
-        //       : const Color(0xFFD9D9D9),
-        //   borderRadius: BorderRadius.circular(32.r),
-        // ),
         child: NextButton(
           onTap: () {
             if (viewModel.isPhoneNumberValid) {
@@ -148,7 +171,11 @@ class SignUpPhone extends StatelessWidget {
           text: '다음',
           height: 60.h,
           fontSize: 18.sp,
+          // 입력된 번호가 010을 포함하고 11자리인 경우에 대한 조건 추가
           enable: viewModel.isPhoneNumberValid,
+          backgroundColor: viewModel.isPhoneNumberValid
+              ? Colors.green
+              : const Color(0xFFD9D9D9),
           textStyle: TextStyle(
             color: viewModel.isPhoneNumberValid ? Colors.white : Colors.black,
             fontSize: 18.sp,
