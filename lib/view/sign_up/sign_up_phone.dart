@@ -34,21 +34,22 @@ class _SignUpPhoneState extends State<SignUpPhone> {
   Widget _body(BuildContext context) {
     final double keyboardOpen = MediaQuery.of(context).viewInsets.bottom;
     final double bottomPadding = keyboardOpen > 0 ? 30.0 : 80.0.h;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(top: 24.h, left: 9.w),
-          child: _header(context),
-        ),
-        SizedBox(height: 30.h),
-        _main(),
-        const Spacer(),
-        Padding(
-          padding: EdgeInsets.only(bottom: bottomPadding),
-          child: _bottom(context),
-        ),
-      ],
+    return Scaffold(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 24.h, left: 9.w),
+            child: _header(context),
+          ),
+          SizedBox(height: 30.h),
+          _main(context),
+          Padding(
+            padding: EdgeInsets.only(bottom: bottomPadding),
+            child: _bottom(context),
+          ),
+        ],
+      ),
     );
   }
 
@@ -76,85 +77,86 @@ class _SignUpPhoneState extends State<SignUpPhone> {
     );
   }
 
-  Widget _main() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: 28.0.w),
-          child: Text(
-            '휴대폰 번호를 입력해주세요',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.sp),
-          ),
-        ),
-        SizedBox(height: 32.h),
-        Consumer<SignUpViewModel>(
-          builder: (context, viewModel, child) => Center(
-            child: SizedBox(
-              width: 339.w,
-              height: 74.h,
-              child: Stack(
-                children: [
-                  TextFormField(
-                    onChanged: (value) {
-                      bool shouldFieldBeFocused =
-                          value.isNotEmpty || _isTextFieldFocused;
-                      if (_isTextFieldFocused != shouldFieldBeFocused) {
-                        setState(() {
-                          _isTextFieldFocused = shouldFieldBeFocused;
-                        });
-                      }
-                      // 입력된 번호가 010을 포함하고 11자리인 경우에 대한 조건 추가
-                      viewModel.checkPhoneNumber(value);
-                    },
-                    onTap: () {
-                      setState(() {
-                        _isTextFieldFocused = true;
-                      });
-                    },
-                    onFieldSubmitted: (value) {
-                      setState(() {
-                        _isTextFieldFocused = false;
-                      });
-                    },
-                    controller: viewModel.controller,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(11),
-                    ],
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16.r),
-                        borderSide: BorderSide(
-                            color: viewModel.controller.text.isNotEmpty
-                                ? (viewModel.isPhoneNumberValid
-                                    ? Colors.green
-                                    : Colors.red)
-                                : const Color(0xFFD2D8F8),
-                            width: 2.5.w),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16.r),
-                          borderSide: BorderSide(
-                              color: viewModel.isPhoneNumberValid
-                                  ? Colors.green
-                                  : Colors.red,
-                              width: 2.5.w)),
-                      hintText: _isTextFieldFocused
-                          ? ''
-                          : '휴대폰 번호', // 힌트 텍스트를 표시하는 조건 추가
-                      hintStyle: TextStyle(
-                          fontSize: 12.sp,
-                          color: const Color(0xFF8D8D8D)), // 힌트 텍스트 스타일 추가
-                    ),
-                  ),
-                ],
+  Widget _main(BuildContext context) {
+    return Expanded(
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 28.0.w),
+              child: Text(
+                '휴대폰 번호를 입력해주세요',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.sp),
               ),
             ),
-          ),
+            SizedBox(height: 32.h),
+            Consumer<SignUpViewModel>(
+              builder: (context, viewModel, child) => Center(
+                child: SizedBox(
+                  width: 339.w,
+                  height: 74.h,
+                  child: Stack(
+                    children: [
+                      TextFormField(
+                        onChanged: (value) {
+                          bool shouldFieldBeFocused =
+                              value.isNotEmpty || _isTextFieldFocused;
+                          if (_isTextFieldFocused != shouldFieldBeFocused) {
+                            setState(() {
+                              _isTextFieldFocused = shouldFieldBeFocused;
+                            });
+                          }
+                          viewModel.checkPhoneNumber(value);
+                        },
+                        onTap: () {
+                          setState(() {
+                            _isTextFieldFocused = true;
+                          });
+                        },
+                        onFieldSubmitted: (value) {
+                          setState(() {
+                            _isTextFieldFocused = false;
+                          });
+                        },
+                        controller: viewModel.controller,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(11),
+                        ],
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16.r),
+                            borderSide: BorderSide(
+                                color: viewModel.controller.text.isNotEmpty
+                                    ? (viewModel.isPhoneNumberValid
+                                        ? Colors.green
+                                        : Colors.red)
+                                    : const Color(0xFFD2D8F8),
+                                width: 2.5.w),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16.r),
+                              borderSide: BorderSide(
+                                  color: viewModel.isPhoneNumberValid
+                                      ? Colors.green
+                                      : Colors.red,
+                                  width: 2.5.w)),
+                          hintText: _isTextFieldFocused ? '' : '휴대폰 번호',
+                          hintStyle: TextStyle(
+                              fontSize: 12.sp, color: const Color(0xFF8D8D8D)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
@@ -171,7 +173,6 @@ class _SignUpPhoneState extends State<SignUpPhone> {
           text: '다음',
           height: 60.h,
           fontSize: 18.sp,
-          // 입력된 번호가 010을 포함하고 11자리인 경우에 대한 조건 추가
           enable: viewModel.isPhoneNumberValid,
           backgroundColor: viewModel.isPhoneNumberValid
               ? Colors.green

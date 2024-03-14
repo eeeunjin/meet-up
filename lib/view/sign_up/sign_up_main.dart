@@ -1,13 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:meet_up/view_model/sign_up/sign_up_view_model.dart';
 import 'package:provider/provider.dart';
+import 'package:meet_up/view_model/sign_up/sign_up_view_model.dart';
 
 class SignUpMain extends StatelessWidget {
-  const SignUpMain({super.key});
+  const SignUpMain({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +15,7 @@ class SignUpMain extends StatelessWidget {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              context.pop();
+              Navigator.of(context).pop();
             },
           ),
           title: const Text('회원가입'),
@@ -120,29 +117,76 @@ class _ConfirmButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<SignUpViewModel>(context);
-    return Expanded(
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 20.0),
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: viewModel.isCodeValid ? () {} : null,
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 18.0),
-              foregroundColor: Colors.black,
-              backgroundColor:
-                  viewModel.isCodeValid ? Colors.green : Colors.grey[300],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
+    return Column(
+      children: [
+        if (viewModel.showErrorMessage) ...[
+          const SizedBox(height: 10.0),
+          const Text(
+            '인증번호가 일치하지 않습니다.',
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 16.0,
             ),
-            child: const Text(
-              '인증번호 확인',
-              style: TextStyle(fontSize: 16.0),
+          ),
+          const Text(
+            '인증번호를 다시 입력해주세요.',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 12.0,
+            ),
+          ),
+        ],
+        Expanded(
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 20.0),
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  if (viewModel.isCodeValid) {
+                    if (viewModel.isVerificationCodeCorrect()) {
+                      context.push('/emptyPage');
+                    } else {
+                      viewModel.setShowErrorMessage(true);
+                      viewModel.controller.clear();
+                    }
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 18.0),
+                  foregroundColor: Colors.black,
+                  backgroundColor:
+                      viewModel.isCodeValid ? Colors.green : Colors.grey[300],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                child: const Text(
+                  '인증번호 확인',
+                  style: TextStyle(fontSize: 16.0),
+                ),
+              ),
             ),
           ),
         ),
+      ],
+    );
+  }
+}
+
+class EmptyPage extends StatelessWidget {
+  const EmptyPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('빈 페이지'),
+      ),
+      body: const Center(
+        child: Text('인증 성공'),
       ),
     );
   }

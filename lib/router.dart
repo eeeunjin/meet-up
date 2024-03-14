@@ -46,4 +46,9 @@ final router = GoRouter(routes: [
       return const SignUpDetail();
     },
   ),
+  GoRoute(
+      path: '/emptyPage',
+      builder: (context, state) {
+        return const EmptyPage();
+      }),
 ]);

@@ -6,6 +6,8 @@ class SignUpViewModel with ChangeNotifier {
   bool _canResendCode = true; // 재전송 가능 여부
   late Timer _timer;
   String _verificationCode = ''; // 인증번호 변수
+  bool _showErrorMessage = false;
+  bool get showErrorMessage => _showErrorMessage;
 
   SignUpViewModel() {
     startTimer(); // 타이머 시작
@@ -67,6 +69,12 @@ class SignUpViewModel with ChangeNotifier {
     super.dispose();
   }
 
+  // 인증번호 일치 여부 확인
+  bool isVerificationCodeCorrect() {
+    // 인증번호가 맞는지 확인
+    return _verificationCode == "123456";
+  }
+
   // 핸드폰 번호 유효성 검사 여부
   bool _isPhoneNumberValid = false;
 
@@ -90,4 +98,9 @@ class SignUpViewModel with ChangeNotifier {
 
   // 인증번호를 가져옴
   String get verificationCode => _verificationCode;
+
+  void setShowErrorMessage(bool value) {
+    _showErrorMessage = value;
+    notifyListeners();
+  }
 }
