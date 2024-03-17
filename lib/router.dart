@@ -3,8 +3,11 @@ import 'package:meet_up/view/login/login_main.dart';
 import 'package:meet_up/view/login/login_phone_num.dart';
 import 'package:meet_up/view/login/login_verification.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail.dart';
-import 'package:meet_up/view/sign_up/sign_up_main.dart';
-import 'package:meet_up/view/sign_up/sign_up_phone.dart';
+import 'package:meet_up/view/sign_up/sign_up_verification.dart';
+import 'package:meet_up/view/sign_up/sign_up_phone_num.dart';
+import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
+import 'package:meet_up/view_model/sign_up/sign_up_verification_view_model.dart';
+import 'package:provider/provider.dart';
 
 final router = GoRouter(routes: [
   // 초기 화면
@@ -31,13 +34,19 @@ final router = GoRouter(routes: [
   GoRoute(
     path: '/signUpVerification',
     builder: (context, state) {
-      return const SignUpMain();
+      return ChangeNotifierProvider(
+        create: (context) => SignUpVerificationViewModel(),
+        child: const SignUpVerification(),
+      );
     },
   ),
   GoRoute(
-    path: '/signUpPhone',
+    path: '/signUpPhoneNum',
     builder: (context, state) {
-      return const SignUpPhone();
+      return ChangeNotifierProvider(
+        create: (context) => SignUpPhoneNumViewModel(),
+        child: const SignUpPhoneNum(),
+      );
     },
   ),
   GoRoute(
@@ -46,9 +55,4 @@ final router = GoRouter(routes: [
       return const SignUpDetail();
     },
   ),
-  GoRoute(
-      path: '/emptyPage',
-      builder: (context, state) {
-        return const EmptyPage();
-      }),
 ]);

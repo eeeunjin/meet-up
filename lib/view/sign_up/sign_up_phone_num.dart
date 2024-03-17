@@ -1,58 +1,42 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/next_button.dart';
-import 'package:meet_up/view_model/sign_up/sign_up_view_model.dart';
+import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
 import 'package:provider/provider.dart';
 
-class SignUpPhone extends StatefulWidget {
-  const SignUpPhone({Key? key}) : super(key: key);
+class SignUpPhoneNum extends StatelessWidget {
+  const SignUpPhoneNum({super.key});
 
-  @override
-  _SignUpPhoneState createState() => _SignUpPhoneState();
-}
-
-class _SignUpPhoneState extends State<SignUpPhone> {
-  bool _isTextFieldFocused = false;
-
+  // build
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => SignUpViewModel(),
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        body: SafeArea(child: _body(context)),
-      ),
-    );
-  }
-
-  Widget _body(BuildContext context) {
     final double keyboardOpen = MediaQuery.of(context).viewInsets.bottom;
     final double bottomPadding = keyboardOpen > 0 ? 30.0 : 80.0.h;
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 24.h, left: 9.w),
-            child: _header(context),
-          ),
-          SizedBox(height: 30.h),
-          _main(context),
-          Padding(
-            padding: EdgeInsets.only(bottom: bottomPadding),
-            child: _bottom(context),
-          ),
-        ],
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 24.h, left: 9.w),
+              child: _header(context),
+            ),
+            SizedBox(height: 30.h),
+            _main(context),
+            Padding(
+              padding: EdgeInsets.only(bottom: bottomPadding),
+              child: _bottom(context),
+            ),
+          ],
+        ),
       ),
     );
   }
 
+  // header
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () => context.pop(),
@@ -77,6 +61,7 @@ class _SignUpPhoneState extends State<SignUpPhone> {
     );
   }
 
+  // main
   Widget _main(BuildContext context) {
     return Expanded(
       child: SingleChildScrollView(
@@ -85,14 +70,14 @@ class _SignUpPhoneState extends State<SignUpPhone> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(left: 28.0.w),
+              padding: EdgeInsets.only(left: 32.0.w),
               child: Text(
                 '휴대폰 번호를 입력해주세요',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.sp),
               ),
             ),
             SizedBox(height: 32.h),
-            Consumer<SignUpViewModel>(
+            Consumer<SignUpPhoneNumViewModel>(
               builder: (context, viewModel, child) => Center(
                 child: SizedBox(
                   width: 339.w,
@@ -102,23 +87,21 @@ class _SignUpPhoneState extends State<SignUpPhone> {
                       TextFormField(
                         onChanged: (value) {
                           bool shouldFieldBeFocused =
-                              value.isNotEmpty || _isTextFieldFocused;
-                          if (_isTextFieldFocused != shouldFieldBeFocused) {
-                            setState(() {
-                              _isTextFieldFocused = shouldFieldBeFocused;
-                            });
+                              value.isNotEmpty || viewModel.isTextFieldFocused;
+                          if (viewModel.isTextFieldFocused !=
+                              shouldFieldBeFocused) {
+                            viewModel.setIsTextFieldFocusd(
+                                isTextFieldFocused: shouldFieldBeFocused);
                           }
-                          viewModel.checkPhoneNumber(value);
+                          viewModel.setIsPhoneNumberValid(value);
                         },
                         onTap: () {
-                          setState(() {
-                            _isTextFieldFocused = true;
-                          });
+                          viewModel.setIsTextFieldFocusd(
+                              isTextFieldFocused: true);
                         },
                         onFieldSubmitted: (value) {
-                          setState(() {
-                            _isTextFieldFocused = false;
-                          });
+                          viewModel.setIsTextFieldFocusd(
+                              isTextFieldFocused: false);
                         },
                         controller: viewModel.controller,
                         keyboardType: TextInputType.number,
@@ -138,17 +121,27 @@ class _SignUpPhoneState extends State<SignUpPhone> {
                                 width: 2.5.w),
                           ),
                           focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16.r),
-                              borderSide: BorderSide(
-                                  color: viewModel.isPhoneNumberValid
-                                      ? Colors.green
-                                      : Colors.red,
-                                  width: 2.5.w)),
-                          hintText: _isTextFieldFocused ? '' : '휴대폰 번호',
-                          hintStyle: TextStyle(
-                              fontSize: 12.sp, color: const Color(0xFF8D8D8D)),
+                            borderRadius: BorderRadius.circular(16.r),
+                            borderSide: BorderSide(
+                                color: viewModel.isPhoneNumberValid
+                                    ? Colors.green
+                                    : Colors.red,
+                                width: 2.5.w),
+                          ),
                         ),
                       ),
+                      if (!viewModel.isTextFieldFocused &&
+                          viewModel.controller.text.isEmpty)
+                        Positioned(
+                          top: 13.h,
+                          left: 18.w,
+                          child: Text(
+                            "휴대폰 번호",
+                            style: TextStyle(
+                                fontSize: 12.sp,
+                                color: const Color(0xFF8D8D8D)),
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -160,8 +153,9 @@ class _SignUpPhoneState extends State<SignUpPhone> {
     );
   }
 
+  // bottom
   Widget _bottom(BuildContext context) {
-    return Consumer<SignUpViewModel>(
+    return Consumer<SignUpPhoneNumViewModel>(
       builder: (context, viewModel, child) => Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
         child: NextButton(
