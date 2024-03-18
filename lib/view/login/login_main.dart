@@ -21,7 +21,7 @@ class LoginMain extends StatelessWidget {
         children: [
           GestureDetector(
               onTap: () {
-                context.push('/phoneNum');
+                context.push('/loginPhoneNum');
               },
               child: _loginButton()),
           SizedBox(

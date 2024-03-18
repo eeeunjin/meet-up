@@ -62,7 +62,7 @@ class SignUpVerification extends StatelessWidget {
           width: 119.w,
         ),
         Text(
-          '로그인',
+          '회원 가입',
           style: TextStyle(fontSize: 22.sp),
         ),
       ],
