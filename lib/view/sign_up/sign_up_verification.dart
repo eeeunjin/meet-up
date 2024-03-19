@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/image.dart';
-import 'package:meet_up/view_model/login/login_verification_view_model.dart';
+import 'package:meet_up/view_model/sign_up/sign_up_verification_view_model.dart';
 import 'package:provider/provider.dart';
 
-class LoginVerification extends StatelessWidget {
-  const LoginVerification({super.key});
+class SignUpVerification extends StatelessWidget {
+  const SignUpVerification({super.key});
 
   // build
   @override
@@ -62,7 +62,7 @@ class LoginVerification extends StatelessWidget {
           width: 119.w,
         ),
         Text(
-          '로그인',
+          '회원 가입',
           style: TextStyle(fontSize: 22.sp),
         ),
       ],
@@ -71,7 +71,7 @@ class LoginVerification extends StatelessWidget {
 
   // main
   Widget _verificationCodeInputField(BuildContext context) {
-    final viewModel = Provider.of<LoginVerificationViewModel>(context);
+    final viewModel = Provider.of<SignUpVerificationViewModel>(context);
     return Stack(
       children: [
         TextFormField(
@@ -128,7 +128,7 @@ class LoginVerification extends StatelessWidget {
   }
 
   Widget _resendCode(BuildContext context) {
-    final viewModel = Provider.of<LoginVerificationViewModel>(context);
+    final viewModel = Provider.of<SignUpVerificationViewModel>(context);
     return Row(
       children: [
         GestureDetector(
@@ -192,7 +192,7 @@ class LoginVerification extends StatelessWidget {
 
   // bottom
   Widget _confirmButton(BuildContext context) {
-    final viewModel = Provider.of<LoginVerificationViewModel>(context);
+    final viewModel = Provider.of<SignUpVerificationViewModel>(context);
     return GestureDetector(
       onTap: () {
         viewModel.setVerificationCode();

@@ -4,11 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/next_button.dart';
-import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
+import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
 import 'package:provider/provider.dart';
 
-class LoginPhoneNum extends StatelessWidget {
-  const LoginPhoneNum({super.key});
+class SignUpPhoneNum extends StatelessWidget {
+  const SignUpPhoneNum({super.key});
 
   // build
   @override
@@ -54,7 +54,7 @@ class LoginPhoneNum extends StatelessWidget {
         _back(context),
         SizedBox(width: 119.w),
         Text(
-          '로그인',
+          '회원가입',
           style: TextStyle(fontSize: 22.sp),
         ),
       ],
@@ -77,7 +77,7 @@ class LoginPhoneNum extends StatelessWidget {
               ),
             ),
             SizedBox(height: 32.h),
-            Consumer<LoginPhoneNumViewModel>(
+            Consumer<SignUpPhoneNumViewModel>(
               builder: (context, viewModel, child) => Center(
                 child: SizedBox(
                   width: 339.w,
@@ -155,13 +155,13 @@ class LoginPhoneNum extends StatelessWidget {
 
   // bottom
   Widget _bottom(BuildContext context) {
-    return Consumer<LoginPhoneNumViewModel>(
+    return Consumer<SignUpPhoneNumViewModel>(
       builder: (context, viewModel, child) => Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
         child: NextButton(
           onTap: () {
             if (viewModel.isPhoneNumberValid) {
-              context.push('/loginVerification');
+              context.push('/signUpVerification');
             }
           },
           text: '다음',

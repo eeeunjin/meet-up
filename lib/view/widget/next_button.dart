@@ -20,7 +20,8 @@ class NextButton extends StatefulWidget {
       this.fontSize,
       this.whiteButton = false,
       this.textStyle,
-      this.enable = true});
+      this.enable = true,
+      Color? backgroundColor});
 
   @override
   State<NextButton> createState() => _NextButtonState();

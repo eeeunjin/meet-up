@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 
 class SignUpDetailViewModel with ChangeNotifier {
-  // gender
+  //
+  // MARK: - Properties
+  //
   Gender _selectedGender = Gender.none;
+  Gender get selectedGender => _selectedGender; // 선택 성별
 
-  Gender get selectedGender => _selectedGender;
+  final DateTime _selectedDate = DateTime.now();
+  DateTime get selectedDate => _selectedDate; // 선택 Date
 
+  //
+  // MARK: - methods
+  //
   void selectGender(Gender gender) {
     if (_selectedGender != gender) {
       _selectedGender = gender;
