@@ -19,6 +19,7 @@ dependencies:
   firebase_auth: ^4.17.7
   provider: ^6.1.2
   dotenv: ^4.2.0
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:
