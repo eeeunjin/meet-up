@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/image.dart';
@@ -23,12 +25,17 @@ class SignUpVerification extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.only(left: 9.w),
-              child: _header(context),
-            ),
+            if (Platform.isIOS)
+              _header(context)
+            else if (Platform.isAndroid)
+              Padding(
+                padding: EdgeInsets.only(
+                  top: 15.h,
+                ),
+                child: _header(context),
+              ),
             SizedBox(
-              height: 30.h,
+              height: 73.h,
             ),
             _main(context),
             const Spacer(),
@@ -100,6 +107,9 @@ class SignUpVerification extends StatelessWidget {
             viewModel.setIsTextFieldFocusd(isTextFieldFocused: false);
           },
           controller: viewModel.controller,
+          inputFormatters: [
+            LengthLimitingTextInputFormatter(6),
+          ],
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
             border: const OutlineInputBorder(),
@@ -142,7 +152,17 @@ class SignUpVerification extends StatelessWidget {
     return Row(
       children: [
         GestureDetector(
-          onTap: viewModel.resendCode,
+          onTap: () {
+            if (viewModel.remainingTime <= 0) {
+              viewModel.resendCode();
+            } else {
+              showAlert(
+                  context: context,
+                  title: "재전송 제한",
+                  message: "3분이 지난 후에 재전송이 가능합니다.");
+              return;
+            }
+          },
           child: Text(
             viewModel.canResendCode ? '인증번호 재전송' : '인증번호가 재전송되었습니다',
             style: TextStyle(

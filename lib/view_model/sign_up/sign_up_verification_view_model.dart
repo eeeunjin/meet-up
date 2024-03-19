@@ -8,11 +8,11 @@ class SignUpVerificationViewModel with ChangeNotifier {
   //
   late Timer _timer; // 인증 타이머
 
-  int _remainingTime = 10; // 남은 시간 3분
+  int _remainingTime = 180; // 남은 시간 3분
   int get remainingTime => _remainingTime; // 남은 시간
   String get formattedRemainingTime => formatTime(_remainingTime);
 
-  bool _canResendCode = false; // 재전송 가능 여부
+  bool _canResendCode = true; // 재전송 가능 여부
   bool get canResendCode => _canResendCode; // 재전송 가능 여부
 
   bool _showErrorMessage = false;
@@ -43,18 +43,18 @@ class SignUpVerificationViewModel with ChangeNotifier {
     );
   }
 
-  /// 타이머를 초기화 하는 함수
-  void resetTimer() {
-    _remainingTime = 180; // 타이머 초기화
-    _canResendCode = true; // 재전송 가능 상태로 변경
-    notifyListeners();
-  }
-
   /// 인증번호 재전송 함수
   void resendCode() {
     if (_canResendCode) {
+      // 인증 번호 재전송
+
+      // TextController 설정
+      controller.clear();
+
+      // 타이머 설정
       _remainingTime = 180; // 타이머 초기화
       _canResendCode = false; // 재전송 중으로 상태 변경
+      _timer.cancel();
       startTimer(); // 타이머 재시작
       notifyListeners();
     }
@@ -82,7 +82,7 @@ class SignUpVerificationViewModel with ChangeNotifier {
   void resetState() {
     _timer.cancel();
     _remainingTime = 180;
-    _canResendCode = false;
+    _canResendCode = true;
     _showErrorMessage = false;
     controller.text = '';
     _isTextFieldFocused = false;

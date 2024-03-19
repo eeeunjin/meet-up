@@ -24,20 +24,14 @@ final router = GoRouter(
           path: 'loginPhoneNum',
           name: 'loginPhoneNum',
           builder: (context, state) {
-            return ChangeNotifierProvider(
-              create: (context) => LoginPhoneNumViewModel(),
-              child: const LoginPhoneNum(),
-            );
+            return const LoginPhoneNum();
           },
           routes: [
             GoRoute(
               path: 'loginVerification',
               name: 'loginVerification',
               builder: (context, state) {
-                return ChangeNotifierProvider(
-                  create: (context) => LoginVerificationViewModel(),
-                  child: const LoginVerification(),
-                );
+                return const LoginVerification();
               },
             ),
           ],
