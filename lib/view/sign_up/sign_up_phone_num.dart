@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
+import 'package:meet_up/view_model/sign_up/sign_up_verification_view_model.dart';
 import 'package:provider/provider.dart';
 
 class SignUpPhoneNum extends StatelessWidget {
@@ -21,7 +22,7 @@ class SignUpPhoneNum extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 24.h, left: 9.w),
+              padding: EdgeInsets.only(left: 9.w),
               child: _header(context),
             ),
             SizedBox(height: 30.h),
@@ -38,8 +39,13 @@ class SignUpPhoneNum extends StatelessWidget {
 
   // header
   Widget _back(BuildContext context) {
+    final viewModel =
+        Provider.of<SignUpPhoneNumViewModel>(context, listen: false);
     return GestureDetector(
-      onTap: () => context.pop(),
+      onTap: () {
+        viewModel.resetState();
+        context.pop();
+      },
       child: Image.asset(
         ImagePath.back,
         width: 40.w,
@@ -50,13 +56,19 @@ class SignUpPhoneNum extends StatelessWidget {
 
   Widget _header(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween, // 가로로 가운데 정렬
       children: [
         _back(context),
-        SizedBox(width: 119.w),
-        Text(
-          '회원가입',
-          style: TextStyle(fontSize: 22.sp),
+        Expanded(
+          child: Center(
+            child: Text(
+              "회원가입",
+              style: TextStyle(fontSize: 20.sp),
+              textAlign: TextAlign.center,
+            ),
+          ),
         ),
+        Container(width: 48.w), // 여백 조절
       ],
     );
   }
@@ -155,13 +167,24 @@ class SignUpPhoneNum extends StatelessWidget {
 
   // bottom
   Widget _bottom(BuildContext context) {
+    final signUpVerificationViewModel =
+        Provider.of<SignUpVerificationViewModel>(context, listen: false);
     return Consumer<SignUpPhoneNumViewModel>(
       builder: (context, viewModel, child) => Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
         child: NextButton(
-          onTap: () {
-            if (viewModel.isPhoneNumberValid) {
-              context.push('/signUpVerification');
+          onTap: () async {
+            // phoneNum 유효성 검사 실패 시, return
+            if (!viewModel.isPhoneNumberValid) return;
+
+            // Auth 관련 동작 - viewModel에서 진행
+            final isSigned = await viewModel.signInWithPhoneNumber(context);
+
+            // 다양한 이유로 코드가 전달되지 않은 경우
+            if (!isSigned) {
+              debugPrint("코드 전달 실패.");
+            } else {
+              signUpVerificationViewModel.startTimer();
             }
           },
           text: '다음',

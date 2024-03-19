@@ -21,7 +21,7 @@ class LoginMain extends StatelessWidget {
         children: [
           GestureDetector(
               onTap: () {
-                context.push('/loginPhoneNum');
+                context.goNamed('loginPhoneNum');
               },
               child: _loginButton()),
           SizedBox(
@@ -29,8 +29,8 @@ class LoginMain extends StatelessWidget {
             height: 40.h,
           ),
           GestureDetector(
-              onTap: () {
-                context.push('/signUpPhoneNum');
+              onTap: () {;
+                context.goNamed('signUpPhoneNum');
               },
               child: _signUpButton()),
           SizedBox(
@@ -39,7 +39,7 @@ class LoginMain extends StatelessWidget {
           ),
           GestureDetector(
               onTap: () {
-                context.push('/signUpDetail');
+                context.goNamed('signUpDetail');
               },
               child: _detailSettingButton()),
         ],

@@ -148,24 +148,30 @@ class FirebaseAUTH {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   /// 전화번호 인증을 위한 메서드
-  Future<void> verifyPhoneNumber({
+  Future<bool> verifyPhoneNumber({
     required String phoneNumber,
     required Function(PhoneAuthCredential) verificationCompleted,
     required Function(FirebaseAuthException) verificationFailed,
     required Function(String, int?) codeSent,
     required Function(String) codeAutoRetrievalTimeout,
   }) async {
-    await _auth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      verificationCompleted: verificationCompleted,
-      verificationFailed: verificationFailed,
-      codeSent: codeSent,
-      codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
-    );
+    try {
+      await _auth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        verificationCompleted: verificationCompleted,
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   /// 해당 전화 번호와 smsCode를 확인하여 만들어진 credential을 전송하여 로그인 및 회원 가입하는 메서드
-  Future<void> signInWithCredential(PhoneAuthCredential credential) async {
-    await _auth.signInWithCredential(credential);
+  Future<UserCredential> signInWithCredential(
+      PhoneAuthCredential credential) async {
+    return await _auth.signInWithCredential(credential);
   }
 }

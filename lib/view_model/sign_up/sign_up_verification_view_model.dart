@@ -8,15 +8,12 @@ class SignUpVerificationViewModel with ChangeNotifier {
   //
   late Timer _timer; // 인증 타이머
 
-  int _remainingTime = 180; // 남은 시간 3분
+  int _remainingTime = 10; // 남은 시간 3분
   int get remainingTime => _remainingTime; // 남은 시간
   String get formattedRemainingTime => formatTime(_remainingTime);
 
-  bool _canResendCode = true; // 재전송 가능 여부
+  bool _canResendCode = false; // 재전송 가능 여부
   bool get canResendCode => _canResendCode; // 재전송 가능 여부
-
-  String _verificationCode = ''; // 인증번호 변수
-  String get verificationCode => _verificationCode; // 인증번호
 
   bool _showErrorMessage = false;
   bool get showErrorMessage => _showErrorMessage;
@@ -24,19 +21,6 @@ class SignUpVerificationViewModel with ChangeNotifier {
   TextEditingController controller = TextEditingController();
   bool _isTextFieldFocused = false;
   bool get isTextFieldFocused => _isTextFieldFocused;
-
-  //
-  // MARK: - Constructor & Distructor
-  //
-  SignUpVerificationViewModel() {
-    startTimer(); // 타이머 시작
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel(); // 타이머 중지
-    super.dispose();
-  }
 
   //
   // MARK: - Methods
@@ -83,17 +67,6 @@ class SignUpVerificationViewModel with ChangeNotifier {
     return '$minutesStr : $secondsStr';
   }
 
-  /// _verificationCode 확인 함수
-  bool isVerificationCodeCorrect() {
-    return _verificationCode == "123456";
-  }
-
-  /// _verficationCode set 함수
-  void setVerificationCode() {
-    _verificationCode = controller.text;
-    notifyListeners();
-  }
-
   /// _showErrorMessage set 함수
   void setShowErrorMessage(bool value) {
     _showErrorMessage = value;
@@ -104,5 +77,14 @@ class SignUpVerificationViewModel with ChangeNotifier {
   void setIsTextFieldFocusd({required bool isTextFieldFocused}) {
     _isTextFieldFocused = isTextFieldFocused;
     notifyListeners();
+  }
+
+  void resetState() {
+    _timer.cancel();
+    _remainingTime = 180;
+    _canResendCode = false;
+    _showErrorMessage = false;
+    controller.text = '';
+    _isTextFieldFocused = false;
   }
 }

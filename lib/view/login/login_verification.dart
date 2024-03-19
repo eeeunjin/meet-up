@@ -22,7 +22,7 @@ class LoginVerification extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 24.h, left: 9.w),
+              padding: EdgeInsets.only(left: 9.w),
               child: _header(context),
             ),
             SizedBox(

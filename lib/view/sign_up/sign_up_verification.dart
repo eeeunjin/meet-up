@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/image.dart';
+import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_verification_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +24,7 @@ class SignUpVerification extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 24.h, left: 9.w),
+              padding: EdgeInsets.only(left: 9.w),
               child: _header(context),
             ),
             SizedBox(
@@ -43,8 +45,13 @@ class SignUpVerification extends StatelessWidget {
 
   // header
   Widget _back(BuildContext context) {
+    final viewModel =
+        Provider.of<SignUpVerificationViewModel>(context, listen: false);
     return GestureDetector(
-      onTap: () => context.pop(), // 뒤로가기
+      onTap: () {
+        context.pop();
+        viewModel.resetState();
+      }, // 뒤로가기
       child: Image.asset(
         ImagePath.back,
         width: 40.w,
@@ -55,16 +62,19 @@ class SignUpVerification extends StatelessWidget {
 
   Widget _header(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween, // 가로로 가운데 정렬
       children: [
         _back(context),
-        SizedBox(
-          // 여백
-          width: 119.w,
+        Expanded(
+          child: Center(
+            child: Text(
+              "회원가입",
+              style: TextStyle(fontSize: 20.sp),
+              textAlign: TextAlign.center,
+            ),
+          ),
         ),
-        Text(
-          '회원 가입',
-          style: TextStyle(fontSize: 22.sp),
-        ),
+        Container(width: 48.w), // 여백 조절
       ],
     );
   }
@@ -191,16 +201,86 @@ class SignUpVerification extends StatelessWidget {
   }
 
   // bottom
+  void showAlert(
+      {required BuildContext context,
+      required String title,
+      required String message}) {
+    showCupertinoDialog(
+      context: context,
+      builder: (context) {
+        return Stack(
+          children: [
+            Container(
+              color: Colors.black.withOpacity(0.46),
+            ),
+            CupertinoAlertDialog(
+              title: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 17.5,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              content: Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Text(
+                  message,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w100,
+                  ),
+                ),
+              ),
+              actions: [
+                CupertinoDialogAction(
+                    isDefaultAction: true,
+                    child: const Text(
+                      "확인",
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    })
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _confirmButton(BuildContext context) {
-    final viewModel = Provider.of<SignUpVerificationViewModel>(context);
+    final phoneNumviewModel = Provider.of<SignUpPhoneNumViewModel>(context);
+    final verificationViewModel =
+        Provider.of<SignUpVerificationViewModel>(context);
     return GestureDetector(
-      onTap: () {
-        viewModel.setVerificationCode();
-        if (viewModel.isVerificationCodeCorrect()) {
-          context.push('/signUpDetail');
-        } else {
-          viewModel.setShowErrorMessage(true);
-          viewModel.controller.clear();
+      onTap: () async {
+        // 시간이 만료된 경우
+        if (verificationViewModel.remainingTime == 0) {
+          // 인증 만료 alert 띄우기
+          showAlert(
+            context: context,
+            title: "인증 시간 만료",
+            message: "인증 번호를 재전송 해주세요",
+          );
+          return;
+        }
+
+        try {
+          // smsCode가 동일한 경우 다음 화면으로 넘어감
+          await phoneNumviewModel
+              .signInWithSmsCode(verificationViewModel.controller.text);
+          context.goNamed('signUpDetail');
+        } catch (e) {
+          // smsCode가 동일하지 않은 경우 alert 출력
+          showAlert(
+            context: context,
+            title: "인증번호가 일치하지 않습니다.",
+            message: "인증번호를 다시 입력해 주십시오.",
+          );
         }
       },
       child: Container(

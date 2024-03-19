@@ -21,7 +21,7 @@ class LoginPhoneNum extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 24.h, left: 9.w),
+              padding: EdgeInsets.only(left: 9.w),
               child: _header(context),
             ),
             SizedBox(height: 30.h),
@@ -160,9 +160,16 @@ class LoginPhoneNum extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 32.w),
         child: NextButton(
           onTap: () {
-            if (viewModel.isPhoneNumberValid) {
-              context.push('/loginVerification');
-            }
+            // phoneNum 유효성 검사 실패 시, return
+            if (viewModel.isPhoneNumberValid) return;
+
+
+            // Auth 관련 동작 - viewModel에서 진행
+            
+
+            // sms 전달 완료 시, loginVerification view로 이동
+            context.push('/loginVerification');
+            
           },
           text: '다음',
           height: 60.h,
