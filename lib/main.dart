@@ -1,12 +1,26 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:meet_up/firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_up/router.dart';
+import 'package:meet_up/service/remote/firebase_options.dart';
+import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
+import 'package:meet_up/view_model/login/login_verification_view_model.dart';
+import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
+import 'package:meet_up/view_model/sign_up/sign_up_verification_view_model.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   await initializeFirebase();
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => SignUpPhoneNumViewModel()),
+      ChangeNotifierProvider(
+          create: (context) => SignUpVerificationViewModel()),
+      ChangeNotifierProvider(create: (context) => LoginVerificationViewModel()),
+      ChangeNotifierProvider(create: (context) => LoginPhoneNumViewModel()),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 Future<void> initializeFirebase() async {
