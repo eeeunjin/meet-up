@@ -168,18 +168,15 @@ class LoginPhoneNum extends StatelessWidget {
             // phoneNum 유효성 검사 실패 시, return
             if (!viewModel.isPhoneNumberValid) return;
 
-            // // Auth 관련 동작 - viewModel에서 진행
-            // final isSigned = await viewModel.signInWithPhoneNumber(context);
+            // Auth 관련 동작 - viewModel에서 진행
+            final isSigned = await viewModel.signInWithPhoneNumber(context);
 
-            // // 다양한 이유로 코드가 전달되지 않은 경우
-            // if (!isSigned) {
-            //   debugPrint("코드 전달 실패.");
-            // } else {
-            //   loginVerificationViewModel.startTimer();
-            // }
-
-            context.goNamed('loginVerification');
-            loginVerificationViewModel.startTimer();
+            // 다양한 이유로 코드가 전달되지 않은 경우
+            if (!isSigned) {
+              debugPrint("코드 전달 실패.");
+            } else {
+              loginVerificationViewModel.startTimer();
+            }
           },
           text: '다음',
           height: 60.h,

@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_verification_view_model.dart';
@@ -148,13 +150,17 @@ class SignUpVerification extends StatelessWidget {
   }
 
   Widget _resendCode(BuildContext context) {
-    final viewModel = Provider.of<SignUpVerificationViewModel>(context);
+    final signUpVerificationViewModel =
+        Provider.of<SignUpVerificationViewModel>(context);
+    final signUpPhoneNumViewModel =
+        Provider.of<SignUpPhoneNumViewModel>(context);
     return Row(
       children: [
         GestureDetector(
           onTap: () {
-            if (viewModel.remainingTime <= 0) {
-              viewModel.resendCode();
+            if (signUpVerificationViewModel.remainingTime <= 0) {
+              signUpVerificationViewModel.resendCode();
+              signUpPhoneNumViewModel.resendCode(context);
             } else {
               showAlert(
                   context: context,
@@ -164,20 +170,24 @@ class SignUpVerification extends StatelessWidget {
             }
           },
           child: Text(
-            viewModel.canResendCode ? '인증번호 재전송' : '인증번호가 재전송되었습니다',
+            signUpVerificationViewModel.canResendCode
+                ? '인증번호 재전송'
+                : '인증번호가 재전송되었습니다',
             style: TextStyle(
               fontSize: 13,
-              decoration: viewModel.canResendCode
+              decoration: signUpVerificationViewModel.canResendCode
                   ? TextDecoration.underline
                   : TextDecoration.none,
-              color: viewModel.canResendCode ? Colors.grey : Colors.grey,
+              color: signUpVerificationViewModel.canResendCode
+                  ? Colors.grey
+                  : Colors.grey,
             ),
           ),
         ),
-        if (!viewModel.canResendCode) ...[
+        if (!signUpVerificationViewModel.canResendCode) ...[
           const SizedBox(width: 8.0),
           Text(
-            viewModel.formattedRemainingTime,
+            signUpVerificationViewModel.formattedRemainingTime,
             style: const TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.bold,
@@ -253,17 +263,18 @@ class SignUpVerification extends StatelessWidget {
               ),
               actions: [
                 CupertinoDialogAction(
-                    isDefaultAction: true,
-                    child: const Text(
-                      "확인",
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    })
+                  isDefaultAction: true,
+                  child: const Text(
+                    "확인",
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
               ],
             ),
           ],
@@ -273,7 +284,7 @@ class SignUpVerification extends StatelessWidget {
   }
 
   Widget _confirmButton(BuildContext context) {
-    final phoneNumviewModel = Provider.of<SignUpPhoneNumViewModel>(context);
+    final phoneNumViewModel = Provider.of<SignUpPhoneNumViewModel>(context);
     final verificationViewModel =
         Provider.of<SignUpVerificationViewModel>(context);
     return GestureDetector(
@@ -291,9 +302,42 @@ class SignUpVerification extends StatelessWidget {
 
         try {
           // smsCode가 동일한 경우 다음 화면으로 넘어감
-          await phoneNumviewModel
+          UserCredential credential = await phoneNumViewModel
               .signInWithSmsCode(verificationViewModel.controller.text);
-          context.goNamed('signUpDetail');
+
+          // DB에 유저 정보를 저장 (UID + 휴대전화 번호)
+          if (credential.user != null) {
+            if (credential.additionalUserInfo!.isNewUser) {
+              debugPrint("새로운 유저 입니다.");
+              // 유저 정보 생성
+              await phoneNumViewModel.createUserDocument(
+                  uid: credential.user!.uid);
+
+              // 프로필 생성 화면으로 이동
+              context.goNamed('signUpDetail');
+            } else {
+              debugPrint("새로운 유저가 아닙니다.");
+              // uid 저장
+              phoneNumViewModel.getUID(credential.user!.uid);
+
+              UserModel userInfo = await phoneNumViewModel.readUserDocument(
+                  uid: phoneNumViewModel.uid);
+              // 기본 프로필 정보가 전부 있는 경우
+              if (userInfo.gender != "") {
+                debugPrint("기존 프로필 정보가 있어서 로그인으로 연결");
+                // 메인 홈 화면으로 이동
+                // 구현 필요
+              }
+              // 기본 프로필 정보 중 전화 번호만 있는 경우
+              else {
+                debugPrint("기존 프로필 정보가 없기 때문에 프로필 설정부터.");
+                // 프로필 설정 페이지로 이동
+                context.goNamed('signUpDetail');
+              }
+            }
+          } else {
+            debugPrint("유저 정보 생성 중 오류 발생");
+          }
         } catch (e) {
           // smsCode가 동일하지 않은 경우 alert 출력
           showAlert(

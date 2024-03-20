@@ -46,8 +46,6 @@ class SignUpVerificationViewModel with ChangeNotifier {
   /// 인증번호 재전송 함수
   void resendCode() {
     if (_canResendCode) {
-      // 인증 번호 재전송
-
       // TextController 설정
       controller.clear();
 

@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
 import 'package:meet_up/view_model/login/login_verification_view_model.dart';
@@ -148,15 +150,18 @@ class LoginVerification extends StatelessWidget {
   }
 
   Widget _resendCode(BuildContext context) {
-    final viewModel = Provider.of<LoginVerificationViewModel>(context);
+    final loginVerificationViewModel =
+        Provider.of<LoginVerificationViewModel>(context);
+    final loginPhoneNumViewModel = Provider.of<LoginPhoneNumViewModel>(context);
     return Row(
       children: [
         GestureDetector(
           onTap: () {
-            if (viewModel.remainingTime <= 0) {
-              viewModel.resendCode();
+            if (loginVerificationViewModel.remainingTime <= 0) {
+              loginVerificationViewModel.resendCode();
+              loginPhoneNumViewModel.resendCode(context);
             } else {
-              showAlert(
+              showAlert(null,
                   context: context,
                   title: "재전송 제한",
                   message: "3분이 지난 후에 재전송이 가능합니다.");
@@ -164,20 +169,24 @@ class LoginVerification extends StatelessWidget {
             }
           },
           child: Text(
-            viewModel.canResendCode ? '인증번호 재전송' : '인증번호가 재전송되었습니다',
+            loginVerificationViewModel.canResendCode
+                ? '인증번호 재전송'
+                : '인증번호가 재전송되었습니다',
             style: TextStyle(
               fontSize: 13,
-              decoration: viewModel.canResendCode
+              decoration: loginVerificationViewModel.canResendCode
                   ? TextDecoration.underline
                   : TextDecoration.none,
-              color: viewModel.canResendCode ? Colors.grey : Colors.grey,
+              color: loginVerificationViewModel.canResendCode
+                  ? Colors.grey
+                  : Colors.grey,
             ),
           ),
         ),
-        if (!viewModel.canResendCode) ...[
+        if (!loginVerificationViewModel.canResendCode) ...[
           const SizedBox(width: 8.0),
           Text(
-            viewModel.formattedRemainingTime,
+            loginVerificationViewModel.formattedRemainingTime,
             style: const TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.bold,
@@ -222,37 +231,40 @@ class LoginVerification extends StatelessWidget {
 
   // bottom
   void showAlert(
-      {required BuildContext context,
-      required String title,
-      required String message}) {
-    showCupertinoDialog(
-      context: context,
-      builder: (context) {
-        return Stack(
-          children: [
-            Container(
-              color: Colors.black.withOpacity(0.46),
-            ),
-            CupertinoAlertDialog(
-              title: Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 17.5,
-                  fontWeight: FontWeight.w600,
-                ),
+    Function()? onTap, {
+    required BuildContext context,
+    required String title,
+    required String message,
+  }) {
+    if (onTap == null) {
+      showCupertinoDialog(
+        context: context,
+        builder: (context) {
+          return Stack(
+            children: [
+              Container(
+                color: Colors.black.withOpacity(0.46),
               ),
-              content: Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Text(
-                  message,
+              CupertinoAlertDialog(
+                title: Text(
+                  title,
                   style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w100,
+                    fontSize: 17.5,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              ),
-              actions: [
-                CupertinoDialogAction(
+                content: Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text(
+                    message,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w100,
+                    ),
+                  ),
+                ),
+                actions: [
+                  CupertinoDialogAction(
                     isDefaultAction: true,
                     child: const Text(
                       "확인",
@@ -263,17 +275,76 @@ class LoginVerification extends StatelessWidget {
                     ),
                     onPressed: () {
                       Navigator.pop(context);
-                    })
-              ],
-            ),
-          ],
-        );
-      },
-    );
+                    },
+                  )
+                ],
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showCupertinoDialog(
+        context: context,
+        builder: (context) {
+          return Stack(
+            children: [
+              Container(
+                color: Colors.black.withOpacity(0.46),
+              ),
+              CupertinoAlertDialog(
+                title: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 17.5,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                content: Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text(
+                    message,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w100,
+                    ),
+                  ),
+                ),
+                actions: [
+                  CupertinoDialogAction(
+                      isDefaultAction: true,
+                      onPressed: onTap,
+                      child: const Text(
+                        "확인",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                      )),
+                  CupertinoDialogAction(
+                    isDefaultAction: true,
+                    child: const Text(
+                      "취소",
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   Widget _confirmButton(BuildContext context) {
-    final phoneNumviewModel = Provider.of<LoginPhoneNumViewModel>(context);
+    final phoneNumViewModel = Provider.of<LoginPhoneNumViewModel>(context);
     final verificationViewModel =
         Provider.of<LoginVerificationViewModel>(context);
     return GestureDetector(
@@ -282,6 +353,7 @@ class LoginVerification extends StatelessWidget {
         if (verificationViewModel.remainingTime == 0) {
           // 인증 만료 alert 띄우기
           showAlert(
+            null,
             context: context,
             title: "인증 시간 만료",
             message: "인증 번호를 재전송 해주세요",
@@ -291,12 +363,54 @@ class LoginVerification extends StatelessWidget {
 
         try {
           // smsCode가 동일한 경우 다음 화면으로 넘어감
-          await phoneNumviewModel
+          UserCredential credential = await phoneNumViewModel
               .signInWithSmsCode(verificationViewModel.controller.text);
-          context.goNamed('signUpDetail');
+
+          // DB에 유저 정보를 저장 (UID + 휴대전화 번호)
+          if (credential.user != null) {
+            if (credential.additionalUserInfo!.isNewUser) {
+              debugPrint("새로운 유저 입니다.");
+              debugPrint(
+                  "로그인이기 때문에 회원 가입을 진행할 것인지 물은 후, user 정보를 DB에 전달 이후, 화면 이동");
+
+              showAlert(
+                () async {
+                  // 유저 정보 생성
+                  await phoneNumViewModel.createUserDocument(
+                      uid: credential.user!.uid);
+                  context.goNamed('signUpDetail');
+                },
+                context: context,
+                title: "가입된 회원 정보가 없습니다.",
+                message: "회원가입 하시겠습니까?",
+              );
+            } else {
+              debugPrint("새로운 유저가 아닙니다.");
+              // uid 저장
+              phoneNumViewModel.getUID(credential.user!.uid);
+
+              UserModel userInfo = await phoneNumViewModel.readUserDocument(
+                  uid: phoneNumViewModel.uid);
+              // 기본 프로필 정보가 전부 있는 경우
+              if (userInfo.gender != "") {
+                debugPrint("기존 프로필 정보가 있어서 메인 홈 화면으로 연결");
+                // 메인 홈 화면으로 이동
+                // 구현 필요
+              }
+              // 기본 프로필 정보 중 전화 번호만 있는 경우
+              else {
+                debugPrint("회원 가입이 필요하다는 팝업을 띄워주고 프로필 설정 페이지로 이동시키기");
+                // 프로필 설정 페이지로 이동
+                context.goNamed('signUpDetail');
+              }
+            }
+          } else {
+            debugPrint("유저 정보 생성 중 오류 발생");
+          }
         } catch (e) {
           // smsCode가 동일하지 않은 경우 alert 출력
           showAlert(
+            null,
             context: context,
             title: "인증번호가 일치하지 않습니다.",
             message: "인증번호를 다시 입력해 주십시오.",

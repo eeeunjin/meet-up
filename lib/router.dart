@@ -5,9 +5,6 @@ import 'package:meet_up/view/login/login_verification.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail.dart';
 import 'package:meet_up/view/sign_up/sign_up_verification.dart';
 import 'package:meet_up/view/sign_up/sign_up_phone_num.dart';
-import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
-import 'package:meet_up/view_model/login/login_verification_view_model.dart';
-import 'package:provider/provider.dart';
 
 final router = GoRouter(
   initialLocation: '/',

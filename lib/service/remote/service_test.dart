@@ -50,6 +50,7 @@ Future<void> documentCreateTest() async {
     "siDo": "부산",
     "siGunGu": "서면",
   };
+
   // 새로운 유저 모델 정보
   UserModel newUser = UserModel(
       nickname: "minsu",
@@ -65,7 +66,7 @@ Future<void> documentCreateTest() async {
       phoneNumber: "01012341234");
 
   // 새로운 유저 정보를 새로운 docRef 주소에 전달하여 생성
-  await userRepository.createUserDocument(data: newUser);
+  await userRepository.createUserDocument(data: newUser, uid: "TestUID");
 }
 
 // document 정보 읽는 함수 테스트
@@ -73,7 +74,7 @@ Future<void> documentReadTest() async {
   UserRepository userRepository = UserRepository();
 
   // 읽고 싶은 docRef의 주소를 전달하여 user 정보 불러오기
-  UserModel? user = await userRepository.readUserDocument(docID: "testUID");
+  UserModel? user = await userRepository.readUserDocument(uid: "testUID");
   debugPrint(user.nickname);
 }
 
