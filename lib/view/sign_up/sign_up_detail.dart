@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -33,10 +34,15 @@ class SignUpDetail extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: EdgeInsets.only(top: 24.h, left: 9.w),
-          child: _header(context),
-        ),
+        if (Platform.isIOS)
+          _header(context)
+        else if (Platform.isAndroid)
+          Padding(
+            padding: EdgeInsets.only(
+              top: 15.h,
+            ),
+            child: _header(context),
+          ),
         SizedBox(height: 17.h),
         _progressBar(),
         SizedBox(
