@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -11,10 +12,20 @@ class SignUpDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final DateTime startDate = DateTime(1950);
+    final DateTime endDate = DateTime(2050);
+    final DateTime initialDate = DateTime.now(); // 초기화 날짜
+
     return ChangeNotifierProvider<SignUpDetailViewModel>(
-      create: (_) => SignUpDetailViewModel(),
+      create: (_) => SignUpDetailViewModel(
+        init: initialDate,
+        start: startDate,
+        end: endDate,
+      ),
       child: Scaffold(
-        body: SafeArea(child: _body(context)),
+        body: SafeArea(
+          child: _body(context),
+        ),
       ),
     );
   }
@@ -23,16 +34,21 @@ class SignUpDetail extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: EdgeInsets.only(top: 24.h, left: 9.w),
-          child: _header(context),
-        ),
+        if (Platform.isIOS)
+          _header(context)
+        else if (Platform.isAndroid)
+          Padding(
+            padding: EdgeInsets.only(
+              top: 15.h,
+            ),
+            child: _header(context),
+          ),
         SizedBox(height: 17.h),
         _progressBar(),
         SizedBox(
           height: 47.h,
         ),
-        _main(),
+        _main(context),
       ],
     );
   }
@@ -89,7 +105,7 @@ class SignUpDetail extends StatelessWidget {
     );
   }
 
-  Widget _main() {
+  Widget _main(BuildContext context) {
     return const Expanded(
       child: SingleChildScrollView(
         child: SignUpDetailContents(),

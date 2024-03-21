@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-class SignUpVerificationViewModel with ChangeNotifier {
+class LoginVerificationViewModel with ChangeNotifier {
   //
   // MARK: - Properties
   //

@@ -33,55 +33,57 @@ class _NextButtonState extends State<NextButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () async {
-          if (isLoading || !widget.enable) {
-            return;
-          }
+      onTap: () async {
+        if (isLoading || !widget.enable) {
+          return;
+        }
 
-          try {
-            dynamic ret = widget.onTap();
-            if (ret is Future) {
-              setState(() {
-                isLoading = true;
-              });
-              await ret;
-            }
-          } catch (_) {}
-
-          if (mounted) {
+        try {
+          dynamic ret = widget.onTap();
+          if (ret is Future) {
             setState(() {
-              isLoading = false;
+              isLoading = true;
             });
+            await ret;
           }
-        },
-        child: Container(
-            width: widget.width ?? double.infinity,
-            height: widget.height ?? 40.h,
-            alignment: Alignment.center,
-            decoration: ShapeDecoration(
-              color: widget.whiteButton
-                  ? Colors.white
-                  : (widget.enable
-                      ? const Color(0xFF76E84E)
-                      : const Color(0xFFE6E6E6)),
-              shape: RoundedRectangleBorder(
-                  side: widget.whiteButton
-                      ? BorderSide(width: 1.r, color: const Color(0xFFE6E6E6))
-                      : BorderSide.none,
-                  borderRadius: BorderRadius.circular(19.r)),
-            ),
-            child: Visibility(
-              visible: !isLoading,
-              replacement: const CircularProgressIndicator(),
-              child: Text(
-                widget.text,
-                style: widget.textStyle ??
-                    TextStyle(
-                      color: Colors.white,
-                      fontSize: widget.fontSize ?? 15.sp,
-                      // fontFamily: '',
-                    ),
-              ),
-            )));
+        } catch (_) {}
+
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      },
+      child: Container(
+        width: widget.width ?? double.infinity,
+        height: widget.height ?? 40.h,
+        alignment: Alignment.center,
+        decoration: ShapeDecoration(
+          color: widget.whiteButton
+              ? Colors.white
+              : (widget.enable
+                  ? const Color(0xFF76E84E)
+                  : const Color(0xFFE6E6E6)),
+          shape: RoundedRectangleBorder(
+              side: widget.whiteButton
+                  ? BorderSide(width: 1.r, color: const Color(0xFFE6E6E6))
+                  : BorderSide.none,
+              borderRadius: BorderRadius.circular(19.r)),
+        ),
+        child: Visibility(
+          visible: !isLoading,
+          replacement: const CircularProgressIndicator(),
+          child: Text(
+            widget.text,
+            style: widget.textStyle ??
+                TextStyle(
+                  color: Colors.white,
+                  fontSize: widget.fontSize ?? 15.sp,
+                  // fontFamily: '',
+                ),
+          ),
+        ),
+      ),
+    );
   }
 }

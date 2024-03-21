@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/repository/user_repository.dart';
 
-class SignUpPhoneNumViewModel with ChangeNotifier {
+class LoginPhoneNumViewModel with ChangeNotifier {
   //
   // MARK: - Properties
   //
@@ -72,7 +72,7 @@ class SignUpPhoneNumViewModel with ChangeNotifier {
         codeSent: (String verificationId, int? forceResendingToken) {
           _verificationId = verificationId;
           _codeSent = true;
-          context.goNamed('signUpVerification');
+          context.goNamed('LoginVerification');
           resetState();
         },
         codeAutoRetrievalTimeout: (String verificationId) {

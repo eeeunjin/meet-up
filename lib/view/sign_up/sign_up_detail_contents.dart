@@ -10,6 +10,9 @@ class SignUpDetailContents extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel =
+        Provider.of<SignUpDetailViewModel>(context, listen: false);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -17,7 +20,7 @@ class SignUpDetailContents extends StatelessWidget {
         SizedBox(
           height: 55.h,
         ),
-        _dateOfBirth(),
+        _dateOfBirth(context, viewModel),
         SizedBox(
           height: 55.h,
         ),
@@ -120,7 +123,16 @@ class SignUpDetailContents extends StatelessWidget {
     );
   }
 
-  Widget _dateOfBirth() {
+  Widget _dateOfBirth(BuildContext context, SignUpDetailViewModel viewModel) {
+    final DateTime startDate = DateTime(1950);
+    final DateTime endDate = DateTime(2050);
+    final DateTime initialDate = viewModel.currentDate;
+
+    void onDateChange(DateTime newDate) {
+      viewModel.updateDate(
+          newDate); // This will notify all the listeners about date change.
+    }
+
     return Padding(
       padding: EdgeInsets.only(left: 25.0.w),
       child: Column(
@@ -136,13 +148,12 @@ class SignUpDetailContents extends StatelessWidget {
             style: TextStyle(fontSize: 12.sp, color: const Color(0xFF868686)),
           ),
           SizedBox(height: 24.h),
-          // datepicker
-          Center(
-            child: Container(
-              width: 274.w,
-              height: 114.h,
-              color: Colors.black,
-            ),
+          // Mark - datepicker
+          CustomDatePicker(
+            start: startDate,
+            end: endDate,
+            init: initialDate,
+            onChangeListener: onDateChange,
           ),
         ],
       ),
