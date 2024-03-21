@@ -30,9 +30,6 @@ class SignUpDetailViewModel with ChangeNotifier {
     }
   }
 
-  final DateTime _selectedDate = DateTime.now();
-  DateTime get selectedDate => _selectedDate; // 선택 Date
-
   void selectGender(Gender gender) {
     if (_selectedGender != gender) {
       _selectedGender = gender;
