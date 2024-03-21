@@ -82,6 +82,49 @@ class SignUpDetailViewModel with ChangeNotifier {
         DateTime(currentDate.year, currentDate.month + 1, 0);
     return List<int>.generate(lastDateOfMonth.day, (index) => index + 1);
   }
+
+  // MARK : - Page 3
+
+  void _selectKeyword(String keyword, List<String> targetList) {
+    if (targetList.contains(keyword)) {
+      targetList.remove(keyword);
+      notifyListeners();
+    } else {
+      if (targetList.length < 3) {
+        targetList.add(keyword);
+      }
+      notifyListeners();
+    }
+  }
+
+  bool get areBothSectionsCompleted {
+    return areThreeRelationshipKeywordsSelected &&
+        areThreeLifestyleKeywordsSelected;
+  }
+
+  // relationship
+  List<String> selectedRelationshipKeywords = [];
+
+  void selectRelationshipKeyword(String keyword) {
+    _selectKeyword(keyword, selectedRelationshipKeywords);
+  }
+
+  // relationship_check
+  bool get areThreeRelationshipKeywordsSelected {
+    return selectedRelationshipKeywords.length == 3;
+  }
+
+  // lifestyle
+  List<String> selectedLifestyleKeywords = [];
+
+  void selectLifestyleKeyword(String keyword) {
+    _selectKeyword(keyword, selectedLifestyleKeywords);
+  }
+
+  // lifestyle_check
+  bool get areThreeLifestyleKeywordsSelected {
+    return selectedLifestyleKeywords.length == 3;
+  }
 }
 
 enum Gender { none, female, male }
