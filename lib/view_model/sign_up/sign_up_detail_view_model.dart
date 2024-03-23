@@ -171,7 +171,7 @@ class SignUpDetailViewModel with ChangeNotifier {
   // MARK : - Page 5
 
   bool get isSectionsCompletedPageFive {
-    return areThreeInterestedKeywordsSelected;
+    return areThreePurposeKeywordsSelected;
   }
 
   // interested

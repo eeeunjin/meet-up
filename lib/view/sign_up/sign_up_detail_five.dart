@@ -135,7 +135,7 @@ class SignUpDetailFive extends StatelessWidget {
       "독서 모임",
       "여럿이 운동",
       "취업 스터디",
-      "맛집 탄방",
+      "맛집 탐방",
       "기타",
     ];
 
