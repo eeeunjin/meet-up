@@ -79,7 +79,7 @@ class _NextButtonState extends State<NextButton> {
                 TextStyle(
                   color: Colors.white,
                   fontSize: widget.fontSize ?? 15.sp,
-                  // fontFamily: '',
+                  fontFamily: 'Pretendard',
                 ),
           ),
         ),
