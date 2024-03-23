@@ -9,8 +9,8 @@ import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:provider/provider.dart';
 
-class SignUpDetailThree extends StatelessWidget {
-  const SignUpDetailThree({super.key});
+class SignUpDetailFive extends StatelessWidget {
+  const SignUpDetailFive({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -62,13 +62,13 @@ class SignUpDetailThree extends StatelessWidget {
   Widget _progressBar() {
     return Column(
       children: [
-        Image.asset(ImagePath.signUpProgressBar_3),
+        Image.asset(ImagePath.signUpProgressBar_5),
         SizedBox(height: 17.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              '3',
+              '5',
               style: TextStyle(
                   color: const Color(0xFF170F64),
                   fontWeight: FontWeight.bold,
@@ -76,7 +76,10 @@ class SignUpDetailThree extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(top: 1.0.h),
-              child: const Text('/5'),
+              child: Text(
+                '/5',
+                style: TextStyle(fontSize: 14.sp),
+              ),
             )
           ],
         )
@@ -87,135 +90,11 @@ class SignUpDetailThree extends StatelessWidget {
   Widget _main(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 48.h),
-        _relationship(context),
-        SizedBox(height: 55.h),
-        _lifestyle(context),
+        SizedBox(
+          height: 48.h,
+        ),
+        _purpose(context),
       ],
-    );
-  }
-
-  Widget _relationship(BuildContext context) {
-    final viewModel = Provider.of<SignUpDetailViewModel>(context, listen: true);
-    List<String> options = ["사교적인", "소극적인", "유머러스한", "조용한", "친절한", "자신감 있는"];
-
-    return Padding(
-      padding: EdgeInsets.only(left: 25.0.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "대인관계 속 성격을 선택해주세요.",
-            style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            "나를 가장 잘 표현하는 키워드 3가지를 선택해주세요.",
-            style: TextStyle(fontSize: 12.sp, color: const Color(0xFF868686)),
-          ),
-          SizedBox(height: 24.h),
-          // 6개 중 3개 선택
-          Wrap(
-            spacing: 7.w,
-            runSpacing: 7.h,
-            children: options.map((option) {
-              bool isSelected =
-                  viewModel.selectedRelationshipKeywords.contains(option);
-              return GestureDetector(
-                onTap: () {
-                  viewModel.selectRelationshipKeyword(option);
-                },
-                child: Container(
-                  width: 110.w,
-                  height: 36.h,
-                  decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFF7C4DFF) : Colors.white,
-                    borderRadius: BorderRadius.circular(14.r),
-                    border: Border.all(
-                      color: isSelected
-                          ? const Color(0xFF7C4DFF)
-                          : const Color(0xFFD2D8F8),
-                      width: 2.5.w,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      option,
-                      style: TextStyle(
-                        fontSize: 17.sp,
-                        fontWeight: FontWeight.bold,
-                        color: isSelected ? Colors.white : Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _lifestyle(BuildContext context) {
-    final viewModel = Provider.of<SignUpDetailViewModel>(context, listen: true);
-    List<String> options = ["계획적인", "즉흥적인", "창의적인", "안정적인", "낙관적인", "열정적인"];
-
-    return Padding(
-      padding: EdgeInsets.only(left: 25.0.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "스스로의 삶 속 성격을 선택해주세요.",
-            style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            "나를 가장 잘 표현하는 키워드 3가지를 선택해주세요.",
-            style: TextStyle(fontSize: 12.sp, color: const Color(0xFF868686)),
-          ),
-          SizedBox(height: 24.h),
-          // 6개 중 3개 선택
-          Wrap(
-            spacing: 7.w,
-            runSpacing: 7.h,
-            children: options.map((option) {
-              bool isSelected =
-                  viewModel.selectedLifestyleKeywords.contains(option);
-              return GestureDetector(
-                onTap: () {
-                  viewModel.selectLifestyleKeyword(option);
-                },
-                child: Container(
-                  width: 110.w,
-                  height: 36.h,
-                  decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFF7C4DFF) : Colors.white,
-                    borderRadius: BorderRadius.circular(14.r),
-                    border: Border.all(
-                      color: isSelected
-                          ? const Color(0xFF7C4DFF)
-                          : const Color(0xFFD2D8F8),
-                      width: 2.5.w,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      option,
-                      style: TextStyle(
-                        fontSize: 17.sp,
-                        fontWeight: FontWeight.bold,
-                        color: isSelected ? Colors.white : Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ],
-      ),
     );
   }
 
@@ -224,22 +103,97 @@ class SignUpDetailThree extends StatelessWidget {
         builder: (context, viewModel, child) {
       return NextButton(
         onTap: () async {
-          if (!viewModel.areBothSectionsCompleted) return;
-          context.goNamed('signUpDetailfour');
+          if (!viewModel.isSectionsCompletedPageFive) return;
+          context.goNamed('signUpDetailsix');
         },
         text: '다음',
         height: 56.h,
         fontSize: 20.sp,
-        enable: viewModel.areBothSectionsCompleted,
-        backgroundColor: viewModel.areBothSectionsCompleted
+        enable: viewModel.isSectionsCompletedPageFive,
+        backgroundColor: viewModel.isSectionsCompletedPageFive
             ? UsedColor.green
             : const Color(0xFFE6E6E6),
         textStyle: TextStyle(
-          color:
-              viewModel.areBothSectionsCompleted ? Colors.white : Colors.black,
+          color: viewModel.isSectionsCompletedPageFive
+              ? Colors.white
+              : Colors.black,
           fontSize: 18.sp,
         ),
       );
     });
+  }
+
+  Widget _purpose(BuildContext context) {
+    final viewModel = Provider.of<SignUpDetailViewModel>(context, listen: true);
+    List<String> options = [
+      "친목",
+      "자기성찰",
+      "기록",
+      "취미 공유",
+      "자기계발",
+      "새로운 경험",
+      "독서 모임",
+      "여럿이 운동",
+      "취업 스터디",
+      "맛집 탄방",
+      "기타",
+    ];
+
+    return Padding(
+      padding: EdgeInsets.only(left: 25.0.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "만남 목적을 선택해주세요.",
+            style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            "1~3가지를 선택해주세요.",
+            style: TextStyle(fontSize: 12.sp, color: const Color(0xFF868686)),
+          ),
+          SizedBox(height: 24.h),
+          // 12개 중 3개 선택
+          Wrap(
+            spacing: 7.w,
+            runSpacing: 7.h,
+            children: options.map((option) {
+              bool isSelected =
+                  viewModel.selectedPurposeKeywords.contains(option);
+              return GestureDetector(
+                onTap: () {
+                  viewModel.selectPurposeKeyword(option);
+                },
+                child: Container(
+                  width: 110.w,
+                  height: 36.h,
+                  decoration: BoxDecoration(
+                    color: isSelected ? const Color(0xFF7C4DFF) : Colors.white,
+                    borderRadius: BorderRadius.circular(14.r),
+                    border: Border.all(
+                      color: isSelected
+                          ? const Color(0xFF7C4DFF)
+                          : const Color(0xFFD2D8F8),
+                      width: 2.5.w,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      option,
+                      style: TextStyle(
+                        fontSize: 17.sp,
+                        fontWeight: FontWeight.bold,
+                        color: isSelected ? Colors.white : Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
   }
 }
