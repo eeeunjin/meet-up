@@ -202,9 +202,7 @@ class SignUpDetailThree extends StatelessWidget {
                   child: Center(
                     child: Text(
                       option,
-                      style: TextStyle(
-                        fontSize: 17.sp,
-                        fontWeight: FontWeight.bold,
+                      style: AppTextStyles.PR_SB_15.copyWith(
                         color: isSelected ? Colors.white : Colors.black,
                       ),
                     ),

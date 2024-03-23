@@ -181,7 +181,7 @@ class _CustomPicker extends StatelessWidget {
           style: TextStyle(
             fontSize: fontSize,
             color: textColor,
-            // fontFamily: ,
+            fontFamily: 'Pretendard',
             fontWeight: FontWeight.bold,
           ),
           textAlign: TextAlign.center,
