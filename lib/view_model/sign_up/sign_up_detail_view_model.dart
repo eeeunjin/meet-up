@@ -149,6 +149,24 @@ class SignUpDetailViewModel with ChangeNotifier {
   bool get areThreeLifestyleKeywordsSelected {
     return selectedLifestyleKeywords.length == 3;
   }
+
+  // MARK : - Page 4
+
+  bool get isSectionsCompletedPageFour {
+    return areThreeInterestedKeywordsSelected;
+  }
+
+  // interested
+  List<String> selectedInterestedKeywords = [];
+
+  void selectInterestedKeyword(String keyword) {
+    _selectKeyword(keyword, selectedInterestedKeywords);
+  }
+
+  // interested_check
+  bool get areThreeInterestedKeywordsSelected {
+    return selectedInterestedKeywords.length == 3;
+  }
 }
 
 enum Gender { none, female, male }

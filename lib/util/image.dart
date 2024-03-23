@@ -4,4 +4,6 @@ class ImagePath {
       'assets/images/signupprogressbar1.png';
   static String get signUpProgressBar_3 =>
       'assets/images/signupprogressbar3.png';
+  static String get signUpProgressBar_4 =>
+      'assets/images/signupprogressbar4.png';
 }

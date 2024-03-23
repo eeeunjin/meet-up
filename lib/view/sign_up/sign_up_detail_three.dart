@@ -225,7 +225,6 @@ class SignUpDetailThree extends StatelessWidget {
   }
 
   Widget _bottom(BuildContext context) {
-    final viewModel = Provider.of<SignUpDetailViewModel>(context);
     return Consumer<SignUpDetailViewModel>(
         builder: (context, viewModel, child) {
       return NextButton(
@@ -235,7 +234,7 @@ class SignUpDetailThree extends StatelessWidget {
         },
         text: '다음',
         height: 56.h,
-        fontSize: 20,
+        fontSize: 20.sp,
         enable: viewModel.areBothSectionsCompleted,
         backgroundColor: viewModel.areBothSectionsCompleted
             ? UsedColor.green

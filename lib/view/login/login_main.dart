@@ -57,7 +57,7 @@ class LoginMain extends StatelessWidget {
             ),
             GestureDetector(
                 onTap: () {
-                  context.goNamed('signUpDetail');
+                  context.goNamed('signUpDetailthree');
                 },
                 child: _detailSettingButton()),
           ],
