@@ -174,7 +174,7 @@ Widget _nickname(BuildContext context) {
               children: [
                 model.errorMessage.isNotEmpty
                     ? Padding(
-                        padding: const EdgeInsets.only(top: 1.0),
+                        padding: EdgeInsets.only(top: 1.0.h),
                         child: Text(
                           model.errorMessage,
                           style: TextStyle(
@@ -211,29 +211,29 @@ Widget _nickname(BuildContext context) {
 Widget _profile(BuildContext context) {
   Provider.of<SignUpDetailViewModel>(context, listen: true);
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+    padding: EdgeInsets.symmetric(horizontal: 25.0.h),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "프로필을 선택해주세요.",
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 40),
+        SizedBox(height: 40.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildProfileImage(context, 'assets/images/image1.jpg'),
-            _buildProfileImage(context, 'assets/images/image2.jpg'),
-            _buildProfileImage(context, 'assets/images/image3.jpg'),
+            _buildProfileImage(context, ImagePath.image1),
+            _buildProfileImage(context, ImagePath.image2),
+            _buildProfileImage(context, ImagePath.image3),
           ],
         ),
-        const SizedBox(height: 25),
+        SizedBox(height: 25.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildProfileImage(context, 'assets/images/image4.jpg'),
-            _buildProfileImage(context, 'assets/images/image5.jpg'),
+            _buildProfileImage(context, ImagePath.image4),
+            _buildProfileImage(context, ImagePath.image5),
           ],
         ),
       ],
@@ -248,23 +248,22 @@ Widget _buildProfileImage(BuildContext context, String imagePath) {
   return GestureDetector(
     onTap: () {
       imageSelectionProvider.selectImage(imagePath);
-      print('선택된 이미지 경로: $imagePath');
     },
     child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      padding: EdgeInsets.symmetric(horizontal: 4.0.h),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(10.0),
+        borderRadius: BorderRadius.circular(10.0.r),
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(
               color: isSelected ? Colors.blue : Colors.transparent,
-              width: 2.0,
+              width: 2.0.w,
             ),
           ),
           child: Image.asset(
             imagePath,
-            width: 100.0,
-            height: 100.0,
+            width: 100.0.w,
+            height: 100.0.h,
             fit: BoxFit.cover,
           ),
         ),
@@ -277,39 +276,20 @@ Widget _bottom(BuildContext context) {
   return Consumer<SignUpDetailViewModel>(
     builder: (context, viewModel, child) {
       return NextButton(
-        onTap: () async {
-          final signUpDetailViewModel =
-              Provider.of<SignUpDetailViewModel>(context, listen: true);
-
-          // 닉네임과 프로필 이미지가 입력/선택되었는지 확인
-          if (viewModel.isNicknameValid &&
-              viewModel.selectedImagePath != null) {
+        onTap: () {
+          if (viewModel.isNextButtonEnabled) {
             context.goNamed('signUpDetailthree');
-          } else {
-            // 닉네임이 올바르게 입력되었는지 확인하고 에러 메시지 표시
-            signUpDetailViewModel
-                .validateNickname(viewModel.nicknameController.text);
-            // 프로필 이미지 선택 여부 확인하고 에러 메시지 표시
-            if (viewModel.selectedImagePath == null) {
-              // 프로필 이미지가 선택되지 않았을 경우 에러 메시지 표시
-              signUpDetailViewModel.setProfileImageError('프로필 이미지를 선택하세요.');
-            }
           }
         },
         text: '다음',
         height: 56.h,
         fontSize: 20.sp,
-        enable:
-            !(viewModel.isNicknameValid && viewModel.selectedImagePath != null),
-        backgroundColor:
-            viewModel.isNicknameValid && viewModel.selectedImagePath != null
-                ? UsedColor.green
-                : const Color(0xFFE6E6E6),
+        enable: viewModel.isNextButtonEnabled,
+        backgroundColor: viewModel.isNextButtonEnabled
+            ? UsedColor.green
+            : const Color(0xFFE6E6E6),
         textStyle: TextStyle(
-          color:
-              viewModel.isNicknameValid && viewModel.selectedImagePath != null
-                  ? Colors.white
-                  : Colors.black,
+          color: viewModel.isNextButtonEnabled ? Colors.white : Colors.black,
           fontSize: 18.sp,
         ),
       );

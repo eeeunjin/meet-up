@@ -15,22 +15,6 @@ class SignUpDetailViewModel with ChangeNotifier {
 
   String _selectedDistrict = '';
   String get selectedDistrict => _selectedDistrict; // 선택된 구/군
-  String? _selectedImagePath;
-
-  final bool _isNicknameValid = false;
-  bool get isNicknameValid => _isNicknameValid;
-
-  String? _errorMessages;
-  String? get errorMessages => _errorMessages;
-
-  String? get selectedImagePath => _selectedImagePath;
-
-  // page 2
-  TextEditingController nicknameController = TextEditingController();
-  String errorMessage = ''; // 닉네임 입력 에러 메시지
-  bool isNicknameDuplicated(String value) {
-    return false;
-  }
 
   void selectProvince(String province) {
     if (_selectedProvince != province) {
@@ -123,6 +107,38 @@ class SignUpDetailViewModel with ChangeNotifier {
     return List<int>.generate(lastDateOfMonth.day, (index) => index + 1);
   }
 
+  // page 2
+  TextEditingController nicknameController = TextEditingController();
+  String errorMessage = ''; // 닉네임 입력 에러 메시지
+  String? _selectedImagePath;
+  bool _isNicknameValid = false;
+
+  bool get isNicknameValid => _isNicknameValid;
+  String? get selectedImagePath => _selectedImagePath;
+
+  void validateNickname(String value) {
+    RegExp regExp = RegExp(r'^[a-zA-Z0-9가-힣]{4,12}$');
+    if (value.isEmpty) {
+      errorMessage = '4~12자의 한글, 영문 대소문자, 숫자만 사용 가능합니다.';
+      _isNicknameValid = false;
+    } else if (!regExp.hasMatch(value)) {
+      errorMessage = '4~12자의 한글, 영문 대소문자, 숫자만 사용 가능합니다.';
+      _isNicknameValid = false;
+    } else {
+      errorMessage = '사용 가능한 닉네임입니다.';
+      _isNicknameValid = true;
+    }
+    notifyListeners();
+  }
+
+  void selectImage(String imagePath) {
+    _selectedImagePath = imagePath;
+    notifyListeners();
+  }
+
+  bool get isNextButtonEnabled {
+    return isNicknameValid && selectedImagePath != null;
+  }
   // MARK : - Page 3
 
   void _selectKeyword(String keyword, List<String> targetList) {
@@ -200,30 +216,6 @@ class SignUpDetailViewModel with ChangeNotifier {
   // interested_check
   bool get areThreePurposeKeywordsSelected {
     return selectedPurposeKeywords.length == 3;
-  }
-
-  void validateNickname(String value) {
-    RegExp regExp = RegExp(r'^[a-zA-Z0-9가-힣]{4,12}$');
-    if (value.isEmpty) {
-      errorMessage = '4~12자의 한글, 영문 대소문자, 숫자만 사용 가능합니다.';
-    } else if (!regExp.hasMatch(value)) {
-      errorMessage = '4~12자의 한글, 영문 대소문자, 숫자만 사용 가능합니다.';
-    } else if (isNicknameDuplicated(value)) {
-      errorMessage = '이미 사용 중인 닉네임입니다.';
-    } else {
-      errorMessage = '사용 가능한 닉네임입니다.';
-    }
-    notifyListeners();
-  }
-
-  void selectImage(String imagePath) {
-    _selectedImagePath = imagePath;
-    notifyListeners();
-  }
-
-  void setProfileImageError(String errorMessage) {
-    _errorMessages = errorMessages;
-    notifyListeners();
   }
 }
 

@@ -641,7 +641,7 @@ class _CupertinoAddressPickerState extends State<CupertinoAddressPicker> {
             children: [
               Expanded(
                 child: SizedBox(
-                  height: 165,
+                  height: 165.h,
                   child: ListWheelScrollView(
                     itemExtent: 35.0,
                     physics: const FixedExtentScrollPhysics(),
@@ -663,7 +663,7 @@ class _CupertinoAddressPickerState extends State<CupertinoAddressPicker> {
               Expanded(
                 child: selectedCity != null
                     ? SizedBox(
-                        height: 165,
+                        height: 165.h,
                         child: ListWheelScrollView(
                           itemExtent: 35.0,
                           physics: const FixedExtentScrollPhysics(),
