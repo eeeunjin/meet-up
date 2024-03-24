@@ -3,6 +3,7 @@ import 'package:meet_up/view/login/login_main.dart';
 import 'package:meet_up/view/login/login_phone_num.dart';
 import 'package:meet_up/view/login/login_verification.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail.dart';
+import 'package:meet_up/view/sign_up/sign_up_detail_two.dart';
 import 'package:meet_up/view/sign_up/sign_up_verification.dart';
 import 'package:meet_up/view/sign_up/sign_up_phone_num.dart';
 import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
@@ -58,6 +59,15 @@ final router = GoRouter(
                   builder: (context, state) {
                     return const SignUpDetail();
                   },
+                  routes: [
+                    GoRoute(
+                      path: 'signUpDetailTwo',
+                      name: 'signUpDetailTWo',
+                      builder: (context, state) {
+                        return const SignUpDetailTwo();
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),

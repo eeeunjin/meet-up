@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/dob_date_picker_widget.dart';
+import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -29,6 +33,21 @@ class SignUpDetailContents extends StatelessWidget {
           height: 55.h,
         ),
         _affiliation(context),
+        SizedBox(
+          height: 55.h,
+        ),
+        SizedBox(
+          height: 55.h,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 25.0.w),
+          child: NextButton(
+            text: '다음',
+            onTap: () {
+              context.goNamed('signUpDetailTwo');
+            },
+          ),
+        ),
       ],
     );
   }
@@ -591,93 +610,106 @@ final Map<String, List<String>> districts = {
 };
 
 class _CupertinoAddressPickerState extends State<CupertinoAddressPicker> {
-  String? selectedCity; // 선택된 도시
-  String? selectedDistrict; // 선택된 구/군
+  String? selectedCity = '서울';
+  String? selectedDistrict = '강남구';
+
+  final FixedExtentScrollController _cityController =
+      FixedExtentScrollController();
+  final FixedExtentScrollController _districtController =
+      FixedExtentScrollController();
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:
-          const EdgeInsets.only(left: 15.0, right: 50.0, top: 0.0, bottom: 0.0),
-      child: Row(
+      padding: const EdgeInsets.only(left: 20.0, right: 60.0),
+      child: Stack(
         children: [
-          Expanded(
-            child: CupertinoScrollbar(
-              child: SizedBox(
-                height: 165,
-                child: ListWheelScrollView(
-                  itemExtent: 35.0,
-                  physics: const FixedExtentScrollPhysics(),
-                  diameterRatio: 0.5,
-                  children: widget.districts.keys.map((String city) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        color:
-                            selectedCity == city ? Colors.grey.shade200 : null,
-                        borderRadius: BorderRadius.circular(9.0),
-                      ),
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 1.0),
-                          child: Text(
-                            city,
-                            style: const TextStyle(fontSize: 24.0),
-                          ),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                  onSelectedItemChanged: (int index) {
-                    setState(() {
-                      selectedCity = widget.districts.keys.elementAt(index);
-                      selectedDistrict = null;
-                    });
-                  },
-                ),
+          Positioned(
+            top: 60.h,
+            left: 15.w,
+            child: Container(
+              width: 274.w,
+              height: 26.3.h,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF5F5F5),
+                borderRadius: BorderRadius.circular(6.58.r),
               ),
             ),
           ),
-          Expanded(
-            child: selectedCity != null
-                ? CupertinoScrollbar(
-                    child: SizedBox(
-                      height: 165,
-                      child: ListWheelScrollView(
-                        itemExtent: 35.0,
-                        physics: const FixedExtentScrollPhysics(),
-                        diameterRatio: 0.5,
-                        children: (widget.districts[selectedCity!] ?? [])
-                            .map((String district) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              color: selectedDistrict == district
-                                  ? Colors.grey.shade200
-                                  : null,
-                              borderRadius: BorderRadius.circular(9.0),
-                            ),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 1.0),
-                                child: Text(
-                                  district,
-                                  style: const TextStyle(fontSize: 24.0),
-                                ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                        onSelectedItemChanged: (int index) {
-                          setState(() {
-                            selectedDistrict =
-                                widget.districts[selectedCity!]?[index];
-                          });
-                        },
-                      ),
-                    ),
-                  )
-                : Container(), // 선택된 도시가 없을 때
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: SizedBox(
+                  height: 165,
+                  child: ListWheelScrollView(
+                    itemExtent: 35.0,
+                    physics: const FixedExtentScrollPhysics(),
+                    diameterRatio: 0.5,
+                    controller: _cityController,
+                    children: widget.districts.keys.map((String city) {
+                      final isSelectedCity = city == selectedCity;
+                      return _buildItem(city, isSelectedCity);
+                    }).toList(),
+                    onSelectedItemChanged: (int index) {
+                      setState(() {
+                        selectedCity = widget.districts.keys.elementAt(index);
+                        selectedDistrict = null;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              Expanded(
+                child: selectedCity != null
+                    ? SizedBox(
+                        height: 165,
+                        child: ListWheelScrollView(
+                          itemExtent: 35.0,
+                          physics: const FixedExtentScrollPhysics(),
+                          diameterRatio: 0.5,
+                          controller: _districtController,
+                          children: (widget.districts[selectedCity!] ?? [])
+                              .map((String district) {
+                            final isSelectedDistrict =
+                                district == selectedDistrict;
+                            return _buildItem(district, isSelectedDistrict);
+                          }).toList(),
+                          onSelectedItemChanged: (int index) {
+                            setState(() {
+                              selectedDistrict =
+                                  widget.districts[selectedCity!]?[index];
+                            });
+                          },
+                        ),
+                      )
+                    : Container(), // 선택된 도시가 없을 때
+              ),
+            ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildItem(String text, bool isSelected) {
+    final double baseFontSize = isSelected ? 20.5.sp : 19.5.sp;
+    final double scaleFactor = isSelected ? 1.15 : 1.05;
+    final Color textColor = isSelected ? Colors.black : const Color(0xFF8D8D8D);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 10.0),
+        child: Transform.scale(
+          scale: scaleFactor,
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: baseFontSize,
+              color: textColor,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
       ),
     );
   }

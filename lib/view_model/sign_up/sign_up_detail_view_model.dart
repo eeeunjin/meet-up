@@ -16,6 +16,23 @@ class SignUpDetailViewModel with ChangeNotifier {
   String _selectedDistrict = '';
   String get selectedDistrict => _selectedDistrict; // 선택된 구/군
 
+  String? _selectedImagePath;
+
+  final bool _isNicknameValid = false;
+  bool get isNicknameValid => _isNicknameValid;
+
+  String? _errorMessages;
+  String? get errorMessages => _errorMessages;
+
+  String? get selectedImagePath => _selectedImagePath;
+
+  // page 2
+  TextEditingController nicknameController = TextEditingController();
+  String errorMessage = ''; // 닉네임 입력 에러 메시지
+  bool isNicknameDuplicated(String value) {
+    return false;
+  }
+
   void selectProvince(String province) {
     if (_selectedProvince != province) {
       _selectedProvince = province;
@@ -29,9 +46,6 @@ class SignUpDetailViewModel with ChangeNotifier {
       notifyListeners();
     }
   }
-
-  final DateTime _selectedDate = DateTime.now();
-  DateTime get selectedDate => _selectedDate; // 선택 Date
 
   void selectGender(Gender gender) {
     if (_selectedGender != gender) {
@@ -108,6 +122,30 @@ class SignUpDetailViewModel with ChangeNotifier {
     DateTime lastDateOfMonth =
         DateTime(currentDate.year, currentDate.month + 1, 0);
     return List<int>.generate(lastDateOfMonth.day, (index) => index + 1);
+  }
+
+  void validateNickname(String value) {
+    RegExp regExp = RegExp(r'^[a-zA-Z0-9가-힣]{4,12}$');
+    if (value.isEmpty) {
+      errorMessage = '4~12자의 한글, 영문 대소문자, 숫자만 사용 가능합니다.';
+    } else if (!regExp.hasMatch(value)) {
+      errorMessage = '4~12자의 한글, 영문 대소문자, 숫자만 사용 가능합니다.';
+    } else if (isNicknameDuplicated(value)) {
+      errorMessage = '이미 사용 중인 닉네임입니다.';
+    } else {
+      errorMessage = '사용 가능한 닉네임입니다.';
+    }
+    notifyListeners();
+  }
+
+  void selectImage(String imagePath) {
+    _selectedImagePath = imagePath;
+    notifyListeners();
+  }
+
+  void setProfileImageError(String errorMessages) {
+    _errorMessages = errorMessages;
+    notifyListeners();
   }
 }
 
