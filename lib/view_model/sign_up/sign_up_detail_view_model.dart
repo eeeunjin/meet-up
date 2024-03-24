@@ -127,13 +127,12 @@ class SignUpDetailViewModel with ChangeNotifier {
   void validateNickname(String value) {
     RegExp regExp = RegExp(r'^[a-zA-Z0-9가-힣]{4,12}$');
     if (value.isEmpty) {
-      errorMessage = '4~12자의 한글, 영문 대소문자, 숫자만 사용 가능합니다.';
+      _errorMessage = '4~12자의 한글, 영문 대소문자, 숫자만 사용 가능합니다.';
     } else if (!regExp.hasMatch(value)) {
-      errorMessage = '4~12자의 한글, 영문 대소문자, 숫자만 사용 가능합니다.';
-    } else if (isNicknameDuplicated(value)) {
-      errorMessage = '이미 사용 중인 닉네임입니다.';
+      _errorMessage = '4~12자의 한글, 영문 대소문자, 숫자만 사용 가능합니다.';
     } else {
-      errorMessage = '사용 가능한 닉네임입니다.';
+      _isNicknameValid = true;
+      _errorMessage = null;
     }
     notifyListeners();
   }
@@ -143,8 +142,8 @@ class SignUpDetailViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void setProfileImageError(String errorMessages) {
-    _errorMessages = errorMessages;
+  void setProfileImageError(String errorMessage) {
+    _errorMessage = errorMessage;
     notifyListeners();
   }
 }
