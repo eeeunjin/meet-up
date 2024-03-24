@@ -15,7 +15,6 @@ class SignUpDetailViewModel with ChangeNotifier {
 
   String _selectedDistrict = '';
   String get selectedDistrict => _selectedDistrict; // 선택된 구/군
-
   String? _selectedImagePath;
 
   final bool _isNicknameValid = false;
@@ -124,15 +123,95 @@ class SignUpDetailViewModel with ChangeNotifier {
     return List<int>.generate(lastDateOfMonth.day, (index) => index + 1);
   }
 
+  // MARK : - Page 3
+
+  void _selectKeyword(String keyword, List<String> targetList) {
+    if (targetList.contains(keyword)) {
+      targetList.remove(keyword);
+      notifyListeners();
+    } else {
+      if (targetList.length < 3) {
+        targetList.add(keyword);
+      }
+      notifyListeners();
+    }
+  }
+
+  bool get areBothSectionsCompleted {
+    return areThreeRelationshipKeywordsSelected &&
+        areThreeLifestyleKeywordsSelected;
+  }
+
+  // relationship
+  List<String> selectedRelationshipKeywords = [];
+
+  void selectRelationshipKeyword(String keyword) {
+    _selectKeyword(keyword, selectedRelationshipKeywords);
+  }
+
+  // relationship_check
+  bool get areThreeRelationshipKeywordsSelected {
+    return selectedRelationshipKeywords.length == 3;
+  }
+
+  // lifestyle
+  List<String> selectedLifestyleKeywords = [];
+
+  void selectLifestyleKeyword(String keyword) {
+    _selectKeyword(keyword, selectedLifestyleKeywords);
+  }
+
+  // lifestyle_check
+  bool get areThreeLifestyleKeywordsSelected {
+    return selectedLifestyleKeywords.length == 3;
+  }
+
+  // MARK : - Page 4
+
+  bool get isSectionsCompletedPageFour {
+    return areThreeInterestedKeywordsSelected;
+  }
+
+  // interested
+  List<String> selectedInterestedKeywords = [];
+
+  void selectInterestedKeyword(String keyword) {
+    _selectKeyword(keyword, selectedInterestedKeywords);
+  }
+
+  // interested_check
+  bool get areThreeInterestedKeywordsSelected {
+    return selectedInterestedKeywords.length == 3;
+  }
+
+  // MARK : - Page 5
+
+  bool get isSectionsCompletedPageFive {
+    return areThreePurposeKeywordsSelected;
+  }
+
+  // interested
+  List<String> selectedPurposeKeywords = [];
+
+  void selectPurposeKeyword(String keyword) {
+    _selectKeyword(keyword, selectedPurposeKeywords);
+  }
+
+  // interested_check
+  bool get areThreePurposeKeywordsSelected {
+    return selectedPurposeKeywords.length == 3;
+  }
+
   void validateNickname(String value) {
     RegExp regExp = RegExp(r'^[a-zA-Z0-9가-힣]{4,12}$');
     if (value.isEmpty) {
-      _errorMessage = '4~12자의 한글, 영문 대소문자, 숫자만 사용 가능합니다.';
+      errorMessage = '4~12자의 한글, 영문 대소문자, 숫자만 사용 가능합니다.';
     } else if (!regExp.hasMatch(value)) {
-      _errorMessage = '4~12자의 한글, 영문 대소문자, 숫자만 사용 가능합니다.';
+      errorMessage = '4~12자의 한글, 영문 대소문자, 숫자만 사용 가능합니다.';
+    } else if (isNicknameDuplicated(value)) {
+      errorMessage = '이미 사용 중인 닉네임입니다.';
     } else {
-      _isNicknameValid = true;
-      _errorMessage = null;
+      errorMessage = '사용 가능한 닉네임입니다.';
     }
     notifyListeners();
   }
@@ -143,7 +222,7 @@ class SignUpDetailViewModel with ChangeNotifier {
   }
 
   void setProfileImageError(String errorMessage) {
-    _errorMessage = errorMessage;
+    _errorMessages = errorMessages;
     notifyListeners();
   }
 }

@@ -3,6 +3,9 @@ import 'package:meet_up/view/login/login_main.dart';
 import 'package:meet_up/view/login/login_phone_num.dart';
 import 'package:meet_up/view/login/login_verification.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail.dart';
+import 'package:meet_up/view/sign_up/sign_up_detail_five.dart';
+import 'package:meet_up/view/sign_up/sign_up_detail_four.dart';
+import 'package:meet_up/view/sign_up/sign_up_detail_three.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail_two.dart';
 import 'package:meet_up/view/sign_up/sign_up_verification.dart';
 import 'package:meet_up/view/sign_up/sign_up_phone_num.dart';
@@ -61,11 +64,38 @@ final router = GoRouter(
                   },
                   routes: [
                     GoRoute(
-                      path: 'signUpDetailTwo',
-                      name: 'signUpDetailTWo',
+                      path: 'signUpDetailtwo',
+                      name: 'signUpDetailtwo',
                       builder: (context, state) {
                         return const SignUpDetailTwo();
                       },
+                      routes: [
+                        GoRoute(
+                          path: 'signUpDetailthree',
+                          name: 'signUpDetailthree',
+                          builder: (context, state) {
+                            return const SignUpDetailThree();
+                          },
+                          routes: [
+                            GoRoute(
+                              path: 'signUpDetailfour',
+                              name: 'signUpDetailfour',
+                              builder: (context, state) {
+                                return const SignUpDetailFour();
+                              },
+                              routes: [
+                                GoRoute(
+                                  path: 'signUpDetailfive',
+                                  name: 'signUpDetailfive',
+                                  builder: (context, state) {
+                                    return const SignUpDetailFive();
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ],
                 ),
