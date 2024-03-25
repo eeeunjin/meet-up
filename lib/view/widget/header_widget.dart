@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:meet_up/util/color.dart';
+import 'package:meet_up/util/font.dart';
 
 Widget header({required Widget? back, required title}) {
   return Row(
@@ -10,7 +12,7 @@ Widget header({required Widget? back, required title}) {
         child: Center(
           child: Text(
             title,
-            style: TextStyle(fontSize: 20.sp),
+            style: AppTextStyles.SU_R_20.copyWith(color: UsedColor.text_3),
             textAlign: TextAlign.center,
           ),
         ),

@@ -5,6 +5,7 @@ import 'package:meet_up/router.dart';
 import 'package:meet_up/service/remote/firebase_options.dart';
 import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
 import 'package:meet_up/view_model/login/login_verification_view_model.dart';
+import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_verification_view_model.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,12 @@ void main() async {
           create: (context) => SignUpVerificationViewModel()),
       ChangeNotifierProvider(create: (context) => LoginVerificationViewModel()),
       ChangeNotifierProvider(create: (context) => LoginPhoneNumViewModel()),
+      ChangeNotifierProvider(
+          create: (context) => SignUpDetailViewModel(
+                init: DateTime.now().subtract(const Duration(days: 365 * 20)),
+                start: DateTime.now(),
+                end: DateTime.now(),
+              )),
     ],
     child: const MyApp(),
   ));
