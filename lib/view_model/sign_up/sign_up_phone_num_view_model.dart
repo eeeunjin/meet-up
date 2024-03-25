@@ -31,6 +31,10 @@ class SignUpPhoneNumViewModel with ChangeNotifier {
   String _uid = '';
   String get uid => _uid;
 
+  // 기존 유저의 userInfo
+  UserModel? _userInfo;
+  UserModel get userInfo => _userInfo!;
+
   //
   // MARK: - Methods
   //
@@ -49,6 +53,12 @@ class SignUpPhoneNumViewModel with ChangeNotifier {
   /// _codeSent set 함수
   set codeSent(bool value) {
     _codeSent = value;
+    notifyListeners();
+  }
+
+  /// _userInfo set 함수
+  set userInfo(UserModel value) {
+    _userInfo = value;
     notifyListeners();
   }
 
@@ -143,9 +153,9 @@ class SignUpPhoneNumViewModel with ChangeNotifier {
   }
 
   /// Firebase cloudStore에 유저 정보 읽어오는 함수
-  Future<UserModel> readUserDocument({required String uid}) async {
+  Future<void> readUserDocument({required String uid}) async {
     // 유저 정보 전달
-    return await _userRepository.readUserDocument(uid: uid);
+    userInfo = await _userRepository.readUserDocument(uid: uid);
   }
 
   void resetState() {

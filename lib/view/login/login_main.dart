@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
+import 'package:meet_up/view/sign_up/sign_up_detail_six.dart';
 
 class LoginMain extends StatelessWidget {
   const LoginMain({super.key});
@@ -24,9 +25,24 @@ class LoginMain extends StatelessWidget {
                 size: 190.h,
               ),
             ),
+            SizedBox(height: 220.h - 80.h // testView,
+                ),
+            // <----- test view ------> // 80.h
+            GestureDetector(
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return PolicyAccept(context);
+                    },
+                  );
+                },
+                child: _detailSettingButton()),
             SizedBox(
-              height: 210.h,
+              // 여백
+              height: 10.h,
             ),
+            // <----- test view ------> //
             GestureDetector(
                 onTap: () {
                   context.goNamed('loginPhoneNum');
@@ -51,15 +67,6 @@ class LoginMain extends StatelessWidget {
                   context.goNamed('signUpPhoneNum');
                 },
                 child: _signUpButton()),
-            SizedBox(
-              // 여백
-              height: 10.h,
-            ),
-            GestureDetector(
-                onTap: () {
-                  context.goNamed('signUpDetail');
-                },
-                child: _detailSettingButton()),
           ],
         ),
       ),

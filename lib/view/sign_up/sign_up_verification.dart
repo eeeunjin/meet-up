@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_verification_view_model.dart';
@@ -46,6 +45,7 @@ class SignUpVerification extends StatelessWidget {
               padding: EdgeInsets.only(bottom: bottomPadding),
               child: _bottom(context),
             ),
+            Offstage()
           ],
         ),
       ),
@@ -163,9 +163,11 @@ class SignUpVerification extends StatelessWidget {
               signUpPhoneNumViewModel.resendCode(context);
             } else {
               showAlert(
-                  context: context,
-                  title: "재전송 제한",
-                  message: "3분이 지난 후에 재전송이 가능합니다.");
+                null,
+                context: context,
+                title: "재전송 제한",
+                message: "3분이 지난 후에 재전송이 가능합니다.",
+              );
               return;
             }
           },
@@ -232,55 +234,116 @@ class SignUpVerification extends StatelessWidget {
 
   // bottom
   void showAlert(
-      {required BuildContext context,
-      required String title,
-      required String message}) {
-    showCupertinoDialog(
-      context: context,
-      builder: (context) {
-        return Stack(
-          children: [
-            Container(
-              color: Colors.black.withOpacity(0.46),
-            ),
-            CupertinoAlertDialog(
-              title: Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 17.5,
-                  fontWeight: FontWeight.w600,
-                ),
+    Function()? onTap, {
+    required BuildContext context,
+    required String title,
+    required String message,
+  }) {
+    if (onTap == null) {
+      showCupertinoDialog(
+        context: context,
+        builder: (context) {
+          return Stack(
+            children: [
+              Container(
+                color: Colors.black.withOpacity(0.46),
               ),
-              content: Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Text(
-                  message,
+              CupertinoAlertDialog(
+                title: Text(
+                  title,
                   style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w100,
+                    fontSize: 17.5,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
+                content: Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text(
+                    message,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w100,
+                    ),
+                  ),
+                ),
+                actions: [
+                  CupertinoDialogAction(
+                    isDefaultAction: true,
+                    child: const Text(
+                      "확인",
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
               ),
-              actions: [
-                CupertinoDialogAction(
-                  isDefaultAction: true,
-                  child: const Text(
-                    "확인",
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black),
+            ],
+          );
+        },
+      );
+    } else {
+      showCupertinoDialog(
+        context: context,
+        builder: (context) {
+          return Stack(
+            children: [
+              Container(
+                color: Colors.black.withOpacity(0.46),
+              ),
+              CupertinoAlertDialog(
+                title: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 17.5,
+                    fontWeight: FontWeight.w600,
                   ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
                 ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
+                content: Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text(
+                    message,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w100,
+                    ),
+                  ),
+                ),
+                actions: [
+                  CupertinoDialogAction(
+                      isDefaultAction: true,
+                      onPressed: onTap,
+                      child: const Text(
+                        "확인",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                      )),
+                  CupertinoDialogAction(
+                    isDefaultAction: true,
+                    child: const Text(
+                      "취소",
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   Widget _confirmButton(BuildContext context) {
@@ -293,6 +356,7 @@ class SignUpVerification extends StatelessWidget {
         if (verificationViewModel.remainingTime == 0) {
           // 인증 만료 alert 띄우기
           showAlert(
+            null,
             context: context,
             title: "인증 시간 만료",
             message: "인증 번호를 재전송 해주세요",
@@ -307,6 +371,7 @@ class SignUpVerification extends StatelessWidget {
 
           // DB에 유저 정보를 저장 (UID + 휴대전화 번호)
           if (credential.user != null) {
+            // 새로운 유저인 경우
             if (credential.additionalUserInfo!.isNewUser) {
               debugPrint("새로운 유저 입니다.");
               // 유저 정보 생성
@@ -314,25 +379,43 @@ class SignUpVerification extends StatelessWidget {
                   uid: credential.user!.uid);
 
               // 프로필 생성 화면으로 이동
-              context.goNamed('signUpDetail');
-            } else {
+              if (context.mounted) {
+                context.goNamed('signUpDetail');
+              }
+            }
+
+            // 새로운 유저가 아닌 경우
+            else {
               debugPrint("새로운 유저가 아닙니다.");
               // uid 저장
               phoneNumViewModel.getUID(credential.user!.uid);
 
-              UserModel userInfo = await phoneNumViewModel.readUserDocument(
+              // 기존 정보 DB에서 불러오기
+              await phoneNumViewModel.readUserDocument(
                   uid: phoneNumViewModel.uid);
+
               // 기본 프로필 정보가 전부 있는 경우
-              if (userInfo.gender != "") {
+              if (phoneNumViewModel.userInfo.gender != "") {
                 debugPrint("기존 프로필 정보가 있어서 로그인으로 연결");
-                // 메인 홈 화면으로 이동
-                // 구현 필요
+                if (context.mounted) {
+                  showAlert(
+                    () {
+                      // 메인 홈 화면으로 이동 (로그인)
+                      context.goNamed('signUpDetail');
+                    },
+                    context: context,
+                    title: "가입된 계정이 있습니다.",
+                    message: "로그인 하시겠습니까?",
+                  );
+                }
               }
               // 기본 프로필 정보 중 전화 번호만 있는 경우
               else {
                 debugPrint("기존 프로필 정보가 없기 때문에 프로필 설정부터.");
                 // 프로필 설정 페이지로 이동
-                context.goNamed('signUpDetail');
+                if (context.mounted) {
+                  context.goNamed('signUpDetail');
+                }
               }
             }
           } else {
@@ -340,11 +423,14 @@ class SignUpVerification extends StatelessWidget {
           }
         } catch (e) {
           // smsCode가 동일하지 않은 경우 alert 출력
-          showAlert(
-            context: context,
-            title: "인증번호가 일치하지 않습니다.",
-            message: "인증번호를 다시 입력해 주십시오.",
-          );
+          if (context.mounted) {
+            showAlert(
+              null,
+              context: context,
+              title: "인증번호가 일치하지 않습니다.",
+              message: "인증번호를 다시 입력해 주십시오.",
+            );
+          }
         }
       },
       child: Container(

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
 import 'package:meet_up/view_model/login/login_verification_view_model.dart';
@@ -373,35 +372,53 @@ class LoginVerification extends StatelessWidget {
               debugPrint(
                   "로그인이기 때문에 회원 가입을 진행할 것인지 물은 후, user 정보를 DB에 전달 이후, 화면 이동");
 
-              showAlert(
-                () async {
-                  // 유저 정보 생성
-                  await phoneNumViewModel.createUserDocument(
-                      uid: credential.user!.uid);
-                  context.goNamed('signUpDetail');
-                },
-                context: context,
-                title: "가입된 회원 정보가 없습니다.",
-                message: "회원가입 하시겠습니까?",
-              );
+              if (context.mounted) {
+                showAlert(
+                  () async {
+                    // 유저 정보 생성
+                    await phoneNumViewModel.createUserDocument(
+                        uid: credential.user!.uid);
+                    if (context.mounted) {
+                      context.goNamed('signUpDetail');
+                    }
+                  },
+                  context: context,
+                  title: "가입된 회원 정보가 없습니다.",
+                  message: "회원가입 하시겠습니까?",
+                );
+              }
             } else {
               debugPrint("새로운 유저가 아닙니다.");
               // uid 저장
               phoneNumViewModel.getUID(credential.user!.uid);
 
-              UserModel userInfo = await phoneNumViewModel.readUserDocument(
+              // 기존 유저의 정보 불러오기
+              await phoneNumViewModel.readUserDocument(
                   uid: phoneNumViewModel.uid);
+
               // 기본 프로필 정보가 전부 있는 경우
-              if (userInfo.gender != "") {
+              if (phoneNumViewModel.userInfo.gender != "") {
                 debugPrint("기존 프로필 정보가 있어서 메인 홈 화면으로 연결");
                 // 메인 홈 화면으로 이동
                 // 구현 필요
               }
               // 기본 프로필 정보 중 전화 번호만 있는 경우
               else {
-                debugPrint("회원 가입이 필요하다는 팝업을 띄워주고 프로필 설정 페이지로 이동시키기");
-                // 프로필 설정 페이지로 이동
-                context.goNamed('signUpDetail');
+                if (context.mounted) {
+                  showAlert(
+                    () async {
+                      // 유저 정보 생성
+                      await phoneNumViewModel.createUserDocument(
+                          uid: credential.user!.uid);
+                      if (context.mounted) {
+                        context.goNamed('signUpDetail');
+                      }
+                    },
+                    context: context,
+                    title: "가입된 회원 정보가 없습니다.",
+                    message: "회원가입 하시겠습니까?",
+                  );
+                }
               }
             }
           } else {
@@ -409,12 +426,14 @@ class LoginVerification extends StatelessWidget {
           }
         } catch (e) {
           // smsCode가 동일하지 않은 경우 alert 출력
-          showAlert(
-            null,
-            context: context,
-            title: "인증번호가 일치하지 않습니다.",
-            message: "인증번호를 다시 입력해 주십시오.",
-          );
+          if (context.mounted) {
+            showAlert(
+              null,
+              context: context,
+              title: "인증번호가 일치하지 않습니다.",
+              message: "인증번호를 다시 입력해 주십시오.",
+            );
+          }
         }
       },
       child: Container(
