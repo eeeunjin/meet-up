@@ -17,7 +17,6 @@ void main() async {
       ChangeNotifierProvider(create: (context) => SignUpPhoneNumViewModel()),
       ChangeNotifierProvider(
           create: (context) => SignUpVerificationViewModel()),
-      ChangeNotifierProvider(create: (context) => SignUpDetailViewModel()),
       ChangeNotifierProvider(create: (context) => LoginVerificationViewModel()),
       ChangeNotifierProvider(create: (context) => LoginPhoneNumViewModel()),
       ChangeNotifierProvider(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SignUpDetailViewModel with ChangeNotifier {
+  // MARK : - Page 1
+  
   Gender _selectedGender = Gender.none;
   Gender get selectedGender => _selectedGender; // 선택된 성별
 
@@ -107,7 +109,7 @@ class SignUpDetailViewModel with ChangeNotifier {
     return List<int>.generate(lastDateOfMonth.day, (index) => index + 1);
   }
 
-  // page 2
+  // MARK : - Page 2
   TextEditingController nicknameController = TextEditingController();
   String errorMessage = ''; // 닉네임 입력 에러 메시지
   String? _selectedImagePath;
