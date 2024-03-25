@@ -45,7 +45,7 @@ class SignUpVerification extends StatelessWidget {
               padding: EdgeInsets.only(bottom: bottomPadding),
               child: _bottom(context),
             ),
-            Offstage()
+            const Offstage()
           ],
         ),
       ),
@@ -380,7 +380,7 @@ class SignUpVerification extends StatelessWidget {
 
               // 프로필 생성 화면으로 이동
               if (context.mounted) {
-                context.goNamed('signUpDetail');
+                context.goNamed('signUpDetailOne');
               }
             }
 
@@ -401,7 +401,7 @@ class SignUpVerification extends StatelessWidget {
                   showAlert(
                     () {
                       // 메인 홈 화면으로 이동 (로그인)
-                      context.goNamed('signUpDetail');
+                      context.goNamed('signUpDetailOne');
                     },
                     context: context,
                     title: "가입된 계정이 있습니다.",
@@ -414,7 +414,7 @@ class SignUpVerification extends StatelessWidget {
                 debugPrint("기존 프로필 정보가 없기 때문에 프로필 설정부터.");
                 // 프로필 설정 페이지로 이동
                 if (context.mounted) {
-                  context.goNamed('signUpDetail');
+                  context.goNamed('signUpDetailOne');
                 }
               }
             }

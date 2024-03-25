@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/dob_date_picker_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
+import 'package:meet_up/view/widget/province_district_picker_widget.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:provider/provider.dart';
 
-class SignUpDetailContents extends StatelessWidget {
-  const SignUpDetailContents({Key? key}) : super(key: key);
+class SignUpDetailOneContents extends StatelessWidget {
+  const SignUpDetailOneContents({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final viewModel =
-        Provider.of<SignUpDetailViewModel>(context, listen: false);
+    final viewModel = Provider.of<SignUpDetailViewModel>(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(
+          height: 47.h,
+        ),
         _gender(context),
         SizedBox(
-          height: 55.h,
+          height: 46.h,
         ),
         _dateOfBirth(context, viewModel),
         SizedBox(
@@ -34,20 +34,31 @@ class SignUpDetailContents extends StatelessWidget {
         ),
         _affiliation(context),
         SizedBox(
-          height: 55.h,
-        ),
-        SizedBox(
-          height: 55.h,
+          height: 88.h,
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 25.0.w),
           child: NextButton(
+            width: 328.w,
+            height: 56.h,
             text: '다음',
             onTap: () {
               context.goNamed('signUpDetailTwo');
             },
+            enable: viewModel.selectedAllComponents,
+            backgroundColor: viewModel.selectedAllComponents
+                ? Colors.green
+                : const Color(0xFFD9D9D9),
+            textStyle: TextStyle(
+              color:
+                  viewModel.selectedAllComponents ? Colors.white : Colors.black,
+              fontSize: 18.sp,
+            ),
           ),
         ),
+        SizedBox(
+          height: 25.h,
+        )
       ],
     );
   }
@@ -145,7 +156,7 @@ class SignUpDetailContents extends StatelessWidget {
   Widget _dateOfBirth(BuildContext context, SignUpDetailViewModel viewModel) {
     final DateTime startDate = DateTime(1950);
     final DateTime endDate = DateTime(2050);
-    final DateTime initialDate = viewModel.currentDate;
+    final DateTime initialDate = viewModel.selectedDate;
 
     void onDateChange(DateTime newDate) {
       viewModel.updateDate(
@@ -168,7 +179,7 @@ class SignUpDetailContents extends StatelessWidget {
           ),
           SizedBox(height: 24.h),
           // Mark - datepicker
-          CustomDatePicker(
+          DobDatePicker(
             start: startDate,
             end: endDate,
             init: initialDate,
@@ -190,7 +201,7 @@ class SignUpDetailContents extends StatelessWidget {
             style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 10.h),
-          CupertinoAddressPicker(districts: districts),
+          const ProvinceDisctrictPicker(),
         ],
       ),
     );
@@ -372,344 +383,6 @@ class SignUpDetailContents extends StatelessWidget {
             },
           ),
         ],
-      ),
-    );
-  }
-}
-
-class CupertinoAddressPicker extends StatefulWidget {
-  final Map<String, List<String>> districts;
-
-  const CupertinoAddressPicker({Key? key, required this.districts})
-      : super(key: key);
-
-  @override
-  _CupertinoAddressPickerState createState() => _CupertinoAddressPickerState();
-}
-
-final Map<String, List<String>> districts = {
-  '서울': [
-    '강남구',
-    '강동구',
-    '강북구',
-    '강서구',
-    '관악구',
-    '광진구',
-    '구로구',
-    '금천구',
-    '노원구',
-    '도봉구',
-    '동대문구',
-    '동작구',
-    '마포구',
-    '서대문구',
-    '서초구',
-    '성동구',
-    '성북구',
-    '송파구',
-    '양천구',
-    '영등포구',
-    '용산구',
-    '은평구',
-    '종로구',
-    '중구',
-    '중랑구'
-  ],
-  '부산': [
-    '강서구',
-    '금정구',
-    '기장군',
-    '남구',
-    '동구',
-    '동래구',
-    '부산진구',
-    '북구',
-    '사상구',
-    '사하구',
-    '서구',
-    '수영구',
-    '영도구',
-    '연제구',
-    '중구',
-    '해운대구'
-  ],
-  '대구': ['남구', '달서구', '달성군', '동구', '북구', '서구', '수성구', '중구'],
-  '인천': ['강화군', '계양구', '미추홀구', '남동구', '동구', '부평구', '서구', '연수구', '옹진군', '중구'],
-  '광주': ['광산구', '남구', '동구', '북구', '서구'],
-  '대전': ['대덕구', '동구', '서구', '유성구', '중구'],
-  '울산': ['남구', '동구', '북구', '울주군', '중구'],
-  '세종': ['세종시'],
-  '경기도': [
-    '가평군',
-    '고양시',
-    '과천시',
-    '광명시',
-    '광주시',
-    '구리시',
-    '군포시',
-    '김포시',
-    '남양주시',
-    '동두천시',
-    '부천시',
-    '성남시',
-    '수원시',
-    '시흥시',
-    '안산시',
-    '안성시',
-    '안양시',
-    '양주시',
-    '양평군',
-    '여주시',
-    '연천군',
-    '오산시',
-    '용인시',
-    '의왕시',
-    '의정부시',
-    '이천시',
-    '파주시',
-    '평택시',
-    '포천시',
-    '하남시',
-    '화성시'
-  ],
-  '강원도': [
-    '강릉시',
-    '고성군',
-    '동해시',
-    '삼척시',
-    '속초시',
-    '양구군',
-    '양양군',
-    '영월군',
-    '원주시',
-    '인제군',
-    '정선군',
-    '철원군',
-    '춘천시',
-    '태백시',
-    '평창군',
-    '홍천군',
-    '화천군',
-    '횡성군'
-  ],
-  '충청북도': [
-    '괴산군',
-    '단양군',
-    '보은군',
-    '영동군',
-    '옥천군',
-    '음성군',
-    '제천시',
-    '증평군',
-    '진천군',
-    '청주시'
-  ],
-  '충청남도': [
-    '계룡시',
-    '공주시',
-    '금산군',
-    '논산시',
-    '당진시',
-    '보령시',
-    '부여군',
-    '서산시',
-    '서천군',
-    '아산시',
-    '예산군',
-    '천안시',
-    '청양군',
-    '태안군',
-    '홍성군'
-  ],
-  '전라북도': [
-    '고창군',
-    '군산시',
-    '김제시',
-    '남원시',
-    '무주군',
-    '부안군',
-    '순창군',
-    '완주군',
-    '익산시',
-    '임실군',
-    '장수군',
-    '전주시',
-    '정읍시',
-    '진안군'
-  ],
-  '전라남도': [
-    '강진군',
-    '고흥군',
-    '곡성군',
-    '광양시',
-    '구례군',
-    '나주시',
-    '담양군',
-    '목포시',
-    '무안군',
-    '보성군',
-    '순천시',
-    '신안군',
-    '여수시',
-    '영광군',
-    '영암군',
-    '완도군',
-    '장성군',
-    '장흥군',
-    '진도군',
-    '함평군',
-    '해남군',
-    '화순군'
-  ],
-  '경상북도': [
-    '경산시',
-    '경주시',
-    '고령군',
-    '구미시',
-    '군위군',
-    '김천시',
-    '문경시',
-    '봉화군',
-    '상주시',
-    '성주군',
-    '안동시',
-    '영덕군',
-    '영양군',
-    '영주시',
-    '영천시',
-    '예천군',
-    '울릉군',
-    '울진군',
-    '의성군',
-    '청도군',
-    '청송군',
-    '칠곡군',
-    '포항시'
-  ],
-  '경상남도': [
-    '거제시',
-    '거창군',
-    '고성군',
-    '김해시',
-    '남해군',
-    '밀양시',
-    '사천시',
-    '산청군',
-    '양산시',
-    '의령군',
-    '진주시',
-    '창녕군',
-    '창원시',
-    '통영시',
-    '하동군',
-    '함안군',
-    '함양군',
-    '합천군'
-  ],
-  '제주': ['서귀포시', '제주시'],
-};
-
-class _CupertinoAddressPickerState extends State<CupertinoAddressPicker> {
-  String? selectedCity = '서울';
-  String? selectedDistrict = '강남구';
-
-  final FixedExtentScrollController _cityController =
-      FixedExtentScrollController();
-  final FixedExtentScrollController _districtController =
-      FixedExtentScrollController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 20.0, right: 60.0),
-      child: Stack(
-        children: [
-          Positioned(
-            top: 60.h,
-            left: 15.w,
-            child: Container(
-              width: 274.w,
-              height: 26.3.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFFF5F5F5),
-                borderRadius: BorderRadius.circular(6.58.r),
-              ),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: SizedBox(
-                  height: 165.h,
-                  child: ListWheelScrollView(
-                    itemExtent: 35.0,
-                    physics: const FixedExtentScrollPhysics(),
-                    diameterRatio: 0.5,
-                    controller: _cityController,
-                    children: widget.districts.keys.map((String city) {
-                      final isSelectedCity = city == selectedCity;
-                      return _buildItem(city, isSelectedCity);
-                    }).toList(),
-                    onSelectedItemChanged: (int index) {
-                      setState(() {
-                        selectedCity = widget.districts.keys.elementAt(index);
-                        selectedDistrict = null;
-                      });
-                    },
-                  ),
-                ),
-              ),
-              Expanded(
-                child: selectedCity != null
-                    ? SizedBox(
-                        height: 165.h,
-                        child: ListWheelScrollView(
-                          itemExtent: 35.0,
-                          physics: const FixedExtentScrollPhysics(),
-                          diameterRatio: 0.5,
-                          controller: _districtController,
-                          children: (widget.districts[selectedCity!] ?? [])
-                              .map((String district) {
-                            final isSelectedDistrict =
-                                district == selectedDistrict;
-                            return _buildItem(district, isSelectedDistrict);
-                          }).toList(),
-                          onSelectedItemChanged: (int index) {
-                            setState(() {
-                              selectedDistrict =
-                                  widget.districts[selectedCity!]?[index];
-                            });
-                          },
-                        ),
-                      )
-                    : Container(), // 선택된 도시가 없을 때
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildItem(String text, bool isSelected) {
-    final double baseFontSize = isSelected ? 20.5.sp : 19.5.sp;
-    final double scaleFactor = isSelected ? 1.15 : 1.05;
-    final Color textColor = isSelected ? Colors.black : const Color(0xFF8D8D8D);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 10.0),
-        child: Transform.scale(
-          scale: scaleFactor,
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: baseFontSize,
-              color: textColor,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ),
       ),
     );
   }

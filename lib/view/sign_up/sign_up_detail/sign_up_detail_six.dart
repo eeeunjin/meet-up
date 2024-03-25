@@ -5,7 +5,7 @@ import 'package:meet_up/model/policy_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:provider/provider.dart';
 
-Widget PolicyAccept(BuildContext context) {
+Widget SignUpDetailSix(BuildContext context) {
   final viewModel = Provider.of<SignUpDetailViewModel>(context);
   return Container(
     decoration: const BoxDecoration(
@@ -157,6 +157,7 @@ Widget PolicyAccept(BuildContext context) {
               if (viewModel.isAcceptionValid) {
                 // DB에 User 정보 전달하고 User data 넘기기
                 debugPrint("동의하고 시작하기");
+                viewModel.printAllInfo();
                 context.pop();
               } else {
                 debugPrint("필수 항목이 체크되지 않아 시작 불가");

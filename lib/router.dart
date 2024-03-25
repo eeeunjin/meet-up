@@ -2,11 +2,11 @@ import 'package:go_router/go_router.dart';
 import 'package:meet_up/view/login/login_main.dart';
 import 'package:meet_up/view/login/login_phone_num.dart';
 import 'package:meet_up/view/login/login_verification.dart';
-import 'package:meet_up/view/sign_up/sign_up_detail.dart';
-import 'package:meet_up/view/sign_up/sign_up_detail_five.dart';
-import 'package:meet_up/view/sign_up/sign_up_detail_four.dart';
-import 'package:meet_up/view/sign_up/sign_up_detail_three.dart';
-import 'package:meet_up/view/sign_up/sign_up_detail_two.dart';
+import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_one.dart';
+import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_five.dart';
+import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_four.dart';
+import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_three.dart';
+import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_two.dart';
 import 'package:meet_up/view/sign_up/sign_up_verification.dart';
 import 'package:meet_up/view/sign_up/sign_up_phone_num.dart';
 
@@ -54,36 +54,36 @@ final router = GoRouter(
               },
               routes: [
                 GoRoute(
-                  path: 'signUpDetail',
-                  name: 'signUpDetail',
+                  path: 'signUpDetailOne',
+                  name: 'signUpDetailOne',
                   builder: (context, state) {
-                    return const SignUpDetail();
+                    return const SignUpDetailOne();
                   },
                   routes: [
                     GoRoute(
-                      path: 'signUpDetailtwo',
-                      name: 'signUpDetailtwo',
+                      path: 'signUpDetailTwo',
+                      name: 'signUpDetailTwo',
                       builder: (context, state) {
                         return const SignUpDetailTwo();
                       },
                       routes: [
                         GoRoute(
-                          path: 'signUpDetailthree',
-                          name: 'signUpDetailthree',
+                          path: 'signUpDetailThree',
+                          name: 'signUpDetailThree',
                           builder: (context, state) {
                             return const SignUpDetailThree();
                           },
                           routes: [
                             GoRoute(
-                              path: 'signUpDetailfour',
-                              name: 'signUpDetailfour',
+                              path: 'signUpDetailFour',
+                              name: 'signUpDetailFour',
                               builder: (context, state) {
                                 return const SignUpDetailFour();
                               },
                               routes: [
                                 GoRoute(
-                                  path: 'signUpDetailfive',
-                                  name: 'signUpDetailfive',
+                                  path: 'signUpDetailFive',
+                                  name: 'signUpDetailFive',
                                   builder: (context, state) {
                                     return const SignUpDetailFive();
                                   },

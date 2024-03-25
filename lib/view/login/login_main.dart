@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
-import 'package:meet_up/view/sign_up/sign_up_detail_six.dart';
 
 class LoginMain extends StatelessWidget {
   const LoginMain({super.key});
@@ -30,12 +29,7 @@ class LoginMain extends StatelessWidget {
             // <----- test view ------> // 80.h
             GestureDetector(
                 onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (context) {
-                      return PolicyAccept(context);
-                    },
-                  );
+                  context.goNamed('signUpDetailTwo');
                 },
                 child: _detailSettingButton()),
             SizedBox(
@@ -71,11 +65,6 @@ class LoginMain extends StatelessWidget {
               // 여백
               height: 5.h,
             ),
-            GestureDetector(
-                onTap: () {
-                  context.goNamed('signUpDetailtwo');
-                },
-                child: _detailSettingButton()),
           ],
         ),
       ),

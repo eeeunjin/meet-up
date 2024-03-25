@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -36,7 +35,7 @@ class SignUpDetailTwo extends StatelessWidget {
             _main(context),
             const Spacer(),
             Padding(
-              padding: EdgeInsets.only(left: 32.w, right: 33.w, bottom: 56.h),
+              padding: EdgeInsets.only(left: 32.w, right: 33.w, bottom: 25.h),
               child: _bottom(context),
             ),
           ],
@@ -72,7 +71,7 @@ Widget _progressBar() {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            '3',
+            '2',
             style: TextStyle(
                 color: const Color(0xFF170F64),
                 fontWeight: FontWeight.bold,
@@ -91,16 +90,16 @@ Widget _progressBar() {
 Widget _main(BuildContext context) {
   return Column(
     children: [
-      SizedBox(height: 48.h),
+      SizedBox(height: 47.h),
       _nickname(context),
-      SizedBox(height: 55.h),
+      SizedBox(height: 60.h),
       _profile(context),
     ],
   );
 }
 
 Widget _nickname(BuildContext context) {
-  Provider.of<SignUpDetailViewModel>(context, listen: true);
+  final viewModel = Provider.of<SignUpDetailViewModel>(context, listen: true);
   return Padding(
     padding: EdgeInsets.only(
       left: 25.0.w,
@@ -113,95 +112,79 @@ Widget _nickname(BuildContext context) {
           "닉네임을 입력해주세요.",
           style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: 5.h),
+        SizedBox(height: 8.h),
         Text(
           "프로필에 표시되는 이름으로 언제든 변경할 수 있습니다.",
           style: TextStyle(fontSize: 12.sp),
         ),
-        SizedBox(height: 20.h),
+        SizedBox(height: 27.h),
 
         // 닉네임 입력 창
-        Padding(
-          padding: EdgeInsets.only(top: 10.h, right: 1.w),
-          child: Row(
-            children: [
-              Expanded(
-                child: Container(
-                  width: 400.w,
-                  height: 20.h,
-                  decoration: const BoxDecoration(
-                    border: Border(bottom: BorderSide(color: Colors.grey)),
-                  ),
-                  child: Consumer<SignUpDetailViewModel>(
-                    builder: (context, model, child) {
-                      return TextField(
-                        //maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                        controller: model.nicknameController,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                        ),
-                        onChanged: (value) {
-                          model.validateNickname(value);
-                        },
-                        // maxLength: 12,
-                        // 최대 글자 수 강제 여부
-                      );
-                    },
-                  ),
-                ),
+        Stack(children: [
+          Container(
+            width: 345.w,
+            height: 20.h,
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(color: Colors.grey)),
+            ),
+            child: TextField(
+              //maxLengthEnforcement: MaxLengthEnforcement.enforced,
+              controller: viewModel.nicknameController,
+              decoration: const InputDecoration(
+                border: InputBorder.none,
               ),
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () {
-                      // 닉네임 입력창의 내용 지우기
-                      Provider.of<SignUpDetailViewModel>(context, listen: false)
-                          .nicknameController
-                          .clear();
-                    },
-                  ),
-                ],
-              ),
-            ],
+              onChanged: (value) {
+                viewModel.validateNickname(value);
+              },
+              // 최대 글자 수 강제 여부
+            ),
           ),
+          Positioned(
+            bottom: 5.0.h,
+            right: 0.0.h,
+            child: GestureDetector(
+              onTap: () {
+                viewModel.nicknameController.clear();
+                viewModel.validateNickname(viewModel.nicknameController.text);
+              },
+              child: Icon(
+                Icons.clear,
+                size: 15.h,
+              ),
+            ),
+          ),
+        ]),
+        SizedBox(
+          height: 10.h,
         ),
-
-        SizedBox(height: 5.h),
-        Consumer<SignUpDetailViewModel>(
-          builder: (context, model, child) {
-            return Row(
-              children: [
-                model.errorMessage.isNotEmpty
-                    ? Padding(
-                        padding: EdgeInsets.only(top: 1.0.h),
-                        child: Text(
-                          model.errorMessage,
-                          style: TextStyle(
-                            color: model.errorMessage.contains('사용 가능한 닉네임입니다.')
-                                ? Colors.green
-                                : Colors.red,
-                            fontSize: 12.sp,
-                          ),
-                        ),
-                      )
-                    : Text(
-                        '4~12자의 한글, 영문 대소문자, 숫자만 사용 가능합니다.',
-                        style: TextStyle(fontSize: 12.sp),
-                      ),
-                Expanded(
-                  child: Text(
-                    '${model.nicknameController.text.length}/12',
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            viewModel.errorMessage.isNotEmpty
+                ? Text(
+                    viewModel.errorMessage,
                     style: TextStyle(
+                      color: viewModel.errorMessage.contains('사용 가능한 닉네임입니다.')
+                          ? Colors.green
+                          : Colors.red,
                       fontSize: 12.sp,
-                      color: Colors.black,
                     ),
-                    textAlign: TextAlign.right,
+                  )
+                : Text(
+                    '4~12자의 한글, 영문 대소문자, 숫자만 사용 가능합니다.',
+                    style: TextStyle(fontSize: 12.sp),
                   ),
-                ),
-              ],
-            );
-          },
+            const Spacer(),
+            Text(
+              '${viewModel.nicknameController.text.length}/12',
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: Colors.black,
+              ),
+              textAlign: TextAlign.right,
+            ),
+          ],
         ),
       ],
     ),
@@ -210,34 +193,35 @@ Widget _nickname(BuildContext context) {
 
 Widget _profile(BuildContext context) {
   Provider.of<SignUpDetailViewModel>(context, listen: true);
-  return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 25.0.h),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisAlignment: MainAxisAlignment.start,
+    children: [
+      Padding(
+        padding: EdgeInsets.only(left: 25.0.h),
+        child: Text(
           "프로필을 선택해주세요.",
           style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: 40.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildProfileImage(context, ImagePath.image1),
-            _buildProfileImage(context, ImagePath.image2),
-            _buildProfileImage(context, ImagePath.image3),
-          ],
-        ),
-        SizedBox(height: 25.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildProfileImage(context, ImagePath.image4),
-            _buildProfileImage(context, ImagePath.image5),
-          ],
-        ),
-      ],
-    ),
+      ),
+      SizedBox(height: 35.h),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _buildProfileImage(context, ImagePath.image1),
+          _buildProfileImage(context, ImagePath.image2),
+          _buildProfileImage(context, ImagePath.image3),
+        ],
+      ),
+      SizedBox(height: 16.h),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _buildProfileImage(context, ImagePath.image4),
+          _buildProfileImage(context, ImagePath.image5),
+        ],
+      ),
+    ],
   );
 }
 
@@ -250,16 +234,20 @@ Widget _buildProfileImage(BuildContext context, String imagePath) {
       imageSelectionProvider.selectImage(imagePath);
     },
     child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 4.0.h),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10.0.r),
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: isSelected ? Colors.blue : Colors.transparent,
-              width: 2.0.w,
-            ),
+      padding: EdgeInsets.only(
+        right: 0.0.h,
+        left: 12.0.h,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: isSelected ? Colors.blue : Colors.transparent,
+            width: 1.0.w,
           ),
+          borderRadius: BorderRadius.circular(50.0.r),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(50.0.r),
           child: Image.asset(
             imagePath,
             width: 100.0.w,
@@ -278,7 +266,7 @@ Widget _bottom(BuildContext context) {
       return NextButton(
         onTap: () {
           if (viewModel.isNextButtonEnabled) {
-            context.goNamed('signUpDetailthree');
+            context.goNamed('signUpDetailThree');
           }
         },
         text: '다음',

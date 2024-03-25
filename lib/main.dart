@@ -12,22 +12,26 @@ import 'package:provider/provider.dart';
 
 void main() async {
   await initializeFirebase();
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (context) => SignUpPhoneNumViewModel()),
-      ChangeNotifierProvider(
-          create: (context) => SignUpVerificationViewModel()),
-      ChangeNotifierProvider(create: (context) => LoginVerificationViewModel()),
-      ChangeNotifierProvider(create: (context) => LoginPhoneNumViewModel()),
-      ChangeNotifierProvider(
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => SignUpPhoneNumViewModel()),
+        ChangeNotifierProvider(
+            create: (context) => SignUpVerificationViewModel()),
+        ChangeNotifierProvider(
+            create: (context) => LoginVerificationViewModel()),
+        ChangeNotifierProvider(create: (context) => LoginPhoneNumViewModel()),
+        ChangeNotifierProvider(
           create: (context) => SignUpDetailViewModel(
-                init: DateTime.now().subtract(const Duration(days: 365 * 20)),
-                start: DateTime.now(),
-                end: DateTime.now(),
-              )),
-    ],
-    child: const MyApp(),
-  ));
+            init: DateTime.now().subtract(const Duration(days: 365 * 19)),
+            start: DateTime.now().subtract(const Duration(days: 365 * 60)),
+            end: DateTime.now().subtract(const Duration(days: 365 * 19)),
+          ),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 Future<void> initializeFirebase() async {

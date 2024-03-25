@@ -1,22 +1,38 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SignUpDetailViewModel with ChangeNotifier {
   // MARK : - Page 1
-  
+
   Gender _selectedGender = Gender.none;
   Gender get selectedGender => _selectedGender; // 선택된 성별
 
-  final DateTime _selectedDate = DateTime.now();
-  DateTime get selectedDate => _selectedDate; // 선택된 날짜
+  DateTime _selectedDate;
+  DateTime get selectedDate => _selectedDate; // 선택된 생일 날짜
 
   Affiliation _selectedAffiliation = Affiliation.none;
   Affiliation get selectedAffiliation => _selectedAffiliation; // 선택된 소속
 
-  String _selectedProvince = '';
+  String _selectedProvince = '서울';
   String get selectedProvince => _selectedProvince; // 선택된 도/시
+  FixedExtentScrollController provinceScrollController =
+      FixedExtentScrollController(initialItem: 0);
 
-  String _selectedDistrict = '';
+  String _selectedDistrict = '강남구';
   String get selectedDistrict => _selectedDistrict; // 선택된 구/군
+  FixedExtentScrollController districtScrollController =
+      FixedExtentScrollController(initialItem: 0);
+
+  bool get selectedAllComponents =>
+      (selectedGender != Gender.none) &&
+      (selectedAffiliation != Affiliation.none);
+
+  void selectGender(Gender gender) {
+    if (_selectedGender != gender) {
+      _selectedGender = gender;
+      notifyListeners();
+    }
+  }
 
   void selectProvince(String province) {
     if (_selectedProvince != province) {
@@ -32,37 +48,6 @@ class SignUpDetailViewModel with ChangeNotifier {
     }
   }
 
-  void selectGender(Gender gender) {
-    if (_selectedGender != gender) {
-      _selectedGender = gender;
-      notifyListeners();
-    }
-  }
-
-  //datepicker
-  DateTime _currentDate;
-  final DateTime _start;
-  final DateTime _end;
-
-  SignUpDetailViewModel({
-    required DateTime init,
-    required DateTime start,
-    required DateTime end,
-  })  : _currentDate = init,
-        _start = start,
-        _end = end;
-
-  DateTime get currentDate => _currentDate;
-  DateTime get start => _start;
-  DateTime get end => _end;
-
-  void updateDate(DateTime date) {
-    if (_currentDate != date) {
-      _currentDate = date;
-      notifyListeners();
-    }
-  }
-
   void selectAffiliation(Affiliation affiliation) {
     if (_selectedAffiliation != affiliation) {
       _selectedAffiliation = affiliation;
@@ -70,26 +55,48 @@ class SignUpDetailViewModel with ChangeNotifier {
     }
   }
 
+  //datepicker
+  final DateTime _start;
+  final DateTime _end;
+
+  SignUpDetailViewModel({
+    required DateTime init,
+    required DateTime start,
+    required DateTime end,
+  })  : _selectedDate = init,
+        _start = start,
+        _end = end;
+
+  DateTime get start => _start;
+  DateTime get end => _end;
+
+  void updateDate(DateTime date) {
+    if (_selectedDate != date) {
+      _selectedDate = date;
+      notifyListeners();
+    }
+  }
+
   // 연도 업데이트
   void updateYear(int year) {
-    if (_currentDate.year != year) {
-      _currentDate = DateTime(year, _currentDate.month, _currentDate.day);
+    if (_selectedDate.year != year) {
+      _selectedDate = DateTime(year, _selectedDate.month, _selectedDate.day);
       notifyListeners();
     }
   }
 
   // 월 업데이트
   void updateMonth(int month) {
-    if (_currentDate.month != month) {
-      _currentDate = DateTime(_currentDate.year, month, _currentDate.day);
+    if (_selectedDate.month != month) {
+      _selectedDate = DateTime(_selectedDate.year, month, _selectedDate.day);
       notifyListeners();
     }
   }
 
   // 일 업데이트
   void updateDay(int day) {
-    if (_currentDate.day != day) {
-      _currentDate = DateTime(_currentDate.year, _currentDate.month, day);
+    if (_selectedDate.day != day) {
+      _selectedDate = DateTime(_selectedDate.year, _selectedDate.month, day);
       notifyListeners();
     }
   }
@@ -105,7 +112,7 @@ class SignUpDetailViewModel with ChangeNotifier {
 
   List<int> getDayList() {
     DateTime lastDateOfMonth =
-        DateTime(currentDate.year, currentDate.month + 1, 0);
+        DateTime(selectedDate.year, selectedDate.month + 1, 0);
     return List<int>.generate(lastDateOfMonth.day, (index) => index + 1);
   }
 
@@ -217,7 +224,8 @@ class SignUpDetailViewModel with ChangeNotifier {
 
   // interested_check
   bool get areThreePurposeKeywordsSelected {
-    return selectedPurposeKeywords.length == 3;
+    return selectedPurposeKeywords.length <= 3 &&
+        selectedPurposeKeywords.isNotEmpty;
   }
 
   // MARK: - page 6
@@ -232,7 +240,7 @@ class SignUpDetailViewModel with ChangeNotifier {
     false, // 선택
     false, // 전체 동의
   ];
-  
+
   bool isAcceptionValid = false;
 
   void toggleAcceptPolicies({required int index}) {
@@ -268,6 +276,20 @@ class SignUpDetailViewModel with ChangeNotifier {
       isAcceptionValid = false;
     }
     notifyListeners();
+  }
+
+  void printAllInfo() {
+    debugPrint("$selectedGender");
+    debugPrint("$selectedDate");
+    debugPrint(selectedProvince);
+    debugPrint(selectedDistrict);
+    debugPrint("$selectedAffiliation");
+    debugPrint(nicknameController.text);
+    debugPrint("$_selectedImagePath");
+    debugPrint("$selectedRelationshipKeywords");
+    debugPrint("$selectedLifestyleKeywords");
+    debugPrint("$selectedInterestedKeywords");
+    debugPrint("$selectedPurposeKeywords");
   }
 }
 

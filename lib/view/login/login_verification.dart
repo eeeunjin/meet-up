@@ -379,7 +379,7 @@ class LoginVerification extends StatelessWidget {
                     await phoneNumViewModel.createUserDocument(
                         uid: credential.user!.uid);
                     if (context.mounted) {
-                      context.goNamed('signUpDetail');
+                      context.goNamed('signUpDetailOne');
                     }
                   },
                   context: context,
@@ -411,7 +411,7 @@ class LoginVerification extends StatelessWidget {
                       await phoneNumViewModel.createUserDocument(
                           uid: credential.user!.uid);
                       if (context.mounted) {
-                        context.goNamed('signUpDetail');
+                        context.goNamed('signUpDetailOne');
                       }
                     },
                     context: context,

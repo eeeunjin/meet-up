@@ -34,7 +34,7 @@ class SignUpDetailThree extends StatelessWidget {
             _main(context),
             const Spacer(),
             Padding(
-              padding: EdgeInsets.only(left: 32.w, right: 33.w, bottom: 56.h),
+              padding: EdgeInsets.only(left: 32.w, right: 33.w, bottom: 25.h),
               child: _bottom(context),
             ),
           ],
@@ -222,7 +222,7 @@ class SignUpDetailThree extends StatelessWidget {
       return NextButton(
         onTap: () async {
           if (!viewModel.areBothSectionsCompleted) return;
-          context.goNamed('signUpDetailfour');
+          context.goNamed('signUpDetailFour');
         },
         text: '다음',
         height: 56.h,
