@@ -20,6 +20,12 @@ void main() async {
       ChangeNotifierProvider(create: (context) => SignUpDetailViewModel()),
       ChangeNotifierProvider(create: (context) => LoginVerificationViewModel()),
       ChangeNotifierProvider(create: (context) => LoginPhoneNumViewModel()),
+      ChangeNotifierProvider(
+          create: (context) => SignUpDetailViewModel(
+                init: DateTime.now().subtract(const Duration(days: 365 * 20)),
+                start: DateTime.now(),
+                end: DateTime.now(),
+              )),
     ],
     child: const MyApp(),
   ));

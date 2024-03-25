@@ -10,7 +10,6 @@ class NextButton extends StatefulWidget {
   final bool whiteButton;
   final TextStyle? textStyle;
   final bool enable;
-
   const NextButton(
       {super.key,
       required this.onTap,
@@ -22,14 +21,12 @@ class NextButton extends StatefulWidget {
       this.textStyle,
       this.enable = true,
       Color? backgroundColor});
-
   @override
   State<NextButton> createState() => _NextButtonState();
 }
 
 class _NextButtonState extends State<NextButton> {
   bool isLoading = false;
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -78,8 +75,8 @@ class _NextButtonState extends State<NextButton> {
             style: widget.textStyle ??
                 TextStyle(
                   color: Colors.white,
-                  fontSize: widget.fontSize ?? 15.sp,
-                  // fontFamily: '',
+                  fontSize: widget.fontSize ?? 20.sp,
+                  fontFamily: 'Pretendard',
                 ),
           ),
         ),

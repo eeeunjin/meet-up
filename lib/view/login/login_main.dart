@@ -49,7 +49,7 @@ class LoginMain extends StatelessWidget {
                 },
                 child: _loginButton()),
             SizedBox(
-              height: 12.h,
+              height: 1.h,
             ),
             Text(
               "또는",
@@ -60,13 +60,22 @@ class LoginMain extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 12.h,
+              height: 1.h,
             ),
             GestureDetector(
                 onTap: () {
                   context.goNamed('signUpPhoneNum');
                 },
                 child: _signUpButton()),
+            SizedBox(
+              // 여백
+              height: 5.h,
+            ),
+            GestureDetector(
+                onTap: () {
+                  context.goNamed('signUpDetailtwo');
+                },
+                child: _detailSettingButton()),
           ],
         ),
       ),

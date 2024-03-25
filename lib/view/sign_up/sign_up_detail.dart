@@ -12,10 +12,20 @@ class SignUpDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final DateTime startDate = DateTime(1950);
+    final DateTime endDate = DateTime(2050);
+    final DateTime initialDate = DateTime.now(); // 초기화 날짜
+
     return ChangeNotifierProvider<SignUpDetailViewModel>(
-      create: (_) => SignUpDetailViewModel(),
+      create: (_) => SignUpDetailViewModel(
+        init: initialDate,
+        start: startDate,
+        end: endDate,
+      ),
       child: Scaffold(
-        body: SafeArea(child: _body(context)),
+        body: SafeArea(
+          child: _body(context),
+        ),
       ),
     );
   }
@@ -38,7 +48,7 @@ class SignUpDetail extends StatelessWidget {
         SizedBox(
           height: 47.h,
         ),
-        _main(),
+        _main(context),
       ],
     );
   }
@@ -95,7 +105,7 @@ class SignUpDetail extends StatelessWidget {
     );
   }
 
-  Widget _main() {
+  Widget _main(BuildContext context) {
     return const Expanded(
       child: SingleChildScrollView(
         child: SignUpDetailContents(),
