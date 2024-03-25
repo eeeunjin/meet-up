@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/repository/user_repository.dart';
 
 class LoginPhoneNumViewModel with ChangeNotifier {
@@ -24,6 +26,14 @@ class LoginPhoneNumViewModel with ChangeNotifier {
   String _verificationId = '';
   String get verificationId => _verificationId;
 
+  // 가입한 유저의 uid string
+  String _uid = '';
+  String get uid => _uid;
+
+  // 가입한 유저의 userInfo
+  UserModel? _userInfo;
+  UserModel get userInfo => _userInfo!;
+
   //
   // MARK: - Methods
   //
@@ -43,6 +53,17 @@ class LoginPhoneNumViewModel with ChangeNotifier {
   set codeSent(bool value) {
     _codeSent = value;
     notifyListeners();
+  }
+
+  // _userInfo set 함수
+  set userInfo(UserModel value) {
+    _userInfo = value;
+    notifyListeners();
+  }
+
+  // 코드 재전송 함수
+  void resendCode(BuildContext context) {
+    signInWithPhoneNumber(context);
   }
 
   /// _verificationID set 함수
@@ -72,7 +93,7 @@ class LoginPhoneNumViewModel with ChangeNotifier {
         codeSent: (String verificationId, int? forceResendingToken) {
           _verificationId = verificationId;
           _codeSent = true;
-          context.goNamed('LoginVerification');
+          context.goNamed('loginVerification');
           resetState();
         },
         codeAutoRetrievalTimeout: (String verificationId) {
@@ -93,8 +114,50 @@ class LoginPhoneNumViewModel with ChangeNotifier {
     return await _userRepository.signInWithCredential(credential);
   }
 
+  // 로그인 또는 회원가입 시, uid를 저장하는 함수
+  void getUID(String uid) {
+    this.uid = uid;
+  }
+
+  // _uid set 함수
+  set uid(String value) {
+    _uid = value;
+  }
+
+  /// Firebase cloudStore에 유저 정보 저장하는 함수 (UID + 휴대전화 번호)
+  Future<bool> createUserDocument({required String uid}) async {
+    // 유저의 uid 정보 저장
+    _uid = uid;
+
+    // 새로운 유저 모델
+    UserModel newUser = UserModel(
+      nickname: "",
+      profileIcon: -1,
+      birthday: Timestamp.now(),
+      gender: "",
+      region: {"-1": "-1"},
+      job: "",
+      personalityRelationship: [],
+      personalitySelf: [],
+      interest: [],
+      purpose: [],
+      phoneNumber: controller.text,
+    );
+
+    // Cloud Firestore에 유저 정보 저장
+    return await _userRepository.createUserDocument(
+      data: newUser,
+      uid: uid,
+    );
+  }
+
+  /// Firebase cloudStore에 유저 정보 읽어오는 함수
+  Future<void> readUserDocument({required String uid}) async {
+    // 유저 정보 전달
+    userInfo = await _userRepository.readUserDocument(uid: uid);
+  }
+
   void resetState() {
-    controller.text = '';
     _isTextFieldFocused = false;
     _isPhoneNumberValid = false;
     _codeSent = false;

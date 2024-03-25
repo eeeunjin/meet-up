@@ -24,9 +24,19 @@ class LoginMain extends StatelessWidget {
                 size: 190.h,
               ),
             ),
+            SizedBox(height: 220.h - 80.h // testView,
+                ),
+            // <----- test view ------> // 80.h
+            GestureDetector(
+                onTap: () {
+                  context.goNamed('signUpDetailTwo');
+                },
+                child: _detailSettingButton()),
             SizedBox(
-              height: 210.h,
+              // 여백
+              height: 10.h,
             ),
+            // <----- test view ------> //
             GestureDetector(
                 onTap: () {
                   context.goNamed('loginPhoneNum');
@@ -55,11 +65,6 @@ class LoginMain extends StatelessWidget {
               // 여백
               height: 5.h,
             ),
-            GestureDetector(
-                onTap: () {
-                  context.goNamed('signUpDetailtwo');
-                },
-                child: _detailSettingButton()),
           ],
         ),
       ),

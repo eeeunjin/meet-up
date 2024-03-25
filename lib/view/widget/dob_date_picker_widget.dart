@@ -1,16 +1,15 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:provider/provider.dart';
 
-class CustomDatePicker extends StatefulWidget {
+class DobDatePicker extends StatefulWidget {
   final Function(DateTime dt) onChangeListener;
   final DateTime start;
   final DateTime end;
   final DateTime init;
 
-  const CustomDatePicker(
+  const DobDatePicker(
       {super.key,
       required this.start,
       required this.end,
@@ -19,11 +18,11 @@ class CustomDatePicker extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _CustomDatePickerState();
+    return _DobDatePickerState();
   }
 }
 
-class _CustomDatePickerState extends State<CustomDatePicker> {
+class _DobDatePickerState extends State<DobDatePicker> {
   @override
   void initState() {
     super.initState();
@@ -41,8 +40,8 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
           return Stack(
             children: [
               Positioned(
-                  top: (113.h - 26.3.h) / 2,
-                  left: (360.w - 274.w) / 2,
+                  top: (113.h - 26.3.h) / 2 + 3.h,
+                  left: 35.w,
                   child: Container(
                     width: 274.w,
                     height: 26.3.h,
@@ -55,12 +54,12 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
                 children: [
                   IntrinsicWidth(
                     child: Container(
-                      width: 80.w,
+                      width: 90.w,
                       alignment: Alignment.centerRight,
                       child: _CustomPicker(
                         items: viewModel.getYearList(),
                         initialItem:
-                            viewModel.currentDate.year - viewModel.start.year,
+                            viewModel.selectedDate.year - viewModel.start.year,
                         onChanged: (int v) {
                           viewModel.updateYear(viewModel.start.year + v);
                         },
@@ -70,10 +69,10 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
                   ),
                   SizedBox(width: 30.w),
                   SizedBox(
-                    width: 55.w,
+                    width: 50.w,
                     child: _CustomPicker(
                       items: viewModel.getMonthList(),
-                      initialItem: viewModel.currentDate.month - 1,
+                      initialItem: viewModel.selectedDate.month - 1,
                       onChanged: (int v) {
                         viewModel.updateMonth(v + 1);
                       },
@@ -83,11 +82,11 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
                   SizedBox(width: 30.w),
                   IntrinsicWidth(
                     child: Container(
-                      width: 80.w,
+                      width: 90.w,
                       alignment: Alignment.centerLeft,
                       child: _CustomPicker(
                         items: viewModel.getDayList(),
-                        initialItem: viewModel.currentDate.day - 1,
+                        initialItem: viewModel.selectedDate.day - 1,
                         onChanged: (int v) {
                           viewModel.updateDay(v + 1);
                         },
@@ -128,7 +127,7 @@ class _CustomPicker extends StatelessWidget {
       height: 113.h,
       child: ListWheelScrollView.useDelegate(
         controller: scrollController,
-        itemExtent: 25.h,
+        itemExtent: 28.h,
         // 필요에 따라 magnification을 조정하여 중앙 항목의 크기를 키움
         // magnification: 1.1,
         // 휠의 곡률을 변경하려면 diameterRatio 조정
@@ -156,18 +155,18 @@ class _CustomPicker extends StatelessWidget {
     double fontSize;
 
     Color textColor = Colors.black;
-    // AutoSizeText 사용, presetFontSizes로 고정 폰트 크기 목록 제공
+    // AutoSizeText 사용
     if (distanceFromCenter == 0) {
       scale = 1.0;
-      fontSize = 24.11.sp;
+      // fontSize = 24.11.sp;
       textColor = Colors.black;
     } else if (distanceFromCenter == 1) {
       scale = 24.h / baseHeight;
-      fontSize = 19.sp;
+      // fontSize = 19.sp;
       textColor = const Color(0xFF8D8D8D);
     } else {
       scale = 18.h / baseHeight;
-      fontSize = 17.sp;
+      // fontSize = 17.sp;
       textColor = const Color(0xFFDFDFDF);
     }
 
@@ -175,11 +174,11 @@ class _CustomPicker extends StatelessWidget {
       alignment: Alignment.center,
       child: Transform.scale(
         scale: scale,
-        child: AutoSizeText(
+        child: Text(
           '${items[index]}$type',
           maxLines: 1,
           style: TextStyle(
-            fontSize: fontSize,
+            fontSize: 24.11.sp,
             color: textColor,
             fontFamily: 'Pretendard',
             fontWeight: FontWeight.bold,

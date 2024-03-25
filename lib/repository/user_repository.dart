@@ -23,17 +23,17 @@ class UserRepository {
   }
 
   /// 유저 정보를 생성하는 함수
-  Future<bool> createUserDocument({required UserModel data}) async {
+  Future<bool> createUserDocument({required UserModel data, required String uid}) async {
     return await _firebaseService.createDocument(
-      docRef: _firebaseRefs.colRefUser.doc(),
+      docRef: _firebaseRefs.colRefUser.doc(uid),
       data: data,
     );
   }
 
   /// 유저 정보를 읽어오는 함수
-  Future<UserModel> readUserDocument({required String docID}) async {
+  Future<UserModel> readUserDocument({required String uid}) async {
     return await _firebaseService.readDocument<UserModel>(
-        docRef: _firebaseRefs.colRefUser.doc(docID));
+        docRef: _firebaseRefs.colRefUser.doc(uid));
   }
 
   /// 유저 정보를 업데이트 하는 함수
