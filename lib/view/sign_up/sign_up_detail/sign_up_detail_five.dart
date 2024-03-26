@@ -64,7 +64,8 @@ class SignUpDetailFive extends StatelessWidget {
   Widget _progressBar() {
     return Column(
       children: [
-        Image.asset(ImagePath.signUpProgressBar_5),
+        Image.asset(ImagePath.signUpProgressBar_5,
+            width: 393.w, fit: BoxFit.cover),
         SizedBox(height: 17.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

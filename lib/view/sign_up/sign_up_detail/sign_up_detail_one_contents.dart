@@ -198,7 +198,7 @@ class SignUpDetailOneContents extends StatelessWidget {
             style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 10.h),
-          const ProvinceDisctrictPicker(),
+          const ProvinceDistrictPicker(),
         ],
       ),
     );
