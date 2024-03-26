@@ -164,7 +164,7 @@ class SignUpDetailOneContents extends StatelessWidget {
     }
 
     return Padding(
-      padding: EdgeInsets.only(left: 25.0.w),
+      padding: EdgeInsets.only(left: 25.0.w, right: 25.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -180,9 +180,6 @@ class SignUpDetailOneContents extends StatelessWidget {
           SizedBox(height: 24.h),
           // Mark - datepicker
           DobDatePicker(
-            start: startDate,
-            end: endDate,
-            init: initialDate,
             onChangeListener: onDateChange,
           ),
         ],

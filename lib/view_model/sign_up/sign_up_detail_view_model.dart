@@ -70,6 +70,13 @@ class SignUpDetailViewModel with ChangeNotifier {
   DateTime get start => _start;
   DateTime get end => _end;
 
+  set selectedDate(DateTime newValue) {
+    if (_selectedDate != newValue) {
+      _selectedDate = newValue;
+      notifyListeners();
+    }
+  }
+
   void updateDate(DateTime date) {
     if (_selectedDate != date) {
       _selectedDate = date;
