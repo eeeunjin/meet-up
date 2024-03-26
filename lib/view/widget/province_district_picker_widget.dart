@@ -4,23 +4,25 @@ import 'package:meet_up/model/province_district_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:provider/provider.dart';
 
-class ProvinceDisctrictPicker extends StatelessWidget {
-  const ProvinceDisctrictPicker({Key? key}) : super(key: key);
+class ProvinceDistrictPicker extends StatelessWidget {
+  const ProvinceDistrictPicker({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<SignUpDetailViewModel>(context);
+    final items = ProvinceDistrict.districts.keys.toList();
 
     return Container(
-      padding: const EdgeInsets.only(left: 20.0, right: 60.0),
+      padding:
+          const EdgeInsets.only(left: 30.0, right: 75.0), // Adjust as needed
       child: Stack(
         children: [
           Positioned(
-            top: 65.h,
-            left: 15.w,
+            top: 44.h,
+            left: 13.w,
             child: Container(
-              width: 274.w,
-              height: 26.3.h,
+              width: 255.w,
+              height: 30.h,
               decoration: BoxDecoration(
                 color: const Color(0xFFF5F5F5),
                 borderRadius: BorderRadius.circular(6.58.r),
@@ -32,17 +34,18 @@ class ProvinceDisctrictPicker extends StatelessWidget {
             children: [
               Expanded(
                 child: SizedBox(
-                  height: 165.h,
+                  height: 113.h,
                   child: ListWheelScrollView(
-                    itemExtent: 35.0,
+                    itemExtent: 36.5,
                     physics: const FixedExtentScrollPhysics(),
-                    diameterRatio: 0.5,
+                    // diameterRatio: Render,
                     controller: viewModel.provinceScrollController,
-                    children:
-                        ProvinceDistrict.districts.keys.map((String province) {
-                      final isSelectedselectedProvince =
+                    children: items.map((String province) {
+                      final isSelectedProvince =
                           (province == viewModel.selectedProvince);
-                      return _buildItem(province, isSelectedselectedProvince);
+
+                      return _buildItem(province, isSelectedProvince,
+                          viewModel.selectedProvinceIndex, items);
                     }).toList(),
                     onSelectedItemChanged: (int index) {
                       viewModel.selectProvince(
@@ -56,11 +59,11 @@ class ProvinceDisctrictPicker extends StatelessWidget {
               ),
               Expanded(
                 child: SizedBox(
-                  height: 165.h,
+                  height: 113.h,
                   child: ListWheelScrollView(
-                    itemExtent: 35.0,
+                    itemExtent: 36.5,
                     physics: const FixedExtentScrollPhysics(),
-                    diameterRatio: 0.5,
+                    // diameterRatio: 0.7,
                     controller: viewModel.districtScrollController,
                     children: (ProvinceDistrict
                                 .districts[viewModel.selectedProvince] ??
@@ -68,7 +71,12 @@ class ProvinceDisctrictPicker extends StatelessWidget {
                         .map((String district) {
                       final isSelectedDistrict =
                           (district == viewModel.selectedDistrict);
-                      return _buildItem(district, isSelectedDistrict);
+                      return _buildItem(
+                          district,
+                          isSelectedDistrict,
+                          viewModel.selectedDistrictIndex,
+                          ProvinceDistrict
+                              .districts[viewModel.selectedProvince]!);
                     }).toList(),
                     onSelectedItemChanged: (int index) {
                       viewModel.selectDistrict(ProvinceDistrict
@@ -84,20 +92,35 @@ class ProvinceDisctrictPicker extends StatelessWidget {
     );
   }
 
-  Widget _buildItem(String text, bool isSelected) {
-    final double baseFontSize = isSelected ? 20.5.sp : 19.5.sp;
-    final double scaleFactor = isSelected ? 1.15 : 1.05;
-    final Color textColor = isSelected ? Colors.black : const Color(0xFF8D8D8D);
+  Widget _buildItem(
+      String text, bool isSelected, int selectedIndex, List<String> items) {
+    int distanceFromSelected = (selectedIndex - items.indexOf(text)).abs();
+
+    double scale;
+    Color textColor;
+
+    if (distanceFromSelected == 0) {
+      scale = 1.0;
+      textColor = Colors.black;
+    } else if (distanceFromSelected == 1) {
+      scale = 0.97;
+      textColor = const Color(0xFF8D8D8D);
+    } else {
+      scale = 0.94;
+      textColor = const Color(0xFFDFDFDF);
+    }
+
     return Center(
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 10.0),
+        padding: const EdgeInsets.only(bottom: 5.0),
         child: Transform.scale(
-          scale: scaleFactor,
+          scale: scale,
           child: Text(
             text,
             style: TextStyle(
-              fontSize: baseFontSize,
+              fontSize: isSelected ? 24.sp : 19.sp,
               color: textColor,
+              fontFamily: 'Pretendard-M',
             ),
             textAlign: TextAlign.center,
           ),

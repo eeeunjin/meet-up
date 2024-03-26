@@ -3,35 +3,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:provider/provider.dart';
 
-class DobDatePicker extends StatefulWidget {
+class DobDatePicker extends StatelessWidget {
   final Function(DateTime dt) onChangeListener;
-  final DateTime start;
-  final DateTime end;
-  final DateTime init;
 
-  const DobDatePicker(
-      {super.key,
-      required this.start,
-      required this.end,
-      required this.init,
-      required this.onChangeListener});
-
-  @override
-  State<StatefulWidget> createState() {
-    return _DobDatePickerState();
-  }
-}
-
-class _DobDatePickerState extends State<DobDatePicker> {
-  @override
-  void initState() {
-    super.initState();
-  }
+  const DobDatePicker({
+    super.key,
+    required this.onChangeListener,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final viewModel =
-        Provider.of<SignUpDetailViewModel>(context, listen: false);
+    final viewModel = Provider.of<SignUpDetailViewModel>(context);
 
     return ChangeNotifierProvider<SignUpDetailViewModel>.value(
       value: viewModel,
@@ -41,7 +23,7 @@ class _DobDatePickerState extends State<DobDatePicker> {
             children: [
               Positioned(
                   top: (113.h - 26.3.h) / 2 + 3.h,
-                  left: 35.w,
+                  left: 25.w,
                   child: Container(
                     width: 274.w,
                     height: 26.3.h,
@@ -127,13 +109,7 @@ class _CustomPicker extends StatelessWidget {
       height: 113.h,
       child: ListWheelScrollView.useDelegate(
         controller: scrollController,
-        itemExtent: 28.h,
-        // 필요에 따라 magnification을 조정하여 중앙 항목의 크기를 키움
-        // magnification: 1.1,
-        // 휠의 곡률을 변경하려면 diameterRatio 조정
-        // diameterRatio: 500.0,
-        // 시각적 효과를 위해 perspective 조정
-        // perspective: 0.002,
+        itemExtent: 29.h,
         physics: const FixedExtentScrollPhysics(),
         onSelectedItemChanged: onChanged,
         childDelegate: ListWheelChildBuilderDelegate(
@@ -152,21 +128,17 @@ class _CustomPicker extends StatelessWidget {
 
     double scale = 1.0;
     final double baseHeight = 29.h;
-    double fontSize;
 
     Color textColor = Colors.black;
     // AutoSizeText 사용
     if (distanceFromCenter == 0) {
       scale = 1.0;
-      // fontSize = 24.11.sp;
       textColor = Colors.black;
     } else if (distanceFromCenter == 1) {
       scale = 24.h / baseHeight;
-      // fontSize = 19.sp;
       textColor = const Color(0xFF8D8D8D);
     } else {
       scale = 18.h / baseHeight;
-      // fontSize = 17.sp;
       textColor = const Color(0xFFDFDFDF);
     }
 
@@ -178,10 +150,9 @@ class _CustomPicker extends StatelessWidget {
           '${items[index]}$type',
           maxLines: 1,
           style: TextStyle(
-            fontSize: 24.11.sp,
+            fontSize: 24.sp,
             color: textColor,
-            fontFamily: 'Pretendard',
-            fontWeight: FontWeight.bold,
+            fontFamily: 'Pretendard-M',
           ),
           textAlign: TextAlign.center,
         ),

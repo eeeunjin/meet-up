@@ -65,7 +65,8 @@ Widget _back(BuildContext context) {
 Widget _progressBar() {
   return Column(
     children: [
-      Image.asset(ImagePath.signUpProgressBar_2),
+      Image.asset(ImagePath.signUpProgressBar_2,
+          width: 393.w, fit: BoxFit.cover),
       SizedBox(height: 17.h),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,

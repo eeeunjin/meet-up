@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meet_up/model/province_district_model.dart';
 import 'package:meet_up/repository/user_repository.dart';
 
 class SignUpDetailViewModel with ChangeNotifier {
@@ -15,15 +16,15 @@ class SignUpDetailViewModel with ChangeNotifier {
   Affiliation _selectedAffiliation = Affiliation.none;
   Affiliation get selectedAffiliation => _selectedAffiliation; // 선택된 소속
 
-  String _selectedProvince = '서울';
-  String get selectedProvince => _selectedProvince; // 선택된 도/시
-  FixedExtentScrollController provinceScrollController =
-      FixedExtentScrollController(initialItem: 0);
+  // String _selectedProvince = '서울';
+  // String get selectedProvince => _selectedProvince; // 선택된 도/시
+  // FixedExtentScrollController provinceScrollController =
+  //     FixedExtentScrollController(initialItem: 0);
 
-  String _selectedDistrict = '강남구';
-  String get selectedDistrict => _selectedDistrict; // 선택된 구/군
-  FixedExtentScrollController districtScrollController =
-      FixedExtentScrollController(initialItem: 0);
+  // String _selectedDistrict = '강남구';
+  // String get selectedDistrict => _selectedDistrict; // 선택된 구/군
+  // FixedExtentScrollController districtScrollController =
+  //     FixedExtentScrollController(initialItem: 0);
 
   bool get selectedAllComponents =>
       (selectedGender != Gender.none) &&
@@ -35,6 +36,35 @@ class SignUpDetailViewModel with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // void selectProvince(String province) {
+  //   if (_selectedProvince != province) {
+  //     _selectedProvince = province;
+  //     notifyListeners();
+  //   }
+  // }
+
+  // void selectDistrict(String district) {
+  //   if (_selectedDistrict != district) {
+  //     _selectedDistrict = district;
+  //     notifyListeners();
+  //   }
+  // }
+
+  String _selectedProvince = '서울';
+  String get selectedProvince => _selectedProvince; // 선택된 도/시
+  int get selectedProvinceIndex => ProvinceDistrict.districts.keys
+      .toList()
+      .indexOf(_selectedProvince); // 선택된 도/시의 인덱스
+  FixedExtentScrollController provinceScrollController =
+      FixedExtentScrollController(initialItem: 0);
+
+  String _selectedDistrict = '강남구';
+  String get selectedDistrict => _selectedDistrict; // 선택된 구/군
+  int get selectedDistrictIndex => ProvinceDistrict.districts[selectedProvince]!
+      .indexOf(_selectedDistrict); // 선택된 구/군의 인덱스
+  FixedExtentScrollController districtScrollController =
+      FixedExtentScrollController(initialItem: 0);
 
   void selectProvince(String province) {
     if (_selectedProvince != province) {
@@ -71,6 +101,13 @@ class SignUpDetailViewModel with ChangeNotifier {
 
   DateTime get start => _start;
   DateTime get end => _end;
+
+  set selectedDate(DateTime newValue) {
+    if (_selectedDate != newValue) {
+      _selectedDate = newValue;
+      notifyListeners();
+    }
+  }
 
   void updateDate(DateTime date) {
     if (_selectedDate != date) {
@@ -118,9 +155,9 @@ class SignUpDetailViewModel with ChangeNotifier {
     return List<int>.generate(lastDateOfMonth.day, (index) => index + 1);
   }
 
-  // MARK : - Page 2
+  // Mark : page 2
   TextEditingController nicknameController = TextEditingController();
-  String errorMessage = ''; // 닉네임 입력 에러 메시지
+  String errorMessage = '';
   String? _selectedImagePath;
   bool _isNicknameValid = false;
 

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/util/color.dart';
+import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
@@ -42,7 +44,6 @@ class LoginVerification extends StatelessWidget {
             _main(context),
             const Spacer(),
             Padding(
-              // Apply the padding dynamically based on the keyboard state
               padding: EdgeInsets.only(bottom: bottomPadding),
               child: _bottom(context),
             ),
@@ -82,6 +83,7 @@ class LoginVerification extends StatelessWidget {
     return Stack(
       children: [
         TextFormField(
+          cursorHeight: 24.0.h,
           onChanged: (value) {
             bool shouldFieldBeFocused =
                 value.isNotEmpty || viewModel.isTextFieldFocused;
@@ -112,26 +114,20 @@ class LoginVerification extends StatelessWidget {
                 borderSide:
                     BorderSide(color: const Color(0xFFD2D8F8), width: 2.5.w)),
           ),
+          style: AppTextStyles.PR_SB_26.copyWith(height: 1.1.h),
         ),
         if (!viewModel.isTextFieldFocused && viewModel.controller.text.isEmpty)
           Positioned(
             top: 13.h,
             left: 18.w,
-            child: Text(
-              "인증 번호",
-              style: TextStyle(fontSize: 12.sp, color: const Color(0xFF8D8D8D)),
-            ),
+            child: Text("인증 번호",
+                style: AppTextStyles.SU_L_12.copyWith(color: UsedColor.text_4)),
           ),
         Positioned(
           top: 12.h,
           right: 15.w,
-          child: Text(
-            viewModel.formattedRemainingTime,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          child: Text(viewModel.formattedRemainingTime,
+              style: AppTextStyles.PR_SB_12.copyWith(color: UsedColor.text_3)),
         ),
       ],
     );
@@ -160,19 +156,15 @@ class LoginVerification extends StatelessWidget {
             loginVerificationViewModel.canResendCode
                 ? '인증번호 재전송'
                 : '인증번호가 재전송되었습니다',
-            style: TextStyle(
-              fontSize: 13,
-              decoration: loginVerificationViewModel.canResendCode
-                  ? TextDecoration.underline
-                  : TextDecoration.none,
-              color: loginVerificationViewModel.canResendCode
-                  ? Colors.grey
-                  : Colors.grey,
-            ),
+            style: AppTextStyles.SU_L_12.copyWith(
+                decoration: loginVerificationViewModel.canResendCode
+                    ? TextDecoration.underline
+                    : TextDecoration.none,
+                color: UsedColor.text_4),
           ),
         ),
         if (!loginVerificationViewModel.canResendCode) ...[
-          const SizedBox(width: 8.0),
+          SizedBox(width: 8.0.w),
           Text(
             loginVerificationViewModel.formattedRemainingTime,
             style: const TextStyle(
@@ -193,7 +185,7 @@ class LoginVerification extends StatelessWidget {
           padding: EdgeInsets.only(left: 32.0.w),
           child: Text(
             '인증번호를 입력해주세요',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.sp),
+            style: AppTextStyles.PR_SB_24,
           ),
         ),
         SizedBox(
@@ -236,20 +228,12 @@ class LoginVerification extends StatelessWidget {
               CupertinoAlertDialog(
                 title: Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 17.5,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style:
+                      TextStyle(fontSize: 17.5.sp, fontFamily: "Pretendard-M"),
                 ),
                 content: Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Text(
-                    message,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w100,
-                    ),
-                  ),
+                  padding: EdgeInsets.only(top: 5.h),
+                  child: Text(message, style: AppTextStyles.PR_R_12),
                 ),
                 actions: [
                   CupertinoDialogAction(
@@ -441,10 +425,8 @@ class LoginVerification extends StatelessWidget {
         ),
         child: Text(
           "인증번호 확인",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 20.sp,
-            // fontFamily: '',
+          style: AppTextStyles.PR_SB_20.copyWith(
+            color: UsedColor.text_2,
           ),
         ),
       ),
