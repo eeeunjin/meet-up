@@ -3,12 +3,37 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppTextStyles {
   // Pretendard
+  // PR_B
   static TextStyle get PR_B_22 => TextStyle(
         fontFamily: 'Pretendard',
         fontWeight: FontWeight.bold,
         fontSize: 22.sp,
       );
+  static TextStyle get PR_B_19 => TextStyle(
+        fontFamily: 'Pretendard',
+        fontWeight: FontWeight.bold,
+        fontSize: 19.sp,
+      );
 
+  static TextStyle get PR_B_18 => TextStyle(
+        fontFamily: 'Pretendard',
+        fontWeight: FontWeight.bold,
+        fontSize: 18.sp,
+      );
+
+  static TextStyle get PR_B_16 => TextStyle(
+        fontFamily: 'Pretendard',
+        fontWeight: FontWeight.bold,
+        fontSize: 16.sp,
+      );
+
+  static TextStyle get PR_B_12 => TextStyle(
+        fontFamily: 'Pretendard',
+        fontWeight: FontWeight.bold,
+        fontSize: 12.sp,
+      );
+
+  //PR_SB
   static TextStyle get PR_SB_26 => TextStyle(
         fontFamily: 'Pretendard-SB',
         fontWeight: FontWeight.bold,
@@ -21,9 +46,30 @@ class AppTextStyles {
         fontSize: 24.sp,
       );
 
+  static TextStyle get PR_SB_22 => TextStyle(
+        fontFamily: 'Pretendard-SB',
+        fontWeight: FontWeight.bold,
+        fontSize: 22.sp,
+      );
+
   static TextStyle get PR_SB_20 => TextStyle(
         fontFamily: 'Pretendard-SB',
         fontSize: 20.sp,
+      );
+
+  static TextStyle get PR_SB_18 => TextStyle(
+        fontFamily: 'Pretendard-SB',
+        fontSize: 18.sp,
+      );
+
+  static TextStyle get PR_SB_17 => TextStyle(
+        fontFamily: 'Pretendard-SB',
+        fontSize: 17.sp,
+      );
+
+  static TextStyle get PR_SB_16 => TextStyle(
+        fontFamily: 'Pretendard-SB',
+        fontSize: 16.sp,
       );
 
   static TextStyle get PR_SB_15 => TextStyle(
@@ -31,17 +77,157 @@ class AppTextStyles {
         fontSize: 15.sp,
       );
 
+  static TextStyle get PR_SB_14 => TextStyle(
+        fontFamily: 'Pretendard-SB',
+        fontSize: 14.sp,
+      );
+
+  static TextStyle get PR_SB_13 => TextStyle(
+        fontFamily: 'Pretendard-SB',
+        fontSize: 13.sp,
+      );
+
   static TextStyle get PR_SB_12 => TextStyle(
         fontFamily: 'Pretendard-SB',
         fontSize: 12.sp,
+      );
+
+  static TextStyle get PR_SB_11 => TextStyle(
+        fontFamily: 'Pretendard-SB',
+        fontSize: 11.sp,
+      );
+
+  static TextStyle get PR_SB_10 => TextStyle(
+        fontFamily: 'Pretendard-SB',
+        fontSize: 10.sp,
+      );
+
+  //PR_M
+  static TextStyle get PR_M_24 => TextStyle(
+        fontFamily: 'Pretendard-M',
+        fontSize: 24.sp,
+      );
+
+  static TextStyle get PR_M_20 => TextStyle(
+        fontFamily: 'Pretendard-M',
+        fontSize: 20.sp,
+      );
+
+  static TextStyle get PR_M_17 => TextStyle(
+        fontFamily: 'Pretendard-M',
+        fontSize: 17.sp,
+      );
+
+  static TextStyle get PR_M_16 => TextStyle(
+        fontFamily: 'Pretendard-M',
+        fontSize: 16.sp,
+      );
+
+  static TextStyle get PR_M_15 => TextStyle(
+        fontFamily: 'Pretendard-M',
+        fontSize: 15.sp,
+      );
+
+  static TextStyle get PR_M_14 => TextStyle(
+        fontFamily: 'Pretendard-M',
+        fontSize: 14.sp,
+      );
+
+  static TextStyle get PR_M_13 => TextStyle(
+        fontFamily: 'Pretendard-M',
+        fontSize: 13.sp,
+      );
+
+  static TextStyle get PR_M_12 => TextStyle(
+        fontFamily: 'Pretendard-M',
+        fontSize: 12.sp,
+      );
+
+  static TextStyle get PR_M_11 => TextStyle(
+        fontFamily: 'Pretendard-M',
+        fontSize: 11.sp,
+      );
+
+  static TextStyle get PR_M_10 => TextStyle(
+        fontFamily: 'Pretendard-M',
+        fontSize: 10.sp,
+      );
+
+  static TextStyle get PR_M_9 => TextStyle(
+        fontFamily: 'Pretendard-M',
+        fontSize: 9.sp,
+      );
+
+  //PR_R
+  static TextStyle get PR_R_24 => TextStyle(
+        fontFamily: 'Pretendard',
+        fontSize: 24.sp,
+      );
+
+  static TextStyle get PR_R_20 => TextStyle(
+        fontFamily: 'Pretendard',
+        fontSize: 20.sp,
+      );
+
+  static TextStyle get PR_R_16 => TextStyle(
+        fontFamily: 'Pretendard',
+        fontSize: 16.sp,
+      );
+
+  static TextStyle get PR_R_15 => TextStyle(
+        fontFamily: 'Pretendard',
+        fontSize: 15.sp,
+      );
+
+  static TextStyle get PR_R_14 => TextStyle(
+        fontFamily: 'Pretendard',
+        fontSize: 14.sp,
+      );
+
+  static TextStyle get PR_R_13 => TextStyle(
+        fontFamily: 'Pretendard',
+        fontSize: 13.sp,
       );
 
   static TextStyle get PR_R_12 => TextStyle(
         fontFamily: 'Pretendard',
         fontSize: 12.sp,
       );
+  static TextStyle get PR_R_11 => TextStyle(
+        fontFamily: 'Pretendard',
+        fontSize: 11.sp,
+      );
+
+  static TextStyle get PR_R_10 => TextStyle(
+        fontFamily: 'Pretendard',
+        fontSize: 10.sp,
+      );
+  static TextStyle get PR_R_9 => TextStyle(
+        fontFamily: 'Pretendard',
+        fontSize: 9.sp,
+      );
+  static TextStyle get PR_R_7 => TextStyle(
+        fontFamily: 'Pretendard',
+        fontSize: 7.sp,
+      );
 
   // SUITE
+  // SU_SB
+
+  static TextStyle get SU_SB_22 => TextStyle(
+        fontFamily: 'SUITE-SB',
+        fontSize: 22.sp,
+      );
+
+  static TextStyle get SU_SB_16 => TextStyle(
+        fontFamily: 'SUITE-SB',
+        fontSize: 16.sp,
+      );
+
+  static TextStyle get SU_SB_13 => TextStyle(
+        fontFamily: 'SUITE-SB',
+        fontSize: 13.sp,
+      );
 
   static TextStyle get SU_R_20 => TextStyle(
         fontFamily: 'SUITE',
