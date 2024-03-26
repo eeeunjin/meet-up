@@ -18,7 +18,7 @@ class ProvinceDistrictPicker extends StatelessWidget {
       child: Stack(
         children: [
           Positioned(
-            top: 44.h,
+            top: 42.h,
             left: 13.w,
             child: Container(
               width: 255.w,
@@ -36,7 +36,7 @@ class ProvinceDistrictPicker extends StatelessWidget {
                 child: SizedBox(
                   height: 113.h,
                   child: ListWheelScrollView(
-                    itemExtent: 36.5,
+                    itemExtent: 32.5.h,
                     physics: const FixedExtentScrollPhysics(),
                     // diameterRatio: Render,
                     controller: viewModel.provinceScrollController,
@@ -61,7 +61,7 @@ class ProvinceDistrictPicker extends StatelessWidget {
                 child: SizedBox(
                   height: 113.h,
                   child: ListWheelScrollView(
-                    itemExtent: 36.5,
+                    itemExtent: 32.5.h,
                     physics: const FixedExtentScrollPhysics(),
                     // diameterRatio: 0.7,
                     controller: viewModel.districtScrollController,
@@ -111,19 +111,16 @@ class ProvinceDistrictPicker extends StatelessWidget {
     }
 
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 5.0),
-        child: Transform.scale(
-          scale: scale,
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: isSelected ? 24.sp : 19.sp,
-              color: textColor,
-              fontFamily: 'Pretendard-M',
-            ),
-            textAlign: TextAlign.center,
+      child: Transform.scale(
+        scale: scale,
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: isSelected ? 24.sp : 19.sp,
+            color: textColor,
+            fontFamily: 'Pretendard-M',
           ),
+          textAlign: TextAlign.center,
         ),
       ),
     );
