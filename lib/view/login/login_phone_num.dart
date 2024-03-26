@@ -137,7 +137,8 @@ class LoginPhoneNum extends StatelessWidget {
                               width: 2.5.w),
                         ),
                       ),
-                      style: AppTextStyles.SU_L_24.copyWith(height: 1.0.h),
+                      style: AppTextStyles.SU_L_24
+                          .copyWith(height: 1.1.h, color: UsedColor.text_2),
                     ),
                     if (!viewModel.isTextFieldFocused &&
                         viewModel.controller.text.isEmpty)
