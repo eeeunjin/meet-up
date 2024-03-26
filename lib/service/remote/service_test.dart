@@ -47,15 +47,15 @@ Future<void> documentCreateTest() async {
   // 새로운 User 정보를 생성하여 새로운 docRef에 저장
   // 지역 정보
   Map<String, dynamic> region = {
-    "siDo": "부산",
-    "siGunGu": "서면",
+    "province": "부산",
+    "district": "서면",
   };
 
   // 새로운 유저 모델 정보
   UserModel newUser = UserModel(
       nickname: "minsu",
-      profileIcon: 2,
-      birthday: Timestamp.now(),
+      profileIcon: '',
+      birthday: DateTime.now(),
       gender: "man",
       region: region,
       job: "student",
@@ -63,7 +63,8 @@ Future<void> documentCreateTest() async {
       personalitySelf: ["계획적인", "안정적인", "열정적인"],
       interest: ["운동", "음악", "독서"],
       purpose: ["친목", "자기성찰", "기록"],
-      phoneNumber: "01012341234");
+      phoneNumber: "01012341234",
+      acceptedPolicies: [false, false]);
 
   // 새로운 유저 정보를 새로운 docRef 주소에 전달하여 생성
   await userRepository.createUserDocument(data: newUser, uid: "TestUID");
@@ -89,7 +90,7 @@ Future<void> documentUpdateTest() async {
 
   // 변경을 원하는 docRef 주소와 변경을 원하는 data를 전달
   await userRepository.updateUserDocument(
-    docID: "testUID",
+    uid: "testUID",
     data: myMap,
   );
 }

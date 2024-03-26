@@ -5,9 +5,9 @@ class UserModel {
   // 닉네임
   String nickname;
   // 프로필 아이콘
-  int profileIcon;
+  String profileIcon;
   // 생년월일
-  Timestamp birthday;
+  DateTime birthday;
   // 성별
   String gender;
   // 거주지
@@ -24,6 +24,8 @@ class UserModel {
   List<dynamic> purpose;
   // 전화번호
   String phoneNumber;
+  // 정책
+  List<dynamic> acceptedPolicies;
 
   UserModel({
     required this.nickname,
@@ -37,14 +39,16 @@ class UserModel {
     required this.interest,
     required this.purpose,
     required this.phoneNumber,
+    required this.acceptedPolicies,
   });
 
   /// json 형식으로 된 정보를 변수 값으로 등록할 때 쓰는 Constructor
   UserModel.fromJson(Map<String, Object?> json)
       : this(
           nickname: json['nickname']! as String,
-          profileIcon: json['profileIcon']! as int,
-          birthday: json['birthday']! as Timestamp,
+          profileIcon: json['profileIcon']! as String,
+          birthday: DateTime.parse(
+              (json['birthday']! as Timestamp).toDate().toString()),
           gender: json['gender']! as String,
           region: json['region']! as Map<String, dynamic>,
           job: json['job']! as String,
@@ -54,6 +58,7 @@ class UserModel {
           interest: json["interest"]! as List<dynamic>,
           purpose: json["purpose"]! as List<dynamic>,
           phoneNumber: json["phoneNumber"]! as String,
+          acceptedPolicies: json["acceptedPolicies"]! as List<dynamic>,
         );
 
   /// 모델의 프로퍼티 값을 json 파일 형식으로 변환하여 넘겨줄 때 사용하는 함수
@@ -70,6 +75,7 @@ class UserModel {
       'interest': interest,
       'purpose': purpose,
       'phoneNumber': phoneNumber,
+      'acceptedPolicies': acceptedPolicies,
     };
   }
 }

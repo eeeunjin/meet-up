@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/image.dart';
+import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
 import 'package:meet_up/view_model/login/login_verification_view_model.dart';
 import 'package:provider/provider.dart';
@@ -69,21 +70,9 @@ class LoginVerification extends StatelessWidget {
   }
 
   Widget _header(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween, // 가로로 가운데 정렬
-      children: [
-        _back(context),
-        Expanded(
-          child: Center(
-            child: Text(
-              "로그인",
-              style: TextStyle(fontSize: 20.sp),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-        Container(width: 48.w), // 여백 조절
-      ],
+    return header(
+      back: _back(context),
+      title: "로그인",
     );
   }
 
@@ -390,7 +379,7 @@ class LoginVerification extends StatelessWidget {
             } else {
               debugPrint("새로운 유저가 아닙니다.");
               // uid 저장
-              phoneNumViewModel.getUID(credential.user!.uid);
+              phoneNumViewModel.uid = credential.user!.uid;
 
               // 기존 유저의 정보 불러오기
               await phoneNumViewModel.readUserDocument(
@@ -426,6 +415,7 @@ class LoginVerification extends StatelessWidget {
           }
         } catch (e) {
           // smsCode가 동일하지 않은 경우 alert 출력
+          debugPrint(e.toString());
           if (context.mounted) {
             showAlert(
               null,
