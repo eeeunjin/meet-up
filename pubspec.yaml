@@ -51,3 +51,6 @@ flutter:
         - asset: assets/fonts/SUITE-Regular.ttf
         - asset: assets/fonts/SUITE-Medium.ttf
         - asset: assets/fonts/SUITE-SemiBold.ttf
+    - family: SUITE-L
+      fonts:
+        - asset: assets/fonts/SUITE-Light.ttf
