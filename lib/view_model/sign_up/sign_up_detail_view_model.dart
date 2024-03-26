@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_up/model/province_district_model.dart';
+import 'package:meet_up/repository/user_repository.dart';
 
 class SignUpDetailViewModel with ChangeNotifier {
-  // MARK : - Page 1
+  final UserRepository _userRepository = UserRepository();
 
+  // MARK : - Page 1
   Gender _selectedGender = Gender.none;
   Gender get selectedGender => _selectedGender; // 선택된 성별
 
@@ -267,7 +269,7 @@ class SignUpDetailViewModel with ChangeNotifier {
 
   // MARK: - page 6
 
-  List<bool> acceptedPlicies = [
+  List<bool> acceptedPolicies = [
     false, // 필수
     false, // 필수
     false, // 필수
@@ -281,19 +283,19 @@ class SignUpDetailViewModel with ChangeNotifier {
   bool isAcceptionValid = false;
 
   void toggleAcceptPolicies({required int index}) {
-    acceptedPlicies[index] = !acceptedPlicies[index];
+    acceptedPolicies[index] = !acceptedPolicies[index];
     bool allAcceptionCheck = true;
     bool acceptionValidCheck = true;
     for (int i = 0; i < 7; i++) {
-      if (acceptedPlicies[i] == false) {
+      if (acceptedPolicies[i] == false) {
         allAcceptionCheck = false;
         if (i < 5) acceptionValidCheck = false;
       }
     }
     if (allAcceptionCheck == true) {
-      acceptedPlicies[7] = true;
+      acceptedPolicies[7] = true;
     } else {
-      acceptedPlicies[7] = false;
+      acceptedPolicies[7] = false;
     }
     isAcceptionValid = acceptionValidCheck;
 
@@ -301,14 +303,14 @@ class SignUpDetailViewModel with ChangeNotifier {
   }
 
   void toggleAllAccpetPlicies() {
-    if (acceptedPlicies[7] == false) {
+    if (acceptedPolicies[7] == false) {
       for (int i = 0; i < 8; i++) {
-        acceptedPlicies[i] = true;
+        acceptedPolicies[i] = true;
       }
       isAcceptionValid = true;
     } else {
       for (int i = 0; i < 8; i++) {
-        acceptedPlicies[i] = false;
+        acceptedPolicies[i] = false;
       }
       isAcceptionValid = false;
     }
@@ -327,6 +329,35 @@ class SignUpDetailViewModel with ChangeNotifier {
     debugPrint("$selectedLifestyleKeywords");
     debugPrint("$selectedInterestedKeywords");
     debugPrint("$selectedPurposeKeywords");
+    debugPrint("선택1: ${acceptedPolicies[5]}");
+    debugPrint("선택2: ${acceptedPolicies[6]}");
+  }
+
+  Future<bool> updateNewUser({required String uid}) async {
+    Map<String, dynamic> data = {
+      "nickname": nicknameController.text,
+      "profileIcon": selectedImagePath!,
+      "birthday": selectedDate,
+      "gender": selectedGender.name,
+      "region": {
+        "province": selectedProvince,
+        "district": selectedDistrict,
+      },
+      "job": selectedAffiliation.name,
+      "personalityRelationship": selectedRelationshipKeywords,
+      "personalitySelf": selectedLifestyleKeywords,
+      "interest": selectedInterestedKeywords,
+      "purpose": selectedPurposeKeywords,
+      "acceptedPolicies": [
+        acceptedPolicies[5],
+        acceptedPolicies[6],
+      ],
+    };
+
+    return await _userRepository.updateUserDocument(
+      uid: uid,
+      data: data,
+    );
   }
 }
 

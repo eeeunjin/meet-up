@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/image.dart';
+import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_verification_view_model.dart';
 import 'package:provider/provider.dart';
@@ -70,21 +71,9 @@ class SignUpVerification extends StatelessWidget {
   }
 
   Widget _header(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween, // 가로로 가운데 정렬
-      children: [
-        _back(context),
-        Expanded(
-          child: Center(
-            child: Text(
-              "회원가입",
-              style: TextStyle(fontSize: 20.sp),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-        Container(width: 48.w), // 여백 조절
-      ],
+    return header(
+      back: _back(context),
+      title: "회원가입",
     );
   }
 
@@ -401,7 +390,7 @@ class SignUpVerification extends StatelessWidget {
                   showAlert(
                     () {
                       // 메인 홈 화면으로 이동 (로그인)
-                      context.goNamed('signUpDetailOne');
+                      context.pop();
                     },
                     context: context,
                     title: "가입된 계정이 있습니다.",

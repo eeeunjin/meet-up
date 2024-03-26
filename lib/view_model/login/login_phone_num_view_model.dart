@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -132,8 +131,8 @@ class LoginPhoneNumViewModel with ChangeNotifier {
     // 새로운 유저 모델
     UserModel newUser = UserModel(
       nickname: "",
-      profileIcon: -1,
-      birthday: Timestamp.now(),
+      profileIcon: "",
+      birthday: DateTime.now(),
       gender: "",
       region: {"-1": "-1"},
       job: "",
@@ -142,6 +141,7 @@ class LoginPhoneNumViewModel with ChangeNotifier {
       interest: [],
       purpose: [],
       phoneNumber: controller.text,
+      acceptedPolicies: [false, false],
     );
 
     // Cloud Firestore에 유저 정보 저장
@@ -154,7 +154,9 @@ class LoginPhoneNumViewModel with ChangeNotifier {
   /// Firebase cloudStore에 유저 정보 읽어오는 함수
   Future<void> readUserDocument({required String uid}) async {
     // 유저 정보 전달
-    userInfo = await _userRepository.readUserDocument(uid: uid);
+    userInfo = await _userRepository.readUserDocument(
+      uid: uid,
+    );
   }
 
   void resetState() {

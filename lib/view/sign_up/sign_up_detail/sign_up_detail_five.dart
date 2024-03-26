@@ -110,7 +110,6 @@ class SignUpDetailFive extends StatelessWidget {
           showModalBottomSheet(
             context: context,
             builder: (context) {
-              viewModel.printAllInfo();
               return SignUpDetailSix(context);
             },
           );

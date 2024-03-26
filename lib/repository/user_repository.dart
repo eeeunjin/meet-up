@@ -23,7 +23,8 @@ class UserRepository {
   }
 
   /// 유저 정보를 생성하는 함수
-  Future<bool> createUserDocument({required UserModel data, required String uid}) async {
+  Future<bool> createUserDocument(
+      {required UserModel data, required String uid}) async {
     return await _firebaseService.createDocument(
       docRef: _firebaseRefs.colRefUser.doc(uid),
       data: data,
@@ -38,11 +39,11 @@ class UserRepository {
 
   /// 유저 정보를 업데이트 하는 함수
   Future<bool> updateUserDocument({
-    required String docID,
+    required String uid,
     required Map<String, dynamic> data,
   }) async {
     return await _firebaseService.updateDocument(
-      docRef: _firebaseRefs.colRefUser.doc(docID),
+      docRef: _firebaseRefs.colRefUser.doc(uid),
       data: data,
     );
   }
