@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/util/color.dart';
+import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
@@ -78,18 +80,19 @@ class LoginPhoneNum extends StatelessWidget {
             padding: EdgeInsets.only(left: 32.0.w),
             child: Text(
               '휴대폰 번호를 입력해주세요',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.sp),
+              style: AppTextStyles.PR_SB_24,
             ),
           ),
           SizedBox(height: 32.h),
           Consumer<LoginPhoneNumViewModel>(
             builder: (context, viewModel, child) => Center(
               child: SizedBox(
-                width: 339.w,
-                height: 74.h,
+                width: 328.w,
+                height: 64.h,
                 child: Stack(
                   children: [
                     TextFormField(
+                      cursorHeight: 24.0.h,
                       onChanged: (value) {
                         bool shouldFieldBeFocused =
                             value.isNotEmpty || viewModel.isTextFieldFocused;
@@ -120,8 +123,8 @@ class LoginPhoneNum extends StatelessWidget {
                           borderSide: BorderSide(
                               color: viewModel.controller.text.isNotEmpty
                                   ? (viewModel.isPhoneNumberValid
-                                      ? Colors.green
-                                      : Colors.red)
+                                      ? UsedColor.green
+                                      : UsedColor.red)
                                   : const Color(0xFFD2D8F8),
                               width: 2.5.w),
                         ),
@@ -129,22 +132,22 @@ class LoginPhoneNum extends StatelessWidget {
                           borderRadius: BorderRadius.circular(16.r),
                           borderSide: BorderSide(
                               color: viewModel.isPhoneNumberValid
-                                  ? Colors.green
-                                  : Colors.red,
+                                  ? UsedColor.green
+                                  : UsedColor.red,
                               width: 2.5.w),
                         ),
                       ),
+                      style: AppTextStyles.SU_L_24
+                          .copyWith(height: 1.1.h, color: UsedColor.text_2),
                     ),
                     if (!viewModel.isTextFieldFocused &&
                         viewModel.controller.text.isEmpty)
                       Positioned(
                         top: 13.h,
                         left: 18.w,
-                        child: Text(
-                          "휴대폰 번호",
-                          style: TextStyle(
-                              fontSize: 12.sp, color: const Color(0xFF8D8D8D)),
-                        ),
+                        child: Text("휴대폰 번호",
+                            style: AppTextStyles.SU_L_12
+                                .copyWith(color: UsedColor.text_4)),
                       ),
                   ],
                 ),
@@ -164,32 +167,30 @@ class LoginPhoneNum extends StatelessWidget {
       builder: (context, viewModel, child) => Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
         child: NextButton(
-          onTap: () async {
-            // phoneNum 유효성 검사 실패 시, return
-            if (!viewModel.isPhoneNumberValid) return;
+            onTap: () async {
+              // phoneNum 유효성 검사 실패 시, return
+              if (!viewModel.isPhoneNumberValid) return;
 
-            // Auth 관련 동작 - viewModel에서 진행
-            final isSigned = await viewModel.signInWithPhoneNumber(context);
+              // Auth 관련 동작 - viewModel에서 진행
+              final isSigned = await viewModel.signInWithPhoneNumber(context);
 
-            // 다양한 이유로 코드가 전달되지 않은 경우
-            if (!isSigned) {
-              debugPrint("코드 전달 실패.");
-            } else {
-              loginVerificationViewModel.startTimer();
-            }
-          },
-          text: '다음',
-          height: 60.h,
-          fontSize: 18.sp,
-          enable: viewModel.isPhoneNumberValid,
-          backgroundColor: viewModel.isPhoneNumberValid
-              ? Colors.green
-              : const Color(0xFFD9D9D9),
-          textStyle: TextStyle(
-            color: viewModel.isPhoneNumberValid ? Colors.white : Colors.black,
+              // 다양한 이유로 코드가 전달되지 않은 경우
+              if (!isSigned) {
+                debugPrint("코드 전달 실패.");
+              } else {
+                loginVerificationViewModel.startTimer();
+              }
+            },
+            text: '다음',
+            height: 60.h,
             fontSize: 18.sp,
-          ),
-        ),
+            enable: viewModel.isPhoneNumberValid,
+            backgroundColor: viewModel.isPhoneNumberValid
+                ? UsedColor.green
+                : UsedColor.grey1,
+            textStyle: AppTextStyles.PR_SB_20.copyWith(
+              color: viewModel.isPhoneNumberValid ? Colors.white : Colors.black,
+            )),
       ),
     );
   }

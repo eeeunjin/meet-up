@@ -12,6 +12,8 @@ class UsedColor {
   static const Color text_5 = Color(0xFF989898);
   static const Color text_6 = Color(0xFFe6e6e6);
   static Color line = const Color(0xffafafaf);
+  static Color grey1 = const Color(0xffdfdfdf);
+  static Color grey2 = const Color(0xfff1f1f1);
 
   //subs
   static Color green = const Color(0xff76e84e);
