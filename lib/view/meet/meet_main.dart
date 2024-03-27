@@ -13,21 +13,31 @@ class MeetMain extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          if (Platform.isIOS)
-            _header(context)
-          else if (Platform.isAndroid)
-            Padding(
-              padding: EdgeInsets.only(
-                top: 15.h,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            if (Platform.isIOS)
+              _header(context)
+            else if (Platform.isAndroid)
+              Padding(
+                padding: EdgeInsets.only(
+                  top: 15.h,
+                ),
+                child: _header(context),
               ),
-              child: _header(context),
-            ),
-          _main(context),
-        ],
-      )),
+            _main(context),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: Colors.black,
+        shape: const CircleBorder(),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 
@@ -55,22 +65,26 @@ class MeetMain extends StatelessWidget {
   Widget _main(BuildContext context) {
     return Container(
       color: UsedColor.bg_color,
-      child: Column(
-        children: [
-          _manageMeetList(),
-          SizedBox(
-            height: 28.h,
-          ),
-          _searchMeetList(),
-          SizedBox(
-            height: 28.h,
-          ),
-          _checkMeetList(),
-        ],
+      child: Padding(
+        padding: EdgeInsets.only(left: 20.0.w, right: 20.w),
+        child: Column(
+          children: [
+            _manageMeetList(),
+            SizedBox(
+              height: 28.h,
+            ),
+            _searchMeetList(),
+            SizedBox(
+              height: 28.h,
+            ),
+            _checkMeetList(),
+          ],
+        ),
       ),
     );
   }
 
+  // Mark - 내가 만든 만남방
   Widget _manageMeetList() {
     return Column(
       children: [
@@ -144,6 +158,7 @@ class MeetMain extends StatelessWidget {
     );
   }
 
+  // Mark - 만남방 둘러보기
   Widget _searchMeetList() {
     return Column(
       children: [
@@ -217,6 +232,7 @@ class MeetMain extends StatelessWidget {
     );
   }
 
+  // Mark - 만남 요청 리스트
   Widget _checkMeetList() {
     return Column(
       children: [
