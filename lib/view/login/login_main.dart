@@ -24,8 +24,18 @@ class LoginMain extends StatelessWidget {
                 size: 190.h,
               ),
             ),
-            SizedBox(height: 220.h - 80.h // testView,
+            SizedBox(height: 220.h - 80.h - 80.h // testView,meetView
                 ),
+            // <----- meet test view ------> // 80.h
+            GestureDetector(
+                onTap: () {
+                  context.goNamed('meetMain');
+                },
+                child: _meetTestButton()),
+            SizedBox(
+              // 여백
+              height: 10.h,
+            ),
             // <----- test view ------> // 80.h
             GestureDetector(
                 onTap: () {
@@ -131,7 +141,32 @@ class LoginMain extends StatelessWidget {
       ),
       child: const Center(
         child: Text(
-          '테스트 뷰',
+          '회원가입 상세 테스트 뷰',
+          style: TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.bold,
+            color: Color(0xff7A6AF7),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _meetTestButton() {
+    return Container(
+      width: 286.w,
+      height: 56.64.h,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadiusDirectional.circular(19.r),
+        border: Border.all(
+          color: const Color(0xff9798F1), // 테두리 색상
+          width: 2.5, // 테두리 굵기
+        ),
+      ),
+      child: const Center(
+        child: Text(
+          '만남 테스트 뷰',
           style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.bold,
