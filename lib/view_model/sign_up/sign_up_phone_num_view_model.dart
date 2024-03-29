@@ -132,17 +132,17 @@ class SignUpPhoneNumViewModel with ChangeNotifier {
     // 새로운 유저 모델
     UserModel newUser = UserModel(
       nickname: "",
-      profileIcon: "",
+      profile_icon: "",
       birthday: DateTime.now(),
       gender: "",
       region: {"-1": "-1"},
       job: "",
-      personalityRelationship: [],
-      personalitySelf: [],
+      personality_relationship: [],
+      personality_self: [],
       interest: [],
       purpose: [],
-      phoneNumber: controller.text,
-      acceptedPolicies: [false, false],
+      phone_number: controller.text,
+      accepted_policies: [false, false],
     );
 
     // Cloud Firestore에 유저 정보 저장

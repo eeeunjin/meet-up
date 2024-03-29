@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
 
 ///
@@ -16,6 +17,7 @@ class FirebaseInstance {
 class FirebaseRefs {
   // user collection
   CollectionReference colRefUser = FirebaseInstance.db.collection("users");
+  CollectionReference colRefRoom = FirebaseInstance.db.collection("rooms");
 }
 
 ///
@@ -33,6 +35,14 @@ class FirebaseCRUD {
       return querySnapshot.docs.map((doc) {
         if (T == UserModel) {
           return UserModel.fromJson(doc.data() as Map<String, Object?>) as T;
+        } else if (T == MyRoomModel) {
+          return MyRoomModel.fromJson(doc.data() as Map<String, Object?>) as T;
+        } else if (T == MyEnterRequestModel) {
+          return MyEnterRequestModel.fromJson(
+              doc.data() as Map<String, Object?>) as T;
+        } else if (T == RoomModel) {
+          return RoomModel.fromJson(
+              doc.data() as Map<String, Object?>) as T;
         } else {
           // 지정하지 않은 형식의 모델 값이 들어오면 에러를 반환
           throw Exception("Unsupported document type.");
@@ -65,6 +75,18 @@ class FirebaseCRUD {
           UserModel user = data as UserModel;
           await docRef.set(user.toJson());
           return true;
+        } else if (T == MyRoomModel) {
+          MyRoomModel myRoom = data as MyRoomModel;
+          await docRef.set(myRoom.toJson());
+          return true;
+        } else if (T == MyEnterRequestModel) {
+          MyEnterRequestModel myEnterRequest = data as MyEnterRequestModel;
+          await docRef.set(myEnterRequest.toJson());
+          return true;
+        } else if (T == RoomModel) {
+          RoomModel myEnterRequest = data as RoomModel;
+          await docRef.set(myEnterRequest.toJson());
+          return true;
         } else {
           // 지정하지 않은 모델인 경우 에러 반환
           throw Exception("Unsupported document type.");
@@ -93,12 +115,13 @@ class FirebaseCRUD {
       if (data != null) {
         if (T == UserModel) {
           return UserModel.fromJson(data) as T;
-        }
-        // 다른 모델에 대한 처리 추가
-        // else if (T == OtherModel) {
-        //   return OtherModel.fromJson(data) as T;
-        // }
-        else {
+        } else if (T == MyRoomModel) {
+          return MyRoomModel.fromJson(data) as T;
+        } else if (T == MyEnterRequestModel) {
+          return MyEnterRequestModel.fromJson(data) as T;
+        } else if (T == RoomModel) {
+          return RoomModel.fromJson(data) as T;
+        } else {
           // 지정한 모델이 아닌 경우 에러 코드 반환
           throw Exception("Unsupported document type.");
         }

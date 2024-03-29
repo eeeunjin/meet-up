@@ -54,17 +54,17 @@ Future<void> documentCreateTest() async {
   // 새로운 유저 모델 정보
   UserModel newUser = UserModel(
       nickname: "minsu",
-      profileIcon: '',
+      profile_icon: '',
       birthday: DateTime.now(),
       gender: "man",
       region: region,
       job: "student",
-      personalityRelationship: ["사교적인", "친절한", "자신감있는"],
-      personalitySelf: ["계획적인", "안정적인", "열정적인"],
+      personality_relationship: ["사교적인", "친절한", "자신감있는"],
+      personality_self: ["계획적인", "안정적인", "열정적인"],
       interest: ["운동", "음악", "독서"],
       purpose: ["친목", "자기성찰", "기록"],
-      phoneNumber: "01012341234",
-      acceptedPolicies: [false, false]);
+      phone_number: "01012341234",
+      accepted_policies: [false, false]);
 
   // 새로운 유저 정보를 새로운 docRef 주소에 전달하여 생성
   await userRepository.createUserDocument(data: newUser, uid: "TestUID");
@@ -100,5 +100,5 @@ Future<void> documentDeleteTest() async {
   UserRepository userRepository = UserRepository();
 
   // 제거를 원하는 docRef의 주소를 전달
-  await userRepository.deleteUserData(docID: "kMCp0M25JblNhWGsYGg8");
+  await userRepository.deleteUserData(uid: "kMCp0M25JblNhWGsYGg8");
 }
