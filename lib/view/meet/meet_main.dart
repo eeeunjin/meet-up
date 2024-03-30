@@ -30,7 +30,9 @@ class MeetMain extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          context.goNamed('meetCreate');
+        },
         backgroundColor: Colors.black,
         shape: const CircleBorder(),
         child: const Icon(

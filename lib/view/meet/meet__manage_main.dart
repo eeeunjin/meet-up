@@ -39,7 +39,7 @@ class MeetManageMain extends StatelessWidget {
         children: [
           header(back: _back(context), title: '내가 만든 만남방'),
           SizedBox(
-            height: 23.h,
+            height: 11.h,
           ),
           Divider(
             height: 0.3.h,

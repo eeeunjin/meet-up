@@ -27,4 +27,6 @@ class ImagePath {
   static String get meetImage1 => 'assets/images/meetimage1.png';
   static String get meetImage2 => 'assets/images/meetimage2.png';
   static String get meetImage3 => 'assets/images/meetimage3.png';
+
+  static String get nextArrow => 'assets/images/nextarrow.png';
 }
