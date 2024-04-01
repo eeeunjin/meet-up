@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MeetCreateViewModel with ChangeNotifier {
+  // detail
   String _textCount = '';
 
   String get textCount => _textCount;
@@ -29,5 +30,23 @@ class MeetCreateViewModel with ChangeNotifier {
     }
     debugPrint('Selected ages: $_selectedAges');
     notifyListeners();
+  }
+
+  // rules
+  final Map<String, bool?> _rulesQuestion = {
+    '만남 시 대화 녹음': null,
+    '만남 후 앱을 통해 연락처 공유': null,
+    '아는 지인과 동반 신청': null,
+    '첫 만남에 2차 이동': null,
+    '귀가 시 동성과 동행': null,
+  };
+
+  Map<String, bool?> get rules => _rulesQuestion;
+
+  void setRuleQuestion(String rule, bool? agree) {
+    if (_rulesQuestion[rule] != agree) {
+      _rulesQuestion[rule] = agree;
+      notifyListeners();
+    }
   }
 }
