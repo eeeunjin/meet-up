@@ -1,6 +1,20 @@
 import 'package:flutter/material.dart';
 
 class MeetCreateViewModel with ChangeNotifier {
+  // naming
+  String _namingCount = '';
+
+  String get namingCount => _namingCount;
+
+  void countNaming(String newNamingCount) {
+    if (_namingCount != newNamingCount) {
+      _namingCount = newNamingCount;
+      notifyListeners();
+    }
+  }
+
+  String get subNamingCount => '${_namingCount.length}/16';
+
   // detail
   String _textCount = '';
 

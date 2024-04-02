@@ -70,7 +70,7 @@ class MeetCreate extends StatelessWidget {
     return Column(
       children: [
         SizedBox(height: 33.h),
-        _naming(),
+        _naming(context),
         SizedBox(height: 31.h),
         _divider(),
         SizedBox(height: 33.h),
@@ -110,7 +110,8 @@ class MeetCreate extends StatelessWidget {
   }
 
   // MARK - 방 명
-  Widget _naming() {
+  Widget _naming(BuildContext context) {
+    final viewModel = Provider.of<MeetCreateViewModel>(context);
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w),
       child: Row(
@@ -137,23 +138,40 @@ class MeetCreate extends StatelessWidget {
           SizedBox(width: 23.w),
           // text field
           Expanded(
-            child: Transform.translate(
-              offset: Offset(0, -4.0.h), // text와 높이를 맞추기 위한 임의 값
-              child: Container(
-                alignment: Alignment.center,
-                width: 210.w, // 임의 값
-                height: 19.h,
-                child: TextField(
-                  decoration: const InputDecoration(
-                    isDense: true,
-                    contentPadding: EdgeInsets.zero,
-                    border: InputBorder.none,
-                    hintText: '방 명을 입력해주세요',
-                    hintStyle: TextStyle(color: UsedColor.text_5),
+            child: Stack(
+              children: [
+                Transform.translate(
+                  offset: Offset(0, -4.0.h), // text와 높이를 맞추기 위한 임의 값
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: 210.w, // 임의 값
+                    height: 19.h,
+                    child: TextField(
+                      onChanged: (text) {
+                        viewModel.countNaming(text);
+                      },
+                      decoration: const InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.zero,
+                        border: InputBorder.none,
+                        hintText: '방 명을 입력해주세요',
+                        hintStyle: TextStyle(color: UsedColor.text_5),
+                      ),
+                      style: AppTextStyles.PR_R_15
+                          .copyWith(color: UsedColor.text_5),
+                    ),
                   ),
-                  style: AppTextStyles.PR_R_15,
                 ),
-              ),
+                Positioned(
+                  right: 26.0.w,
+                  bottom: 0.0.h,
+                  child: Text(
+                    viewModel.subNamingCount,
+                    style: AppTextStyles.PR_SB_11
+                        .copyWith(color: UsedColor.text_3), // 임의 색상
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -321,7 +339,7 @@ class MeetCreate extends StatelessWidget {
                 onChanged: (text) {
                   viewModel.setDescription(text);
                 },
-                style: AppTextStyles.PR_R_15,
+                style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
               ),
             ),
           ),
@@ -518,33 +536,55 @@ class MeetCreate extends StatelessWidget {
           ),
           SizedBox(height: 32.09.w),
           // contents
-          ...viewModel.rules.keys.map(
-            (rule) => Padding(
+          ...viewModel.rules.entries.map((entry) {
+            bool isSelected = entry.value ?? false;
+            return Padding(
               padding: EdgeInsets.only(left: 14.46.w),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: Text(
-                      rule,
-                      style: AppTextStyles.PR_R_14,
+                      entry.key,
+                      style: AppTextStyles.PR_R_14.copyWith(
+                          color: isSelected ? Colors.black : UsedColor.text_5),
                     ),
                   ),
-                  _responseButton(),
+                  _responseButton(context, entry.key, true),
                   SizedBox(width: 7.12.w),
-                  _responseButton(),
+                  _responseButton(context, entry.key, false),
                 ],
               ),
-            ),
-          ),
+            );
+          }),
         ],
       ),
     );
   }
 
-  Widget _responseButton() {
+  // MARK - 세부 규칙 - 예, 아니요 컨테이너
+  Widget _responseButton(BuildContext context, String rule, bool response) {
+    MeetCreateViewModel viewModel =
+        Provider.of<MeetCreateViewModel>(context, listen: false);
+    bool isSelected = viewModel.rules[rule] == response;
+
     return GestureDetector(
-        // onTap: ,
-        child: Container());
+      onTap: () {
+        viewModel.setRuleQuestion(rule, response);
+      },
+      child: Container(
+        width: 42.96.w,
+        height: 19.75.h,
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.purple : Colors.grey,
+          borderRadius: BorderRadius.circular(9.9.r),
+        ),
+        child: Text(
+          response ? '가능' : '불가능',
+          style: TextStyle(
+              color: isSelected ? Colors.white : Colors.black, fontSize: 14.sp),
+        ),
+      ),
+    );
   }
 }
