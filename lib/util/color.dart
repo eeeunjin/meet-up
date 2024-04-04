@@ -33,6 +33,7 @@ class UsedColor {
   //button
   static Color violet = const Color(0xff564ec2);
   static const Color button = Color(0xFF9798f1);
+  static const Color button_g = Color(0xFFe6e6e6);
 
   //surface
   static Color iamge_card = const Color(0xfff1f3fd);

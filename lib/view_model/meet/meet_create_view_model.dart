@@ -15,6 +15,11 @@ class MeetCreateViewModel with ChangeNotifier {
 
   String get subNamingCount => '${_namingCount.length}/16';
 
+  // naming check
+  bool get namingCompleted {
+    return _namingCount.trim().isNotEmpty;
+  }
+
   // detail
   String _textCount = '';
 
@@ -62,5 +67,11 @@ class MeetCreateViewModel with ChangeNotifier {
       _rulesQuestion[rule] = agree;
       notifyListeners();
     }
+  }
+
+  // check
+
+  bool get allCheckCompleted {
+    return namingCompleted;
   }
 }

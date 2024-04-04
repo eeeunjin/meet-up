@@ -6,6 +6,7 @@ import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
+import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +31,10 @@ class MeetCreate extends StatelessWidget {
                   child: _header(context),
                 ),
               _main(context),
+              Padding(
+                padding: EdgeInsets.only(left: 33.w, right: 32.w, bottom: 56.h),
+                child: _bottom(context),
+              ),
             ],
           ),
         ),
@@ -97,6 +102,7 @@ class MeetCreate extends StatelessWidget {
         _divider(),
         SizedBox(height: 32.h),
         _rules(context),
+        SizedBox(height: 72.2.h),
       ],
     );
   }
@@ -458,7 +464,7 @@ class MeetCreate extends StatelessWidget {
                       shape: BoxShape.circle, color: UsedColor.main),
                 ),
                 SizedBox(
-                  width: 23.w,
+                  width: 13.85.w,
                 ),
                 // title
                 Container(
@@ -521,7 +527,7 @@ class MeetCreate extends StatelessWidget {
                       shape: BoxShape.circle, color: UsedColor.main),
                 ),
                 SizedBox(
-                  width: 23.w,
+                  width: 14.46.w,
                 ),
                 // title
                 Container(
@@ -534,29 +540,37 @@ class MeetCreate extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 32.09.w),
+          SizedBox(height: 27.1.h),
           // contents
           ...viewModel.rules.entries.map((entry) {
             bool isSelected = entry.value ?? false;
             return Padding(
-              padding: EdgeInsets.only(left: 14.46.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              padding: EdgeInsets.only(left: 28.46.w, right: 39.12.w),
+              child: Column(
                 children: [
-                  Expanded(
-                    child: Text(
-                      entry.key,
-                      style: AppTextStyles.PR_R_14.copyWith(
-                          color: isSelected ? Colors.black : UsedColor.text_5),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(entry.key,
+                            style: isSelected
+                                ? AppTextStyles.PR_M_14
+                                    .copyWith(color: Colors.black)
+                                : AppTextStyles.PR_R_14
+                                    .copyWith(color: UsedColor.text_5)),
+                      ),
+                      _responseButton(context, entry.key, true),
+                      SizedBox(width: 7.12.w),
+                      _responseButton(context, entry.key, false),
+                    ],
                   ),
-                  _responseButton(context, entry.key, true),
-                  SizedBox(width: 7.12.w),
-                  _responseButton(context, entry.key, false),
+                  SizedBox(
+                    height: 22.58.h,
+                  )
                 ],
               ),
             );
-          }),
+          }).toList(),
         ],
       ),
     );
@@ -576,15 +590,41 @@ class MeetCreate extends StatelessWidget {
         width: 42.96.w,
         height: 19.75.h,
         decoration: BoxDecoration(
-          color: isSelected ? Colors.purple : Colors.grey,
-          borderRadius: BorderRadius.circular(9.9.r),
-        ),
-        child: Text(
-          response ? '가능' : '불가능',
-          style: TextStyle(
-              color: isSelected ? Colors.white : Colors.black, fontSize: 14.sp),
+            color: isSelected ? UsedColor.button : Colors.white,
+            borderRadius: BorderRadius.circular(9.9.r),
+            border: Border.all(
+                color: isSelected ? UsedColor.button : UsedColor.B_line,
+                width: 1.41.h)),
+        child: Center(
+          child: Text(response ? '가능' : '불가능',
+              style: AppTextStyles.PR_SB_11.copyWith(
+                color: isSelected ? Colors.white : Colors.black,
+              )),
         ),
       ),
+    );
+  }
+
+  Widget _bottom(BuildContext context) {
+    return Consumer<MeetCreateViewModel>(
+      builder: (context, viewModel, child) {
+        return NextButton(
+          onTap: () async {
+            if (!viewModel.allCheckCompleted) return;
+          },
+          height: 56.h,
+          text: '만남방 개설',
+          enable: viewModel.allCheckCompleted,
+          backgroundColor: viewModel.allCheckCompleted
+              ? UsedColor.button
+              : UsedColor.button_g,
+          textStyle: TextStyle(
+            color:
+                viewModel.allCheckCompleted ? Colors.white : UsedColor.text_2,
+            fontSize: 20.sp,
+          ),
+        );
+      },
     );
   }
 }
