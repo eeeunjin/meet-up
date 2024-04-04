@@ -29,4 +29,11 @@ class ImagePath {
   static String get meetImage3 => 'assets/images/meetimage3.png';
 
   static String get nextArrow => 'assets/images/nextarrow.png';
+
+  static String get grW4Empty => 'assets/images/grw4_empty.png';
+  static String get grM4Empty => 'assets/images/grm4_empty.png';
+  static String get grW2M2Empty => 'assets/images/grw2m2_empty.png';
+  static String get grW4 => 'assets/images/grw4.png';
+  static String get grM4 => 'assets/images/grw4.png';
+  static String get grW2M2 => 'assets/images/grw2m2.png';
 }

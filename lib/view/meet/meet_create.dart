@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -97,7 +99,7 @@ class MeetCreate extends StatelessWidget {
         SizedBox(height: 33.h),
         _divider(),
         SizedBox(height: 32.h),
-        _genderRatio(),
+        _genderRatio(context),
         SizedBox(height: 32.7.h),
         _divider(),
         SizedBox(height: 32.h),
@@ -445,7 +447,10 @@ class MeetCreate extends StatelessWidget {
   }
 
   // MARK - 성비
-  Widget _genderRatio() {
+  Widget _genderRatio(BuildContext context) {
+    MeetCreateViewModel viewModel =
+        Provider.of<MeetCreateViewModel>(context, listen: true);
+
     return Padding(
       padding: EdgeInsets.only(left: 27.0.w),
       child: Column(
@@ -478,27 +483,44 @@ class MeetCreate extends StatelessWidget {
             ),
           ),
           SizedBox(height: 13.3.h),
-          Row(
-            children: [
-              Container(
-                width: 76.w,
-                height: 76.h,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle, color: UsedColor.iamge_card),
-              ),
-              Container(
-                width: 76.w,
-                height: 76.h,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle, color: UsedColor.iamge_card),
-              ),
-              Container(
-                width: 76.w,
-                height: 76.h,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle, color: UsedColor.iamge_card),
-              ),
-            ],
+          Padding(
+            padding: EdgeInsets.only(left: 31.0.w),
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: () => viewModel.selectWomen4(),
+                  child: Image.asset(
+                    viewModel.isWomen4Selected
+                        ? ImagePath.grW4
+                        : ImagePath.grW4Empty,
+                    width: 76.w,
+                    height: 76.h,
+                  ),
+                ),
+                SizedBox(width: 24.w),
+                GestureDetector(
+                  onTap: () => viewModel.selectWomen2Men2(),
+                  child: Image.asset(
+                    viewModel.isWomen2Men2Selected
+                        ? ImagePath.grW2M2
+                        : ImagePath.grW2M2Empty,
+                    width: 76.w,
+                    height: 76.h,
+                  ),
+                ),
+                SizedBox(width: 24.w),
+                GestureDetector(
+                  onTap: () => viewModel.selectMen4(),
+                  child: Image.asset(
+                    viewModel.isMen4Selected
+                        ? ImagePath.grM4
+                        : ImagePath.grM4Empty,
+                    width: 76.w,
+                    height: 76.h,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

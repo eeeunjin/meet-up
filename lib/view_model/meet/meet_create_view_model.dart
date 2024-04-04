@@ -51,6 +51,36 @@ class MeetCreateViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  // gender ratio
+  bool _isWomen4Selected = false;
+  bool _isWomen2Men2Selected = false;
+  bool _isMen4Selected = false;
+
+  void selectWomen4() {
+    _isWomen4Selected = true;
+    _isWomen2Men2Selected = false;
+    _isMen4Selected = false;
+    notifyListeners();
+  }
+
+  void selectWomen2Men2() {
+    _isWomen4Selected = false;
+    _isWomen2Men2Selected = true;
+    _isMen4Selected = false;
+    notifyListeners();
+  }
+
+  void selectMen4() {
+    _isWomen4Selected = false;
+    _isWomen2Men2Selected = false;
+    _isMen4Selected = true;
+    notifyListeners();
+  }
+
+  bool get isWomen4Selected => _isWomen4Selected;
+  bool get isWomen2Men2Selected => _isWomen2Men2Selected;
+  bool get isMen4Selected => _isMen4Selected;
+
   // rules
   final Map<String, bool?> _rulesQuestion = {
     '만남 시 대화 녹음': null,
