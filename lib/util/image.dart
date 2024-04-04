@@ -1,5 +1,7 @@
 class ImagePath {
   static String get back => 'assets/images/back.png';
+  static String get close => 'assets/images/close.png';
+  static String get x => 'assets/images/x.png';
 
   // login & sign up
   static String get signUpProgressBar_1 =>
@@ -27,4 +29,16 @@ class ImagePath {
   static String get meetImage1 => 'assets/images/meetimage1.png';
   static String get meetImage2 => 'assets/images/meetimage2.png';
   static String get meetImage3 => 'assets/images/meetimage3.png';
+
+  static String get meetSearch => 'assets/images/search.png';
+  static String get meetGroup => 'assets/images/group.png';
+
+  static String get vector => 'assets/images/Vector.png';
+
+  static String get female2male2 => 'assets/images/female2male2.png';
+  static String get female4 => 'assets/images/female4.png';
+  static String get male4 => 'assets/images/male4.png';
+  static String get female2male2_ => 'assets/images/female2male2_.png';
+  static String get female4_ => 'assets/images/female4_.png';
+  static String get male4_ => 'assets/images/male4_.png';
 }

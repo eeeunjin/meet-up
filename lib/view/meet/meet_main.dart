@@ -169,7 +169,7 @@ class MeetMain extends StatelessWidget {
   Widget _searchMeetList(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.goNamed('meetSearchMain');
+        context.goNamed('meetBrowseMain');
       },
       child: Column(
         children: [

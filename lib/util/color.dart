@@ -33,4 +33,6 @@ class UsedColor {
 
   //button
   static Color violet = const Color(0xff564ec2);
+  static Color button_g = const Color(0xffE6E6E6);
+  static Color button = const Color(0xff9798F1);
 }

@@ -5,6 +5,7 @@ import 'package:meet_up/router.dart';
 import 'package:meet_up/service/remote/firebase_options.dart';
 import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
 import 'package:meet_up/view_model/login/login_verification_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_browse_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_verification_view_model.dart';
@@ -28,6 +29,7 @@ void main() async {
             end: DateTime.now().subtract(const Duration(days: 365 * 19)),
           ),
         ),
+        ChangeNotifierProvider(create: (context) => MeetBrowseViewModel()),
       ],
       child: const MyApp(),
     ),
