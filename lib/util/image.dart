@@ -36,4 +36,6 @@ class ImagePath {
   static String get grW4 => 'assets/images/grw4.png';
   static String get grM4 => 'assets/images/grw4.png';
   static String get grW2M2 => 'assets/images/grw2m2.png';
+
+  static String get closeIcon => 'assets/images/closeicon.png';
 }

@@ -36,5 +36,5 @@ class UsedColor {
   static const Color button_g = Color(0xFFe6e6e6);
 
   //surface
-  static Color iamge_card = const Color(0xfff1f3fd);
+  static Color image_card = const Color(0xfff1f3fd);
 }
