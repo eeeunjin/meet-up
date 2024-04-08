@@ -122,7 +122,6 @@ class MeetBrowseMain extends StatelessWidget {
             errorBorder: InputBorder.none,
             disabledBorder: InputBorder.none,
 
-            // End of border removal
             hintStyle: AppTextStyles.SU_R_14.copyWith(color: UsedColor.text_3),
           ),
           onChanged: (value) {},
@@ -136,53 +135,48 @@ class MeetBrowseMain extends StatelessWidget {
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          for (String category in filters)
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 4.0.w),
-              child: SizedBox(
-                width: 90.w,
-                height: 34.h,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    foregroundColor: UsedColor.text_2,
-                    backgroundColor: Colors.white,
-                    side: BorderSide(
-                      color: UsedColor.button_g,
-                      width: 1.75.w,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                  ),
-                  onPressed: () {
-                    context.goNamed('meetFilterMain');
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          category,
-                          textAlign: TextAlign.center,
-                          // style: AppTextStyles.PR_M_12
-                          //     .copyWith(color: UsedColor.text_2),
-                        ),
-                      ),
-                      SizedBox(width: 8.w),
-                      Image.asset(
-                        ImagePath.vector,
-                        width: 9.w,
-                        height: 4.5.h,
-                      ),
-                    ],
-                  ),
+      child: Wrap(
+        spacing: 4.0.w,
+        children: filters.map((category) {
+          double buttonWidth = 70.w;
+          if (category.length == 4) {
+            buttonWidth = 90.w;
+          }
+          return SizedBox(
+            width: buttonWidth,
+            height: 34.h,
+            child: ElevatedButton(
+              onPressed: () {
+                context.goNamed('meetFilterMain');
+              },
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.zero,
+                backgroundColor: Colors.white,
+                side: BorderSide(
+                  color: UsedColor.button_g,
+                  width: 1.67.w,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
                 ),
               ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(category,
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.PR_M_12.copyWith(
+                          color: UsedColor.text_2,
+                        )),
+                  ),
+                  SizedBox(width: 8.w),
+                  Image.asset(ImagePath.vector),
+                ],
+              ),
             ),
-        ],
+          );
+        }).toList(),
       ),
     );
   }

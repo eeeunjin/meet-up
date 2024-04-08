@@ -119,7 +119,8 @@ Widget _main(BuildContext context) {
             SizedBox(height: 33.51.h),
             _detailedRules(context),
             SizedBox(height: 42.89.h),
-            // _bottom(context),
+            _bottom(context),
+            SizedBox(height: 56.h),
           ],
         ),
       ),
@@ -452,8 +453,13 @@ Widget _area(BuildContext context) {
                 ),
               ],
             ),
-            const Icon(
-              Icons.arrow_forward_ios,
+            GestureDetector(
+              onTap: () {
+                context.goNamed('meetFilterArea');
+              },
+              child: const Icon(
+                Icons.arrow_forward_ios,
+              ),
             ),
           ],
         ),
@@ -695,4 +701,23 @@ Widget _detailedRules(BuildContext context) {
   );
 }
 
-Widget _bottom(BuildContext context) {}
+Widget _bottom(BuildContext context) {
+  return Consumer<MeetBrowseViewModel>(
+    builder: (context, viewModel, child) {
+      return NextButton(
+        onTap: () async {
+          // if(!viewModel.allCheckCompleted)
+          // return;
+        },
+        height: 56.h,
+        text: '다음',
+        // enable :
+        backgroundColor: UsedColor.button,
+        textStyle: TextStyle(
+          color: Colors.white,
+          fontSize: 20.sp,
+        ),
+      );
+    },
+  );
+}
