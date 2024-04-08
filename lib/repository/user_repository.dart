@@ -11,18 +11,18 @@ class UserRepository {
   // < ---------- UserModel CRUD ---------- >
 
   Future<List<UserModel>> readUserCollection() async {
-    return await _firebaseService.readCollection(
+    return await _firebaseService.readCollection<UserModel>(
         colRef: _firebaseRefs.colRefUser);
   }
 
   Stream<QuerySnapshot<Object?>> readUserCollectionStream() {
-    return _firebaseService.readCollectionStream(
+    return _firebaseService.readCollectionStream<UserModel>(
         colRef: _firebaseRefs.colRefUser);
   }
 
   Future<bool> createUserDocument(
       {required UserModel data, required String uid}) async {
-    return await _firebaseService.createDocument(
+    return await _firebaseService.createDocument<UserModel>(
       docRef: _firebaseRefs.colRefUser.doc(uid),
       data: data,
     );
@@ -53,7 +53,7 @@ class UserRepository {
   Future<List<MyRoomModel>> readMyRoomCollection({required String uid}) async {
     CollectionReference myRoomCollectionReference =
         _firebaseRefs.colRefUser.doc(uid).collection("myRooms");
-    return await _firebaseService.readCollection(
+    return await _firebaseService.readCollection<MyRoomModel>(
         colRef: myRoomCollectionReference);
   }
 
@@ -61,7 +61,7 @@ class UserRepository {
       {required String uid}) {
     CollectionReference myRoomCollectionReference =
         _firebaseRefs.colRefUser.doc(uid).collection("myRooms");
-    return _firebaseService.readCollectionStream(
+    return _firebaseService.readCollectionStream<MyRoomModel>(
         colRef: myRoomCollectionReference);
   }
 
@@ -72,7 +72,7 @@ class UserRepository {
   }) async {
     DocumentReference myRoomDocumentReference =
         _firebaseRefs.colRefUser.doc(uid).collection("myRooms").doc(roomId);
-    return await _firebaseService.createDocument(
+    return await _firebaseService.createDocument<MyRoomModel>(
       docRef: myRoomDocumentReference,
       data: data,
     );
@@ -112,11 +112,11 @@ class UserRepository {
 
   // < ---------- MyEnterRequestModel CRUD ---------- >
 
-  Future<List<MyRoomModel>> readMyEnterRequestCollection(
+  Future<List<MyEnterRequestModel>> readMyEnterRequestCollection(
       {required String uid}) async {
     CollectionReference myEnterRequestCollectionReference =
         _firebaseRefs.colRefUser.doc(uid).collection("myEnterRequests");
-    return await _firebaseService.readCollection(
+    return await _firebaseService.readCollection<MyEnterRequestModel>(
         colRef: myEnterRequestCollectionReference);
   }
 
@@ -124,44 +124,46 @@ class UserRepository {
       {required String uid}) {
     CollectionReference myEnterRequestCollectionReference =
         _firebaseRefs.colRefUser.doc(uid).collection("myEnterRequests");
-    return _firebaseService.readCollectionStream(
+    return _firebaseService.readCollectionStream<MyEnterRequestModel>(
         colRef: myEnterRequestCollectionReference);
   }
 
   Future<bool> createMyEnterRequestDocument({
-    required MyRoomModel data,
+    required MyEnterRequestModel data,
     required String uid,
-    required String enterRequestId,
+    required String myEnterRequestId,
   }) async {
-    DocumentReference myEnterRequestDocumentReference =
-        _firebaseRefs.colRefUser.doc(uid).collection("myEnterRequests").doc(enterRequestId);
-    return await _firebaseService.createDocument(
+    DocumentReference myEnterRequestDocumentReference = _firebaseRefs.colRefUser
+        .doc(uid)
+        .collection("myEnterRequests")
+        .doc(myEnterRequestId);
+    return await _firebaseService.createDocument<MyEnterRequestModel>(
       docRef: myEnterRequestDocumentReference,
       data: data,
     );
   }
 
-  Future<MyRoomModel> readMyEnterRequestDocument({
+  Future<MyEnterRequestModel> readMyEnterRequestDocument({
     required String uid,
-    required enterRequestId,
+    required myEnterRequestId,
   }) async {
     DocumentReference myRoomDocumentReference = _firebaseRefs.colRefUser
         .doc(uid)
         .collection("myEnterRequests")
-        .doc(enterRequestId);
-    return await _firebaseService.readDocument<MyRoomModel>(
+        .doc(myEnterRequestId);
+    return await _firebaseService.readDocument<MyEnterRequestModel>(
         docRef: myRoomDocumentReference);
   }
 
   Future<bool> updateMyEnterRequestDocument({
     required String uid,
     required Map<String, dynamic> data,
-    required String enterRequestId,
+    required String myEnterRequestId,
   }) async {
     DocumentReference myRoomDocumentReference = _firebaseRefs.colRefUser
         .doc(uid)
         .collection("myEnterRequests")
-        .doc(enterRequestId);
+        .doc(myEnterRequestId);
     return await _firebaseService.updateDocument(
       docRef: myRoomDocumentReference,
       data: data,
@@ -170,12 +172,12 @@ class UserRepository {
 
   Future<bool> deleteMyEnterRequestData({
     required String uid,
-    required String enterRequestId,
+    required String myEnterRequestId,
   }) async {
     DocumentReference myRoomDocumentReference = _firebaseRefs.colRefUser
         .doc(uid)
         .collection("myEnterRequests")
-        .doc(enterRequestId);
+        .doc(myEnterRequestId);
     return _firebaseService.deleteDocument(docRef: myRoomDocumentReference);
   }
 

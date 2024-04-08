@@ -97,3 +97,23 @@ class EnterRequestModel {
     };
   }
 }
+
+class FilterInfo {
+  String? room_category;
+  String? room_category_detail;
+  String? room_region_province;
+  String? room_region_district;
+  String? room_age;
+  String? room_gender_ratio;
+  List<bool>? room_rules;
+
+  FilterInfo({
+    this.room_category,
+    this.room_category_detail,
+    this.room_region_province,
+    this.room_region_district,
+    this.room_age,
+    this.room_gender_ratio,
+    this.room_rules,
+  });
+}

@@ -77,10 +77,10 @@ class MyRoomModel {
   });
 
   MyRoomModel.fromJson(Map<String, Object?> json)
-  : this(
-    isMyRoom: json['isMyRoom']! as bool,
-    room_reference: json['room_reference']! as DocumentReference,
-  );
+      : this(
+          isMyRoom: json['isMyRoom']! as bool,
+          room_reference: json['room_reference']! as DocumentReference,
+        );
 
   Map<String, dynamic> toJson() {
     return {
@@ -100,15 +100,38 @@ class MyEnterRequestModel {
   });
 
   MyEnterRequestModel.fromJson(Map<String, Object?> json)
-  : this(
-    isAccepted: json["isAccepted"]! as bool,
-    room_reference: json["room_reference"]! as DocumentReference,
-  );
+      : this(
+          isAccepted: json["isAccepted"]! as bool,
+          room_reference: json["room_reference"]! as DocumentReference,
+        );
 
   Map<String, dynamic> toJson() {
     return {
-      'isAccepted' : isAccepted,
-      'room_reference' : room_reference,
+      'isAccepted': isAccepted,
+      'room_reference': room_reference,
+    };
+  }
+}
+
+class MyGoodsHistories {
+  DocumentReference gh_reference;
+  Timestamp gh_change_date;
+
+  MyGoodsHistories({
+    required this.gh_reference,
+    required this.gh_change_date,
+  });
+
+  MyGoodsHistories.fromJson(Map<String, Object?> json)
+      : this(
+          gh_reference: json["gh_reference"]! as DocumentReference,
+          gh_change_date: json["gh_change_date"]! as Timestamp,
+        );
+
+  Map<String, dynamic> toJson() {
+    return {
+      'gh_reference': gh_reference,
+      'gh_change_date': gh_change_date,
     };
   }
 }
