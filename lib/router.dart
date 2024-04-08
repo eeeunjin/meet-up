@@ -3,7 +3,10 @@ import 'package:meet_up/view/login/login_main.dart';
 import 'package:meet_up/view/login/login_phone_num.dart';
 import 'package:meet_up/view/login/login_verification.dart';
 import 'package:meet_up/view/meet/meet__manage_main.dart';
+import 'package:meet_up/view/meet/meet_browse_main.dart';
 import 'package:meet_up/view/meet/meet_create.dart';
+import 'package:meet_up/view/meet/meet_filter.dart';
+import 'package:meet_up/view/meet/meet_filter_area.dart';
 import 'package:meet_up/view/meet/meet_keyword.dart';
 import 'package:meet_up/view/meet/meet_main.dart';
 import 'package:meet_up/view/meet/meet_search_main.dart';
@@ -125,6 +128,27 @@ final router = GoRouter(
               name: 'meetSearchMain',
               builder: (context, state) {
                 return const MeetSearchMain();
+              },
+            ),
+            GoRoute(
+              path: 'meetBrowseMain',
+              name: 'meetBrowseMain',
+              builder: (context, state) {
+                return const MeetBrowseMain();
+              },
+            ),
+            GoRoute(
+              path: 'meetFilterMain',
+              name: 'meetFilterMain',
+              builder: (context, state) {
+                return const MeetFilterMain();
+              },
+            ),
+            GoRoute(
+              path: 'meetFilterArea',
+              name: 'meetFilterArea',
+              builder: (context, state) {
+                return const MeetFilterArea();
               },
             ),
             GoRoute(
