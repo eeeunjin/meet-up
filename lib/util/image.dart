@@ -1,5 +1,6 @@
 class ImagePath {
   static String get back => 'assets/images/back.png';
+  static String get close => 'assets/images/close.png';
 
   // login & sign up
   static String get signUpProgressBar_1 =>
@@ -36,4 +37,7 @@ class ImagePath {
   static String get grW4 => 'assets/images/grw4.png';
   static String get grM4 => 'assets/images/grw4.png';
   static String get grW2M2 => 'assets/images/grw2m2.png';
+
+  static String get search => 'assets/images/search.png';
+  static String get vector => 'assets/images/Vector.png';
 }

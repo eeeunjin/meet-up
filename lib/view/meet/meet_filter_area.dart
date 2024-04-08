@@ -63,30 +63,30 @@ class MeetFilterArea extends StatelessWidget {
         onTap: () {
           Navigator.pop(context);
         },
-        // child: Image.asset(
-        //   ImagePath.close,
-        //   width: 40.w,
-        //   height: 40.h,
-        // ),
+        child: Image.asset(
+          ImagePath.close,
+          width: 40.w,
+          height: 40.h,
+        ),
       ),
     );
   }
 }
 
-// Widget _main(BuildContext context) {
-//   return Container(
-//     color: Colors.white,
-//     child: SingleChildScrollView(
-//       child: Padding(
-//         padding: EdgeInsets.only(left: 20.w, right: 20.w),
-//         child: Column(
-//           children: [
-//             // _category(context),
-//           ],
-//         ),
-//       ),
-//     ),
-//   );
-// }
+Widget _main(BuildContext context) {
+  return Container(
+    color: Colors.white,
+    child: SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.only(left: 20.w, right: 20.w),
+        child: const Column(
+          children: [
+            // _category(context),
+          ],
+        ),
+      ),
+    ),
+  );
+}
 
 // Widget _selectArea(BuildContext context) {}

@@ -64,11 +64,11 @@ Widget _back(BuildContext context) {
       onTap: () {
         Navigator.pop(context);
       },
-      // child: Image.asset(
-      //   // ImagePath.close,
-      //   width: 40.w,
-      //   height: 40.h,
-      // ),
+      child: Image.asset(
+        ImagePath.close,
+        width: 40.w,
+        height: 40.h,
+      ),
     ),
   );
 }
@@ -569,23 +569,23 @@ Widget _genderRatio(BuildContext context) {
         child: Row(
           children: [
             SizedBox(width: 4.64.w),
-            // Image.asset(
-            //   // ImagePath.female4,
-            //   width: 76.w,
-            //   height: 76.h,
-            // ),
-            // SizedBox(width: 24.w),
-            // Image.asset(
-            //   // ImagePath.female2male2,
-            //   width: 76.w,
-            //   height: 76.h,
-            // ),
-            // SizedBox(width: 24.w),
-            // Image.asset(
-            //   // ImagePath.male4,
-            //   width: 76.w,
-            //   height: 76.h,
-            // ),
+            Image.asset(
+              ImagePath.grW4Empty,
+              width: 76.w,
+              height: 76.h,
+            ),
+            SizedBox(width: 24.w),
+            Image.asset(
+              ImagePath.grW2M2Empty,
+              width: 76.w,
+              height: 76.h,
+            ),
+            SizedBox(width: 24.w),
+            Image.asset(
+              ImagePath.grM4Empty,
+              width: 76.w,
+              height: 76.h,
+            ),
           ],
         ),
       ),

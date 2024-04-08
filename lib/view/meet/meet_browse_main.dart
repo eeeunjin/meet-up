@@ -100,20 +100,20 @@ class MeetBrowseMain extends StatelessWidget {
             focusColor: UsedColor.bg_color,
             contentPadding: EdgeInsets.symmetric(vertical: 10.0.h),
             hintText: '만남방의 이름을 검색해 보세요.',
-            // prefixIcon: Image.asset(
-            //   // ImagePath.meetSearch,
-            //   width: 15.w,
-            //   height: 15.h,
-            // ),
+            prefixIcon: Image.asset(
+              ImagePath.search,
+              width: 10.w,
+              height: 10.h,
+            ),
             suffixIcon: GestureDetector(
               onTap: () {
                 controller.clear();
               },
-              // child: Image.asset(
-              //   // ImagePath.x,
-              //   width: 23.w,
-              //   height: 23.h,
-              // ),
+              child: Image.asset(
+                ImagePath.close,
+                width: 23.w,
+                height: 23.h,
+              ),
             ),
             // Remove border
             border: InputBorder.none,
@@ -171,7 +171,11 @@ class MeetBrowseMain extends StatelessWidget {
                         )),
                   ),
                   SizedBox(width: 8.w),
-                  // Image.asset(ImagePath.vector),
+                  Image.asset(
+                    ImagePath.vector,
+                    width: 9.w,
+                    height: 5.h,
+                  ),
                 ],
               ),
             ),
