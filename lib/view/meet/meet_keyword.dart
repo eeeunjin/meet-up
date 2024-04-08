@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -103,7 +104,8 @@ class MeetKeyWord extends StatelessWidget {
                       AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_5),
                   contentPadding: EdgeInsets.only(left: 25.w),
                   focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
+                    borderSide:
+                        BorderSide(color: UsedColor.text_1, width: 0.75),
                   ),
                 ),
                 onChanged: (text) {
@@ -143,23 +145,22 @@ class MeetKeyWord extends StatelessWidget {
             ],
           ),
           // 텍스트 카운트 표시
-          Stack(
+          Column(
             children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(top: 15.0.h), // 왼쪽 여백 조정
-                  child: _keywordList(context, viewModel),
+              Padding(
+                padding: EdgeInsets.only(top: 8.0.h, right: 7.0.w),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    viewModel.subTextCount,
+                    style: AppTextStyles.PR_SB_11
+                        .copyWith(color: UsedColor.text_3), // 임의 색상
+                  ),
                 ),
               ),
-              Positioned(
-                top: 8.0.h,
-                right: 7.0.w,
-                child: Text(
-                  viewModel.subTextCount,
-                  style: AppTextStyles.PR_SB_11
-                      .copyWith(color: UsedColor.text_3), // 임의 색상
-                ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: _keywordList(context, viewModel),
               ),
             ],
           ),
@@ -170,47 +171,62 @@ class MeetKeyWord extends StatelessWidget {
 
   Widget _keywordList(BuildContext context, MeetKeyWordViewModel viewModel) {
     return Wrap(
-      spacing: 8.0,
-      runSpacing: 4.0,
-      children: viewModel.keywords.map((keyword) {
-        return Container(
-          // label: Text('#$keyword'),
-          // onDeleted: () => viewModel.removeKeyword(keyword),
-          width: 78.w,
-          height: 29.h,
-          decoration: BoxDecoration(
-            color: UsedColor.image_card,
-            borderRadius: BorderRadius.circular(9.r),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    '#$keyword',
-                    style: AppTextStyles.SU_SB_12
-                        .copyWith(color: UsedColor.violet),
-                  ),
-                ),
+      // 자동 줄바꿈
+      spacing: 4.0, // 좌우 간격
+      runSpacing: 4.0, // 상하 간격
+      children: viewModel.keywords
+          .map((keyword) => _keywordChip(
+              keyword,
+              AppTextStyles.SU_SB_12.copyWith(color: UsedColor.violet),
+              context))
+          .toList(),
+    );
+  }
+
+  Widget _keywordChip(
+      String keyword, TextStyle textStyle, BuildContext context) {
+    double baseWidth = 78.w;
+    int additionalCharacters = keyword.length - 2;
+    double additionalWidth = 10.w;
+    double containerWidth =
+        baseWidth + (additionalCharacters * additionalWidth);
+
+    containerWidth = max(containerWidth, baseWidth);
+
+    return Container(
+      width: containerWidth,
+      height: 29.h,
+      decoration: BoxDecoration(
+        color: UsedColor.image_card,
+        borderRadius: BorderRadius.circular(9.r),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                '#$keyword',
+                style: AppTextStyles.SU_SB_12.copyWith(color: UsedColor.violet),
               ),
-              GestureDetector(
-                onTap: () {
-                  viewModel.removeKeyword(keyword);
-                },
-                child: Padding(
-                  padding: EdgeInsets.only(right: 6.0.w),
-                  child: Image.asset(
-                    ImagePath.closeIcon,
-                    width: 7.w,
-                    height: 7.h,
-                  ),
-                ),
-              )
-            ],
+            ),
           ),
-        );
-      }).toList(),
+          GestureDetector(
+            onTap: () {
+              Provider.of<MeetKeyWordViewModel>(context, listen: false)
+                  .removeKeyword(keyword);
+            },
+            child: Padding(
+              padding: EdgeInsets.only(right: 6.0.w),
+              child: Image.asset(
+                ImagePath.closeIcon,
+                width: 7.w,
+                height: 7.h,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
