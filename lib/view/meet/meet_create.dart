@@ -87,7 +87,7 @@ class MeetCreate extends StatelessWidget {
         SizedBox(height: 31.h),
         _divider(),
         SizedBox(height: 32.91.h),
-        _keyword(context),
+        _keyword(),
         SizedBox(height: 31.h),
         _divider(),
         SizedBox(height: 32.31.h),
@@ -98,9 +98,9 @@ class MeetCreate extends StatelessWidget {
         _divider(),
         SizedBox(height: 32.h),
         _genderRatio(context),
-        SizedBox(height: 33.h),
+        SizedBox(height: 32.7.h),
         _divider(),
-        SizedBox(height: 33.h),
+        SizedBox(height: 32.h),
         _rules(context),
         SizedBox(height: 72.2.h),
       ],
@@ -153,7 +153,6 @@ class MeetCreate extends StatelessWidget {
                     width: 210.w, // 임의 값
                     height: 19.h,
                     child: TextField(
-                      cursorColor: Colors.black, // 커서 색상 변경
                       onChanged: (text) {
                         viewModel.countNaming(text);
                       },
@@ -163,9 +162,6 @@ class MeetCreate extends StatelessWidget {
                         border: InputBorder.none,
                         hintText: '방 명을 입력해주세요',
                         hintStyle: TextStyle(color: UsedColor.text_5),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
                       ),
                       style: AppTextStyles.PR_R_15
                           .copyWith(color: UsedColor.text_5),
@@ -268,7 +264,7 @@ class MeetCreate extends StatelessWidget {
   }
 
   // MARK - 키워드
-  Widget _keyword(BuildContext context) {
+  Widget _keyword() {
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w),
       child: Row(
@@ -294,16 +290,8 @@ class MeetCreate extends StatelessWidget {
           ),
           const Spacer(),
           Padding(
-            padding: EdgeInsets.only(right: 7.w),
-            child: GestureDetector(
-              onTap: () {
-                context.goNamed('meetKeyWord');
-              },
-              child: SizedBox(
-                  width: 48.w,
-                  height: 48.w,
-                  child: Image.asset(ImagePath.nextArrow)),
-            ),
+            padding: EdgeInsets.only(right: 26.0.w),
+            child: Image.asset(ImagePath.nextArrow),
           ),
         ],
       ),
@@ -357,12 +345,11 @@ class MeetCreate extends StatelessWidget {
               padding: EdgeInsets.only(left: 28.0.w, top: 15.h),
               child: TextField(
                 decoration: const InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.zero,
-                  border: InputBorder.none,
-                  hintText: '만남 목표를 간단히 입력해 주세요. (50자 제한)',
-                  hintStyle: TextStyle(color: UsedColor.text_5),
-                ),
+                    isDense: true,
+                    contentPadding: EdgeInsets.zero,
+                    border: InputBorder.none,
+                    hintText: '만남 목표를 간단히 입력해 주세요. (50자 제한)',
+                    hintStyle: TextStyle(color: UsedColor.text_5)),
                 onChanged: (text) {
                   viewModel.setDescription(text);
                 },
@@ -606,7 +593,7 @@ class MeetCreate extends StatelessWidget {
                     ],
                   ),
                   SizedBox(
-                    height: 22.h,
+                    height: 22.58.h,
                   )
                 ],
               ),
