@@ -1,7 +1,5 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -81,7 +79,7 @@ class MeetCreate extends StatelessWidget {
         SizedBox(height: 31.h),
         _divider(),
         SizedBox(height: 33.h),
-        _category(),
+        _category(context),
         SizedBox(height: 31.h),
         _divider(),
         SizedBox(height: 33.h),
@@ -192,7 +190,7 @@ class MeetCreate extends StatelessWidget {
   }
 
   // MARK - 카테고리
-  Widget _category() {
+  Widget _category(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w),
       child: Row(
@@ -218,8 +216,16 @@ class MeetCreate extends StatelessWidget {
           ),
           const Spacer(),
           Padding(
-            padding: EdgeInsets.only(right: 26.0.w),
-            child: Image.asset(ImagePath.nextArrow),
+            padding: EdgeInsets.only(right: 7.0.w),
+            child: GestureDetector(
+              onTap: () {
+                context.goNamed('meetCategory');
+              },
+              child: SizedBox(
+                  width: 48.w,
+                  height: 48.w,
+                  child: Image.asset(ImagePath.nextArrow)),
+            ),
           ),
         ],
       ),

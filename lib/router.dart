@@ -4,6 +4,7 @@ import 'package:meet_up/view/login/login_phone_num.dart';
 import 'package:meet_up/view/login/login_verification.dart';
 import 'package:meet_up/view/meet/meet__manage_main.dart';
 import 'package:meet_up/view/meet/meet_browse_main.dart';
+import 'package:meet_up/view/meet/meet_category.dart';
 import 'package:meet_up/view/meet/meet_create.dart';
 import 'package:meet_up/view/meet/meet_filter.dart';
 import 'package:meet_up/view/meet/meet_filter_area.dart';
@@ -163,6 +164,13 @@ final router = GoRouter(
                   name: 'meetKeyWord',
                   builder: (context, state) {
                     return const MeetKeyWord();
+                  },
+                ),
+                GoRoute(
+                  path: 'meetCategory',
+                  name: 'meetCategory',
+                  builder: (context, state) {
+                    return const MeetCategory();
                   },
                 ),
               ],
