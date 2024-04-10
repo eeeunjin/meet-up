@@ -106,27 +106,38 @@ class MeetCreateViewModel with ChangeNotifier {
   }
 
   // MARK - CategoryPage
+
   // 상세 카테고리
-  String? _selectedCategory;
-  String? get selectedCategory => _selectedCategory;
+  bool _isSelectedCategory = false;
+  bool get isSelectedCategory => _isSelectedCategory;
 
-  set selectedCategory(String? value) {
-    _selectedCategory = value;
+  String? _selectedMainCategory;
+  String? get selectedMainCategory => _selectedMainCategory;
+
+  final Map<String, List<String>> _subCategoriesMap = {
+    '취미': ['여행', '맛집', '연예인', '사진', '영화', '게임'],
+    '운동': ['축구', '야구', '농구', '테니스', '요가', '헬스', '탁구', '조깅', '배드민턴'],
+    '공부/학업': ['취업', '독서', '대학', '미라클 모닝', '자격증', '아르바이트'],
+    '휴식/친목': ['카페', '산책', '저녁 식사'],
+    '기타': [],
+  };
+
+  List<String> getSubCategories(String mainCategory) {
+    return _subCategoriesMap[mainCategory] ?? [];
+  }
+
+  void selectSubCategory(String subCategory) {
     notifyListeners();
   }
 
-  // age
-  List<bool> isSelected = [false, false, false, false];
-
-  void toggleSelection(int index) {
-    isSelected[index] = !isSelected[index];
+  void mainCategorySelection(String category) {
+    if (_selectedMainCategory == category) {
+      _selectedMainCategory = null;
+      _isSelectedCategory = false;
+    } else {
+      _selectedMainCategory = category;
+      _isSelectedCategory = true;
+    }
     notifyListeners();
-  }
-
-  // 세부규칙
-  List<bool> selectedRules = [false, false, false, false, false];
-
-  void toggleRule(int index) {
-    selectedRules[index] = !selectedRules[index];
   }
 }
