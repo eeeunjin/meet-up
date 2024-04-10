@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class UsedColor {
-  // button
   static const Color Button_01 = Color(0xFF564EC2);
 
   // Gray
@@ -33,4 +32,9 @@ class UsedColor {
 
   //button
   static Color violet = const Color(0xff564ec2);
+  static const Color button = Color(0xFF9798f1);
+  static const Color button_g = Color(0xFFe6e6e6);
+
+  //surface
+  static Color image_card = const Color(0xfff1f3fd);
 }

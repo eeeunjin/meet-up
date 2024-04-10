@@ -2,6 +2,15 @@ import 'package:go_router/go_router.dart';
 import 'package:meet_up/view/login/login_main.dart';
 import 'package:meet_up/view/login/login_phone_num.dart';
 import 'package:meet_up/view/login/login_verification.dart';
+import 'package:meet_up/view/meet/meet__manage_main.dart';
+import 'package:meet_up/view/meet/meet_browse_main.dart';
+import 'package:meet_up/view/meet/meet_category.dart';
+import 'package:meet_up/view/meet/meet_create.dart';
+import 'package:meet_up/view/meet/meet_filter.dart';
+import 'package:meet_up/view/meet/meet_filter_area.dart';
+import 'package:meet_up/view/meet/meet_keyword.dart';
+import 'package:meet_up/view/meet/meet_main.dart';
+import 'package:meet_up/view/meet/meet_search_main.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_one.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_five.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_four.dart';
@@ -95,6 +104,74 @@ final router = GoRouter(
                       ],
                     ),
                   ],
+                ),
+              ],
+            ),
+          ],
+        ),
+        // Meet
+        GoRoute(
+          path: 'meetMain',
+          name: 'meetMain',
+          builder: (context, state) {
+            return const MeetMain();
+          },
+          routes: [
+            GoRoute(
+              path: 'meetManageMain',
+              name: 'meetManageMain',
+              builder: (context, state) {
+                return const MeetManageMain();
+              },
+            ),
+            GoRoute(
+              path: 'meetSearchMain',
+              name: 'meetSearchMain',
+              builder: (context, state) {
+                return const MeetSearchMain();
+              },
+            ),
+            GoRoute(
+              path: 'meetBrowseMain',
+              name: 'meetBrowseMain',
+              builder: (context, state) {
+                return const MeetBrowseMain();
+              },
+            ),
+            GoRoute(
+              path: 'meetFilterMain',
+              name: 'meetFilterMain',
+              builder: (context, state) {
+                return const MeetFilterMain();
+              },
+            ),
+            GoRoute(
+              path: 'meetFilterArea',
+              name: 'meetFilterArea',
+              builder: (context, state) {
+                return const MeetFilterArea();
+              },
+            ),
+            GoRoute(
+              path: 'meetCreate',
+              name: 'meetCreate',
+              builder: (context, state) {
+                return const MeetCreate();
+              },
+              routes: [
+                GoRoute(
+                  path: 'meetKeyWord',
+                  name: 'meetKeyWord',
+                  builder: (context, state) {
+                    return const MeetKeyWord();
+                  },
+                ),
+                GoRoute(
+                  path: 'meetCategory',
+                  name: 'meetCategory',
+                  builder: (context, state) {
+                    return const MeetCategory();
+                  },
                 ),
               ],
             ),
