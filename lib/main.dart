@@ -15,6 +15,22 @@ import 'package:provider/provider.dart';
 
 void main() async {
   await initializeFirebase();
+
+  // await roomDocumentCreationTest();
+
+  // FilterInfo filterInfo = FilterInfo(
+  //   room_category: RoomCategory.hobby.name,
+  //   room_category_detail: Hobby.photography.name,
+  //   room_region_province: "서울",
+  //   room_region_district: "종로구",
+  //   room_age: RoomAge.twenties.name,
+  //   room_gender_ratio: RoomGenderRatio.mixed.name,
+  //   room_rules: [false, false, false, false, false],
+  // );
+
+  // await roomCollectionReadTest(filterInfo: filterInfo, limit: 2);
+  // await roomCollectionStreamReadTest(filterInfo: filterInfo);
+
   runApp(
     MultiProvider(
       providers: [

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
 
 ///
@@ -16,6 +17,7 @@ class FirebaseInstance {
 class FirebaseRefs {
   // user collection
   CollectionReference colRefUser = FirebaseInstance.db.collection("users");
+  CollectionReference colRefRoom = FirebaseInstance.db.collection("rooms");
 }
 
 ///
@@ -23,16 +25,66 @@ class FirebaseRefs {
 ///
 class FirebaseCRUD {
   /// 콜렉션 정보를 읽어오는 함수
-  Future<List<T>> readCollection<T>(
-      {required CollectionReference colRef}) async {
+  Future<List<T>> readCollection<T>({
+    int? limit,
+    FilterInfo? filterInfo,
+    required CollectionReference colRef,
+  }) async {
     try {
       // Get 메서드를 이용해서 Collection 하위의 documents 들의 Snapshot 가져오기
-      QuerySnapshot querySnapshot = await colRef.get();
+      QuerySnapshot querySnapshot;
+      if (limit == null) {
+        if (T == RoomModel) {
+          if (filterInfo == null) {
+            querySnapshot = await colRef
+                .orderBy("room_creation_date", descending: true)
+                .get();
+          } else {
+            // 최신 순으로 정렬해서 가져오기
+            querySnapshot = await createFilterQuery(
+              filterInfo: filterInfo,
+              colRef: colRef,
+            ).orderBy("room_creation_date", descending: true).get();
+          }
+        } else {
+          querySnapshot = await colRef.get();
+        }
+      } else {
+        if (T == RoomModel) {
+          if (filterInfo == null) {
+            querySnapshot = await colRef
+                .orderBy("room_creation_date", descending: true)
+                .limit(limit)
+                .get();
+          } else {
+            // 최신 순으로 정렬해서 가져오기
+            querySnapshot = await createFilterQuery(
+              colRef: colRef,
+              filterInfo: filterInfo,
+            )
+                .orderBy("room_creation_date", descending: true)
+                .limit(limit)
+                .get();
+          }
+        } else {
+          querySnapshot = await colRef.limit(limit).get();
+        }
+      }
 
       // 불러온 documents 들의 정보를 list로 매핑해서 반환하기
       return querySnapshot.docs.map((doc) {
         if (T == UserModel) {
           return UserModel.fromJson(doc.data() as Map<String, Object?>) as T;
+        } else if (T == MyRoomModel) {
+          return MyRoomModel.fromJson(doc.data() as Map<String, Object?>) as T;
+        } else if (T == MyEnterRequestModel) {
+          return MyEnterRequestModel.fromJson(
+              doc.data() as Map<String, Object?>) as T;
+        } else if (T == RoomModel) {
+          return RoomModel.fromJson(doc.data() as Map<String, Object?>) as T;
+        } else if (T == EnterRequestModel) {
+          return EnterRequestModel.fromJson(doc.data() as Map<String, Object?>)
+              as T;
         } else {
           // 지정하지 않은 형식의 모델 값이 들어오면 에러를 반환
           throw Exception("Unsupported document type.");
@@ -46,11 +98,91 @@ class FirebaseCRUD {
   }
 
   /// 콜렉션의 stream snapshots을 불러오는 함수
-  Stream<QuerySnapshot<Object?>> readCollectionStream(
-      {required CollectionReference colRef}) {
+  Stream<QuerySnapshot<Object?>> readCollectionStream<T>({
+    int? limit,
+    FilterInfo? filterInfo,
+    required CollectionReference colRef,
+  }) {
     // 콜렉션 스냅샷 스트림 정보를 반환
     // 실시간으로 스트림 정보를 Read 할 수 있음
-    return colRef.snapshots();
+    if (limit == null) {
+      if (T == RoomModel) {
+        if (filterInfo == null) {
+          return colRef
+              .orderBy("room_creation_date", descending: true)
+              .snapshots();
+        } else {
+          return createFilterQuery(
+            filterInfo: filterInfo,
+            colRef: colRef,
+          ).orderBy("room_creation_date", descending: true).snapshots();
+        }
+      } else {
+        return colRef.snapshots();
+      }
+    } else {
+      if (T == RoomModel) {
+        if (filterInfo == null) {
+          return colRef
+              .orderBy("room_creation_date", descending: true)
+              .limit(limit)
+              .snapshots();
+        } else {
+          return createFilterQuery(
+            colRef: colRef,
+            filterInfo: filterInfo,
+          )
+              .orderBy("room_creation_date", descending: true)
+              .limit(limit)
+              .snapshots();
+        }
+      } else {
+        return colRef.limit(limit).snapshots();
+      }
+    }
+  }
+
+  // Room Model의 필터 정보에 맞게 쿼리를 반환해주는 함수
+  Query<Object?> createFilterQuery({
+    required FilterInfo filterInfo,
+    required CollectionReference colRef,
+  }) {
+    Query<Object?> filteredQuery = colRef;
+    if (filterInfo.room_category != null) {
+      filteredQuery = filteredQuery.where("room_category",
+          isEqualTo: filterInfo.room_category);
+    }
+    // 세부 카테고리 같아야 함
+    if (filterInfo.room_category_detail != null) {
+      filteredQuery = filteredQuery.where("room_category_detail",
+          isEqualTo: filterInfo.room_category_detail);
+    }
+    // 테스트 필요
+    if (filterInfo.room_age != null) {
+      filteredQuery =
+          filteredQuery.where("room_age", arrayContains: filterInfo.room_age);
+    }
+    // 성별 비율 같아야 함
+    if (filterInfo.room_gender_ratio != null) {
+      filteredQuery = filteredQuery.where("room_gender_ratio",
+          isEqualTo: filterInfo.room_gender_ratio);
+    }
+    // 시/도 같아야 함
+    if (filterInfo.room_region_district != null) {
+      filteredQuery = filteredQuery.where("room_region_district",
+          isEqualTo: filterInfo.room_region_district);
+    }
+    // 시/군/구 같아야 함
+    if (filterInfo.room_region_province != null) {
+      filteredQuery = filteredQuery.where("room_region_province",
+          isEqualTo: filterInfo.room_region_province);
+    }
+    // 규칙 완전히 같아야 함
+    if (filterInfo.room_rules != null) {
+      filteredQuery =
+          filteredQuery.where("room_rules", isEqualTo: filterInfo.room_rules);
+    }
+    return filteredQuery;
   }
 
   /// 도큐먼트 정보를 생성하는 함수
@@ -64,6 +196,22 @@ class FirebaseCRUD {
         if (T == UserModel) {
           UserModel user = data as UserModel;
           await docRef.set(user.toJson());
+          return true;
+        } else if (T == MyRoomModel) {
+          MyRoomModel myRoom = data as MyRoomModel;
+          await docRef.set(myRoom.toJson());
+          return true;
+        } else if (T == MyEnterRequestModel) {
+          MyEnterRequestModel myEnterRequest = data as MyEnterRequestModel;
+          await docRef.set(myEnterRequest.toJson());
+          return true;
+        } else if (T == RoomModel) {
+          RoomModel myEnterRequest = data as RoomModel;
+          await docRef.set(myEnterRequest.toJson());
+          return true;
+        } else if (T == EnterRequestModel) {
+          EnterRequestModel enterRequest = data as EnterRequestModel;
+          await docRef.set(enterRequest.toJson());
           return true;
         } else {
           // 지정하지 않은 모델인 경우 에러 반환
@@ -93,12 +241,15 @@ class FirebaseCRUD {
       if (data != null) {
         if (T == UserModel) {
           return UserModel.fromJson(data) as T;
-        }
-        // 다른 모델에 대한 처리 추가
-        // else if (T == OtherModel) {
-        //   return OtherModel.fromJson(data) as T;
-        // }
-        else {
+        } else if (T == MyRoomModel) {
+          return MyRoomModel.fromJson(data) as T;
+        } else if (T == MyEnterRequestModel) {
+          return MyEnterRequestModel.fromJson(data) as T;
+        } else if (T == RoomModel) {
+          return RoomModel.fromJson(data) as T;
+        } else if (T == EnterRequestModel) {
+          return EnterRequestModel.fromJson(data) as T;
+        } else {
           // 지정한 모델이 아닌 경우 에러 코드 반환
           throw Exception("Unsupported document type.");
         }
