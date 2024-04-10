@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -142,6 +143,10 @@ class LoginPhoneNumViewModel with ChangeNotifier {
       purpose: [],
       phone_number: controller.text,
       accepted_policies: [false, false],
+      coin: 0,
+      ticket: 0,
+      isFixedTicket: false,
+      fixed_ticket_end_date: Timestamp.now(),
     );
 
     // Cloud Firestore에 유저 정보 저장

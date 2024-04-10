@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
+  List<dynamic> accepted_policies;
   String nickname;
   String profile_icon;
   DateTime birthday;
@@ -14,7 +15,10 @@ class UserModel {
   List<dynamic> interest;
   List<dynamic> purpose;
   String phone_number;
-  List<dynamic> accepted_policies;
+  int coin;
+  int ticket;
+  bool isFixedTicket;
+  Timestamp fixed_ticket_end_date;
 
   UserModel({
     required this.nickname,
@@ -29,6 +33,10 @@ class UserModel {
     required this.purpose,
     required this.phone_number,
     required this.accepted_policies,
+    required this.coin,
+    required this.ticket,
+    required this.isFixedTicket,
+    required this.fixed_ticket_end_date,
   });
 
   UserModel.fromJson(Map<String, Object?> json)
@@ -47,6 +55,10 @@ class UserModel {
           purpose: json["purpose"]! as List<dynamic>,
           phone_number: json["phone_number"]! as String,
           accepted_policies: json["accepted_policies"]! as List<dynamic>,
+          coin: json["coin"]! as int,
+          ticket: json["ticket"]! as int,
+          isFixedTicket: json["isFixedTicket"]! as bool,
+          fixed_ticket_end_date: json["fixed_ticket_end_date"]! as Timestamp,
         );
 
   Map<String, Object?> toJson() {
@@ -63,6 +75,10 @@ class UserModel {
       'purpose': purpose,
       'phone_number': phone_number,
       'accepted_policies': accepted_policies,
+      'coin': coin,
+      'ticket': ticket,
+      'isFixedTicket': isFixedTicket,
+      'fixed_ticket_end_date': fixed_ticket_end_date,
     };
   }
 }
@@ -113,16 +129,16 @@ class MyEnterRequestModel {
   }
 }
 
-class MyGoodsHistories {
+class MyGoodsHistoryModel {
   DocumentReference gh_reference;
   Timestamp gh_change_date;
 
-  MyGoodsHistories({
+  MyGoodsHistoryModel({
     required this.gh_reference,
     required this.gh_change_date,
   });
 
-  MyGoodsHistories.fromJson(Map<String, Object?> json)
+  MyGoodsHistoryModel.fromJson(Map<String, Object?> json)
       : this(
           gh_reference: json["gh_reference"]! as DocumentReference,
           gh_change_date: json["gh_change_date"]! as Timestamp,
@@ -132,6 +148,33 @@ class MyGoodsHistories {
     return {
       'gh_reference': gh_reference,
       'gh_change_date': gh_change_date,
+    };
+  }
+}
+
+class MyTickets {
+  int number_of_times_available;
+  bool isUsed;
+  DocumentReference roomReference;
+
+  MyTickets({
+    required this.number_of_times_available,
+    required this.isUsed,
+    required this.roomReference,
+  });
+
+  MyTickets.fromJson(Map<String, Object?> json)
+      : this(
+          number_of_times_available: json["number_of_times_available"]! as int,
+          isUsed: json["isUsed"]! as bool,
+          roomReference: json["roomReference"]! as DocumentReference,
+        );
+
+  Map<String, Object?> toJson() {
+    return {
+      "number_of_times_available": number_of_times_available,
+      "isUsed": isUsed,
+      "roomReference": roomReference,
     };
   }
 }

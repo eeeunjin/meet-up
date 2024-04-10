@@ -155,8 +155,10 @@ class RoomRepository {
     );
   }
 
-  Future<bool> deleteEnterRequestData(
-      {required String roomId, required String enterRequestId}) async {
+  Future<bool> deleteEnterRequestData({
+    required String roomId,
+    required String enterRequestId,
+  }) async {
     DocumentReference enterRequestDocumentReference = _firebaseRefs.colRefUser
         .doc(roomId)
         .collection("enterRequests")

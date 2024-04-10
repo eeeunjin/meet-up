@@ -55,18 +55,23 @@ Future<void> documentCreateTest() async {
 
   // 새로운 유저 모델 정보
   UserModel newUser = UserModel(
-      nickname: "minsu",
-      profile_icon: '',
-      birthday: DateTime.now(),
-      gender: "man",
-      region: region,
-      job: "student",
-      personality_relationship: ["사교적인", "친절한", "자신감있는"],
-      personality_self: ["계획적인", "안정적인", "열정적인"],
-      interest: ["운동", "음악", "독서"],
-      purpose: ["친목", "자기성찰", "기록"],
-      phone_number: "01012341234",
-      accepted_policies: [false, false]);
+    nickname: "minsu",
+    profile_icon: '',
+    birthday: DateTime.now(),
+    gender: "man",
+    region: region,
+    job: "student",
+    personality_relationship: ["사교적인", "친절한", "자신감있는"],
+    personality_self: ["계획적인", "안정적인", "열정적인"],
+    interest: ["운동", "음악", "독서"],
+    purpose: ["친목", "자기성찰", "기록"],
+    phone_number: "01012341234",
+    accepted_policies: [false, false],
+    coin: 0,
+    ticket: 0,
+    isFixedTicket: false,
+    fixed_ticket_end_date: Timestamp.now(),
+  );
 
   // 새로운 유저 정보를 새로운 docRef 주소에 전달하여 생성
   await userRepository.createUserDocument(data: newUser, uid: "TestUID");
