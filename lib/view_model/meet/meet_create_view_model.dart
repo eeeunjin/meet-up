@@ -108,11 +108,11 @@ class MeetCreateViewModel with ChangeNotifier {
   // MARK - CategoryPage
 
   // 상세 카테고리
-  bool _isSelectedCategory = false;
+  final bool _isSelectedCategory = false;
   bool get isSelectedCategory => _isSelectedCategory;
 
-  String? _selectedMainCategory;
-  String? get selectedMainCategory => _selectedMainCategory;
+  final List<String> _selectedMainCategories = [];
+  List<String> get selectedMainCategories => _selectedMainCategories;
 
   final Map<String, List<String>> _subCategoriesMap = {
     '취미': ['여행', '맛집', '연예인', '사진', '영화', '게임'],
@@ -127,17 +127,19 @@ class MeetCreateViewModel with ChangeNotifier {
   }
 
   void selectSubCategory(String subCategory) {
+    // 상세 카테고리 선택 로직
     notifyListeners();
   }
 
-  void mainCategorySelection(String category) {
-    if (_selectedMainCategory == category) {
-      _selectedMainCategory = null;
-      _isSelectedCategory = false;
+  void selectMainCategory(String category) {
+    if (_selectedMainCategories.contains(category)) {
+      // 이미 선택된 카테고리일 경우 해제
+      _selectedMainCategories.remove(category);
     } else {
-      _selectedMainCategory = category;
-      _isSelectedCategory = true;
+      // 선택되지 않은 카테고리일 경우 추가
+      _selectedMainCategories.add(category);
     }
+    // 변경 사항을 리스너에게 알림
     notifyListeners();
   }
 }

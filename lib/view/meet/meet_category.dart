@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -17,18 +16,20 @@ class MeetCategory extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: Column(
-        children: [
-          if (Platform.isIOS)
-            _header(context)
-          else if (Platform.isAndroid)
-            Padding(
-              padding: EdgeInsets.only(
-                top: 15.h,
+          child: SingleChildScrollView(
+        child: Column(
+          children: [
+            if (Platform.isIOS)
+              _header(context)
+            else if (Platform.isAndroid)
+              Padding(
+                padding: EdgeInsets.only(
+                  top: 15.h,
+                ),
+                child: _header(context),
               ),
-              child: _header(context),
-            ),
-        ],
+          ],
+        ),
       )),
     );
   }
@@ -106,10 +107,11 @@ class MeetCategory extends StatelessWidget {
                   spacing: 8.w,
                   runSpacing: 8.h,
                   children: options.map((option) {
-                    bool isSelected = viewModel.selectedMainCategory == option;
+                    bool isSelected =
+                        viewModel.selectedMainCategories.contains(option);
                     return GestureDetector(
                       onTap: () {
-                        viewModel.mainCategorySelection(option);
+                        viewModel.selectMainCategory(option);
                       },
                       child: Container(
                         width: 99.w,
@@ -165,23 +167,23 @@ class MeetCategory extends StatelessWidget {
                   ),
                 ],
               ),
-              viewModel.selectedMainCategory == null
-                  ? Padding(
-                      padding: EdgeInsets.only(top: 7.0.h, left: 14.76.w),
-                      child: Text(
-                        '상위 카테고리를 먼저 선택해주세요.',
-                        style: AppTextStyles.PR_R_14
-                            .copyWith(color: UsedColor.text_5),
-                      ),
-                    )
-                  : Padding(
-                      padding: EdgeInsets.only(top: 8.0.h),
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 7.0.h),
-                        child: _subCategoryList(
-                            context, viewModel.selectedMainCategory!),
-                      ),
-                    ),
+              if (viewModel.selectedMainCategories.isEmpty)
+                Padding(
+                  padding: EdgeInsets.only(top: 7.0.h, left: 14.76.w),
+                  child: Text(
+                    '상위 카테고리를 먼저 선택해주세요.',
+                    style:
+                        AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_5),
+                  ),
+                )
+              else
+                // 선택된 각 메인 카테고리에 대해 상세 카테고리 리스트를 표시
+                ...viewModel.selectedMainCategories.map(
+                  (mainCategory) => Padding(
+                    padding: EdgeInsets.only(top: 8.0.h),
+                    child: _subCategoryList(context, mainCategory),
+                  ),
+                ),
             ],
           ),
         ),
@@ -193,36 +195,41 @@ class MeetCategory extends StatelessWidget {
     final viewModel = Provider.of<MeetCreateViewModel>(context, listen: true);
     List<String> subCategories = viewModel.getSubCategories(mainCategory);
 
-    return Wrap(
-      spacing: 8.w,
-      runSpacing: 8.h,
-      children: subCategories.map((subCategory) {
-        return GestureDetector(
-          onTap: () {
-            viewModel.selectSubCategory(subCategory);
-          },
-          child: Container(
-            width: 99.w,
-            height: 32.h,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12.61.r),
-              border: Border.all(
-                color: UsedColor.B_line,
-                width: 2.25.w,
-              ),
-            ),
-            child: Center(
-              child: Text(
-                subCategory,
-                style: AppTextStyles.PR_SB_14.copyWith(
-                  color: Colors.black,
+    return Column(
+      children: [
+        Wrap(
+          spacing: 8.w,
+          runSpacing: 8.h,
+          children: subCategories.map((subCategory) {
+            return GestureDetector(
+              onTap: () {
+                viewModel.selectSubCategory(subCategory);
+              },
+              child: Container(
+                width: 99.w,
+                height: 32.h,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12.61.r),
+                  border: Border.all(
+                    color: UsedColor.B_line,
+                    width: 2.25.w,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    subCategory,
+                    style: AppTextStyles.PR_SB_14.copyWith(
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-        );
-      }).toList(),
+            );
+          }).toList(),
+        ),
+        SizedBox(height: 28.h),
+      ],
     );
   }
 }
