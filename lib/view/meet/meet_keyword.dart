@@ -33,10 +33,6 @@ class MeetKeyWord extends StatelessWidget {
               ),
             SizedBox(height: 63.h),
             _main(context, viewModel),
-            // Padding(
-            //   padding: EdgeInsets.only(left: 33.w, right: 32.w, bottom: 56.h),
-            //   child: _bottom(context),
-            // ),
           ],
         ),
       ),
@@ -146,19 +142,32 @@ class MeetKeyWord extends StatelessWidget {
           Column(
             children: [
               Padding(
-                padding: EdgeInsets.only(top: 8.0.h, right: 7.0.w),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    viewModel.subTextCount,
-                    style: AppTextStyles.PR_SB_11
-                        .copyWith(color: UsedColor.text_3), // 임의 색상
-                  ),
+                padding: EdgeInsets.only(left: 5.0.w, top: 5.0.h, right: 7.0.w),
+                child: Row(
+                  children: [
+                    Text(
+                      '띄어쓰기 없이 1-8자 입력하세요.',
+                      style:
+                          AppTextStyles.SU_R_12.copyWith(color: UsedColor.red),
+                    ),
+                    const Spacer(),
+                    Padding(
+                      padding: EdgeInsets.only(top: 3.0.h),
+                      child: Text(
+                        viewModel.subTextCount,
+                        style: AppTextStyles.PR_SB_11
+                            .copyWith(color: UsedColor.text_3), // 임의 색상
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Align(
                 alignment: Alignment.centerLeft,
-                child: _keywordList(context, viewModel),
+                child: Padding(
+                  padding: EdgeInsets.only(top: 6.0.h),
+                  child: _keywordList(context, viewModel),
+                ),
               ),
             ],
           ),

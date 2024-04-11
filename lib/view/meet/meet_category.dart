@@ -28,6 +28,8 @@ class MeetCategory extends StatelessWidget {
                 ),
                 child: _header(context),
               ),
+            SizedBox(height: 33.h),
+            _mainCategory(context),
           ],
         ),
       )),
@@ -44,8 +46,6 @@ class MeetCategory extends StatelessWidget {
             height: 11.h,
           ),
           _divider(),
-          SizedBox(height: 33.h),
-          _mainCategory(context),
         ],
       ),
     );

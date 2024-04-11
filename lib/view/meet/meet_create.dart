@@ -87,7 +87,7 @@ class MeetCreate extends StatelessWidget {
         SizedBox(height: 31.h),
         _divider(),
         SizedBox(height: 32.91.h),
-        _keyword(),
+        _keyword(context),
         SizedBox(height: 31.h),
         _divider(),
         SizedBox(height: 32.31.h),
@@ -264,7 +264,7 @@ class MeetCreate extends StatelessWidget {
   }
 
   // MARK - 키워드
-  Widget _keyword() {
+  Widget _keyword(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w),
       child: Row(
@@ -290,8 +290,16 @@ class MeetCreate extends StatelessWidget {
           ),
           const Spacer(),
           Padding(
-            padding: EdgeInsets.only(right: 26.0.w),
-            child: Image.asset(ImagePath.nextArrow),
+            padding: EdgeInsets.only(right: 7.0.w),
+            child: GestureDetector(
+              onTap: () {
+                context.goNamed('meetKeyWord');
+              },
+              child: SizedBox(
+                  width: 48.w,
+                  height: 48.w,
+                  child: Image.asset(ImagePath.nextArrow)),
+            ),
           ),
         ],
       ),
