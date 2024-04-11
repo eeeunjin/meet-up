@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -16,27 +18,34 @@ class MeetCreate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              if (Platform.isIOS)
-                _header(context)
-              else if (Platform.isAndroid)
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 15.h,
-                  ),
-                  child: _header(context),
-                ),
-              _main(context),
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            if (Platform.isIOS)
+              _header(context)
+            else if (Platform.isAndroid)
               Padding(
-                padding: EdgeInsets.only(left: 33.w, right: 32.w, bottom: 56.h),
-                child: _bottom(context),
+                padding: EdgeInsets.only(
+                  top: 15.h,
+                ),
+                child: _header(context),
               ),
-            ],
-          ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _main(context),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: 33.w, right: 32.w, bottom: 56.h),
+                      child: _bottom(context),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
