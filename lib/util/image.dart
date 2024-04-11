@@ -41,4 +41,7 @@ class ImagePath {
   static String get closeIcon => 'assets/images/closeicon.png';
   static String get search => 'assets/images/search.png';
   static String get vector => 'assets/images/Vector.png';
+
+  static String get coinDollarIcon => 'assets/images/coin_dollar_icon.png';
+  static String get coinWalletIcon => 'assets/images/coin_wallet_icon.png';
 }

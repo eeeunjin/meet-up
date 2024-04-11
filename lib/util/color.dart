@@ -22,7 +22,7 @@ class UsedColor {
   static Color progress_bar = const Color(0xffa2a3ff);
   static Color progress_bar2 = const Color(0xfff1f3fd);
   static Color charcoal_black = const Color(0xff282828);
-  static Color coin = const Color(0xff78f7f4);
+  static Color coin = const Color(0xfff8f7f4);
 
   //main
   static Color main = const Color(0xff8d98e8);

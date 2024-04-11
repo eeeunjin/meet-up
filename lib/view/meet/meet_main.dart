@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
+import 'package:meet_up/view/widget/coin_widget.dart';
 
 class MeetMain extends StatelessWidget {
   const MeetMain({super.key});
@@ -29,6 +30,7 @@ class MeetMain extends StatelessWidget {
           ],
         ),
       ),
+      // 만남방 개설하기 플로팅액션 버튼
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           context.goNamed('meetCreate');
@@ -72,7 +74,9 @@ class MeetMain extends StatelessWidget {
           padding: EdgeInsets.only(left: 20.0.w, right: 20.w),
           child: Column(
             children: [
-              SizedBox(height: 54.h),
+              SizedBox(height: 15.h),
+              _coinWidget(),
+              SizedBox(height: 15.h),
               _event(),
               SizedBox(height: 64.h),
               _manageMeetList(context),
@@ -323,5 +327,11 @@ class MeetMain extends StatelessWidget {
         color: Colors.white,
       ),
     );
+  }
+
+  Widget _coinWidget() {
+    return const Align(
+        alignment: Alignment.centerRight,
+        child: CoinWidget(coinAmount: '600', itemCount: 5));
   }
 }
