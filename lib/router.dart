@@ -2,7 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:meet_up/view/login/login_main.dart';
 import 'package:meet_up/view/login/login_phone_num.dart';
 import 'package:meet_up/view/login/login_verification.dart';
-import 'package:meet_up/view/meet/meet__manage_main.dart';
+import 'package:meet_up/view/meet/meet_manage_main.dart';
 import 'package:meet_up/view/meet/meet_browse_main.dart';
 import 'package:meet_up/view/meet/meet_category.dart';
 import 'package:meet_up/view/meet/meet_create.dart';

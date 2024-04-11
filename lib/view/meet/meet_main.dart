@@ -331,7 +331,8 @@ class MeetMain extends StatelessWidget {
 
   Widget _coinWidget() {
     return const Align(
-        alignment: Alignment.centerRight,
-        child: CoinWidget(coinAmount: '600', itemCount: 5));
+      alignment: Alignment.centerRight,
+      child: CoinWidget(coinAmount: '600', itemCount: 5),
+    );
   }
 }
