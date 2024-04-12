@@ -75,7 +75,7 @@ class MeetMain extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(height: 15.h),
-              _coinWidget(),
+              _coinWidget(context),
               SizedBox(height: 15.h),
               _event(),
               SizedBox(height: 64.h),
@@ -329,10 +329,15 @@ class MeetMain extends StatelessWidget {
     );
   }
 
-  Widget _coinWidget() {
-    return const Align(
-      alignment: Alignment.centerRight,
-      child: CoinWidget(coinAmount: '600', itemCount: 5),
+  Widget _coinWidget(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        context.goNamed('coinMainFromMeetMain');
+      },
+      child: const Align(
+        alignment: Alignment.centerRight,
+        child: CoinWidget(coinAmount: '600', itemCount: 5),
+      ),
     );
   }
 }

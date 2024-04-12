@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -76,7 +78,7 @@ class MeetManageMain extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(height: 31.h),
-              _title(),
+              _title(context),
             ],
           ),
         ),
@@ -84,7 +86,7 @@ class MeetManageMain extends StatelessWidget {
     );
   }
 
-  Widget _title() {
+  Widget _title(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -101,7 +103,11 @@ class MeetManageMain extends StatelessWidget {
           style: AppTextStyles.SU_SB_16.copyWith(color: UsedColor.text_3),
         ),
         SizedBox(width: 118.w),
-        const CoinWidget(coinAmount: '600', itemCount: 5),
+        GestureDetector(
+            onTap: () {
+              context.goNamed('coinMainFromMeetManageMain');
+            },
+            child: const CoinWidget(coinAmount: '600', itemCount: 5)),
       ],
     );
   }
