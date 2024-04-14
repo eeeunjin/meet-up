@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
+import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 
@@ -27,6 +28,8 @@ class CoinMain extends StatelessWidget {
                 ),
                 child: _header(context),
               ),
+            SizedBox(height: 45.h),
+            _currentCoin(),
           ],
         ),
       ),
@@ -67,6 +70,26 @@ class CoinMain extends StatelessWidget {
         ImagePath.back,
         width: 40.w,
         height: 40.h,
+      ),
+    );
+  }
+
+  Widget _currentCoin() {
+    return Padding(
+      padding: EdgeInsets.only(left: 32.0.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '코인 보유 현황',
+            style: AppTextStyles.SU_R_12.copyWith(color: UsedColor.text_3),
+          ),
+          Text(
+            '600 C',
+            style: AppTextStyles.PR_SB_24
+                .copyWith(color: UsedColor.charcoal_black),
+          ),
+        ],
       ),
     );
   }
