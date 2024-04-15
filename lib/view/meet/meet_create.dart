@@ -163,7 +163,7 @@ class MeetCreate extends StatelessWidget {
                     height: 19.h,
                     child: TextField(
                       onChanged: (text) {
-                        viewModel.countNaming(text);
+                        viewModel.namingContents(text);
                       },
                       decoration: const InputDecoration(
                         isDense: true,
@@ -181,7 +181,7 @@ class MeetCreate extends StatelessWidget {
                   right: 26.0.w,
                   bottom: 0.0.h,
                   child: Text(
-                    viewModel.subNamingCount,
+                    viewModel.namingCount,
                     style: AppTextStyles.PR_SB_11
                         .copyWith(color: UsedColor.text_3), // 임의 색상
                   ),
@@ -379,7 +379,7 @@ class MeetCreate extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 307.w),
             child: Text(
-              viewModel.subTextCount,
+              viewModel.textCount,
               style: AppTextStyles.PR_SB_11
                   .copyWith(color: UsedColor.text_3), // 임의 색상
             ),

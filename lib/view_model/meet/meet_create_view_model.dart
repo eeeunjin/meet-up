@@ -2,37 +2,38 @@ import 'package:flutter/material.dart';
 
 class MeetCreateViewModel with ChangeNotifier {
   // naming
-  String _namingCount = '';
+  String _roomNaming = '';
 
-  String get namingCount => _namingCount;
+  String get namingCount => _roomNaming;
 
-  void countNaming(String newNamingCount) {
-    if (_namingCount != newNamingCount) {
-      _namingCount = newNamingCount;
+  void roomNaming(String newNamingCount) {
+    if (_roomNaming != newNamingCount) {
+      _roomNaming = newNamingCount;
+      debugPrint('방 명 : $_roomNaming');
       notifyListeners();
     }
   }
 
-  String get subNamingCount => '${_namingCount.length}/16';
+  String get subNamingCount => '${_roomNaming.length}/16';
 
   // naming check
   bool get namingCompleted {
-    return _namingCount.trim().isNotEmpty;
+    return _roomNaming.trim().isNotEmpty;
   }
 
   // detail
-  String _textCount = '';
+  String _roomText = '';
 
-  String get textCount => _textCount;
+  String get textCount => _roomText;
 
   void setDescription(String newTextCount) {
-    if (_textCount != newTextCount) {
-      _textCount = newTextCount;
+    if (_roomText != newTextCount) {
+      _roomText = newTextCount;
       notifyListeners();
     }
   }
 
-  String get subTextCount => '${_textCount.length}/50';
+  String get subTextCount => '${_roomText.length}/50';
 
   // age
   final List<String> _selectedAges = [];
