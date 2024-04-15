@@ -30,6 +30,8 @@ class CoinMain extends StatelessWidget {
               ),
             SizedBox(height: 45.h),
             _currentCoin(),
+            SizedBox(height: 52.h),
+            _currentTicket(),
           ],
         ),
       ),
@@ -76,18 +78,126 @@ class CoinMain extends StatelessWidget {
 
   Widget _currentCoin() {
     return Padding(
-      padding: EdgeInsets.only(left: 32.0.w),
+      padding: EdgeInsets.only(left: 32.0.w, right: 28.w),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '코인 보유 현황',
-            style: AppTextStyles.SU_R_12.copyWith(color: UsedColor.text_3),
+          Stack(
+            alignment: Alignment.topLeft,
+            children: [
+              // Column 정렬 안되는 오류로 row로 한 번 감싸놓음
+              Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '코인 보유 현황',
+                        style: AppTextStyles.SU_R_12
+                            .copyWith(color: UsedColor.text_3),
+                      ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        '600 C',
+                        style: AppTextStyles.PR_SB_24
+                            .copyWith(color: UsedColor.charcoal_black),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Positioned(
+                right: 0.w,
+                bottom: 10.h,
+                child: SizedBox(
+                  width: 27.w,
+                  height: 27.h,
+                  child: Image.asset(
+                    ImagePath.nextArrow,
+                    width: 6.75.w,
+                    height: 13.5.h,
+                  ),
+                ),
+              ),
+            ],
           ),
-          Text(
-            '600 C',
-            style: AppTextStyles.PR_SB_24
-                .copyWith(color: UsedColor.charcoal_black),
+          SizedBox(height: 16.h),
+          Container(
+            width: 337.w,
+            height: 51.h,
+            decoration: BoxDecoration(
+              color: UsedColor.button,
+              borderRadius: BorderRadius.circular(19.r),
+            ),
+            child: Center(
+              child: Text(
+                '코인 구매',
+                style: AppTextStyles.PR_SB_17.copyWith(color: Colors.white),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _currentTicket() {
+    return Padding(
+      padding: EdgeInsets.only(left: 32.0.w, right: 28.w),
+      child: Column(
+        children: [
+          Stack(
+            alignment: Alignment.topLeft,
+            children: [
+              // Column 정렬 안되는 오류로 row로 한 번 감싸놓음
+              Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '만남권 보유 현황',
+                        style: AppTextStyles.SU_R_12
+                            .copyWith(color: UsedColor.text_3),
+                      ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        '만남권 1개',
+                        style: AppTextStyles.PR_SB_24
+                            .copyWith(color: UsedColor.charcoal_black),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Positioned(
+                right: 0.w,
+                bottom: 10.h,
+                child: SizedBox(
+                  width: 27.w,
+                  height: 27.h,
+                  child: Image.asset(
+                    ImagePath.nextArrow,
+                    width: 6.75.w,
+                    height: 13.5.h,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16.h),
+          Container(
+            width: 337.w,
+            height: 51.h,
+            decoration: BoxDecoration(
+              color: UsedColor.button,
+              borderRadius: BorderRadius.circular(19.r),
+            ),
+            child: Center(
+              child: Text(
+                '만남권 구매',
+                style: AppTextStyles.PR_SB_17.copyWith(color: Colors.white),
+              ),
+            ),
           ),
         ],
       ),
