@@ -50,7 +50,7 @@ class CoinWidget extends StatelessWidget {
             // 정기권 여부
             Container(
               width: 30.w,
-              height: 10.3.h,
+              height: 10.h,
               decoration: BoxDecoration(
                   color: UsedColor.charcoal_black,
                   borderRadius: BorderRadius.circular(13.41.r),

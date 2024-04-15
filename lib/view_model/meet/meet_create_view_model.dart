@@ -4,9 +4,9 @@ class MeetCreateViewModel with ChangeNotifier {
   // naming
   String _roomNaming = '';
 
-  String get namingCount => _roomNaming;
+  String get roomNaming => _roomNaming;
 
-  void roomNaming(String newNamingCount) {
+  void namingContents(String newNamingCount) {
     if (_roomNaming != newNamingCount) {
       _roomNaming = newNamingCount;
       debugPrint('방 명 : $_roomNaming');
@@ -14,7 +14,7 @@ class MeetCreateViewModel with ChangeNotifier {
     }
   }
 
-  String get subNamingCount => '${_roomNaming.length}/16';
+  String get namingCount => '${_roomNaming.length}/16';
 
   // naming check
   bool get namingCompleted {
@@ -24,16 +24,17 @@ class MeetCreateViewModel with ChangeNotifier {
   // detail
   String _roomText = '';
 
-  String get textCount => _roomText;
+  String get roomText => _roomText;
 
   void setDescription(String newTextCount) {
     if (_roomText != newTextCount) {
       _roomText = newTextCount;
+      debugPrint('상세내용 : $_roomText');
       notifyListeners();
     }
   }
 
-  String get subTextCount => '${_roomText.length}/50';
+  String get textCount => '${_roomText.length}/50';
 
   // age
   final List<String> _selectedAges = [];
@@ -133,14 +134,9 @@ class MeetCreateViewModel with ChangeNotifier {
   }
 
   void selectMainCategory(String category) {
-    if (_selectedMainCategories.contains(category)) {
-      // 이미 선택된 카테고리일 경우 해제
-      _selectedMainCategories.remove(category);
-    } else {
-      // 선택되지 않은 카테고리일 경우 추가
-      _selectedMainCategories.add(category);
-    }
-    // 변경 사항을 리스너에게 알림
+    // 단일 선택
+    _selectedMainCategories.clear();
+    _selectedMainCategories.add(category);
     notifyListeners();
   }
 }
