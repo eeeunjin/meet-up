@@ -248,6 +248,12 @@ class AppTextStyles {
         fontSize: 14.sp,
       );
 
+  static TextStyle get SU_R_7 => TextStyle(
+        fontFamily: 'SUITE',
+        fontWeight: FontWeight.normal,
+        fontSize: 7.sp,
+      );
+
   static TextStyle get SU_R_12 => TextStyle(
         fontFamily: 'SUITE',
         fontWeight: FontWeight.normal,

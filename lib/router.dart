@@ -1,8 +1,9 @@
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/view/coin/coin_main.dart';
 import 'package:meet_up/view/login/login_main.dart';
 import 'package:meet_up/view/login/login_phone_num.dart';
 import 'package:meet_up/view/login/login_verification.dart';
-import 'package:meet_up/view/meet/meet__manage_main.dart';
+import 'package:meet_up/view/meet/meet_manage_main.dart';
 import 'package:meet_up/view/meet/meet_browse_main.dart';
 import 'package:meet_up/view/meet/meet_category.dart';
 import 'package:meet_up/view/meet/meet_create.dart';
@@ -118,12 +119,20 @@ final router = GoRouter(
           },
           routes: [
             GoRoute(
-              path: 'meetManageMain',
-              name: 'meetManageMain',
-              builder: (context, state) {
-                return const MeetManageMain();
-              },
-            ),
+                path: 'meetManageMain',
+                name: 'meetManageMain',
+                builder: (context, state) {
+                  return const MeetManageMain();
+                },
+                routes: [
+                  GoRoute(
+                    path: 'meetManageMain/coinMain',
+                    name: 'coinMainFromMeetManageMain',
+                    builder: (context, state) {
+                      return const CoinMain(fromRoute: 'meetManageMain');
+                    },
+                  ),
+                ]),
             GoRoute(
               path: 'meetSearchMain',
               name: 'meetSearchMain',
@@ -150,6 +159,13 @@ final router = GoRouter(
               name: 'meetFilterArea',
               builder: (context, state) {
                 return const MeetFilterArea();
+              },
+            ),
+            GoRoute(
+              path: 'meetMain/coinMain',
+              name: 'coinMainFromMeetMain',
+              builder: (context, state) {
+                return const CoinMain(fromRoute: 'meetMain');
               },
             ),
             GoRoute(

@@ -2,37 +2,39 @@ import 'package:flutter/material.dart';
 
 class MeetCreateViewModel with ChangeNotifier {
   // naming
-  String _namingCount = '';
+  String _roomNaming = '';
 
-  String get namingCount => _namingCount;
+  String get roomNaming => _roomNaming;
 
-  void countNaming(String newNamingCount) {
-    if (_namingCount != newNamingCount) {
-      _namingCount = newNamingCount;
+  void namingContents(String newNamingCount) {
+    if (_roomNaming != newNamingCount) {
+      _roomNaming = newNamingCount;
+      debugPrint('방 명 : $_roomNaming');
       notifyListeners();
     }
   }
 
-  String get subNamingCount => '${_namingCount.length}/16';
+  String get namingCount => '${_roomNaming.length}/16';
 
   // naming check
   bool get namingCompleted {
-    return _namingCount.trim().isNotEmpty;
+    return _roomNaming.trim().isNotEmpty;
   }
 
   // detail
-  String _textCount = '';
+  String _roomText = '';
 
-  String get textCount => _textCount;
+  String get roomText => _roomText;
 
   void setDescription(String newTextCount) {
-    if (_textCount != newTextCount) {
-      _textCount = newTextCount;
+    if (_roomText != newTextCount) {
+      _roomText = newTextCount;
+      debugPrint('상세내용 : $_roomText');
       notifyListeners();
     }
   }
 
-  String get subTextCount => '${_textCount.length}/50';
+  String get textCount => '${_roomText.length}/50';
 
   // age
   final List<String> _selectedAges = [];
@@ -106,27 +108,35 @@ class MeetCreateViewModel with ChangeNotifier {
   }
 
   // MARK - CategoryPage
+
   // 상세 카테고리
-  String? _selectedCategory;
-  String? get selectedCategory => _selectedCategory;
+  final bool _isSelectedCategory = false;
+  bool get isSelectedCategory => _isSelectedCategory;
 
-  set selectedCategory(String? value) {
-    _selectedCategory = value;
+  final List<String> _selectedMainCategories = [];
+  List<String> get selectedMainCategories => _selectedMainCategories;
+
+  final Map<String, List<String>> _subCategoriesMap = {
+    '취미': ['여행', '맛집', '연예인', '사진', '영화', '게임'],
+    '운동': ['축구', '야구', '농구', '테니스', '요가', '헬스', '탁구', '조깅', '배드민턴'],
+    '공부/학업': ['취업', '독서', '대학', '미라클 모닝', '자격증', '아르바이트'],
+    '휴식/친목': ['카페', '산책', '저녁 식사'],
+    '기타': [],
+  };
+
+  List<String> getSubCategories(String mainCategory) {
+    return _subCategoriesMap[mainCategory] ?? [];
+  }
+
+  void selectSubCategory(String subCategory) {
+    // 상세 카테고리 선택 로직
     notifyListeners();
   }
 
-  // age
-  List<bool> isSelected = [false, false, false, false];
-
-  void toggleSelection(int index) {
-    isSelected[index] = !isSelected[index];
+  void selectMainCategory(String category) {
+    // 단일 선택
+    _selectedMainCategories.clear();
+    _selectedMainCategories.add(category);
     notifyListeners();
-  }
-
-  // 세부규칙
-  List<bool> selectedRules = [false, false, false, false, false];
-
-  void toggleRule(int index) {
-    selectedRules[index] = !selectedRules[index];
   }
 }
