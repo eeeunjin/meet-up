@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/view/chat/chat_main.dart';
 import 'package:meet_up/view/coin/coin_main.dart';
 import 'package:meet_up/view/login/login_main.dart';
 import 'package:meet_up/view/login/login_phone_num.dart';
@@ -43,6 +44,11 @@ final router = GoRouter(
           path: '/meetMain',
           name: 'meetMain',
           builder: (context, state) => const MeetMain(),
+        ),
+        // Chat
+        GoRoute(
+          path: '/chatMain',
+          builder: (context, state) => const ChatMain(),
         ),
       ],
     ),

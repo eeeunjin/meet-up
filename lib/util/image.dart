@@ -44,4 +44,13 @@ class ImagePath {
 
   static String get coinDollarIcon => 'assets/images/coin_dollar_icon.png';
   static String get coinWalletIcon => 'assets/images/coin_wallet_icon.png';
+
+  // bot_nav
+  static String get meetOn => 'assets/images/bot_nav_meet_on.png';
+  static String get meetOff => 'assets/images/bot_nav_meet_off.png';
+  static String get chatOn => 'assets/images/bot_nav_chat_on.png';
+  static String get chatOff => 'assets/images/bot_nav_chat_off.png';
+  static String get scheduleOff => 'assets/images/bot_nav_schedule_off.png';
+  static String get refOff => 'assets/images/bot_nav_ref_off.png';
+  static String get profileOff => 'assets/images/bot_nav_profile_off.png';
 }

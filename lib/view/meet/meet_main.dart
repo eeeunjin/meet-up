@@ -32,6 +32,7 @@ class MeetMain extends StatelessWidget {
       ),
       // 만남방 개설하기 플로팅액션 버튼
       floatingActionButton: FloatingActionButton(
+        heroTag: null, // 고유 태그 지정 - hero오류
         onPressed: () {
           context.push('/meetCreate');
         },
