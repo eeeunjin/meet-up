@@ -33,7 +33,7 @@ class MeetMain extends StatelessWidget {
       // 만남방 개설하기 플로팅액션 버튼
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.goNamed('meetCreate');
+          context.push('/meetCreate');
         },
         backgroundColor: Colors.black,
         shape: const CircleBorder(),
@@ -96,7 +96,7 @@ class MeetMain extends StatelessWidget {
   Widget _manageMeetList(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.goNamed('meetManageMain');
+        context.push('/meetManageMain');
       },
       child: Column(
         children: [
@@ -175,7 +175,7 @@ class MeetMain extends StatelessWidget {
   Widget _searchMeetList(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.goNamed('meetBrowseMain');
+        context.push('/meetBrowseMain');
       },
       child: Column(
         children: [
@@ -332,7 +332,7 @@ class MeetMain extends StatelessWidget {
   Widget _coinWidget(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.goNamed('coinMainFromMeetMain');
+        context.push('/coinMain');
       },
       child: const Align(
         alignment: Alignment.centerRight,

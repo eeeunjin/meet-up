@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/view/coin/coin_main.dart';
 import 'package:meet_up/view/login/login_main.dart';
@@ -19,16 +20,38 @@ import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_three.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_two.dart';
 import 'package:meet_up/view/sign_up/sign_up_verification.dart';
 import 'package:meet_up/view/sign_up/sign_up_phone_num.dart';
+import 'package:meet_up/view/widget/bot_nav_bar.dart';
+
+final GlobalKey<NavigatorState> rootNavkey = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> shellNavkey = GlobalKey<NavigatorState>();
 
 final router = GoRouter(
+  navigatorKey: rootNavkey,
   initialLocation: '/',
-  routes: [
+  routes: <RouteBase>[
+    // ShellRoute
+    ShellRoute(
+      navigatorKey: shellNavkey,
+      builder: (context, state, child) => Scaffold(
+        body: child,
+        bottomNavigationBar: const BotNavBar(),
+      ),
+      routes: [
+        // Meet
+        GoRoute(
+          // path: '.', // ShellRoute에서 현재 경로 나타낼 때 . 을 사용
+          path: '/meetMain',
+          name: 'meetMain',
+          builder: (context, state) => const MeetMain(),
+        ),
+      ],
+    ),
+
     // 초기 화면
     GoRoute(
       path: '/',
-      builder: (context, state) {
-        return const LoginMain();
-      },
+      pageBuilder: (context, state) =>
+          const NoTransitionPage(child: LoginMain()),
       routes: [
         // Login
         GoRoute(
@@ -110,86 +133,81 @@ final router = GoRouter(
             ),
           ],
         ),
+
         // Meet
+
+        // 바텀네비게이션 숨김
         GoRoute(
-          path: 'meetMain',
-          name: 'meetMain',
+          path: 'meetManageMain',
+          name: 'meetManageMain',
+          builder: (context, state) => const Scaffold(
+            body: MeetManageMain(), // meetMain에서만 바텀 네비게이션 표시
+          ),
+          routes: [
+            GoRoute(
+              path: 'meetManageMain/coinMain',
+              name: 'coinMainFromMeetManageMain',
+              builder: (context, state) {
+                return const CoinMain(fromRoute: 'meetManageMain');
+              },
+            ),
+          ],
+        ),
+        GoRoute(
+          path: 'meetSearchMain',
+          name: 'meetSearchMain',
           builder: (context, state) {
-            return const MeetMain();
+            return const Scaffold(body: MeetSearchMain());
+          },
+        ),
+        GoRoute(
+          path: 'meetBrowseMain',
+          name: 'meetBrowseMain',
+          builder: (context, state) {
+            return const Scaffold(body: MeetBrowseMain());
+          },
+        ),
+        GoRoute(
+          path: 'meetFilterMain',
+          name: 'meetFilterMain',
+          builder: (context, state) {
+            return const Scaffold(body: MeetFilterMain());
+          },
+        ),
+        GoRoute(
+          path: 'meetFilterArea',
+          name: 'meetFilterArea',
+          builder: (context, state) {
+            return const Scaffold(body: MeetFilterArea());
+          },
+        ),
+        GoRoute(
+          path: 'coinMain',
+          name: 'coinMainFromMeetMain',
+          builder: (context, state) {
+            return const Scaffold(body: CoinMain(fromRoute: 'meetMain'));
+          },
+        ),
+        GoRoute(
+          path: 'meetCreate',
+          name: 'meetCreate',
+          builder: (context, state) {
+            return const Scaffold(body: MeetCreate());
           },
           routes: [
             GoRoute(
-                path: 'meetManageMain',
-                name: 'meetManageMain',
-                builder: (context, state) {
-                  return const MeetManageMain();
-                },
-                routes: [
-                  GoRoute(
-                    path: 'meetManageMain/coinMain',
-                    name: 'coinMainFromMeetManageMain',
-                    builder: (context, state) {
-                      return const CoinMain(fromRoute: 'meetManageMain');
-                    },
-                  ),
-                ]),
-            GoRoute(
-              path: 'meetSearchMain',
-              name: 'meetSearchMain',
+              path: 'meetKeyWord',
+              name: 'meetKeyWord',
               builder: (context, state) {
-                return const MeetSearchMain();
+                return const MeetKeyWord();
               },
             ),
             GoRoute(
-              path: 'meetBrowseMain',
-              name: 'meetBrowseMain',
+              path: 'meetCategory',
+              name: 'meetCategory',
               builder: (context, state) {
-                return const MeetBrowseMain();
+                return const MeetCategory();
               },
-            ),
-            GoRoute(
-              path: 'meetFilterMain',
-              name: 'meetFilterMain',
-              builder: (context, state) {
-                return const MeetFilterMain();
-              },
-            ),
-            GoRoute(
-              path: 'meetFilterArea',
-              name: 'meetFilterArea',
-              builder: (context, state) {
-                return const MeetFilterArea();
-              },
-            ),
-            GoRoute(
-              path: 'meetMain/coinMain',
-              name: 'coinMainFromMeetMain',
-              builder: (context, state) {
-                return const CoinMain(fromRoute: 'meetMain');
-              },
-            ),
-            GoRoute(
-              path: 'meetCreate',
-              name: 'meetCreate',
-              builder: (context, state) {
-                return const MeetCreate();
-              },
-              routes: [
-                GoRoute(
-                  path: 'meetKeyWord',
-                  name: 'meetKeyWord',
-                  builder: (context, state) {
-                    return const MeetKeyWord();
-                  },
-                ),
-                GoRoute(
-                  path: 'meetCategory',
-                  name: 'meetCategory',
-                  builder: (context, state) {
-                    return const MeetCategory();
-                  },
-                ),
-              ],
             ),
           ],
         ),

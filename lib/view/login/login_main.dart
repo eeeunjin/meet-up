@@ -29,7 +29,7 @@ class LoginMain extends StatelessWidget {
             // <----- meet test view ------> // 80.h
             GestureDetector(
                 onTap: () {
-                  context.goNamed('meetMain');
+                  context.push('/meetMain');
                 },
                 child: _meetTestButton()),
             SizedBox(
