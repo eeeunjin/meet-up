@@ -5,6 +5,6 @@ class ScheduleMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Text('스케쥴');
   }
 }
