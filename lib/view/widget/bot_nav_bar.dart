@@ -34,9 +34,9 @@ class BotNavBar extends StatelessWidget {
               children: const [
                 MeetMain(),
                 ChatMain(),
-                // ScheduleMain(),
-                // ReflectMain(),
-                // ProfileMain(),
+                ScheduleMain(),
+                ReflectMain(),
+                ProfileMain(),
               ],
             ),
           ),
@@ -65,37 +65,74 @@ class BotNavBar extends StatelessWidget {
           topLeft: Radius.circular(16.r),
           topRight: Radius.circular(16.r),
         ),
-        child: BottomNavigationBar(
-          currentIndex: bottomNavViewModel.currentIndex,
-          showSelectedLabels: true,
-          showUnselectedLabels: true,
-          selectedItemColor: UsedColor.charcoal_black, // 선택된 라벨 색상
-          unselectedItemColor: Colors.grey, // 선택되지 않은 라벨 색상: 회색
-          selectedLabelStyle: AppTextStyles.SU_R_11,
-          unselectedLabelStyle: AppTextStyles.SU_R_11,
-          backgroundColor: Colors.white,
-          onTap: (index) {
-            // viewmodel
-            bottomNavViewModel.updateCurrentPage(index);
-            // 경로 이동
-          },
-          items: [
-            // figma 적용
-            BottomNavigationBarItem(
-              icon: Image.asset(ImagePath.meetOff,
-                  width: 33.14.w, height: 33.14.h),
-              activeIcon: Image.asset(ImagePath.meetOn,
-                  width: 33.14.w, height: 33.14.h),
-              label: '만남',
-            ),
-            BottomNavigationBarItem(
-              icon: Image.asset(ImagePath.chatOff,
-                  width: 33.14.w, height: 33.14.h),
-              activeIcon: Image.asset(ImagePath.chatOn,
-                  width: 33.14.w, height: 33.14.h),
-              label: '채팅',
-            ),
-          ],
+        child: Theme(
+          // 터치 시 잉크 효과 제거
+          data: ThemeData(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+          ),
+          child: BottomNavigationBar(
+            currentIndex: bottomNavViewModel.currentIndex,
+            showSelectedLabels: true,
+            showUnselectedLabels: true,
+            selectedItemColor: UsedColor.charcoal_black, // 선택된 라벨 색상
+            unselectedItemColor: Colors.grey, // 선택되지 않은 라벨 색상: 회색
+            selectedLabelStyle: AppTextStyles.SU_R_11,
+            unselectedLabelStyle: AppTextStyles.SU_R_11,
+            backgroundColor: Colors.white,
+            // 터치 애니메이션 제거
+            type: BottomNavigationBarType.fixed,
+            onTap: (index) {
+              // viewmodel
+              bottomNavViewModel.updateCurrentPage(index);
+              // 경로 이동
+            },
+            items: [
+              // index - 0
+              BottomNavigationBarItem(
+                icon: Image.asset(ImagePath.meetOff,
+                    width: 33.14.w, height: 33.14.h),
+                activeIcon: Image.asset(ImagePath.meetOn,
+                    width: 33.14.w, height: 33.14.h),
+                label: '만남',
+              ),
+              // index - 1
+              BottomNavigationBarItem(
+                icon: Image.asset(ImagePath.chatOff,
+                    width: 33.14.w, height: 33.14.h),
+                activeIcon: Image.asset(ImagePath.chatOn,
+                    width: 33.14.w, height: 33.14.h),
+                label: '채팅',
+              ),
+              // index - 2
+              BottomNavigationBarItem(
+                icon: Image.asset(ImagePath.scheduleOff,
+                    width: 33.14.w, height: 33.14.h),
+                activeIcon: Image.asset(ImagePath.scheduleOn,
+                    width: 33.14.w, height: 33.14.h),
+                label: '일정',
+              ),
+              // index - 3
+              BottomNavigationBarItem(
+                icon: Image.asset(
+                  ImagePath.refOff,
+                  width: 33.14.w,
+                  height: 33.14.h,
+                ),
+                activeIcon: Image.asset(ImagePath.refOn,
+                    width: 33.14.w, height: 33.14.h),
+                label: '성찰',
+              ),
+              // index - 4
+              BottomNavigationBarItem(
+                icon: Image.asset(ImagePath.profileOff,
+                    width: 33.14.w, height: 33.14.h),
+                activeIcon: Image.asset(ImagePath.profileOff,
+                    width: 33.14.w, height: 33.14.h),
+                label: '프로필',
+              ),
+            ],
+          ),
         ),
       ),
     );

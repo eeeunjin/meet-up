@@ -50,7 +50,9 @@ class ImagePath {
   static String get meetOff => 'assets/images/bot_nav_meet_off.png';
   static String get chatOn => 'assets/images/bot_nav_chat_on.png';
   static String get chatOff => 'assets/images/bot_nav_chat_off.png';
+  static String get scheduleOn => 'assets/images/bot_nav_schedule_on.png';
   static String get scheduleOff => 'assets/images/bot_nav_schedule_off.png';
+  static String get refOn => 'assets/images/bot_nav_ref_on.png';
   static String get refOff => 'assets/images/bot_nav_ref_off.png';
   static String get profileOff => 'assets/images/bot_nav_profile_off.png';
 }
