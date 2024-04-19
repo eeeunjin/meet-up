@@ -55,4 +55,14 @@ class ImagePath {
   static String get refOn => 'assets/images/bot_nav_ref_on.png';
   static String get refOff => 'assets/images/bot_nav_ref_off.png';
   static String get profileOff => 'assets/images/bot_nav_profile_off.png';
+
+  // setting
+  static String get setIcon1 => 'assets/images/set_icon_1.png';
+  static String get setIcon2 => 'assets/images/set_icon_2.png';
+  static String get setIcon3 => 'assets/images/set_icon_3.png';
+  static String get setIcon4 => 'assets/images/set_icon_4.png';
+  static String get setIcon5 => 'assets/images/set_icon_5.png';
+  static String get setIcon6 => 'assets/images/set_icon_6.png';
+  static String get setIcon7 => 'assets/images/set_icon_7.png';
+  static String get setIcon8 => 'assets/images/set_icon_8.png';
 }

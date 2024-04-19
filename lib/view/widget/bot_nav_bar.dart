@@ -76,7 +76,7 @@ class BotNavBar extends StatelessWidget {
             showSelectedLabels: true,
             showUnselectedLabels: true,
             selectedItemColor: UsedColor.charcoal_black, // 선택된 라벨 색상
-            unselectedItemColor: Colors.grey, // 선택되지 않은 라벨 색상: 회색
+            unselectedItemColor: UsedColor.text_5, // 선택되지 않은 라벨 색상: 회색
             selectedLabelStyle: AppTextStyles.SU_R_11,
             unselectedLabelStyle: AppTextStyles.SU_R_11,
             backgroundColor: Colors.white,

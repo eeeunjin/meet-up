@@ -17,6 +17,7 @@ import 'package:meet_up/view/meet/meet_search_main.dart';
 import 'package:meet_up/view/profile/profile_main.dart';
 import 'package:meet_up/view/reflect/reflect_main.dart';
 import 'package:meet_up/view/schedule/schedule_main.dart';
+import 'package:meet_up/view/setting/setting_main.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_one.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_five.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_four.dart';
@@ -159,8 +160,6 @@ final router = GoRouter(
         ),
 
         // Meet
-
-        // 바텀네비게이션 숨김
         GoRoute(
           path: 'meetManageMain',
           name: 'meetManageMain',
@@ -235,6 +234,14 @@ final router = GoRouter(
             ),
           ],
         ),
+
+        // Setting
+        GoRoute(
+          path: 'settingMain',
+          builder: (context, state) {
+            return const SettingMain();
+          },
+        )
       ],
     ),
   ],

@@ -22,7 +22,7 @@ class MeetMain extends StatelessWidget {
             else if (Platform.isAndroid)
               Padding(
                 padding: EdgeInsets.only(
-                  top: 15.h,
+                  top: 58.h,
                 ),
                 child: _header(context),
               ),
@@ -51,12 +51,13 @@ class MeetMain extends StatelessWidget {
     return Center(
       child: Column(
         children: [
+          // header(title: '만남', back: null),
           Text(
             '만남',
             style: AppTextStyles.SU_R_20.copyWith(color: UsedColor.text_3),
           ),
           SizedBox(
-            height: 23.h,
+            height: 16.h,
           ),
           Divider(
             height: 0.3.h,
