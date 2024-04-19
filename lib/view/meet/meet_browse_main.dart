@@ -62,28 +62,33 @@ class MeetBrowseMain extends StatelessWidget {
     );
   }
 
+  Widget _divider() {
+    return Divider(
+      height: 0.91.h,
+      color: const Color(0xffd9d9d9),
+    );
+  }
+
   Widget _main(BuildContext context) {
     return Container(
-        color: Colors.white,
-        child: SingleChildScrollView(
-          child: Padding(
-              padding: EdgeInsets.only(
-                left: 20.0.w,
-                right: 20.0.w,
-              ),
-              child: Column(children: [
-                SizedBox(height: 39.h),
-                _search(context),
-                SizedBox(height: 23.h),
-                _filter(context),
-                SizedBox(height: 21.h),
-                Divider(
-                  height: 0.3.h,
-                  color: UsedColor.line,
-                ),
-                SizedBox(height: 28.h),
-              ])),
-        ));
+      color: Colors.white,
+      child: SingleChildScrollView(
+          // child: Padding(
+          // padding: EdgeInsets.only(
+          //   left: 20.0.w,
+          //   right: 20.0.w,
+          // ),
+          child: Column(children: [
+        SizedBox(height: 39.h),
+        _search(context),
+        SizedBox(height: 23.h),
+        _filter(context),
+        SizedBox(height: 21.h),
+        _divider(),
+        SizedBox(height: 28.h),
+        // _meetingRoom(context),
+      ])),
+    );
   }
 
   Widget _search(BuildContext context) {
@@ -93,38 +98,43 @@ class MeetBrowseMain extends StatelessWidget {
       child: SizedBox(
         width: 352.w,
         height: 37.h,
-        child: TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            fillColor: UsedColor.bg_color,
-            focusColor: UsedColor.bg_color,
-            contentPadding: EdgeInsets.symmetric(vertical: 10.0.h),
-            hintText: '만남방의 이름을 검색해 보세요.',
-            prefixIcon: Image.asset(
-              ImagePath.search,
-              width: 10.w,
-              height: 10.h,
-            ),
-            suffixIcon: GestureDetector(
-              onTap: () {
-                controller.clear();
-              },
-              child: Image.asset(
-                ImagePath.close,
-                width: 23.w,
-                height: 23.h,
-              ),
-            ),
-            // Remove border
-            border: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            errorBorder: InputBorder.none,
-            disabledBorder: InputBorder.none,
-
-            hintStyle: AppTextStyles.SU_R_14.copyWith(color: UsedColor.text_3),
+        child: Container(
+          decoration: BoxDecoration(
+            color: UsedColor.bg_color, // 배경색 설정
+            borderRadius: BorderRadius.circular(20.0), // 테두리를 둥글게 만듦
           ),
-          onChanged: (value) {},
+          child: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(vertical: 10.0.h),
+              hintText: '만남방의 이름을 검색해 보세요.',
+              prefixIcon: Image.asset(
+                ImagePath.search,
+                width: 10.w,
+                height: 10.h,
+              ),
+              suffixIcon: GestureDetector(
+                onTap: () {
+                  controller.clear();
+                },
+                child: Image.asset(
+                  ImagePath.close,
+                  width: 23.w,
+                  height: 23.h,
+                ),
+              ),
+              // Remove border
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+
+              hintStyle:
+                  AppTextStyles.SU_R_14.copyWith(color: UsedColor.text_3),
+            ),
+            onChanged: (value) {},
+          ),
         ),
       ),
     );
@@ -151,13 +161,13 @@ class MeetBrowseMain extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.zero,
-                backgroundColor: Colors.white,
+                // backgroundColor: Colors.white,
                 side: BorderSide(
                   color: UsedColor.button_g,
-                  width: 1.67.w,
+                  width: 1.w,
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
+                  borderRadius: BorderRadius.circular(19.0),
                 ),
               ),
               child: Row(
@@ -170,11 +180,11 @@ class MeetBrowseMain extends StatelessWidget {
                           color: UsedColor.text_2,
                         )),
                   ),
-                  SizedBox(width: 8.w),
+                  //  const Spacer(),
                   Image.asset(
                     ImagePath.vector,
                     width: 9.w,
-                    height: 5.h,
+                    height: 9.h,
                   ),
                 ],
               ),
@@ -185,3 +195,5 @@ class MeetBrowseMain extends StatelessWidget {
     );
   }
 }
+
+// Widget _meetingRoom(BuildContext context) {}
