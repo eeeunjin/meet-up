@@ -460,7 +460,7 @@ Widget _area(BuildContext context) {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Padding(
-        padding: EdgeInsets.only(left: 33.w, right: 26.w),
+        padding: EdgeInsets.only(left: 33.w),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -474,8 +474,15 @@ Widget _area(BuildContext context) {
                 ),
               ],
             ),
-            const Icon(
-              Icons.arrow_forward_ios,
+            const Spacer(),
+            Padding(
+              padding: EdgeInsets.only(right: 26.w),
+              child: GestureDetector(
+                onTap: () {
+                  context.goNamed('meetFilterArea');
+                },
+                child: SizedBox(child: Image.asset(ImagePath.nextArrow)),
+              ),
             ),
           ],
         ),
@@ -514,7 +521,7 @@ Widget _age(BuildContext context) {
               spacing: 7.62.w,
               runSpacing: 7.62.h,
               children: options.map((option) {
-                bool isSelected = viewModel.selectedAges.contains(option);
+                bool isSelected = viewModel.selectedAge.contains(option);
                 return GestureDetector(
                   onTap: () {
                     viewModel.selectAge(option);
