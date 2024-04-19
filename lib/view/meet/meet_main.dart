@@ -331,13 +331,16 @@ class MeetMain extends StatelessWidget {
   }
 
   Widget _coinWidget(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        context.push('/coinMain');
-      },
-      child: const Align(
-        alignment: Alignment.centerRight,
-        child: CoinWidget(coinAmount: '600', itemCount: 5),
+    return Padding(
+      padding: EdgeInsets.only(right: 3.0.h),
+      child: GestureDetector(
+        onTap: () {
+          context.push('/coinMain');
+        },
+        child: const Align(
+          alignment: Alignment.centerRight,
+          child: CoinWidget(coinAmount: '600', itemCount: 5),
+        ),
       ),
     );
   }
