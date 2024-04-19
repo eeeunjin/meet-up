@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:meet_up/model/province_district_model.dart';
 
 class MeetBrowseViewModel with ChangeNotifier {
@@ -43,12 +42,14 @@ class MeetBrowseViewModel with ChangeNotifier {
     _selectedProvince = province;
     _selectedProvinceNotifier.value = province;
     notifyListeners();
+    debugPrint(' $province');
   }
 
   set selectedDistrict(String district) {
     _selectedDistrict = district;
     _selectedDistrictNotifier.value = district;
     notifyListeners();
+    debugPrint(district);
   }
 
   List<String> getDistrictsByProvince(String province) {
@@ -63,13 +64,8 @@ class MeetBrowseViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  bool get isSelectionNotEmpty =>
-      _selectedProvince.isNotEmpty || _selectedDistrict.isNotEmpty;
-
-  void goToNextPage(BuildContext context) {
-    if (isSelectionNotEmpty) {
-      context.goNamed('MeetFilterMain');
-    }
+  bool get isSelectionComplete {
+    return _selectedProvince.isNotEmpty && _selectedDistrict.isNotEmpty;
   }
 
   // age

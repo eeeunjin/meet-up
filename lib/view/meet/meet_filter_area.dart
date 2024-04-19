@@ -1,10 +1,8 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:meet_up/model/province_district_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
@@ -34,6 +32,10 @@ class MeetFilterArea extends StatelessWidget {
                 child: _header(context),
               ),
             Expanded(child: _main(context)),
+            Padding(
+              padding: EdgeInsets.only(left: 33.w, right: 32.w, bottom: 56.h),
+              child: _bottom(context),
+            ),
           ],
         ),
       ),
@@ -89,16 +91,15 @@ class MeetFilterArea extends StatelessWidget {
           _selectArea(context),
           _divider(),
           SizedBox(
-            height: 32.h,
+            height: 13.h,
           ),
-          _bottom(context),
         ],
       ),
     );
   }
 
   Widget _selectArea(BuildContext context) {
-    final MeetBrowseViewModel viewModel = MeetBrowseViewModel();
+    final viewModel = Provider.of<MeetBrowseViewModel>(context, listen: false);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -267,37 +268,39 @@ class MeetFilterArea extends StatelessWidget {
                       Visibility(
                         visible: selectedProvince.isNotEmpty ||
                             selectedDistrict.isNotEmpty,
-                        child: TextButton(
-                          onPressed: () {},
-                          style: TextButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              side: BorderSide(
-                                  color: UsedColor.B_line,
-                                  width: 1.5.w), // 테두리 색상
-                            ),
+                        child: Container(
+                          height: 31.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(9.r),
+                            border: Border.all(
+                                color: UsedColor.B_line, width: 1.5.w),
                           ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 9.w, vertical: 7.h),
+                          child: IntrinsicWidth(
                             child: Row(
-                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(
-                                  '${selectedProvince.isNotEmpty ? "$selectedProvince " : ""}$selectedDistrict',
-                                  style: AppTextStyles.PR_SB_14.copyWith(
-                                      color: UsedColor.charcoal_black),
-                                ),
-                                SizedBox(width: 10.w),
-                                GestureDetector(
-                                  onTap: () {
-                                    viewModel.clearSelection();
-                                  },
-                                  child: Icon(
-                                    Icons.close,
-                                    color: UsedColor.charcoal_black,
-                                    size: 18,
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 9.w),
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          '${selectedProvince.isNotEmpty ? "$selectedProvince " : ""}$selectedDistrict',
+                                          style: AppTextStyles.PR_SB_14
+                                              .copyWith(
+                                                  color:
+                                                      UsedColor.charcoal_black),
+                                        ),
+                                        SizedBox(width: 10.w),
+                                        GestureDetector(
+                                            onTap: () {
+                                              viewModel.clearSelection();
+                                            },
+                                            child: Image.asset(ImagePath.close,
+                                                width: 9.w, height: 9.h)),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],
@@ -322,30 +325,20 @@ class MeetFilterArea extends StatelessWidget {
   Widget _bottom(BuildContext context) {
     return Consumer<MeetBrowseViewModel>(
       builder: (context, viewModel, child) {
-        Color buttonColor = viewModel.isSelectionNotEmpty
-            ? UsedColor.button
-            : UsedColor.button_g;
-
-        Color textColor =
-            viewModel.isSelectionNotEmpty ? Colors.white : UsedColor.text_2;
-
-        String buttonText = viewModel.isSelectionNotEmpty ? '확인' : '다음';
-
-        return SizedBox(
-          width: 327.w,
+        return NextButton(
+          onTap: () async {
+            if (!viewModel.isSelectionComplete) return;
+          },
           height: 56.h,
-          child: ElevatedButton(
-            onPressed: () => viewModel.goToNextPage(context),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: buttonColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-            ),
-            child: Text(
-              buttonText,
-              style: AppTextStyles.PR_SB_20.copyWith(color: textColor),
-            ),
+          text: viewModel.isSelectionComplete ? '확인' : '다음',
+          enable: viewModel.isSelectionComplete,
+          backgroundColor: viewModel.isSelectionComplete
+              ? UsedColor.button
+              : UsedColor.button_g,
+          textStyle: TextStyle(
+            color:
+                viewModel.isSelectionComplete ? Colors.white : UsedColor.text_2,
+            fontSize: 20.sp,
           ),
         );
       },
