@@ -76,6 +76,8 @@ class SettingMain extends StatelessWidget {
             height: 0.3.h,
             color: UsedColor.grey1,
           ),
+          SizedBox(height: 12.h),
+          _help(),
         ],
       ),
     );
@@ -108,6 +110,7 @@ class SettingMain extends StatelessWidget {
             ],
           ),
         ),
+        SizedBox(height: 4.h),
         SizedBox(
           height: 48.h,
           child: Row(
@@ -127,6 +130,132 @@ class SettingMain extends StatelessWidget {
           ),
         ),
         SizedBox(height: 12.h),
+      ],
+    );
+  }
+
+  Widget _help() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '도움말',
+          style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+        ),
+        SizedBox(height: 8.0.h),
+        SizedBox(
+          height: 48.h,
+          child: Row(
+            children: [
+              Image.asset(
+                ImagePath.setIcon3,
+                width: 24.w,
+                height: 24.h,
+              ),
+              SizedBox(width: 16.w),
+              Text(
+                '자주 묻는 질문',
+                style: AppTextStyles.PR_R_16
+                    .copyWith(color: UsedColor.charcoal_black),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 4.h),
+        SizedBox(
+          height: 48.h,
+          child: Row(
+            children: [
+              Image.asset(
+                ImagePath.setIcon4,
+                width: 24.w,
+                height: 24.h,
+              ),
+              SizedBox(width: 16.w),
+              Text(
+                '공지사항',
+                style: AppTextStyles.PR_R_16
+                    .copyWith(color: UsedColor.charcoal_black),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 4.h),
+        SizedBox(
+          height: 48.h,
+          child: Row(
+            children: [
+              Image.asset(
+                ImagePath.setIcon5,
+                width: 24.w,
+                height: 24.h,
+              ),
+              SizedBox(width: 16.w),
+              Text(
+                '개인정보처리방침',
+                style: AppTextStyles.PR_R_16
+                    .copyWith(color: UsedColor.charcoal_black),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 4.h),
+        SizedBox(
+          height: 48.h,
+          child: Row(
+            children: [
+              Image.asset(
+                ImagePath.setIcon6,
+                width: 24.w,
+                height: 24.h,
+              ),
+              SizedBox(width: 16.w),
+              Text(
+                '서비스이용사항',
+                style: AppTextStyles.PR_R_16
+                    .copyWith(color: UsedColor.charcoal_black),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 4.h),
+        SizedBox(
+          height: 48.h,
+          child: Row(
+            children: [
+              Image.asset(
+                ImagePath.setIcon7,
+                width: 24.w,
+                height: 24.h,
+              ),
+              SizedBox(width: 16.w),
+              Text(
+                '오픈소스라이센스',
+                style: AppTextStyles.PR_R_16
+                    .copyWith(color: UsedColor.charcoal_black),
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 4.h),
+        SizedBox(
+          height: 48.h,
+          child: Row(
+            children: [
+              Image.asset(
+                ImagePath.setIcon8,
+                width: 24.w,
+                height: 24.h,
+              ),
+              SizedBox(width: 16.w),
+              Text(
+                '버전정보',
+                style: AppTextStyles.PR_R_16
+                    .copyWith(color: UsedColor.charcoal_black),
+              )
+            ],
+          ),
+        ),
       ],
     );
   }

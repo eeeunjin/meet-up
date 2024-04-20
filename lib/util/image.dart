@@ -65,4 +65,7 @@ class ImagePath {
   static String get setIcon6 => 'assets/images/set_icon_6.png';
   static String get setIcon7 => 'assets/images/set_icon_7.png';
   static String get setIcon8 => 'assets/images/set_icon_8.png';
+
+  // schedule
+  static String get backCross => 'assets/images/backcross.png';
 }

@@ -1,7 +1,5 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -64,6 +62,12 @@ class ProfileMain extends StatelessWidget {
             height: 14.h,
           ),
           _topButtons(context),
+          SizedBox(height: 12.h),
+          _profileBox(context),
+          SizedBox(height: 32.h),
+          _coinAndTicketBox(context),
+          SizedBox(height: 16.h),
+          _review(context),
         ],
       ),
     );
@@ -110,6 +114,55 @@ class ProfileMain extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _profileBox(BuildContext context) {
+    return Container(
+      width: 340.w,
+      height: 176.h,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22.r),
+      ),
+    );
+  }
+
+  Widget _coinAndTicketBox(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        // 코인 박스
+        Container(
+          width: 162.w,
+          height: 96.h,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(22.r),
+          ),
+        ),
+        SizedBox(width: 16.w),
+        // 만남권 박스
+        Container(
+          width: 162.w,
+          height: 96.h,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(22.r),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _review(BuildContext context) {
+    return Container(
+      width: 340.w,
+      height: 95.h,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22.r),
       ),
     );
   }
