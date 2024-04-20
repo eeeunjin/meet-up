@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:meet_up/util/color.dart';
 
 class NextButton extends StatefulWidget {
   final String text;
@@ -10,6 +11,7 @@ class NextButton extends StatefulWidget {
   final bool whiteButton;
   final TextStyle? textStyle;
   final bool enable;
+  final Color? backgroundColor;
   const NextButton(
       {super.key,
       required this.onTap,
@@ -20,7 +22,7 @@ class NextButton extends StatefulWidget {
       this.whiteButton = false,
       this.textStyle,
       this.enable = true,
-      Color? backgroundColor});
+      this.backgroundColor});
   @override
   State<NextButton> createState() => _NextButtonState();
 }
@@ -59,8 +61,8 @@ class _NextButtonState extends State<NextButton> {
           color: widget.whiteButton
               ? Colors.white
               : (widget.enable
-                  ? const Color(0xFF76E84E)
-                  : const Color(0xFFE6E6E6)),
+                  ? widget.backgroundColor ?? UsedColor.button
+                  : UsedColor.button_g),
           shape: RoundedRectangleBorder(
               side: widget.whiteButton
                   ? BorderSide(width: 1.r, color: const Color(0xFFE6E6E6))
