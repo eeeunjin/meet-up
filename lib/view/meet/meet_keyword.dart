@@ -122,6 +122,14 @@ class MeetKeyWord extends StatelessWidget {
                 textInputAction: TextInputAction.done,
                 style: AppTextStyles.PR_R_15,
               ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  viewModel.subTextCount,
+                  style:
+                      AppTextStyles.PR_SB_11.copyWith(color: UsedColor.text_4),
+                ),
+              ),
               // 저장 버튼
               // Positioned(
               //   right: 2.w,
@@ -164,15 +172,6 @@ class MeetKeyWord extends StatelessWidget {
                       '키워드는 최대 3개까지 입력이 가능합니다.',
                       style:
                           AppTextStyles.SU_R_12.copyWith(color: UsedColor.red),
-                    ),
-                    const Spacer(),
-                    Padding(
-                      padding: EdgeInsets.only(top: 3.0.h),
-                      child: Text(
-                        viewModel.subTextCount,
-                        style: AppTextStyles.PR_SB_11
-                            .copyWith(color: UsedColor.text_3), // 임의 색상
-                      ),
                     ),
                   ],
                 ),
