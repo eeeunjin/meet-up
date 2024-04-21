@@ -68,4 +68,11 @@ class ImagePath {
 
   // schedule
   static String get backCross => 'assets/images/backcross.png';
+  static String get scheduleIcon1 => 'assets/images/schedule_icon_1.png';
+  static String get scheduleIcon2 => 'assets/images/schedule_icon_2.png';
+  static String get scheduleIcon3 => 'assets/images/schedule_icon_3.png';
+  static String get scheduleIcon4 => 'assets/images/schedule_icon_4.png';
+  static String get scheduleIcon5 => 'assets/images/schedule_icon_5.png';
+  static String get scheduleIcon6 => 'assets/images/schedule_icon_6.png';
+  static String get downArrow => 'assets/images/down_arrow.png';
 }

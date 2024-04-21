@@ -20,6 +20,17 @@ class ScheduleMainViewModel with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // datePicker
+  bool _isDatePanelExpanded = false;
+
+  bool get isDatePanelExpanded => _isDatePanelExpanded;
+
+  // ExpansionPanel을 토글하는 함수
+  void toggleDatePanel() {
+    _isDatePanelExpanded = !_isDatePanelExpanded; // 상태를 반전시킵니다.
+    notifyListeners(); // 위젯들에게 상태 변경을 알립니다.
+  }
 }
 
 enum SelectedPart { meetUp, personal }
