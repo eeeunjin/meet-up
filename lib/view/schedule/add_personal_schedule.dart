@@ -98,45 +98,7 @@ class AddPersonalSchedule extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(height: 22.h),
-          Padding(
-            padding: EdgeInsets.only(left: 23.0.w),
-            child: Row(
-              children: [
-                Image.asset(
-                  ImagePath.scheduleIcon1,
-                  width: 20.w,
-                  height: 20.h,
-                ),
-                SizedBox(width: 20.w),
-                Text(
-                  '일정',
-                  style: AppTextStyles.PR_M_16
-                      .copyWith(color: UsedColor.charcoal_black),
-                ),
-                SizedBox(width: 16.w),
-                Expanded(
-                  child: Transform.translate(
-                    offset: Offset(0, -4.0.h),
-                    child: Container(
-                      alignment: Alignment.center,
-                      height: 19.h,
-                      child: TextField(
-                        decoration: const InputDecoration(
-                          isDense: true,
-                          contentPadding: EdgeInsets.zero,
-                          border: InputBorder.none,
-                          hintText: '일정을 입력해주세요',
-                          hintStyle: TextStyle(color: UsedColor.text_5),
-                        ),
-                        style: AppTextStyles.PR_R_15
-                            .copyWith(color: UsedColor.text_5),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          _naming(context),
           SizedBox(height: 22.h),
           _divider(),
           SizedBox(height: 10.h),
@@ -405,27 +367,71 @@ class AddPersonalSchedule extends StatelessWidget {
     );
   }
 
-  // 저장
-  Widget _bottom(BuildContext context) {
-    return Consumer<ScheduleMainViewModel>(
-        builder: (context, viewModel, child) {
-      return Padding(
-        padding: EdgeInsets.only(bottom: 56.0.h, left: 51.w, right: 51.w),
-        child: NextButton(
-          onTap: () {},
-          height: 50.h,
-          text: '저장',
-          enable: viewModel.allCheckCompleted,
-          backgroundColor: viewModel.allCheckCompleted
-              ? UsedColor.button
-              : UsedColor.button_g,
-          textStyle: TextStyle(
-            color:
-                viewModel.allCheckCompleted ? Colors.white : UsedColor.text_2,
-            fontSize: 20.sp,
+  Widget _naming(BuildContext context) {
+    final viewModel = Provider.of<ScheduleMainViewModel>(context);
+
+    return Padding(
+      padding: EdgeInsets.only(left: 23.0.w),
+      child: Row(
+        children: [
+          Image.asset(
+            ImagePath.scheduleIcon1,
+            width: 20.w,
+            height: 20.h,
           ),
-        ),
-      );
-    });
+          SizedBox(width: 20.w),
+          Text(
+            '일정',
+            style:
+                AppTextStyles.PR_M_16.copyWith(color: UsedColor.charcoal_black),
+          ),
+          SizedBox(width: 16.w),
+          Expanded(
+            child: Transform.translate(
+              offset: Offset(0, -4.0.h),
+              child: Container(
+                alignment: Alignment.center,
+                height: 19.h,
+                child: TextField(
+                  onChanged: (text) => viewModel.namingContents(text),
+                  decoration: const InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.zero,
+                    border: InputBorder.none,
+                    hintText: '일정을 입력해주세요',
+                    hintStyle: TextStyle(color: UsedColor.text_5),
+                  ),
+                  style:
+                      AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
+}
+
+// 저장
+Widget _bottom(BuildContext context) {
+  return Consumer<ScheduleMainViewModel>(builder: (context, viewModel, child) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 56.0.h, left: 51.w, right: 51.w),
+      child: NextButton(
+        onTap: () async {
+          if (!viewModel.allCheckCompleted) return;
+        },
+        height: 50.h,
+        text: '저장',
+        enable: viewModel.allCheckCompleted,
+        backgroundColor:
+            viewModel.allCheckCompleted ? UsedColor.button : UsedColor.button_g,
+        textStyle: TextStyle(
+          color: viewModel.allCheckCompleted ? Colors.white : UsedColor.text_2,
+          fontSize: 20.sp,
+        ),
+      ),
+    );
+  });
 }
