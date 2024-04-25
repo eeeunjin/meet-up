@@ -14,6 +14,7 @@ import 'package:meet_up/view/meet/meet_filter_area.dart';
 import 'package:meet_up/view/meet/meet_keyword.dart';
 import 'package:meet_up/view/meet/meet_main.dart';
 import 'package:meet_up/view/meet/meet_search_main.dart';
+import 'package:meet_up/view/profile/profile_edit.dart';
 import 'package:meet_up/view/profile/profile_main.dart';
 import 'package:meet_up/view/reflect/reflect_main.dart';
 import 'package:meet_up/view/schedule/add_personal_schedule.dart';
@@ -241,6 +242,14 @@ final router = GoRouter(
           path: 'addPersonalSchedule',
           builder: (context, state) {
             return const AddPersonalSchedule();
+          },
+        ),
+
+        // Profile
+        GoRoute(
+          path: 'profileEdit',
+          builder: (context, state) {
+            return const ProfileEdit();
           },
         ),
 

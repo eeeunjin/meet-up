@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
+import 'package:meet_up/util/image.dart';
 
 class ProfileMain extends StatelessWidget {
   const ProfileMain({super.key});
@@ -126,6 +127,86 @@ class ProfileMain extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(22.r),
       ),
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: 16.0.w,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // 프로필 이미지
+            Container(
+              width: 120.w,
+              height: 120.h,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(width: 1.5.w, color: UsedColor.B_line),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 16.0.h),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 수정 버튼
+                  Padding(
+                    padding: EdgeInsets.only(left: 156.w, bottom: 8.h),
+                    child: GestureDetector(
+                      onTap: () {
+                        // 수정 페이지
+                        context.push('/profileEdit');
+                      },
+                      child: Image.asset(
+                        ImagePath.profileEditIcon,
+                        width: 32.w,
+                        height: 32.h,
+                      ),
+                    ),
+                  ),
+                  // 사용자 닉네임
+                  Padding(
+                    padding: EdgeInsets.only(left: 24.0.w, bottom: 3.h),
+                    child: Text(
+                      '사용자 닉네임',
+                      style: AppTextStyles.PR_SB_18
+                          .copyWith(color: UsedColor.charcoal_black),
+                    ),
+                  ),
+                  // 정기권 혜택 적용 중
+                  Padding(
+                    padding: EdgeInsets.only(left: 24.0.w),
+                    child: Container(
+                      width: 93.w,
+                      height: 14.h,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(7.r),
+                          color: UsedColor.image_card),
+                      child: Center(
+                        child: Text(
+                          '정기권 혜택 적용 중',
+                          style: AppTextStyles.PR_R_10
+                              .copyWith(color: UsedColor.violet),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Novice 혜택 보러가기
+                  Padding(
+                    padding: EdgeInsets.only(top: 24.0.h, left: 24.h),
+                    child: Text(
+                      'Novice 혜택 보러가기 >',
+                      style: AppTextStyles.PR_R_12
+                          .copyWith(color: UsedColor.text_5),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -141,6 +222,20 @@ class ProfileMain extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(22.r),
           ),
+          child: Padding(
+            padding: EdgeInsets.only(left: 24.0.w, top: 20.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  '코인',
+                  style: AppTextStyles.PR_SB_18
+                      .copyWith(color: UsedColor.charcoal_black),
+                ),
+              ],
+            ),
+          ),
         ),
         SizedBox(width: 16.w),
         // 만남권 박스
@@ -150,6 +245,20 @@ class ProfileMain extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(22.r),
+          ),
+          child: Padding(
+            padding: EdgeInsets.only(left: 24.0.w, top: 20.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  '만남권',
+                  style: AppTextStyles.PR_SB_18
+                      .copyWith(color: UsedColor.charcoal_black),
+                ),
+              ],
+            ),
           ),
         ),
       ],
