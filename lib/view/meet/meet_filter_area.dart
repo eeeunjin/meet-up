@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:meet_up/model/province_district_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
@@ -335,10 +336,9 @@ class MeetFilterArea extends StatelessWidget {
       builder: (context, viewModel, child) {
         return NextButton(
           onTap: () async {
-            if (!viewModel.isSelectionComplete) return;
+            context.goNamed('meetFilterMain');
           },
           height: 54.h,
-          // height: 46.h,
           text: viewModel.isSelectionComplete ? '확인' : '다음',
           enable: viewModel.isSelectionComplete,
           backgroundColor: viewModel.isSelectionComplete
