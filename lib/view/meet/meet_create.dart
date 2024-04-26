@@ -1,7 +1,5 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -632,8 +630,8 @@ class MeetCreate extends StatelessWidget {
         viewModel.setRuleQuestion(rule, response);
       },
       child: Container(
-        width: 42.96.w,
-        height: 19.75.h,
+        width: 43.w,
+        height: 19.h,
         decoration: BoxDecoration(
             color: isSelected ? UsedColor.button : Colors.white,
             borderRadius: BorderRadius.circular(9.9.r),
@@ -643,7 +641,7 @@ class MeetCreate extends StatelessWidget {
         child: Center(
           child: Text(response ? '가능' : '불가능',
               style: AppTextStyles.PR_SB_11.copyWith(
-                color: isSelected ? Colors.white : Colors.black,
+                color: isSelected ? Colors.white : UsedColor.charcoal_black,
               )),
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meet_up/model/province_district_model.dart';
 
 class MeetBrowseViewModel with ChangeNotifier {
   // 카테고리
@@ -21,21 +22,60 @@ class MeetBrowseViewModel with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  // age
-  // age
-  final List<String> _selectedAges = [];
+  // area
+  String _selectedProvince = '';
+  final ValueNotifier<String> _selectedProvinceNotifier = ValueNotifier('');
 
-  List<String> get selectedAges => _selectedAges;
+  String _selectedDistrict = '';
+  final ValueNotifier<String> _selectedDistrictNotifier = ValueNotifier('');
+
+  String get selectedProvince => _selectedProvince;
+  String get selectedDistrict => _selectedDistrict;
+
+  ValueNotifier<String> get selectedProvinceNotifier =>
+      _selectedProvinceNotifier;
+
+  ValueNotifier<String> get selectedDistrictNotifier =>
+      _selectedDistrictNotifier;
+
+  set selectedProvince(String province) {
+    _selectedProvince = province;
+    _selectedProvinceNotifier.value = province;
+    notifyListeners();
+    debugPrint(' $province');
+  }
+
+  set selectedDistrict(String district) {
+    _selectedDistrict = district;
+    _selectedDistrictNotifier.value = district;
+    notifyListeners();
+    debugPrint(district);
+  }
+
+  List<String> getDistrictsByProvince(String province) {
+    return ProvinceDistrict.entireDistricts[province] ?? [];
+  }
+
+  void clearSelection() {
+    _selectedProvince = ''; // 선택된 시/도 초기화
+    _selectedDistrict = ''; // 선택된 시/도/군 초기화
+    _selectedProvinceNotifier.value = '';
+    _selectedDistrictNotifier.value = '';
+    notifyListeners();
+  }
+
+  bool get isSelectionComplete {
+    return _selectedProvince.isNotEmpty && _selectedDistrict.isNotEmpty;
+  }
+
+  // age
+  String _selectedAge = '';
+
+  String get selectedAge => _selectedAge;
 
   void selectAge(String age) {
-    if (_selectedAges.contains(age)) {
-      // 이미 선택된 나이라면 리스트에서 제거
-      _selectedAges.remove(age);
-    } else {
-      // 선택되지 않은 나이라면 리스트에 추가
-      _selectedAges.add(age);
-    }
-    debugPrint('Selected ages: $_selectedAges');
+    _selectedAge = age;
+    debugPrint('Selected age: $_selectedAge');
     notifyListeners();
   }
 

@@ -103,39 +103,62 @@ class MeetKeyWord extends StatelessWidget {
                   ),
                 ),
                 onChanged: (text) {
-                  viewModel.setDescription(text);
-                },
-                style: AppTextStyles.PR_R_15,
-              ),
-              // 저장 버튼
-              Positioned(
-                right: 2.w,
-                child: GestureDetector(
-                  onTap: () {
-                    String keyword = viewModel.textController.text.trim();
-                    debugPrint('Before adding keyword: $keyword');
+                  // Check if the last character is a space and save the keyword
+                  if (text.isNotEmpty && text.characters.last == ' ') {
+                    final keyword = text.trim();
                     if (keyword.isNotEmpty) {
                       viewModel.addKeyword(keyword);
                       viewModel.textController.clear();
                     }
-                  },
-                  child: Container(
-                    width: 44.w,
-                    height: 25.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(9.r),
-                      border: Border.all(width: 1.w, color: UsedColor.B_line),
-                    ),
-                    child: Center(
-                      child: Text(
-                        '저장',
-                        style: AppTextStyles.PR_M_13
-                            .copyWith(color: UsedColor.charcoal_black),
-                      ),
-                    ),
-                  ),
+                  }
+                },
+                onSubmitted: (text) {
+                  final keyword = text.trim();
+                  if (keyword.isNotEmpty) {
+                    viewModel.addKeyword(keyword);
+                    viewModel.textController.clear();
+                  }
+                },
+                textInputAction: TextInputAction.done,
+                style: AppTextStyles.PR_R_15,
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  viewModel.subTextCount,
+                  style:
+                      AppTextStyles.PR_SB_11.copyWith(color: UsedColor.text_4),
                 ),
               ),
+              // 저장 버튼
+              // Positioned(
+              //   right: 2.w,
+              //   child: GestureDetector(
+              //     onTap: () {
+              //       String keyword = viewModel.textController.text.trim();
+              //       debugPrint('Before adding keyword: $keyword');
+              //       if (keyword.isNotEmpty) {
+              //         viewModel.addKeyword(keyword);
+              //         viewModel.textController.clear();
+              //       }
+              //     },
+              //     child: Container(
+              //       width: 44.w,
+              //       height: 25.h,
+              //       decoration: BoxDecoration(
+              //         borderRadius: BorderRadius.circular(9.r),
+              //         border: Border.all(width: 1.w, color: UsedColor.B_line),
+              //       ),
+              //       child: Center(
+              //         child: Text(
+              //           '저장',
+              //           style: AppTextStyles.PR_M_13
+              //               .copyWith(color: UsedColor.charcoal_black),
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           // 텍스트 카운트 표시
@@ -146,18 +169,9 @@ class MeetKeyWord extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      '띄어쓰기 없이 1-8자 입력하세요.',
+                      '키워드는 최대 3개까지 입력이 가능합니다.',
                       style:
                           AppTextStyles.SU_R_12.copyWith(color: UsedColor.red),
-                    ),
-                    const Spacer(),
-                    Padding(
-                      padding: EdgeInsets.only(top: 3.0.h),
-                      child: Text(
-                        viewModel.subTextCount,
-                        style: AppTextStyles.PR_SB_11
-                            .copyWith(color: UsedColor.text_3), // 임의 색상
-                      ),
                     ),
                   ],
                 ),

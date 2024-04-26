@@ -44,4 +44,38 @@ class ImagePath {
 
   static String get coinDollarIcon => 'assets/images/coin_dollar_icon.png';
   static String get coinWalletIcon => 'assets/images/coin_wallet_icon.png';
+
+  // bot_nav
+  static String get meetOn => 'assets/images/bot_nav_meet_on.png';
+  static String get meetOff => 'assets/images/bot_nav_meet_off.png';
+  static String get chatOn => 'assets/images/bot_nav_chat_on.png';
+  static String get chatOff => 'assets/images/bot_nav_chat_off.png';
+  static String get scheduleOn => 'assets/images/bot_nav_schedule_on.png';
+  static String get scheduleOff => 'assets/images/bot_nav_schedule_off.png';
+  static String get refOn => 'assets/images/bot_nav_ref_on.png';
+  static String get refOff => 'assets/images/bot_nav_ref_off.png';
+  static String get profileOff => 'assets/images/bot_nav_profile_off.png';
+
+  // setting
+  static String get setIcon1 => 'assets/images/set_icon_1.png';
+  static String get setIcon2 => 'assets/images/set_icon_2.png';
+  static String get setIcon3 => 'assets/images/set_icon_3.png';
+  static String get setIcon4 => 'assets/images/set_icon_4.png';
+  static String get setIcon5 => 'assets/images/set_icon_5.png';
+  static String get setIcon6 => 'assets/images/set_icon_6.png';
+  static String get setIcon7 => 'assets/images/set_icon_7.png';
+  static String get setIcon8 => 'assets/images/set_icon_8.png';
+
+  // profile
+  static String get profileEditIcon => 'assets/images/profile_edit_icon.png';
+
+  // schedule
+  static String get backCross => 'assets/images/backcross.png';
+  static String get scheduleIcon1 => 'assets/images/schedule_icon_1.png';
+  static String get scheduleIcon2 => 'assets/images/schedule_icon_2.png';
+  static String get scheduleIcon3 => 'assets/images/schedule_icon_3.png';
+  static String get scheduleIcon4 => 'assets/images/schedule_icon_4.png';
+  static String get scheduleIcon5 => 'assets/images/schedule_icon_5.png';
+  static String get scheduleIcon6 => 'assets/images/schedule_icon_6.png';
+  static String get downArrow => 'assets/images/down_arrow.png';
 }

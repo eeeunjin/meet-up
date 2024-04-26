@@ -22,7 +22,7 @@ class MeetMain extends StatelessWidget {
             else if (Platform.isAndroid)
               Padding(
                 padding: EdgeInsets.only(
-                  top: 15.h,
+                  top: 58.h,
                 ),
                 child: _header(context),
               ),
@@ -32,8 +32,9 @@ class MeetMain extends StatelessWidget {
       ),
       // 만남방 개설하기 플로팅액션 버튼
       floatingActionButton: FloatingActionButton(
+        heroTag: null, // 고유 태그 지정 - hero오류
         onPressed: () {
-          context.goNamed('meetCreate');
+          context.push('/meetCreate');
         },
         backgroundColor: Colors.black,
         shape: const CircleBorder(),
@@ -50,12 +51,13 @@ class MeetMain extends StatelessWidget {
     return Center(
       child: Column(
         children: [
+          // header(title: '만남', back: null),
           Text(
             '만남',
             style: AppTextStyles.SU_R_20.copyWith(color: UsedColor.text_3),
           ),
           SizedBox(
-            height: 23.h,
+            height: 16.h,
           ),
           Divider(
             height: 0.3.h,
@@ -96,7 +98,7 @@ class MeetMain extends StatelessWidget {
   Widget _manageMeetList(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.goNamed('meetManageMain');
+        context.push('/meetManageMain');
       },
       child: Column(
         children: [
@@ -175,7 +177,7 @@ class MeetMain extends StatelessWidget {
   Widget _searchMeetList(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.goNamed('meetBrowseMain');
+        context.push('/meetBrowseMain');
       },
       child: Column(
         children: [
@@ -330,13 +332,16 @@ class MeetMain extends StatelessWidget {
   }
 
   Widget _coinWidget(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        context.goNamed('coinMainFromMeetMain');
-      },
-      child: const Align(
-        alignment: Alignment.centerRight,
-        child: CoinWidget(coinAmount: '600', itemCount: 5),
+    return Padding(
+      padding: EdgeInsets.only(right: 3.0.h),
+      child: GestureDetector(
+        onTap: () {
+          context.push('/coinMain');
+        },
+        child: const Align(
+          alignment: Alignment.centerRight,
+          child: CoinWidget(coinAmount: '600', itemCount: 5),
+        ),
       ),
     );
   }
