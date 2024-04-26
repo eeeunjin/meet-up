@@ -53,7 +53,7 @@ class MeetBrowseViewModel with ChangeNotifier {
   }
 
   List<String> getDistrictsByProvince(String province) {
-    return ProvinceDistrict.districts[province] ?? [];
+    return ProvinceDistrict.entireDistricts[province] ?? [];
   }
 
   void clearSelection() {
