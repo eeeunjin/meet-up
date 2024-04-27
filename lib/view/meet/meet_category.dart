@@ -245,30 +245,4 @@ class MeetCategory extends StatelessWidget {
       ],
     );
   }
-
-  Widget _selectedKeywords(
-      BuildContext context, MeetCreateViewModel viewModel) {
-    return Wrap(
-      spacing: 2.w,
-      runSpacing: 2.h,
-      children: viewModel.keywords
-          .map((keyword) => Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color:
-                      const Color(0xFFEDEDED), // Adjust color to match your UI
-                ),
-                child: Text(
-                  '#$keyword',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.black, // Adjust color to match your UI
-                  ),
-                ),
-              ))
-          .toList(),
-    );
-  }
 }

@@ -5,6 +5,7 @@ import 'package:meet_up/view/coin/coin_main.dart';
 import 'package:meet_up/view/login/login_main.dart';
 import 'package:meet_up/view/login/login_phone_num.dart';
 import 'package:meet_up/view/login/login_verification.dart';
+import 'package:meet_up/view/meet/meet_location.dart';
 import 'package:meet_up/view/meet/meet_manage_main.dart';
 import 'package:meet_up/view/meet/meet_browse_main.dart';
 import 'package:meet_up/view/meet/meet_category.dart';
@@ -236,6 +237,13 @@ final router = GoRouter(
               name: 'meetCategory',
               builder: (context, state) {
                 return const MeetCategory();
+              },
+            ),
+            GoRoute(
+              path: 'meetLocation',
+              name: 'meetLocation',
+              builder: (context, state) {
+                return const MeetLocation();
               },
             ),
           ],

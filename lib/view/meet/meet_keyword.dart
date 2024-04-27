@@ -240,7 +240,12 @@ class MeetKeyWord extends StatelessWidget {
           Consumer<MeetCreateViewModel>(builder: (context, viewModel, child) {
         return NextButton(
           onTap: () async {
-            //
+            if (viewModel.keywordCheckComplted) {
+              // viewModel.saveKeywords();
+              Navigator.of(context).pop();
+            } else {
+              return;
+            }
           },
           height: 56.h,
           text: viewModel.keywordCheckComplted ? '저장' : '저장 안됨',

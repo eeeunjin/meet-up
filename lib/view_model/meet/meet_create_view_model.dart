@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meet_up/model/province_district_model.dart';
 
 class MeetCreateViewModel with ChangeNotifier {
   // naming
@@ -161,6 +162,11 @@ class MeetCreateViewModel with ChangeNotifier {
     }
   }
 
+  // 키워드 저장
+  void saveKeywords() {
+    debugPrint('$keywords');
+  }
+
   String get subTextCount => '${_textCount.length}/6';
 
   // list
@@ -202,4 +208,50 @@ class MeetCreateViewModel with ChangeNotifier {
 
   bool get keywordCheckComplted =>
       _keywords.isNotEmpty && _keywords.length <= 3;
+
+  // MARK - Location
+  String _selectedProvince = '';
+  final ValueNotifier<String> _selectedProvinceNotifier = ValueNotifier('');
+
+  String _selectedDistrict = '';
+  final ValueNotifier<String> _selectedDistrictNotifier = ValueNotifier('');
+
+  String get selectedProvince => _selectedProvince;
+  String get selectedDistrict => _selectedDistrict;
+
+  ValueNotifier<String> get selectedProvinceNotifier =>
+      _selectedProvinceNotifier;
+
+  ValueNotifier<String> get selectedDistrictNotifier =>
+      _selectedDistrictNotifier;
+
+  set selectedProvince(String province) {
+    _selectedProvince = province;
+    _selectedProvinceNotifier.value = province;
+    notifyListeners();
+    debugPrint(' $province');
+  }
+
+  set selectedDistrict(String district) {
+    _selectedDistrict = district;
+    _selectedDistrictNotifier.value = district;
+    notifyListeners();
+    debugPrint(district);
+  }
+
+  List<String> getDistrictsByProvince(String province) {
+    return ProvinceDistrict.entireDistricts[province] ?? [];
+  }
+
+  void clearSelection() {
+    _selectedProvince = ''; // 선택된 시/도 초기화
+    _selectedDistrict = ''; // 선택된 시/도/군 초기화
+    _selectedProvinceNotifier.value = '';
+    _selectedDistrictNotifier.value = '';
+    notifyListeners();
+  }
+
+  bool get isSelectionComplete {
+    return _selectedProvince.isNotEmpty && _selectedDistrict.isNotEmpty;
+  }
 }
