@@ -189,29 +189,42 @@ final router = GoRouter(
           },
         ),
         GoRoute(
-            path: 'meetBrowseMain',
-            name: 'meetBrowseMain',
-            builder: (context, state) {
-              return const Scaffold(body: MeetBrowseMain());
-            },
-            routes: [
-              GoRoute(
-                  path: 'meetFilterMain',
-                  name: 'meetFilterMain',
-                  builder: (context, state) {
-                    return const Scaffold(body: MeetFilterMain());
-                  },
-                  routes: [
-                    GoRoute(
-                      path: 'meetFilterArea',
-                      name: 'meetFilterArea',
-                      builder: (context, state) {
-                        return const Scaffold(body: MeetFilterArea());
-                      },
-                    ),
-                  ]),
-            ]),
-
+          path: 'meetBrowseMain',
+          name: 'meetBrowseMain',
+          builder: (context, state) {
+            return const Scaffold(body: MeetBrowseMain());
+          },
+        ),
+        // GoRoute(
+        //   path: 'meetFilterMain',
+        //   name: 'meetFilterMain',
+        //   builder: (context, state) {
+        //     return const Scaffold(body: MeetFilterMain());
+        //   },
+        // ),
+        // GoRoute(
+        //   path: 'meetFilterArea',
+        //   name: 'meetFilterArea',
+        //   builder: (context, state) {
+        //     return const Scaffold(body: MeetFilterArea());
+        //   },
+        // ),
+        GoRoute(
+          path: 'meetFilterMain',
+          name: 'meetFilterMain',
+          builder: (context, state) {
+            return const Scaffold(body: MeetFilterMain());
+          },
+          routes: [
+            GoRoute(
+              path: 'meetFilterArea',
+              name: 'meetFilterArea',
+              builder: (context, state) {
+                return const Scaffold(body: MeetFilterArea());
+              },
+            ),
+          ],
+        ),
         GoRoute(
           path: 'coinMain',
           name: 'coinMainFromMeetMain',
