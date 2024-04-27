@@ -1,6 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:meet_up/model/room_model.dart';
+import 'package:meet_up/repository/room_repository.dart';
+import 'package:meet_up/service/remote/firebase_service.dart';
 
 class MeetCreateViewModel with ChangeNotifier {
+  // Room 관련 DB 동작을 하는 Repository
+  final RoomRepository _roomRepository = RoomRepository();
+  final FirebaseRefs _firebaseRefs = FirebaseRefs();
+
   // naming
   String _roomNaming = '';
 
@@ -54,47 +62,37 @@ class MeetCreateViewModel with ChangeNotifier {
   }
 
   // gender ratio
-  bool _isWomen4Selected = false;
-  bool _isWomen2Men2Selected = false;
-  bool _isMen4Selected = false;
+  RoomGenderRatio _roomGenderRatio = RoomGenderRatio.manOnly;
 
   void selectWomen4() {
-    _isWomen4Selected = true;
-    _isWomen2Men2Selected = false;
-    _isMen4Selected = false;
+    _roomGenderRatio = RoomGenderRatio.womanOnly;
     notifyListeners();
   }
 
   void selectWomen2Men2() {
-    _isWomen4Selected = false;
-    _isWomen2Men2Selected = true;
-    _isMen4Selected = false;
+    _roomGenderRatio = RoomGenderRatio.mixed;
     notifyListeners();
   }
 
   void selectMen4() {
-    _isWomen4Selected = false;
-    _isWomen2Men2Selected = false;
-    _isMen4Selected = true;
+    _roomGenderRatio = RoomGenderRatio.manOnly;
     notifyListeners();
   }
 
-  bool get isWomen4Selected => _isWomen4Selected;
-  bool get isWomen2Men2Selected => _isWomen2Men2Selected;
-  bool get isMen4Selected => _isMen4Selected;
+  RoomGenderRatio get roomGenderRatio => _roomGenderRatio;
 
   // rules
-  final Map<String, bool?> _rulesQuestion = {
-    '만남 시 대화 녹음': null,
-    '만남 후 앱을 통해 연락처 공유': null,
-    '아는 지인과 동반 신청': null,
-    '첫 만남에 2차 이동': null,
-    '귀가 시 동성과 동행': null,
+  final Map<String, bool> _rulesQuestion = {
+    '만남 시 대화 녹음': false,
+    '만남 후 앱을 통해 연락처 공유': false,
+    '아는 지인과 동반 신청': false,
+    '첫 만남에 2차 이동': false,
+    '귀가 시 동성과 동행': false,
   };
 
-  Map<String, bool?> get rules => _rulesQuestion;
+  Map<String, bool> get rules => _rulesQuestion;
 
-  void setRuleQuestion(String rule, bool? agree) {
+  void setRuleQuestion(String rule, bool agree) {
     if (_rulesQuestion[rule] != agree) {
       _rulesQuestion[rule] = agree;
       notifyListeners();
@@ -138,5 +136,41 @@ class MeetCreateViewModel with ChangeNotifier {
     _selectedMainCategories.clear();
     _selectedMainCategories.add(category);
     notifyListeners();
+  }
+
+  // MARK: - 방 만들기
+  void createRoom(DocumentReference docRef) {
+    List<String> roomAge = selectedAges.map((string) {
+      switch (string) {
+        case "20대":
+          RoomAge.twenties;
+        case "30대":
+          RoomAge.thirties;
+        case "40대":
+          RoomAge.fourties;
+        case "50대":
+          RoomAge.fifties;
+      }
+      return string.toUpperCase();
+    }).toList();
+
+    List<bool> roomRules = rules.values.toList();
+
+    RoomModel roomModel = RoomModel(
+      room_name: roomNaming,
+      room_category: RoomCategory.hobby.name,
+      room_category_detail: Hobby.photography.name,
+      room_region_province: "수정 필요",
+      room_region_district: "수정 필요",
+      room_keyword: ["수정 필요", "수정 필요", "수정 필요"],
+      room_description: roomText,
+      room_age: roomAge,
+      room_gender_ratio: roomGenderRatio.name,
+      room_rules: roomRules,
+      room_creation_date: Timestamp.now(),
+      room_owner_reference: docRef,
+      
+      room_participant_reference: [],
+    );
   }
 }

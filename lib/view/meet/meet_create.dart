@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/repository/room_repository.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
@@ -433,6 +434,7 @@ class MeetCreate extends StatelessWidget {
             runSpacing: 7.62.h,
             children: options.map((option) {
               bool isSelected = viewModel.selectedAges.contains(option);
+              
               return GestureDetector(
                 onTap: () {
                   viewModel.selectAge(option);
@@ -511,7 +513,7 @@ class MeetCreate extends StatelessWidget {
                 GestureDetector(
                   onTap: () => viewModel.selectWomen4(),
                   child: Image.asset(
-                    viewModel.isWomen4Selected
+                    viewModel.roomGenderRatio == RoomGenderRatio.womanOnly
                         ? ImagePath.grW4
                         : ImagePath.grW4Empty,
                     width: 76.w,
@@ -522,7 +524,7 @@ class MeetCreate extends StatelessWidget {
                 GestureDetector(
                   onTap: () => viewModel.selectWomen2Men2(),
                   child: Image.asset(
-                    viewModel.isWomen2Men2Selected
+                    viewModel.roomGenderRatio == RoomGenderRatio.mixed
                         ? ImagePath.grW2M2
                         : ImagePath.grW2M2Empty,
                     width: 76.w,
@@ -533,7 +535,7 @@ class MeetCreate extends StatelessWidget {
                 GestureDetector(
                   onTap: () => viewModel.selectMen4(),
                   child: Image.asset(
-                    viewModel.isMen4Selected
+                    viewModel.roomGenderRatio == RoomGenderRatio.manOnly
                         ? ImagePath.grM4
                         : ImagePath.grM4Empty,
                     width: 76.w,
