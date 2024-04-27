@@ -5,6 +5,7 @@ import 'package:meet_up/view/coin/coin_main.dart';
 import 'package:meet_up/view/login/login_main.dart';
 import 'package:meet_up/view/login/login_phone_num.dart';
 import 'package:meet_up/view/login/login_verification.dart';
+import 'package:meet_up/view/meet/meet_location.dart';
 import 'package:meet_up/view/meet/meet_manage_main.dart';
 import 'package:meet_up/view/meet/meet_browse_main.dart';
 import 'package:meet_up/view/meet/meet_category.dart';
@@ -16,10 +17,12 @@ import 'package:meet_up/view/meet/meet_main.dart';
 import 'package:meet_up/view/meet/meet_search_main.dart';
 import 'package:meet_up/view/profile/profile_edit.dart';
 import 'package:meet_up/view/profile/profile_main.dart';
+import 'package:meet_up/view/profile/profile_notification.dart';
 import 'package:meet_up/view/reflect/reflect_main.dart';
 import 'package:meet_up/view/schedule/add_personal_schedule.dart';
 import 'package:meet_up/view/schedule/schedule_main.dart';
 import 'package:meet_up/view/setting/setting_main.dart';
+import 'package:meet_up/view/setting/setting_notification.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_one.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_five.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_four.dart';
@@ -193,19 +196,21 @@ final router = GoRouter(
           },
         ),
         GoRoute(
-          path: 'meetFilterMain',
-          name: 'meetFilterMain',
-          builder: (context, state) {
-            return const Scaffold(body: MeetFilterMain());
-          },
-        ),
-        GoRoute(
-          path: 'meetFilterArea',
-          name: 'meetFilterArea',
-          builder: (context, state) {
-            return const Scaffold(body: MeetFilterArea());
-          },
-        ),
+            path: 'meetFilterMain',
+            name: 'meetFilterMain',
+            builder: (context, state) {
+              return const Scaffold(body: MeetFilterMain());
+            },
+            routes: [
+              GoRoute(
+                path: 'meetFilterArea',
+                name: 'meetFilterArea',
+                builder: (context, state) {
+                  return const Scaffold(body: MeetFilterArea());
+                },
+              ),
+            ]),
+
         GoRoute(
           path: 'coinMain',
           name: 'coinMainFromMeetMain',
@@ -234,6 +239,13 @@ final router = GoRouter(
                 return const MeetCategory();
               },
             ),
+            GoRoute(
+              path: 'meetLocation',
+              name: 'meetLocation',
+              builder: (context, state) {
+                return const MeetLocation();
+              },
+            ),
           ],
         ),
 
@@ -252,14 +264,27 @@ final router = GoRouter(
             return const ProfileEdit();
           },
         ),
-
-        // Setting
         GoRoute(
-          path: 'settingMain',
+          path: 'profileNoticationMain',
           builder: (context, state) {
-            return const SettingMain();
+            return const ProfileNotification();
           },
         ),
+        // Setting
+        GoRoute(
+            path: 'settingMain',
+            builder: (context, state) {
+              return const SettingMain();
+            },
+            routes: [
+              GoRoute(
+                path: 'settingNotification',
+                name: 'settingNotification',
+                builder: (context, state) {
+                  return const SettingNotification();
+                },
+              ),
+            ]),
       ],
     ),
   ],

@@ -1,11 +1,14 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
+import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -16,22 +19,25 @@ class MeetCategory extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: SingleChildScrollView(
-        child: Column(
-          children: [
-            if (Platform.isIOS)
-              _header(context)
-            else if (Platform.isAndroid)
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 15.h,
+          child: Stack(
+        children: [
+          Column(
+            children: [
+              if (Platform.isIOS)
+                _header(context)
+              else if (Platform.isAndroid)
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: 15.h,
+                  ),
+                  child: _header(context),
                 ),
-                child: _header(context),
-              ),
-            SizedBox(height: 33.h),
-            _mainCategory(context),
-          ],
-        ),
+              SizedBox(height: 33.h),
+              Expanded(child: _mainCategory(context)),
+              Align(alignment: Alignment.bottomCenter, child: _bottom(context)),
+            ],
+          ),
+        ],
       )),
     );
   }
@@ -193,6 +199,18 @@ class MeetCategory extends StatelessWidget {
 
   Widget _subCategoryList(BuildContext context, String mainCategory) {
     final viewModel = Provider.of<MeetCreateViewModel>(context, listen: true);
+    if (mainCategory == '기타') {
+      return Padding(
+        padding: EdgeInsets.only(top: 8.0.h),
+        child: Padding(
+          padding: EdgeInsets.only(top: 7.0.h, left: 14.76.w),
+          child: Text(
+            '상위 카테고리를 먼저 선택해주세요.',
+            style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_5),
+          ),
+        ), // This will be your message.
+      );
+    }
     List<String> subCategories = viewModel.getSubCategories(mainCategory);
 
     return Column(
@@ -201,6 +219,7 @@ class MeetCategory extends StatelessWidget {
           spacing: 8.w,
           runSpacing: 8.h,
           children: subCategories.map((subCategory) {
+            bool isSubSelected = viewModel.isSubCategorySelected(subCategory);
             return GestureDetector(
               onTap: () {
                 viewModel.selectSubCategory(subCategory);
@@ -209,10 +228,10 @@ class MeetCategory extends StatelessWidget {
                 width: 99.w,
                 height: 32.h,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isSubSelected ? UsedColor.button : Colors.white,
                   borderRadius: BorderRadius.circular(12.61.r),
                   border: Border.all(
-                    color: UsedColor.B_line,
+                    color: isSubSelected ? UsedColor.button : UsedColor.B_line,
                     width: 2.25.w,
                   ),
                 ),
@@ -220,7 +239,7 @@ class MeetCategory extends StatelessWidget {
                   child: Text(
                     subCategory,
                     style: AppTextStyles.PR_SB_14.copyWith(
-                      color: Colors.black,
+                      color: isSubSelected ? Colors.white : Colors.black,
                     ),
                   ),
                 ),
@@ -230,6 +249,35 @@ class MeetCategory extends StatelessWidget {
         ),
         SizedBox(height: 28.h),
       ],
+    );
+  }
+
+  Widget _bottom(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 33.0.w, right: 33.w, bottom: 56.h),
+      child:
+          Consumer<MeetCreateViewModel>(builder: (context, viewModel, child) {
+        return NextButton(
+          onTap: () async {
+            if (viewModel.isCategorySelectionComplete) {
+              Navigator.of(context).pop();
+            } else {
+              return;
+            }
+          },
+          height: 56.h,
+          text: viewModel.isCategorySelectionComplete ? '저장' : '저장 안됨',
+          enable: viewModel.isCategorySelectionComplete,
+          backgroundColor: viewModel.isCategorySelectionComplete
+              ? UsedColor.button
+              : UsedColor.button_g,
+          textStyle: TextStyle(
+            color: viewModel.isCategorySelectionComplete
+                ? Colors.white
+                : UsedColor.text_2,
+          ),
+        );
+      }),
     );
   }
 }

@@ -26,7 +26,7 @@ class SettingMain extends StatelessWidget {
                 ),
                 child: _header(context),
               ),
-            _main(),
+            _main(context),
           ],
         ),
       ),
@@ -64,14 +64,14 @@ class SettingMain extends StatelessWidget {
     );
   }
 
-  Widget _main() {
+  Widget _main(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w, right: 32.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 20.0.h),
-          _personalSetting(),
+          _personalSetting(context),
           Divider(
             height: 0.3.h,
             color: UsedColor.grey1,
@@ -83,7 +83,7 @@ class SettingMain extends StatelessWidget {
     );
   }
 
-  Widget _personalSetting() {
+  Widget _personalSetting(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -111,22 +111,28 @@ class SettingMain extends StatelessWidget {
           ),
         ),
         SizedBox(height: 4.h),
-        SizedBox(
-          height: 48.h,
-          child: Row(
-            children: [
-              Image.asset(
-                ImagePath.setIcon2,
-                width: 24.w,
-                height: 24.h,
-              ),
-              SizedBox(width: 16.w),
-              Text(
-                '알림 설정',
-                style: AppTextStyles.PR_R_16
-                    .copyWith(color: UsedColor.charcoal_black),
-              )
-            ],
+        GestureDetector(
+          onTap: () {
+            // context.push('/settingMain/settingNotification');
+            context.goNamed('settingNotification');
+          },
+          child: SizedBox(
+            height: 48.h,
+            child: Row(
+              children: [
+                Image.asset(
+                  ImagePath.setIcon2,
+                  width: 24.w,
+                  height: 24.h,
+                ),
+                SizedBox(width: 16.w),
+                Text(
+                  '알림 설정',
+                  style: AppTextStyles.PR_R_16
+                      .copyWith(color: UsedColor.charcoal_black),
+                )
+              ],
+            ),
           ),
         ),
         SizedBox(height: 12.h),
