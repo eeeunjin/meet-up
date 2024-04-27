@@ -1,11 +1,14 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
+import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -16,22 +19,25 @@ class MeetCategory extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: SingleChildScrollView(
-        child: Column(
-          children: [
-            if (Platform.isIOS)
-              _header(context)
-            else if (Platform.isAndroid)
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 15.h,
+          child: Stack(
+        children: [
+          Column(
+            children: [
+              if (Platform.isIOS)
+                _header(context)
+              else if (Platform.isAndroid)
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: 15.h,
+                  ),
+                  child: _header(context),
                 ),
-                child: _header(context),
-              ),
-            SizedBox(height: 33.h),
-            _mainCategory(context),
-          ],
-        ),
+              SizedBox(height: 33.h),
+              Expanded(child: _mainCategory(context)),
+              Align(alignment: Alignment.bottomCenter, child: _bottom(context)),
+            ],
+          ),
+        ],
       )),
     );
   }
@@ -243,6 +249,35 @@ class MeetCategory extends StatelessWidget {
         ),
         SizedBox(height: 28.h),
       ],
+    );
+  }
+
+  Widget _bottom(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 33.0.w, right: 33.w, bottom: 56.h),
+      child:
+          Consumer<MeetCreateViewModel>(builder: (context, viewModel, child) {
+        return NextButton(
+          onTap: () async {
+            if (viewModel.isCategorySelectionComplete) {
+              Navigator.of(context).pop();
+            } else {
+              return;
+            }
+          },
+          height: 56.h,
+          text: viewModel.isCategorySelectionComplete ? '저장' : '저장 안됨',
+          enable: viewModel.isCategorySelectionComplete,
+          backgroundColor: viewModel.isCategorySelectionComplete
+              ? UsedColor.button
+              : UsedColor.button_g,
+          textStyle: TextStyle(
+            color: viewModel.isCategorySelectionComplete
+                ? Colors.white
+                : UsedColor.text_2,
+          ),
+        );
+      }),
     );
   }
 }

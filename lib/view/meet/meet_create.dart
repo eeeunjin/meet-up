@@ -217,6 +217,10 @@ class MeetCreate extends StatelessWidget {
               style: AppTextStyles.PR_SB_16,
             ),
           ),
+          SizedBox(
+            width: 13.w,
+          ),
+          _selectedCategory(context),
           const Spacer(),
           Padding(
             padding: EdgeInsets.only(right: 7.0.w),
@@ -232,6 +236,24 @@ class MeetCreate extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _selectedCategory(BuildContext context) {
+    return Consumer<MeetCreateViewModel>(
+      builder: (context, viewModel, child) {
+        if (viewModel.selectedMainCategory.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        String categoryText = viewModel.selectedSubCategory.isEmpty
+            ? viewModel.selectedMainCategory
+            : '${viewModel.selectedMainCategory} > ${viewModel.selectedSubCategory}';
+
+        return Text(
+          categoryText,
+          style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
+        );
+      },
     );
   }
 
@@ -260,7 +282,7 @@ class MeetCreate extends StatelessWidget {
               style: AppTextStyles.PR_SB_16,
             ),
           ),
-          SizedBox(width: 24.w),
+          SizedBox(width: 41.w),
           _selectedLocation(context),
           const Spacer(),
           Padding(
@@ -279,8 +301,17 @@ class MeetCreate extends StatelessWidget {
   Widget _selectedLocation(BuildContext context) {
     return Consumer<MeetCreateViewModel>(
       builder: (context, viewModel, child) {
+        if (viewModel.selectedProvince.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        String locationText = viewModel.selectedProvince.isEmpty
+            ? viewModel.selectedMainCategory
+            : '${viewModel.selectedProvince} > ${viewModel.selectedDistrict}';
+
         return Text(
-            '${viewModel.selectedProvince} > ${viewModel.selectedDistrict}');
+          locationText,
+          style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
+        );
       },
     );
   }
@@ -311,7 +342,7 @@ Widget _keyword(BuildContext context) {
             style: AppTextStyles.PR_SB_16,
           ),
         ),
-        SizedBox(width: 24.w),
+        SizedBox(width: 27.w),
         // 선택한 키워드 보이도록
         _selectedKeywords(context),
         const Spacer(),
@@ -341,10 +372,9 @@ Widget _selectedKeywords(BuildContext context) {
                 style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
               ))
           .toList();
-
       return Wrap(
-        spacing: 0, // Horizontal gap between text widgets
-        runSpacing: 0.h, // Vertical gap between lines
+        spacing: 0,
+        runSpacing: 0.h,
         children: keywordWidgets,
       );
     },

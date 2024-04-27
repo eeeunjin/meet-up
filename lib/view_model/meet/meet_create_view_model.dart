@@ -142,11 +142,34 @@ class MeetCreateViewModel with ChangeNotifier {
     return _selectedSubCategories.contains(subCategory);
   }
 
+  bool get isCategorySelectionComplete {
+    if (_selectedMainCategories.isNotEmpty &&
+        _selectedMainCategories.first == '기타') {
+      return true;
+    }
+    return _selectedMainCategories.isNotEmpty &&
+        _selectedSubCategories.isNotEmpty;
+  }
+
   void selectMainCategory(String category) {
     // 단일 선택
     _selectedMainCategories.clear();
     _selectedMainCategories.add(category);
     notifyListeners();
+  }
+
+  String get selectedMainCategory {
+    if (_selectedMainCategories.isNotEmpty) {
+      return _selectedMainCategories.first;
+    }
+    return '';
+  }
+
+  String get selectedSubCategory {
+    if (_selectedSubCategories.isNotEmpty) {
+      return _selectedSubCategories.first;
+    }
+    return '';
   }
 
   //Keyword
