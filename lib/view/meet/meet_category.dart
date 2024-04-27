@@ -193,6 +193,18 @@ class MeetCategory extends StatelessWidget {
 
   Widget _subCategoryList(BuildContext context, String mainCategory) {
     final viewModel = Provider.of<MeetCreateViewModel>(context, listen: true);
+    if (mainCategory == '기타') {
+      return Padding(
+        padding: EdgeInsets.only(top: 8.0.h),
+        child: Padding(
+          padding: EdgeInsets.only(top: 7.0.h, left: 14.76.w),
+          child: Text(
+            '상위 카테고리를 먼저 선택해주세요.',
+            style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_5),
+          ),
+        ), // This will be your message.
+      );
+    }
     List<String> subCategories = viewModel.getSubCategories(mainCategory);
 
     return Column(
