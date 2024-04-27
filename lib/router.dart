@@ -16,10 +16,12 @@ import 'package:meet_up/view/meet/meet_main.dart';
 import 'package:meet_up/view/meet/meet_search_main.dart';
 import 'package:meet_up/view/profile/profile_edit.dart';
 import 'package:meet_up/view/profile/profile_main.dart';
+import 'package:meet_up/view/profile/profile_notification.dart';
 import 'package:meet_up/view/reflect/reflect_main.dart';
 import 'package:meet_up/view/schedule/add_personal_schedule.dart';
 import 'package:meet_up/view/schedule/schedule_main.dart';
 import 'package:meet_up/view/setting/setting_main.dart';
+import 'package:meet_up/view/setting/setting_notification.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_one.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_five.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_four.dart';
@@ -252,14 +254,27 @@ final router = GoRouter(
             return const ProfileEdit();
           },
         ),
-
-        // Setting
         GoRoute(
-          path: 'settingMain',
+          path: 'profileNoticationMain',
           builder: (context, state) {
-            return const SettingMain();
+            return const ProfileNotification();
           },
         ),
+        // Setting
+        GoRoute(
+            path: 'settingMain',
+            builder: (context, state) {
+              return const SettingMain();
+            },
+            routes: [
+              GoRoute(
+                path: 'settingNotification',
+                name: 'settingNotification',
+                builder: (context, state) {
+                  return const SettingNotification();
+                },
+              ),
+            ]),
       ],
     ),
   ],

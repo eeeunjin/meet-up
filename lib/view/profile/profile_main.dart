@@ -81,15 +81,22 @@ class ProfileMain extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           // 알림 버튼
-          Container(
-            width: 41.w,
-            height: 22.h,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(11.r), color: Colors.white),
-            child: Center(
-              child: Text(
-                '알림',
-                style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
+          GestureDetector(
+            onTap: () {
+              context.push('/profileNoticationMain');
+            },
+            child: Container(
+              width: 41.w,
+              height: 22.h,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(11.r),
+                  color: Colors.white),
+              child: Center(
+                child: Text(
+                  '알림',
+                  style:
+                      AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
+                ),
               ),
             ),
           ),
