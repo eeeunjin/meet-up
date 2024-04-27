@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/repository/room_repository.dart';
 import 'package:meet_up/service/remote/firebase_service.dart';
+import 'package:meet_up/model/province_district_model.dart';
 
 class MeetCreateViewModel with ChangeNotifier {
   // Room 관련 DB 동작을 하는 Repository
@@ -126,9 +127,26 @@ class MeetCreateViewModel with ChangeNotifier {
     return _subCategoriesMap[mainCategory] ?? [];
   }
 
+  final List<String> _selectedSubCategories = [];
+
   void selectSubCategory(String subCategory) {
-    // 상세 카테고리 선택 로직
+    // 상세 카테고리 선택 로직, 단일 선택
+    _selectedSubCategories.clear();
+    _selectedSubCategories.add(subCategory);
     notifyListeners();
+  }
+
+  bool isSubCategorySelected(String subCategory) {
+    return _selectedSubCategories.contains(subCategory);
+  }
+
+  bool get isCategorySelectionComplete {
+    if (_selectedMainCategories.isNotEmpty &&
+        _selectedMainCategories.first == '기타') {
+      return true;
+    }
+    return _selectedMainCategories.isNotEmpty &&
+        _selectedSubCategories.isNotEmpty;
   }
 
   void selectMainCategory(String category) {
@@ -136,6 +154,126 @@ class MeetCreateViewModel with ChangeNotifier {
     _selectedMainCategories.clear();
     _selectedMainCategories.add(category);
     notifyListeners();
+  }
+
+  String get selectedMainCategory {
+    if (_selectedMainCategories.isNotEmpty) {
+      return _selectedMainCategories.first;
+    }
+    return '';
+  }
+
+  String get selectedSubCategory {
+    if (_selectedSubCategories.isNotEmpty) {
+      return _selectedSubCategories.first;
+    }
+    return '';
+  }
+
+  //Keyword
+
+  String _textCount = '';
+
+  String get textKeywordCount => _textCount;
+
+  void setKeywordDescription(String newTextCount) {
+    if (_textCount != newTextCount) {
+      _textCount = newTextCount;
+      notifyListeners();
+    }
+  }
+
+  // 키워드 저장
+  void saveKeywords() {
+    debugPrint('$keywords');
+  }
+
+  String get subTextCount => '${_textCount.length}/6';
+
+  // list
+  final TextEditingController textController = TextEditingController();
+
+  final List<String> _keywords = [];
+  List<String> get keywords => _keywords;
+
+  void addKeyword(String keyword) {
+    if (keyword.isNotEmpty && !_keywords.contains(keyword)) {
+      _keywords.add(keyword);
+      notifyListeners();
+    }
+  }
+
+  String _currentInput = '';
+
+  String get currentInput => _currentInput;
+
+  void removeKeyword(String keyword) {
+    _keywords.remove(keyword);
+    notifyListeners();
+  }
+
+  void updateCurrentInput(String input) {
+    if (input.length <= 6) {
+      _currentInput = input;
+      notifyListeners();
+    }
+  }
+
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
+  }
+
+  // check
+
+  bool get keywordCheckComplted =>
+      _keywords.isNotEmpty && _keywords.length <= 3;
+
+  // MARK - Location
+  String _selectedProvince = '';
+  final ValueNotifier<String> _selectedProvinceNotifier = ValueNotifier('');
+
+  String _selectedDistrict = '';
+  final ValueNotifier<String> _selectedDistrictNotifier = ValueNotifier('');
+
+  String get selectedProvince => _selectedProvince;
+  String get selectedDistrict => _selectedDistrict;
+
+  ValueNotifier<String> get selectedProvinceNotifier =>
+      _selectedProvinceNotifier;
+
+  ValueNotifier<String> get selectedDistrictNotifier =>
+      _selectedDistrictNotifier;
+
+  set selectedProvince(String province) {
+    _selectedProvince = province;
+    _selectedProvinceNotifier.value = province;
+    notifyListeners();
+    debugPrint(' $province');
+  }
+
+  set selectedDistrict(String district) {
+    _selectedDistrict = district;
+    _selectedDistrictNotifier.value = district;
+    notifyListeners();
+    debugPrint(district);
+  }
+
+  List<String> getDistrictsByProvince(String province) {
+    return ProvinceDistrict.entireDistricts[province] ?? [];
+  }
+
+  void clearSelection() {
+    _selectedProvince = ''; // 선택된 시/도 초기화
+    _selectedDistrict = ''; // 선택된 시/도/군 초기화
+    _selectedProvinceNotifier.value = '';
+    _selectedDistrictNotifier.value = '';
+    notifyListeners();
+  }
+
+  bool get isSelectionComplete {
+    return _selectedProvince.isNotEmpty && _selectedDistrict.isNotEmpty;
   }
 
   // MARK: - 방 만들기
@@ -169,7 +307,6 @@ class MeetCreateViewModel with ChangeNotifier {
       room_rules: roomRules,
       room_creation_date: Timestamp.now(),
       room_owner_reference: docRef,
-      
       room_participant_reference: [],
     );
   }
