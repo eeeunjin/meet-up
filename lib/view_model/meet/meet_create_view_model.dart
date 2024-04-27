@@ -128,9 +128,17 @@ class MeetCreateViewModel with ChangeNotifier {
     return _subCategoriesMap[mainCategory] ?? [];
   }
 
+  final List<String> _selectedSubCategories = [];
+
   void selectSubCategory(String subCategory) {
-    // 상세 카테고리 선택 로직
+    // 상세 카테고리 선택 로직, 단일 선택
+    _selectedSubCategories.clear();
+    _selectedSubCategories.add(subCategory);
     notifyListeners();
+  }
+
+  bool isSubCategorySelected(String subCategory) {
+    return _selectedSubCategories.contains(subCategory);
   }
 
   void selectMainCategory(String category) {

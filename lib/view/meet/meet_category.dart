@@ -201,6 +201,7 @@ class MeetCategory extends StatelessWidget {
           spacing: 8.w,
           runSpacing: 8.h,
           children: subCategories.map((subCategory) {
+            bool isSubSelected = viewModel.isSubCategorySelected(subCategory);
             return GestureDetector(
               onTap: () {
                 viewModel.selectSubCategory(subCategory);
@@ -209,10 +210,10 @@ class MeetCategory extends StatelessWidget {
                 width: 99.w,
                 height: 32.h,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isSubSelected ? UsedColor.button : Colors.white,
                   borderRadius: BorderRadius.circular(12.61.r),
                   border: Border.all(
-                    color: UsedColor.B_line,
+                    color: isSubSelected ? UsedColor.button : UsedColor.B_line,
                     width: 2.25.w,
                   ),
                 ),
@@ -220,7 +221,7 @@ class MeetCategory extends StatelessWidget {
                   child: Text(
                     subCategory,
                     style: AppTextStyles.PR_SB_14.copyWith(
-                      color: Colors.black,
+                      color: isSubSelected ? Colors.white : Colors.black,
                     ),
                   ),
                 ),
