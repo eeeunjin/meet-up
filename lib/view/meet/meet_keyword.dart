@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -9,7 +8,7 @@ import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
-import 'package:meet_up/view_model/meet/meet_keyword_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
 import 'package:provider/provider.dart';
 
 class MeetKeyWord extends StatelessWidget {
@@ -17,7 +16,7 @@ class MeetKeyWord extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<MeetKeyWordViewModel>(context);
+    final viewModel = Provider.of<MeetCreateViewModel>(context);
 
     return Scaffold(
       body: SafeArea(
@@ -74,7 +73,7 @@ class MeetKeyWord extends StatelessWidget {
     );
   }
 
-  Widget _main(BuildContext context, MeetKeyWordViewModel viewModel) {
+  Widget _main(BuildContext context, MeetCreateViewModel viewModel) {
     return Padding(
       padding: EdgeInsets.only(left: 29.w, right: 26.w),
       child: Column(
@@ -173,7 +172,7 @@ class MeetKeyWord extends StatelessWidget {
     );
   }
 
-  Widget _keywordList(BuildContext context, MeetKeyWordViewModel viewModel) {
+  Widget _keywordList(BuildContext context, MeetCreateViewModel viewModel) {
     return Wrap(
       // 자동 줄바꿈
       spacing: 4.0, // 좌우 간격
@@ -217,7 +216,7 @@ class MeetKeyWord extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              Provider.of<MeetKeyWordViewModel>(context, listen: false)
+              Provider.of<MeetCreateViewModel>(context, listen: false)
                   .removeKeyword(keyword);
             },
             child: Padding(
@@ -238,7 +237,7 @@ class MeetKeyWord extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w, right: 33.w, bottom: 56.h),
       child:
-          Consumer<MeetKeyWordViewModel>(builder: (context, viewModel, child) {
+          Consumer<MeetCreateViewModel>(builder: (context, viewModel, child) {
         return NextButton(
           onTap: () async {
             //
