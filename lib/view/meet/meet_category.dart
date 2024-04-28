@@ -1,7 +1,5 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -60,6 +58,10 @@ class MeetCategory extends StatelessWidget {
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        // 정보 초기화
+        final viewModel =
+            Provider.of<MeetCreateViewModel>(context, listen: false);
+        viewModel.backClearSelection();
         context.pop();
       },
       child: Image.asset(

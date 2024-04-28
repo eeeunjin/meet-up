@@ -277,4 +277,25 @@ class MeetCreateViewModel with ChangeNotifier {
   bool get isSelectionComplete {
     return _selectedProvince.isNotEmpty && _selectedDistrict.isNotEmpty;
   }
+
+  // 뒤로 가기 시 초기화
+  void backClearSelection() {
+    _roomNaming = '';
+    _roomText = '';
+    _selectedAges.clear();
+    _isWomen4Selected = false;
+    _isWomen2Men2Selected = false;
+    _isMen4Selected = false;
+    _rulesQuestion.forEach((key, value) => _rulesQuestion[key] = null);
+    _selectedMainCategories.clear();
+    _selectedSubCategories.clear();
+    _textCount = '';
+    _keywords.clear();
+    _currentInput = '';
+    _selectedProvince = '';
+    _selectedDistrict = '';
+    _selectedProvinceNotifier.value = '';
+    _selectedDistrictNotifier.value = '';
+    notifyListeners();
+  }
 }
