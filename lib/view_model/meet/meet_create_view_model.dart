@@ -37,6 +37,10 @@ class MeetCreateViewModel with ChangeNotifier {
 
   String get textCount => '${_roomText.length}/50';
 
+  bool get detailCompleted {
+    return _roomText.trim().isNotEmpty;
+  }
+
   // MARK: - age
   final List<String> _selectedAges = [];
 
@@ -53,6 +57,8 @@ class MeetCreateViewModel with ChangeNotifier {
     debugPrint('Selected ages: $_selectedAges');
     notifyListeners();
   }
+
+  bool get ageCompleted => selectedAges.isNotEmpty;
 
   // MARK: - gender ratio
   bool _isWomen4Selected = false;
@@ -84,6 +90,9 @@ class MeetCreateViewModel with ChangeNotifier {
   bool get isWomen2Men2Selected => _isWomen2Men2Selected;
   bool get isMen4Selected => _isMen4Selected;
 
+  bool get genderRatioCompleted =>
+      _isWomen4Selected || _isWomen2Men2Selected || _isMen4Selected;
+
   // MARK: - rules
   final Map<String, bool?> _rulesQuestion = {
     '만남 시 대화 녹음': null,
@@ -102,11 +111,8 @@ class MeetCreateViewModel with ChangeNotifier {
     }
   }
 
-  // check
-
-  bool get allCheckCompleted {
-    return namingCompleted;
-  }
+  bool get allRulesAnswered =>
+      _rulesQuestion.values.every((answer) => answer != null);
 
   // MARK: - CategoryPage
   // 상세 카테고리
@@ -278,7 +284,7 @@ class MeetCreateViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  bool get isSelectionComplete {
+  bool get isLocationSelectionComplete {
     return _selectedProvince.isNotEmpty && _selectedDistrict.isNotEmpty;
   }
 
@@ -301,5 +307,66 @@ class MeetCreateViewModel with ChangeNotifier {
     _selectedProvinceNotifier.value = '';
     _selectedDistrictNotifier.value = '';
     notifyListeners();
+  }
+
+  // category tap clear
+  void categoryClearSelection() {
+    _selectedMainCategories.clear();
+    _selectedSubCategories.clear();
+    notifyListeners();
+  }
+
+  // MARK: - All check
+  bool get allCheckCompleted {
+    return namingCompleted &&
+        isCategorySelectionComplete &&
+        isLocationSelectionComplete &&
+        keywordCheckComplted &&
+        detailCompleted &&
+        ageCompleted &&
+        genderRatioCompleted &&
+        allRulesAnswered;
+  }
+
+  // MARK: - check bottomsheet
+  bool _allAgreed = false;
+  bool get allAgreed => _allAgreed;
+
+  bool _individualAgreement1 = false;
+  bool _individualAgreement2 = false;
+  bool get individualAgreement1 => _individualAgreement1;
+  bool get individualAgreement2 => _individualAgreement2;
+
+  void setAllAgreed(bool agreed) {
+    _allAgreed = agreed;
+    _individualAgreement1 = agreed;
+    _individualAgreement2 = agreed;
+    notifyListeners();
+  }
+
+  void setIndividualAgreement1(bool agreed) {
+    _individualAgreement1 = agreed;
+    _checkAllAgreed();
+    notifyListeners();
+  }
+
+  void setIndividualAgreement2(bool agreed) {
+    _individualAgreement2 = agreed;
+    _checkAllAgreed();
+    notifyListeners();
+  }
+
+  void _checkAllAgreed() {
+    if (_individualAgreement1 && _individualAgreement2) {
+      _allAgreed = true;
+    } else {
+      _allAgreed = false;
+    }
+  }
+
+  bool get isAllAgreed {
+    return _allAgreed &&
+        individualAgreement1 &&
+        individualAgreement2 /* ... && individualAgreementN */;
   }
 }

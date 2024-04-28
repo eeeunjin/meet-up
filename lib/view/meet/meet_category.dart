@@ -61,7 +61,7 @@ class MeetCategory extends StatelessWidget {
         // 정보 초기화
         final viewModel =
             Provider.of<MeetCreateViewModel>(context, listen: false);
-        viewModel.backClearSelection();
+        viewModel.categoryClearSelection();
         context.pop();
       },
       child: Image.asset(

@@ -72,7 +72,7 @@ class MeetBrowseMain extends StatelessWidget {
     return Container(
       color: Colors.white,
       child: Column(children: [
-        SizedBox(height: 39.h),
+        SizedBox(height: 29.h),
         _search(context),
         SizedBox(height: 22.h),
         _filter(context),

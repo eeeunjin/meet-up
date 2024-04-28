@@ -343,14 +343,15 @@ class MeetLocation extends StatelessWidget {
             Navigator.of(context).pop();
           },
           height: 54.h,
-          text: viewModel.isSelectionComplete ? '확인' : '다음',
-          enable: viewModel.isSelectionComplete,
-          backgroundColor: viewModel.isSelectionComplete
+          text: viewModel.isLocationSelectionComplete ? '확인' : '다음',
+          enable: viewModel.isLocationSelectionComplete,
+          backgroundColor: viewModel.isLocationSelectionComplete
               ? UsedColor.button
               : UsedColor.button_g,
           textStyle: TextStyle(
-            color:
-                viewModel.isSelectionComplete ? Colors.white : UsedColor.text_2,
+            color: viewModel.isLocationSelectionComplete
+                ? Colors.white
+                : UsedColor.text_2,
             fontSize: 20.sp,
           ),
         );
