@@ -2,27 +2,75 @@ import 'package:flutter/material.dart';
 import 'package:meet_up/model/province_district_model.dart';
 
 class MeetBrowseViewModel with ChangeNotifier {
-  // 카테고리
+  // MARK: - category
+  // 상세 카테고리
+  final bool _isSelectedCategory = false;
+  bool get isSelectedCategory => _isSelectedCategory;
 
-  String _selectedCategory = '';
+  final List<String> _selectedMainCategories = [];
+  List<String> get selectedMainCategories => _selectedMainCategories;
 
-  String get selectedCategory => _selectedCategory;
+  final Map<String, List<String>> _subCategoriesMap = {
+    '취미': ['여행', '맛집', '연예인', '사진', '영화', '게임'],
+    '운동': ['축구', '야구', '농구', '테니스', '요가', '헬스', '탁구', '조깅', '배드민턴'],
+    '공부/학업': ['취업', '독서', '대학', '미라클 모닝', '자격증', '아르바이트'],
+    '휴식/친목': ['카페', '산책', '저녁 식사'],
+    '기타': [],
+  };
 
-  set selectedCategory(String category) {
-    _selectedCategory = category;
+  List<String> getSubCategories(String mainCategory) {
+    return _subCategoriesMap[mainCategory] ?? [];
+  }
+
+  final List<String> _selectedSubCategories = [];
+
+  void selectSubCategory(String subCategory) {
+    // 상세 카테고리 선택 로직, 단일 선택
+    _selectedSubCategories.clear();
+    _selectedSubCategories.add(subCategory);
     notifyListeners();
   }
 
-  // 상세 카테고리
-  // String? _selectedCategory;
-  // String? get selectedCategory => _selectedCategory;
+  bool isSubCategorySelected(String subCategory) {
+    return _selectedSubCategories.contains(subCategory);
+  }
 
-  // set selectedCategory(String? value) {
-  //   _selectedCategory = value;
-  //   notifyListeners();
-  // }
+  bool get isCategorySelectionComplete {
+    if (_selectedMainCategories.isNotEmpty &&
+        _selectedMainCategories.first == '기타') {
+      return true;
+    }
+    return _selectedMainCategories.isNotEmpty &&
+        _selectedSubCategories.isNotEmpty;
+  }
 
-  // area
+  void selectMainCategory(String category) {
+    // 단일 선택
+    _selectedMainCategories.clear();
+    _selectedMainCategories.add(category);
+
+    // 기타 골랐을 시, 이전 내역 초기화
+    if (category == '기타') {
+      _selectedSubCategories.clear();
+    }
+    notifyListeners();
+  }
+
+  String get selectedMainCategory {
+    if (_selectedMainCategories.isNotEmpty) {
+      return _selectedMainCategories.first;
+    }
+    return '';
+  }
+
+  String get selectedSubCategory {
+    if (_selectedSubCategories.isNotEmpty) {
+      return _selectedSubCategories.first;
+    }
+    return '';
+  }
+
+  // MARK: - area
   String _selectedProvince = '';
   final ValueNotifier<String> _selectedProvinceNotifier = ValueNotifier('');
 
@@ -68,7 +116,7 @@ class MeetBrowseViewModel with ChangeNotifier {
     return _selectedProvince.isNotEmpty && _selectedDistrict.isNotEmpty;
   }
 
-  // age
+  // MARK: - age
   String _selectedAge = '';
 
   String get selectedAge => _selectedAge;

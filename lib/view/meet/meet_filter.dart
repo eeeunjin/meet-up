@@ -81,12 +81,8 @@ Widget _main(BuildContext context) {
       child: Column(
         children: [
           SizedBox(height: 32.36.h),
-          _category(context),
+          _mainCategory(context),
           SizedBox(height: 32.65.h),
-          _divider(),
-          SizedBox(height: 33.48.h),
-          _detailCategory(context),
-          SizedBox(height: 33.73.h),
           _divider(),
           SizedBox(height: 32.91.h),
           _area(context),
@@ -110,45 +106,27 @@ Widget _main(BuildContext context) {
   );
 }
 
-Widget _category(BuildContext context) {
-  var buttonWidth = 99.03.w;
-  var buttonHeight = 32.44.h;
-  List<String> selectedCategories = [];
+Widget _mainCategory(BuildContext context) {
+  final viewModel = Provider.of<MeetBrowseViewModel>(context, listen: true);
+  List<String> options = ['취미', '운동', '공부/학업', '휴식/친목', '기타'];
 
-  void toggleCategory(String category) {
-    if (selectedCategories.contains(category)) {
-      selectedCategories.remove(category); // 이미 선택된 카테고리일 경우 제거
-    } else {
-      selectedCategories.add(category); // 선택되지 않은 카테고리일 경우 추가
-    }
-  }
-
-  return Consumer<MeetBrowseViewModel>(
-    builder: (context, viewModel, _) {
-      Color getButtonBackgroundColor(String category) {
-        return viewModel.selectedCategory == category
-            ? UsedColor.button
-            : Colors.white;
-      }
-
-      Color getButtonBorderColor(String category) {
-        return viewModel.selectedCategory == category
-            ? UsedColor.button
-            : UsedColor.B_line;
-      }
-
-      // void toggleCategory(String category) {
-      //   viewModel.selectedCategory = category;
-      // }
-
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: 33.w),
-            child: Row(
+  // 메인 카테고리
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: EdgeInsets.only(left: 33.w),
+        child: Column(
+          children: [
+            Row(
               children: [
-                Icon(Icons.circle, color: UsedColor.main, size: 12),
+                // 파란 동그라미
+                Container(
+                  width: 8.w,
+                  height: 8.w,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: UsedColor.main),
+                ),
                 SizedBox(width: 14.46.w),
                 Text(
                   '카테고리',
@@ -156,298 +134,147 @@ Widget _category(BuildContext context) {
                 ),
               ],
             ),
-          ),
-          SizedBox(height: 21.h),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 40.0.w),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      toggleCategory('취미');
+            SizedBox(height: 20.64.h),
+            Padding(
+              padding: EdgeInsets.only(right: 40.0.w),
+              child: Wrap(
+                spacing: 8.w,
+                runSpacing: 8.h,
+                children: options.map((option) {
+                  bool isSelected =
+                      viewModel.selectedMainCategories.contains(option);
+                  return GestureDetector(
+                    onTap: () {
+                      viewModel.selectMainCategory(option);
                     },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: getButtonBackgroundColor('취미'),
-                      minimumSize: Size(buttonWidth, buttonHeight),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.61),
-                        side: BorderSide(
-                            color: getButtonBorderColor('취미'), width: 2.25.w),
+                    child: Container(
+                      width: 99.w,
+                      height: 32.h,
+                      decoration: BoxDecoration(
+                        color: isSelected ? UsedColor.button : Colors.white,
+                        borderRadius: BorderRadius.circular(12.61.r),
+                        border: Border.all(
+                          color:
+                              isSelected ? UsedColor.button : UsedColor.B_line,
+                          width: 2.25.w,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          option,
+                          style: AppTextStyles.PR_SB_14.copyWith(
+                            color: isSelected ? Colors.white : Colors.black,
+                          ),
+                        ),
                       ),
                     ),
-                    child: const Text('취미'),
-                  ),
-                  SizedBox(width: 8.0.w),
-                  ElevatedButton(
-                    onPressed: () {
-                      toggleCategory('운동');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: getButtonBackgroundColor('운동'),
-                      minimumSize: Size(buttonWidth, buttonHeight),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.61),
-                        side: BorderSide(
-                            color: getButtonBorderColor('운동'), width: 2.25.w),
-                      ),
-                    ),
-                    child: const Text('운동'),
-                  ),
-                  SizedBox(width: 8.0.w),
-                  ElevatedButton(
-                    onPressed: () {
-                      toggleCategory('공부/학업');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: getButtonBackgroundColor('공부/학업'),
-                      minimumSize: Size(buttonWidth, buttonHeight),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.61),
-                        side: BorderSide(
-                            color: getButtonBorderColor('공부/학업'),
-                            width: 2.25.w),
-                      ),
-                    ),
-                    child: const Text('공부/학업'),
-                  ),
-                ],
+                  );
+                }).toList(),
               ),
-              SizedBox(height: 8.h),
-              Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 40.0.w),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      toggleCategory('휴식/친목');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: getButtonBackgroundColor('휴식/친목'),
-                      minimumSize: Size(buttonWidth, buttonHeight),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.61),
-                        side: BorderSide(
-                            color: getButtonBorderColor('휴식/친목'),
-                            width: 2.25.w),
-                      ),
-                    ),
-                    child: const Text('휴식/친목'),
-                  ),
-                  SizedBox(width: 8.0.w),
-                  ElevatedButton(
-                    onPressed: () {
-                      toggleCategory('기타');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: getButtonBackgroundColor('기타'),
-                      minimumSize: Size(buttonWidth, buttonHeight),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.61),
-                        side: BorderSide(
-                            color: getButtonBorderColor('기타'), width: 2.25.w),
-                      ),
-                    ),
-                    child: const Text('기타'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      );
-    },
-  );
-}
-
-Widget _detailCategory(BuildContext context) {
-  final viewModel = Provider.of<MeetBrowseViewModel>(context);
-  final selectedCategory = viewModel.selectedCategory;
-
-  Widget buildButton(String text, Function onPressed) {
-    final buttonWidth = 99.03.w;
-    final buttonHeight = 32.44.h;
-
-    return ElevatedButton(
-      onPressed: () {},
-      style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.black,
-        backgroundColor: Colors.white,
-        minimumSize: Size(buttonWidth, buttonHeight),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.61),
-          side: BorderSide(
-            color: UsedColor.B_line,
-            width: 2.25.w,
-          ),
-        ),
-      ),
-      child: Text(text),
-    );
-  }
-
-  List<Widget> buildButtons(String selectedCategory) {
-    switch (selectedCategory) {
-      case '취미':
-        return [
-          SizedBox(height: 19.h),
-          Column(
-            children: [
-              Row(
-                children: [
-                  Padding(padding: EdgeInsets.only(left: 40.0.w)),
-                  buildButton('여행', () {}),
-                  SizedBox(width: 8.0.w),
-                  buildButton('맛집', () {}),
-                  SizedBox(width: 8.0.w),
-                  buildButton('연예인', () {}),
-                ],
-              ),
-              SizedBox(height: 8.h),
-              Row(
-                children: [
-                  Padding(padding: EdgeInsets.only(left: 40.0.w)),
-                  buildButton('사진', () {}),
-                  SizedBox(width: 8.0.w),
-                  buildButton('영화', () {}),
-                  SizedBox(width: 8.0.w),
-                  buildButton('게임', () {}),
-                ],
-              ),
-            ],
-          ),
-        ];
-      case '운동':
-        return [
-          SizedBox(height: 19.h),
-          Column(
-            children: [
-              Row(
-                children: [
-                  Padding(padding: EdgeInsets.only(left: 40.0.w)),
-                  buildButton('축구', () {}),
-                  SizedBox(width: 8.0.w),
-                  buildButton('야구', () {}),
-                  SizedBox(width: 8.0.w),
-                  buildButton('농구', () {}),
-                ],
-              ),
-              SizedBox(height: 8.h),
-              Row(
-                children: [
-                  Padding(padding: EdgeInsets.only(left: 40.0.w)),
-                  buildButton('테니스', () {}),
-                  SizedBox(width: 8.0.w),
-                  buildButton('요가', () {}),
-                  SizedBox(width: 8.0.w),
-                  buildButton('헬스', () {}),
-                ],
-              ),
-              SizedBox(height: 8.h),
-              Row(
-                children: [
-                  Padding(padding: EdgeInsets.only(left: 40.0.w)),
-                  buildButton('탁구', () {}),
-                  SizedBox(width: 8.0.w),
-                  buildButton('조깅', () {}),
-                  SizedBox(width: 8.0.w),
-                  buildButton('배드민턴', () {}),
-                ],
-              ),
-            ],
-          ),
-        ];
-      case '공부/학업':
-        return [
-          SizedBox(height: 19.h),
-          Column(
-            children: [
-              Row(
-                children: [
-                  Padding(padding: EdgeInsets.only(left: 40.0.w)),
-                  buildButton('취업', () {}),
-                  SizedBox(width: 8.0.w),
-                  buildButton('독서', () {}),
-                  SizedBox(width: 8.0.w),
-                  buildButton('대학', () {}),
-                ],
-              ),
-              SizedBox(height: 8.h),
-              Row(
-                children: [
-                  Padding(padding: EdgeInsets.only(left: 40.0.w)),
-                  buildButton('미라클 모닝', () {}),
-                  SizedBox(width: 8.0.w),
-                  buildButton('자격증', () {}),
-                  SizedBox(width: 8.0.w),
-                  buildButton('아르바이트', () {}),
-                ],
-              ),
-            ],
-          ),
-        ];
-      case '휴식/친목':
-        return [
-          SizedBox(height: 19.h),
-          Column(
-            children: [
-              Row(
-                children: [
-                  Padding(padding: EdgeInsets.only(left: 40.0.w)),
-                  buildButton('카페', () {}),
-                  SizedBox(width: 8.0.w),
-                  buildButton('산책', () {}),
-                  SizedBox(width: 8.0.w),
-                  buildButton('저녁 식사', () {}),
-                ],
-              ),
-            ],
-          ),
-        ];
-      case '기타':
-        return [];
-      default:
-        return [
-          Padding(
-            padding: EdgeInsets.only(left: 55.76.w, bottom: 8.h),
-            child: Text(
-              '상위 카테고리를 먼저 선택해주세요.',
-              style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_5),
-            ),
-          ),
-        ];
-    }
-  }
-
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: EdgeInsets.only(left: 33.w),
-        child: Row(
-          children: [
-            Icon(Icons.circle, color: UsedColor.main, size: 12),
-            SizedBox(width: 14.46.w),
-            Text(
-              '상세 카테고리',
-              style: AppTextStyles.PR_SB_15.copyWith(color: Colors.black),
             ),
           ],
         ),
       ),
-      SizedBox(height: 8.h),
-      Row(
-        children: buildButtons(selectedCategory ?? ''),
+      SizedBox(height: 33.h),
+      _divider(),
+      SizedBox(height: 33.h),
+      // 상세 카테고리
+      Padding(
+        padding: EdgeInsets.only(left: 33.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                // 파란 동그라미
+                Container(
+                  width: 8.w,
+                  height: 8.w,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: UsedColor.main),
+                ),
+                SizedBox(width: 14.46.w),
+                Text(
+                  '상세 카테고리',
+                  style: AppTextStyles.PR_SB_15.copyWith(color: Colors.black),
+                ),
+              ],
+            ),
+            if (viewModel.selectedMainCategories.isEmpty)
+              Padding(
+                padding: EdgeInsets.only(top: 7.0.h, left: 14.76.w),
+                child: Text(
+                  '상위 카테고리를 먼저 선택해주세요.',
+                  style:
+                      AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_5),
+                ),
+              )
+            else
+              // 선택된 각 메인 카테고리에 대해 상세 카테고리 리스트를 표시
+              ...viewModel.selectedMainCategories.map(
+                (mainCategory) => Padding(
+                  padding: EdgeInsets.only(top: 8.0.h),
+                  child: _subCategoryList(context, mainCategory),
+                ),
+              ),
+          ],
+        ),
       ),
+    ],
+  );
+}
+
+Widget _subCategoryList(BuildContext context, String mainCategory) {
+  final viewModel = Provider.of<MeetBrowseViewModel>(context, listen: true);
+  if (mainCategory == '기타') {
+    return Padding(
+      padding: EdgeInsets.only(top: 8.0.h),
+      child: Padding(
+        padding: EdgeInsets.only(top: 7.0.h, left: 14.76.w),
+        child: Text(
+          '상위 카테고리를 먼저 선택해주세요.',
+          style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_5),
+        ),
+      ),
+    );
+  }
+  List<String> subCategories = viewModel.getSubCategories(mainCategory);
+
+  return Column(
+    children: [
+      Wrap(
+        spacing: 8.w,
+        runSpacing: 8.h,
+        children: subCategories.map((subCategory) {
+          bool isSubSelected = viewModel.isSubCategorySelected(subCategory);
+          return GestureDetector(
+            onTap: () {
+              viewModel.selectSubCategory(subCategory);
+            },
+            child: Container(
+              width: 99.w,
+              height: 32.h,
+              decoration: BoxDecoration(
+                color: isSubSelected ? UsedColor.button : Colors.white,
+                borderRadius: BorderRadius.circular(12.61.r),
+                border: Border.all(
+                  color: isSubSelected ? UsedColor.button : UsedColor.B_line,
+                  width: 2.25.w,
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  subCategory,
+                  style: AppTextStyles.PR_SB_14.copyWith(
+                    color: isSubSelected ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+      SizedBox(height: 28.h),
     ],
   );
 }
