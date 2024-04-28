@@ -832,8 +832,10 @@ class MeetCreate extends StatelessWidget {
                         ),
                         Text(
                           '만남방 개설 시, 모든 입장을 24시간\n안에 처리해야 합니다.\n\n그렇지 않은 경우 만남방은 파기되며,\n만남권은 환불되지 않습니다.',
-                          style: AppTextStyles.PR_R_17
-                              .copyWith(color: UsedColor.text_4),
+                          style: AppTextStyles.PR_R_17.copyWith(
+                              color: viewModel.individualAgreement1
+                                  ? Colors.black
+                                  : UsedColor.text_4),
                         ),
                       ],
                     ),
@@ -865,8 +867,10 @@ class MeetCreate extends StatelessWidget {
                         ),
                         Text(
                           '만남방 개설 시, 방장이 이탈 혹은\n방 삭제 시 만남권은 환불되지 않습니다.',
-                          style: AppTextStyles.PR_R_17
-                              .copyWith(color: UsedColor.text_4),
+                          style: AppTextStyles.PR_R_17.copyWith(
+                              color: viewModel.individualAgreement2
+                                  ? Colors.black
+                                  : UsedColor.text_4),
                         ),
                       ],
                     ),
