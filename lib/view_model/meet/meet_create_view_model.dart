@@ -108,8 +108,7 @@ class MeetCreateViewModel with ChangeNotifier {
     return namingCompleted;
   }
 
-  // MARK - CategoryPage
-
+  // MARK: - CategoryPage
   // 상세 카테고리
   final bool _isSelectedCategory = false;
   bool get isSelectedCategory => _isSelectedCategory;
@@ -155,6 +154,11 @@ class MeetCreateViewModel with ChangeNotifier {
     // 단일 선택
     _selectedMainCategories.clear();
     _selectedMainCategories.add(category);
+
+    // 기타 골랐을 시, 이전 내역 초기화
+    if (category == '기타') {
+      _selectedSubCategories.clear();
+    }
     notifyListeners();
   }
 
@@ -232,7 +236,7 @@ class MeetCreateViewModel with ChangeNotifier {
   bool get keywordCheckComplted =>
       _keywords.isNotEmpty && _keywords.length <= 3;
 
-  // MARK - Location
+  // MARK: - Location
   String _selectedProvince = '';
   final ValueNotifier<String> _selectedProvinceNotifier = ValueNotifier('');
 
