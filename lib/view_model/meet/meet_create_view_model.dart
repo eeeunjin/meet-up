@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meet_up/model/province_district_model.dart';
 
 class MeetCreateViewModel with ChangeNotifier {
-  // naming
+  // MARK: - naming
   String _roomNaming = '';
 
   String get roomNaming => _roomNaming;
@@ -22,7 +22,7 @@ class MeetCreateViewModel with ChangeNotifier {
     return _roomNaming.trim().isNotEmpty;
   }
 
-  // detail
+  // MARK: - detail
   String _roomText = '';
 
   String get roomText => _roomText;
@@ -37,7 +37,7 @@ class MeetCreateViewModel with ChangeNotifier {
 
   String get textCount => '${_roomText.length}/50';
 
-  // age
+  // MARK: - age
   final List<String> _selectedAges = [];
 
   List<String> get selectedAges => _selectedAges;
@@ -54,7 +54,7 @@ class MeetCreateViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  // gender ratio
+  // MARK: - gender ratio
   bool _isWomen4Selected = false;
   bool _isWomen2Men2Selected = false;
   bool _isMen4Selected = false;
@@ -84,7 +84,7 @@ class MeetCreateViewModel with ChangeNotifier {
   bool get isWomen2Men2Selected => _isWomen2Men2Selected;
   bool get isMen4Selected => _isMen4Selected;
 
-  // rules
+  // MARK: - rules
   final Map<String, bool?> _rulesQuestion = {
     '만남 시 대화 녹음': null,
     '만남 후 앱을 통해 연락처 공유': null,
@@ -176,7 +176,7 @@ class MeetCreateViewModel with ChangeNotifier {
     return '';
   }
 
-  //Keyword
+  // MARK: - Keyword
 
   String _textCount = '';
 
@@ -282,7 +282,7 @@ class MeetCreateViewModel with ChangeNotifier {
     return _selectedProvince.isNotEmpty && _selectedDistrict.isNotEmpty;
   }
 
-  // 뒤로 가기 시 초기화
+  // MARK: -  뒤로 가기 시 초기화
   void backClearSelection() {
     _roomNaming = '';
     _roomText = '';
