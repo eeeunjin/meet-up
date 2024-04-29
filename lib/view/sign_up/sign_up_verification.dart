@@ -390,7 +390,7 @@ class SignUpVerification extends StatelessWidget {
                   showAlert(
                     () {
                       // 메인 홈 화면으로 이동 (로그인)
-                      context.pop();
+                      context.goNamed("meetMain");
                     },
                     context: context,
                     title: "가입된 계정이 있습니다.",

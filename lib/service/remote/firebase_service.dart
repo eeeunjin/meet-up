@@ -231,12 +231,13 @@ class FirebaseCRUD {
   /// 도큐먼트 정보를 읽어오는 함수
   Future<T> readDocument<T>({required DocumentReference docRef}) async {
     try {
+      debugPrint(docRef.toString());
       // get 메서드를 이용하여 docRef의 snapshot 정보를 가져오기
       DocumentSnapshot snapshot = await docRef.get();
 
       // snapshot의 정보를 json 형태로 불러오기
       Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
-
+      debugPrint(data.toString());
       // 데이터가 존재하는 경우
       if (data != null) {
         if (T == UserModel) {

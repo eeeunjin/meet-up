@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
+
+const storage = FlutterSecureStorage();
 
 class LoginMain extends StatelessWidget {
   const LoginMain({super.key});
@@ -175,5 +178,14 @@ class LoginMain extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<String?> autoLogin({required BuildContext context}) async {
+    String? uid = await storage.read(key: 'uid');
+    if (uid != null) {
+      return uid;
+    } else {
+      return null;
+    }
   }
 }

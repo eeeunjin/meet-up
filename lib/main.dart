@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:meet_up/router.dart';
 import 'package:meet_up/service/remote/firebase_options.dart';
 import 'package:meet_up/view_model/bot_nav_view_model.dart';
@@ -14,9 +15,12 @@ import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_verification_view_model.dart';
 import 'package:provider/provider.dart';
 
+const storage = FlutterSecureStorage();
+String? uid;
+
 void main() async {
   await initializeFirebase();
-
+  await autoLogin();
   // await roomDocumentCreationTest();
 
   // FilterInfo filterInfo = FilterInfo(
@@ -30,7 +34,7 @@ void main() async {
   // );
 
   // await roomCollectionReadTest(filterInfo: filterInfo, limit: 2);
-  // await roomCollectionStreamReadTest(filterInfo: filterInfo);
+  // await roomCollectionStreamReadTest(filterInfo: filterInfo); 
 
   runApp(
     MultiProvider(
@@ -64,6 +68,15 @@ Future<void> initializeFirebase() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+}
+
+Future<void> autoLogin() async {
+  String? uid = await storage.read(key: 'uid');
+  if (uid != null) {
+    uid = uid;
+  } else {
+    uid = null;
+  }
 }
 
 class MyApp extends StatelessWidget {

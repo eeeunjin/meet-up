@@ -364,6 +364,7 @@ class LoginVerification extends StatelessWidget {
               debugPrint("새로운 유저가 아닙니다.");
               // uid 저장
               phoneNumViewModel.uid = credential.user!.uid;
+              debugPrint(phoneNumViewModel.uid);
 
               // 기존 유저의 정보 불러오기
               await phoneNumViewModel.readUserDocument(
@@ -373,7 +374,7 @@ class LoginVerification extends StatelessWidget {
               if (phoneNumViewModel.userInfo.gender != "") {
                 debugPrint("기존 프로필 정보가 있어서 메인 홈 화면으로 연결");
                 // 메인 홈 화면으로 이동
-                // 구현 필요
+                context.goNamed("meetMain");
               }
               // 기본 프로필 정보 중 전화 번호만 있는 경우
               else {

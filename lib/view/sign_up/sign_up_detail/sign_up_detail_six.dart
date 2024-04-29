@@ -182,8 +182,7 @@ Widget SignUpDetailSix(BuildContext context) {
                   signUpDetailViewModel.updateNewUser(
                       uid: loginPhoneNumViewModel.uid);
                 }
-
-                context.pop();
+                context.goNamed("meetMain");
               } else {
                 debugPrint("필수 항목이 체크되지 않아 시작 불가");
               }
