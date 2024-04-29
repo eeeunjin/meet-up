@@ -195,20 +195,6 @@ final router = GoRouter(
             return const Scaffold(body: MeetBrowseMain());
           },
         ),
-        // GoRoute(
-        //   path: 'meetFilterMain',
-        //   name: 'meetFilterMain',
-        //   builder: (context, state) {
-        //     return const Scaffold(body: MeetFilterMain());
-        //   },
-        // ),
-        // GoRoute(
-        //   path: 'meetFilterArea',
-        //   name: 'meetFilterArea',
-        //   builder: (context, state) {
-        //     return const Scaffold(body: MeetFilterArea());
-        //   },
-        // ),
         GoRoute(
           path: 'meetFilterMain',
           name: 'meetFilterMain',

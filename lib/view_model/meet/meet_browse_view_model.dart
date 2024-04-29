@@ -3,7 +3,6 @@ import 'package:meet_up/model/province_district_model.dart';
 
 class MeetBrowseViewModel with ChangeNotifier {
   // MARK: - category
-  // 상세 카테고리
   final bool _isSelectedCategory = false;
   bool get isSelectedCategory => _isSelectedCategory;
 
@@ -127,14 +126,7 @@ class MeetBrowseViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  // 세부규칙
-  List<bool> selectedRules = [false, false, false, false, false];
-
-  void toggleRule(int index) {
-    selectedRules[index] = !selectedRules[index];
-  }
-
-  // gender ratio
+  // MARK : - gender ratio
   bool _isWomen4Selected = false;
   bool _isWomen2Men2Selected = false;
   bool _isMen4Selected = false;
@@ -164,9 +156,7 @@ class MeetBrowseViewModel with ChangeNotifier {
   bool get isWomen2Men2Selected => _isWomen2Men2Selected;
   bool get isMen4Selected => _isMen4Selected;
 
-  // 세부규칙
-
-  // rules
+  // MARK: - detailedRules
   final Map<String, bool?> _rulesQuestion = {
     '만남 시 대화 녹음': null,
     '만남 후 앱을 통해 연락처 공유': null,
@@ -182,5 +172,25 @@ class MeetBrowseViewModel with ChangeNotifier {
       _rulesQuestion[rule] = agree;
       notifyListeners();
     }
+  }
+
+// MARK : - bottom
+
+  bool get allCheckCompleted {
+    bool ruleSelected =
+        _rulesQuestion.values.any((isSelected) => isSelected == true);
+
+    bool categoriesCompleted =
+        isSelectedCategory && isCategorySelectionComplete;
+    bool areaCompleted = isSelectionComplete;
+    bool ageCompleted = selectedAge.isNotEmpty;
+    bool genderRatioCompleted =
+        isWomen4Selected || isWomen2Men2Selected || isMen4Selected;
+
+    return ruleSelected &&
+        categoriesCompleted &&
+        areaCompleted &&
+        ageCompleted &&
+        genderRatioCompleted;
   }
 }
