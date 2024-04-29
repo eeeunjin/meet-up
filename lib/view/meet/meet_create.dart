@@ -540,81 +540,81 @@ Widget _genderRatio(BuildContext context) {
   MeetCreateViewModel viewModel =
       Provider.of<MeetCreateViewModel>(context, listen: true);
 
-    return Padding(
-      padding: EdgeInsets.only(left: 27.0.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: 6.0.w),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // 파란 동그라미
-                Container(
-                  width: 8.w,
-                  height: 8.w,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle, color: UsedColor.main),
+  return Padding(
+    padding: EdgeInsets.only(left: 27.0.w),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: 6.0.w),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // 파란 동그라미
+              Container(
+                width: 8.w,
+                height: 8.w,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle, color: UsedColor.main),
+              ),
+              SizedBox(
+                width: 13.85.w,
+              ),
+              // title
+              Container(
+                alignment: Alignment.center,
+                child: Text(
+                  '성비',
+                  style: AppTextStyles.PR_SB_16,
                 ),
-                SizedBox(
-                  width: 13.85.w,
-                ),
-                // title
-                Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    '성비',
-                    style: AppTextStyles.PR_SB_16,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-          SizedBox(height: 13.3.h),
-          Padding(
-            padding: EdgeInsets.only(left: 31.0.w),
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: () => viewModel.selectWomen4(),
-                  child: Image.asset(
-                    viewModel.roomGenderRatio == RoomGenderRatio.womanOnly
-                        ? ImagePath.grW4
-                        : ImagePath.grW4Empty,
-                    width: 76.w,
-                    height: 76.h,
-                  ),
+        ),
+        SizedBox(height: 13.3.h),
+        Padding(
+          padding: EdgeInsets.only(left: 31.0.w),
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () => viewModel.selectWomen4(),
+                child: Image.asset(
+                  viewModel.roomGenderRatio == RoomGenderRatio.womanOnly
+                      ? ImagePath.grW4
+                      : ImagePath.grW4Empty,
+                  width: 76.w,
+                  height: 76.h,
                 ),
-                SizedBox(width: 24.w),
-                GestureDetector(
-                  onTap: () => viewModel.selectWomen2Men2(),
-                  child: Image.asset(
-                    viewModel.roomGenderRatio == RoomGenderRatio.mixed
-                        ? ImagePath.grW2M2
-                        : ImagePath.grW2M2Empty,
-                    width: 76.w,
-                    height: 76.h,
-                  ),
+              ),
+              SizedBox(width: 24.w),
+              GestureDetector(
+                onTap: () => viewModel.selectWomen2Men2(),
+                child: Image.asset(
+                  viewModel.roomGenderRatio == RoomGenderRatio.mixed
+                      ? ImagePath.grW2M2
+                      : ImagePath.grW2M2Empty,
+                  width: 76.w,
+                  height: 76.h,
                 ),
-                SizedBox(width: 24.w),
-                GestureDetector(
-                  onTap: () => viewModel.selectMen4(),
-                  child: Image.asset(
-                    viewModel.roomGenderRatio == RoomGenderRatio.manOnly
-                        ? ImagePath.grM4
-                        : ImagePath.grM4Empty,
-                    width: 76.w,
-                    height: 76.h,
-                  ),
+              ),
+              SizedBox(width: 24.w),
+              GestureDetector(
+                onTap: () => viewModel.selectMen4(),
+                child: Image.asset(
+                  viewModel.roomGenderRatio == RoomGenderRatio.manOnly
+                      ? ImagePath.grM4
+                      : ImagePath.grM4Empty,
+                  width: 76.w,
+                  height: 76.h,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 
 // MARK - 세부 규칙
 Widget _rules(BuildContext context) {
@@ -721,7 +721,12 @@ Widget _bottom(BuildContext context) {
     builder: (context, viewModel, child) {
       return NextButton(
         onTap: () async {
-          if (!viewModel.allCheckCompleted) return;
+          if (!viewModel.allCheckCompleted) {
+            return;
+          } else {
+            viewModel.createRoom(uid: "8Uk5SuhRGrOz4j0Nd5nHPnOy6sa2");
+            debugPrint("완료");
+          }
         },
         height: 56.h,
         text: '만남방 개설',

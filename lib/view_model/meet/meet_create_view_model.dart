@@ -1,13 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_up/model/room_model.dart';
+import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/repository/room_repository.dart';
+import 'package:meet_up/repository/user_repository.dart';
 import 'package:meet_up/service/remote/firebase_service.dart';
 import 'package:meet_up/model/province_district_model.dart';
 
 class MeetCreateViewModel with ChangeNotifier {
   // Room 관련 DB 동작을 하는 Repository
   final RoomRepository _roomRepository = RoomRepository();
+  final UserRepository _userRepository = UserRepository();
   final FirebaseRefs _firebaseRefs = FirebaseRefs();
 
   // naming
@@ -63,7 +66,7 @@ class MeetCreateViewModel with ChangeNotifier {
   }
 
   // gender ratio
-  RoomGenderRatio _roomGenderRatio = RoomGenderRatio.manOnly;
+  RoomGenderRatio _roomGenderRatio = RoomGenderRatio.womanOnly;
 
   void selectWomen4() {
     _roomGenderRatio = RoomGenderRatio.womanOnly;
@@ -168,6 +171,81 @@ class MeetCreateViewModel with ChangeNotifier {
       return _selectedSubCategories.first;
     }
     return '';
+  }
+
+  String findCategory({
+    required bool isMainCategory,
+    required String category,
+  }) {
+    if (isMainCategory) {
+      switch (selectedMainCategory) {
+        case "취미":
+          return RoomCategory.hobby.name;
+        case "운동":
+          return RoomCategory.exercise.name;
+        case "공부/학업":
+          return RoomCategory.study.name;
+        case "휴식/친목":
+          return RoomCategory.socializing.name;
+        case "기타":
+          return RoomCategory.etc.name;
+      }
+    } else {
+      switch (selectedSubCategory) {
+        case "여행":
+          return Hobby.travel.name;
+        case "맛집":
+          return Hobby.foodie.name;
+        case "연예인":
+          return Hobby.celebrity.name;
+        case "사진":
+          return Hobby.photography.name;
+        case "영화":
+          return Hobby.movies.name;
+        case "게임":
+          return Hobby.gaming.name;
+
+        case "축구":
+          return Exercise.soccer.name;
+        case "야구":
+          return Exercise.baseball.name;
+        case "농구":
+          return Exercise.basketball.name;
+        case "테니스":
+          return Exercise.tennis.name;
+        case "요가":
+          return Exercise.yoga.name;
+        case "헬스":
+          return Exercise.fitness.name;
+        case "탁구":
+          return Exercise.pingpong.name;
+        case "조깅":
+          return Exercise.jogging.name;
+        case "배드민턴":
+          return Exercise.badminton.name;
+
+        case "취업":
+          return Study.employment.name;
+        case "독서":
+          return Study.reading.name;
+        case "대학":
+          return Study.university.name;
+        case "미라클 모닝":
+          return Study.miracleMorning.name;
+        case "자격증":
+          return Study.certification.name;
+        case "아르바이트":
+          return Study.partTimeJob.name;
+
+        case "카페":
+          return Socializing.cafe.name;
+        case "산책":
+          return Socializing.walking.name;
+        case "저녁 식사":
+          return Socializing.dinner.name;
+      }
+    }
+    return "";
   }
 
   //Keyword
@@ -277,7 +355,14 @@ class MeetCreateViewModel with ChangeNotifier {
   }
 
   // MARK: - 방 만들기
-  void createRoom(DocumentReference docRef) {
+  void createRoom({required String uid}) async {
+    // 카테고리 변환
+    String mainCategory =
+        findCategory(isMainCategory: true, category: selectedMainCategory);
+    String subCategory =
+        findCategory(isMainCategory: false, category: selectedSubCategory);
+
+    // 나이대 변환
     List<String> roomAge = selectedAges.map((string) {
       switch (string) {
         case "20대":
@@ -292,22 +377,41 @@ class MeetCreateViewModel with ChangeNotifier {
       return string.toUpperCase();
     }).toList();
 
+    // 규칙 변환
     List<bool> roomRules = rules.values.toList();
 
+    // DB에 정보 방 정보 추가
+    // 방 정보 생성
     RoomModel roomModel = RoomModel(
       room_name: roomNaming,
-      room_category: RoomCategory.hobby.name,
-      room_category_detail: Hobby.photography.name,
-      room_region_province: "수정 필요",
-      room_region_district: "수정 필요",
-      room_keyword: ["수정 필요", "수정 필요", "수정 필요"],
+      room_category: mainCategory,
+      room_category_detail: subCategory,
+      room_region_province: selectedProvince,
+      room_region_district: selectedDistrict,
+      room_keyword: keywords,
       room_description: roomText,
       room_age: roomAge,
       room_gender_ratio: roomGenderRatio.name,
       room_rules: roomRules,
       room_creation_date: Timestamp.now(),
-      room_owner_reference: docRef,
+      room_owner_reference: _firebaseRefs.colRefUser.doc(uid),
       room_participant_reference: [],
+    );
+    // 방 정보 저장
+    final roomDocRef =
+        await _roomRepository.createRoomDocument(data: roomModel);
+
+    // 유저 정보에 자신이 만든 방 정보 추가
+    // 유저의 방 정보 생성
+    final myRoomModel = MyRoomModel(
+      isMyRoom: true,
+      room_reference: roomDocRef,
+    );
+    // 유저의 방 정보 저장
+    _userRepository.createMyRoomDocument(
+      data: myRoomModel,
+      uid: uid,
+      roomId: roomDocRef.path.split('/').last,
     );
   }
 }
