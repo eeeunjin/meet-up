@@ -34,7 +34,7 @@ class MeetFilterMain extends StatelessWidget {
             Expanded(child: _main(context)),
           ],
         ),
-      ), 
+      ),
     );
   }
 }
@@ -137,7 +137,7 @@ Widget _category(BuildContext context) {
       Color getButtonBorderColor(String category) {
         return viewModel.selectedCategory == category
             ? UsedColor.button
-            : UsedColor.B_line;
+            : UsedColor.b_line;
       }
 
       // void toggleCategory(String category) {
@@ -289,7 +289,7 @@ Widget _detailCategory(BuildContext context) {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.61),
           side: BorderSide(
-            color: UsedColor.B_line,
+            color: UsedColor.b_line,
             width: 2.25.w,
           ),
         ),

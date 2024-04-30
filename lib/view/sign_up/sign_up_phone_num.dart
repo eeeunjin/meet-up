@@ -123,18 +123,23 @@ class SignUpPhoneNum extends StatelessWidget {
                           borderSide: BorderSide(
                               color: viewModel.controller.text.isNotEmpty
                                   ? (viewModel.isPhoneNumberValid
-                                      ? UsedColor.green
+                                      ? UsedColor.b_line
                                       : UsedColor.red)
-                                  : const Color(0xFFD2D8F8),
+                                  : UsedColor.b_line,
                               width: 2.5.w),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16.r),
                           borderSide: BorderSide(
                               color: viewModel.isPhoneNumberValid
-                                  ? UsedColor.green
+                                  ? UsedColor.b_line
                                   : UsedColor.red,
                               width: 2.5.w),
+                        ),
+                        contentPadding: EdgeInsets.only(
+                          top: 20.h,
+                          bottom: 20.h,
+                          left: 21.w,
                         ),
                       ),
                       style: AppTextStyles.SU_L_24
@@ -186,7 +191,7 @@ class SignUpPhoneNum extends StatelessWidget {
             fontSize: 18.sp,
             enable: viewModel.isPhoneNumberValid,
             backgroundColor: viewModel.isPhoneNumberValid
-                ? UsedColor.green
+                ? UsedColor.button
                 : UsedColor.grey1,
             textStyle: AppTextStyles.PR_SB_20.copyWith(
               color: viewModel.isPhoneNumberValid ? Colors.white : Colors.black,

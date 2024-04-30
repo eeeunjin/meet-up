@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/loginFunc.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
 import 'package:meet_up/view_model/login/login_verification_view_model.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
 class LoginVerification extends StatelessWidget {
@@ -107,14 +109,17 @@ class LoginVerification extends StatelessWidget {
             border: const OutlineInputBorder(),
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16.r),
-                borderSide:
-                    BorderSide(color: const Color(0xFFD2D8F8), width: 2.5.w)),
+                borderSide: BorderSide(color: UsedColor.b_line, width: 2.5.w)),
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16.r),
-                borderSide:
-                    BorderSide(color: const Color(0xFFD2D8F8), width: 2.5.w)),
+                borderSide: BorderSide(color: UsedColor.b_line, width: 2.5.w)),
+            contentPadding:
+                EdgeInsets.only(top: 15.h, bottom: 15.h, left: 21.h),
           ),
-          style: AppTextStyles.PR_SB_26.copyWith(height: 1.1.h),
+          style: AppTextStyles.PR_SB_26.copyWith(
+            color: UsedColor.charcoal_black,
+            height: 1.3.h,
+          ),
         ),
         if (!viewModel.isTextFieldFocused && viewModel.controller.text.isEmpty)
           Positioned(
@@ -124,7 +129,7 @@ class LoginVerification extends StatelessWidget {
                 style: AppTextStyles.SU_L_12.copyWith(color: UsedColor.text_4)),
           ),
         Positioned(
-          top: 12.h,
+          top: 13.h,
           right: 15.w,
           child: Text(viewModel.formattedRemainingTime,
               style: AppTextStyles.PR_SB_12.copyWith(color: UsedColor.text_3)),
@@ -157,20 +162,18 @@ class LoginVerification extends StatelessWidget {
                 ? '인증번호 재전송'
                 : '인증번호가 재전송되었습니다',
             style: AppTextStyles.SU_L_12.copyWith(
-                decoration: loginVerificationViewModel.canResendCode
-                    ? TextDecoration.underline
-                    : TextDecoration.none,
-                color: UsedColor.text_4),
+              decoration: loginVerificationViewModel.canResendCode
+                  ? TextDecoration.underline
+                  : TextDecoration.none,
+              color: UsedColor.text_4,
+            ),
           ),
         ),
         if (!loginVerificationViewModel.canResendCode) ...[
           SizedBox(width: 8.0.w),
           Text(
             loginVerificationViewModel.formattedRemainingTime,
-            style: const TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-            ),
+            style: AppTextStyles.PR_SB_10.copyWith(color: UsedColor.text_4),
           ),
         ],
       ],
@@ -319,6 +322,7 @@ class LoginVerification extends StatelessWidget {
     final phoneNumViewModel = Provider.of<LoginPhoneNumViewModel>(context);
     final verificationViewModel =
         Provider.of<LoginVerificationViewModel>(context);
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     return GestureDetector(
       onTap: () async {
         // 시간이 만료된 경우
@@ -341,10 +345,6 @@ class LoginVerification extends StatelessWidget {
           // DB에 유저 정보를 저장 (UID + 휴대전화 번호)
           if (credential.user != null) {
             if (credential.additionalUserInfo!.isNewUser) {
-              debugPrint("새로운 유저 입니다.");
-              debugPrint(
-                  "로그인이기 때문에 회원 가입을 진행할 것인지 물은 후, user 정보를 DB에 전달 이후, 화면 이동");
-
               if (context.mounted) {
                 showAlert(
                   () async {
@@ -361,7 +361,6 @@ class LoginVerification extends StatelessWidget {
                 );
               }
             } else {
-              debugPrint("새로운 유저가 아닙니다.");
               // uid 저장
               phoneNumViewModel.uid = credential.user!.uid;
               debugPrint(phoneNumViewModel.uid);
@@ -372,9 +371,16 @@ class LoginVerification extends StatelessWidget {
 
               // 기본 프로필 정보가 전부 있는 경우
               if (phoneNumViewModel.userInfo.gender != "") {
-                debugPrint("기존 프로필 정보가 있어서 메인 홈 화면으로 연결");
-                // 메인 홈 화면으로 이동
-                context.goNamed("meetMain");
+                // Firebase secure storage에 uid 값 저장
+                await userViewModel.login(uid: phoneNumViewModel.uid);
+
+                if (LoginFunc.isLogined) {
+                  while (context.canPop()) {
+                    context.pop();
+                  }
+                  // 유저 모델 불러오기
+                  await userViewModel.loadUserModel();
+                }
               }
               // 기본 프로필 정보 중 전화 번호만 있는 경우
               else {
@@ -416,11 +422,11 @@ class LoginVerification extends StatelessWidget {
         height: 60.h,
         alignment: Alignment.center,
         decoration: ShapeDecoration(
-          color: const Color(0xFFE6E6E6),
+          color: UsedColor.grey1,
           shape: RoundedRectangleBorder(
               side: BorderSide(
                 width: 1.r,
-                color: const Color(0xFFE6E6E6),
+                color: UsedColor.grey1,
               ),
               borderRadius: BorderRadius.circular(19.r)),
         ),

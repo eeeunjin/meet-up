@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/loginFunc.dart';
 import 'package:meet_up/view/chat/chat_main.dart';
 import 'package:meet_up/view/coin/coin_main.dart';
 import 'package:meet_up/view/login/login_main.dart';
@@ -80,8 +81,13 @@ final router = GoRouter(
     // 초기 화면
     GoRoute(
       path: '/',
-      pageBuilder: (context, state) =>
-          const NoTransitionPage(child: LoginMain()),
+      pageBuilder: (context, state) {
+        if (LoginFunc.isLogined) {
+          return const NoTransitionPage(child: BotNavBar());
+        } else {
+          return const NoTransitionPage(child: LoginMain());
+        }
+      },
       routes: [
         // Login
         GoRoute(
@@ -272,19 +278,20 @@ final router = GoRouter(
         ),
         // Setting
         GoRoute(
-            path: 'settingMain',
-            builder: (context, state) {
-              return const SettingMain();
-            },
-            routes: [
-              GoRoute(
-                path: 'settingNotification',
-                name: 'settingNotification',
-                builder: (context, state) {
-                  return const SettingNotification();
-                },
-              ),
-            ]),
+          path: 'settingMain',
+          builder: (context, state) {
+            return const SettingMain();
+          },
+          routes: [
+            GoRoute(
+              path: 'settingNotification',
+              name: 'settingNotification',
+              builder: (context, state) {
+                return const SettingNotification();
+              },
+            ),
+          ],
+        ),
       ],
     ),
   ],

@@ -119,8 +119,8 @@ class SignUpDetailFive extends StatelessWidget {
         fontSize: 20.sp,
         enable: viewModel.isSectionsCompletedPageFive,
         backgroundColor: viewModel.isSectionsCompletedPageFive
-            ? UsedColor.green
-            : const Color(0xFFE6E6E6),
+            ? UsedColor.button
+            : UsedColor.grey1,
         textStyle: TextStyle(
           color: viewModel.isSectionsCompletedPageFive
               ? Colors.white
@@ -154,7 +154,7 @@ class SignUpDetailFive extends StatelessWidget {
         children: [
           Text(
             "만남 목적을 선택해주세요.",
-            style: AppTextStyles.PR_B_22,
+            style: AppTextStyles.PR_B_22.copyWith(color: Colors.black),
           ),
           SizedBox(height: 8.h),
           Text(
@@ -177,12 +177,12 @@ class SignUpDetailFive extends StatelessWidget {
                   width: 110.w,
                   height: 36.h,
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFF7C4DFF) : Colors.white,
+                    color: isSelected ? UsedColor.button : Colors.white,
                     borderRadius: BorderRadius.circular(14.r),
                     border: Border.all(
                       color: isSelected
-                          ? const Color(0xFF7C4DFF)
-                          : const Color(0xFFD2D8F8),
+                          ? UsedColor.button
+                          : UsedColor.b_line,
                       width: 2.5.w,
                     ),
                   ),

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/loginFunc.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
@@ -12,6 +13,7 @@ class MeetMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    LoginFunc.storage.deleteAll();
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -51,7 +53,7 @@ class MeetMain extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          // header(title: '만남', back: null),
+          // header(title: '만남', back: null);
           Text(
             '만남',
             style: AppTextStyles.SU_R_20.copyWith(color: UsedColor.text_3),

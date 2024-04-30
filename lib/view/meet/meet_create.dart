@@ -8,7 +8,7 @@ import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
-import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
+import 'package:meet_up/meet_create_view_model.dart';
 import 'package:provider/provider.dart';
 
 class MeetCreate extends StatelessWidget {
@@ -423,7 +423,7 @@ Widget _detail(BuildContext context) {
           height: 176.h,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: UsedColor.B_line, width: 2.h),
+            border: Border.all(color: UsedColor.b_line, width: 2.h),
           ),
           child: Padding(
             padding: EdgeInsets.only(left: 28.0.w, top: 15.h),
@@ -704,7 +704,7 @@ Widget _responseButton(BuildContext context, String rule, bool response) {
           color: isSelected ? UsedColor.button : Colors.white,
           borderRadius: BorderRadius.circular(9.9.r),
           border: Border.all(
-              color: isSelected ? UsedColor.button : UsedColor.B_line,
+              color: isSelected ? UsedColor.button : UsedColor.b_line,
               width: 1.41.h)),
       child: Center(
         child: Text(response ? '가능' : '불가능',
