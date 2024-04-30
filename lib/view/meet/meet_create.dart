@@ -8,7 +8,8 @@ import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
-import 'package:meet_up/meet_create_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
 class MeetCreate extends StatelessWidget {
@@ -68,6 +69,10 @@ class MeetCreate extends StatelessWidget {
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        // 정보 초기화
+        final viewModel =
+            Provider.of<MeetCreateViewModel>(context, listen: false);
+        viewModel.backClearSelection();
         context.pop();
       },
       child: Image.asset(
@@ -316,82 +321,160 @@ class MeetCreate extends StatelessWidget {
       },
     );
   }
-}
 
 // MARK - 키워드
-Widget _keyword(BuildContext context) {
-  return Padding(
-    padding: EdgeInsets.only(left: 33.0.w),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        // 파란 동그라미
-        Container(
-          width: 8.w,
-          height: 8.w,
-          decoration:
-              BoxDecoration(shape: BoxShape.circle, color: UsedColor.main),
-        ),
-        SizedBox(
-          width: 23.w,
-        ),
-        // title
-        Container(
-          alignment: Alignment.center,
-          child: Text(
-            '키워드',
-            style: AppTextStyles.PR_SB_16,
+  Widget _keyword(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 33.0.w),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // 파란 동그라미
+          Container(
+            width: 8.w,
+            height: 8.w,
+            decoration:
+                BoxDecoration(shape: BoxShape.circle, color: UsedColor.main),
           ),
-        ),
-        SizedBox(width: 27.w),
-        // 선택한 키워드 보이도록
-        _selectedKeywords(context),
-        const Spacer(),
-        Padding(
-          padding: EdgeInsets.only(right: 7.0.w),
-          child: GestureDetector(
-            onTap: () {
-              context.goNamed('meetKeyWord');
-            },
-            child: SizedBox(
-                width: 48.w,
-                height: 48.w,
-                child: Image.asset(ImagePath.nextArrow)),
+          SizedBox(
+            width: 23.w,
           ),
-        ),
-      ],
-    ),
-  );
-}
+          // title
+          Container(
+            alignment: Alignment.center,
+            child: Text(
+              '키워드',
+              style: AppTextStyles.PR_SB_16,
+            ),
+          ),
+          SizedBox(width: 27.w),
+          // 선택한 키워드 보이도록
+          _selectedKeywords(context),
+          const Spacer(),
+          Padding(
+            padding: EdgeInsets.only(right: 7.0.w),
+            child: GestureDetector(
+              onTap: () {
+                context.goNamed('meetKeyWord');
+              },
+              child: SizedBox(
+                  width: 48.w,
+                  height: 48.w,
+                  child: Image.asset(ImagePath.nextArrow)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-Widget _selectedKeywords(BuildContext context) {
-  return Consumer<MeetCreateViewModel>(
-    builder: (context, viewModel, child) {
-      List<Widget> keywordWidgets = viewModel.keywords
-          .map((keyword) => Text(
-                '#$keyword ',
+  Widget _selectedKeywords(BuildContext context) {
+    return Consumer<MeetCreateViewModel>(
+      builder: (context, viewModel, child) {
+        List<Widget> keywordWidgets = viewModel.keywords
+            .map((keyword) => Text(
+                  '#$keyword ',
+                  style:
+                      AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
+                ))
+            .toList();
+        return Wrap(
+          spacing: 0,
+          runSpacing: 0.h,
+          children: keywordWidgets,
+        );
+      },
+    );
+  }
+
+// MARK: - 설명
+  Widget _detail(BuildContext context) {
+    final viewModel = Provider.of<MeetCreateViewModel>(context);
+    return Padding(
+      padding: EdgeInsets.only(left: 27.0.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 6.0.w),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // 파란 동그라미
+                Container(
+                  width: 8.w,
+                  height: 8.w,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: UsedColor.main),
+                ),
+                SizedBox(
+                  width: 23.w,
+                ),
+                // title
+                Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    '설명',
+                    style: AppTextStyles.PR_SB_16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 32.09.w),
+          // 설명 입력란
+          Container(
+            width: 340.w,
+            height: 176.h,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16.r),
+              border: Border.all(color: UsedColor.b_line, width: 2.h),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(left: 28.0.w, top: 15.h),
+              child: TextField(
+                decoration: const InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.zero,
+                    border: InputBorder.none,
+                    hintText: '만남 목표를 간단히 입력해 주세요. (50자 제한)',
+                    hintStyle: TextStyle(color: UsedColor.text_5)),
+                onChanged: (text) {
+                  viewModel.setDescription(text);
+                },
                 style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
-              ))
-          .toList();
-      return Wrap(
-        spacing: 0,
-        runSpacing: 0.h,
-        children: keywordWidgets,
-      );
-    },
-  );
-}
+              ),
+            ),
+          ),
+          SizedBox(height: 8.h),
+          //글자수 표시
+          Padding(
+            padding: EdgeInsets.only(left: 307.w),
+            child: Text(
+              viewModel.textCount,
+              style: AppTextStyles.PR_SB_11
+                  .copyWith(color: UsedColor.text_3), // 임의 색상
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-// MARK - 설명
-Widget _detail(BuildContext context) {
-  final viewModel = Provider.of<MeetCreateViewModel>(context);
-  return Padding(
-    padding: EdgeInsets.only(left: 27.0.w),
-    child: Column(
+// MARK: - age
+  Widget _age(BuildContext context) {
+    final viewModel = Provider.of<MeetCreateViewModel>(context, listen: true);
+    List<String> options = [
+      "20대",
+      "30대",
+      "40대",
+      "50대",
+    ];
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(left: 6.0.w),
+          padding: EdgeInsets.only(left: 33.w),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -409,335 +492,422 @@ Widget _detail(BuildContext context) {
               Container(
                 alignment: Alignment.center,
                 child: Text(
-                  '설명',
+                  '나이',
                   style: AppTextStyles.PR_SB_16,
                 ),
               ),
             ],
           ),
         ),
-        SizedBox(height: 32.09.w),
-        // 설명 입력란
-        Container(
-          width: 340.w,
-          height: 176.h,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: UsedColor.b_line, width: 2.h),
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(left: 28.0.w, top: 15.h),
-            child: TextField(
-              decoration: const InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.zero,
-                  border: InputBorder.none,
-                  hintText: '만남 목표를 간단히 입력해 주세요. (50자 제한)',
-                  hintStyle: TextStyle(color: UsedColor.text_5)),
-              onChanged: (text) {
-                viewModel.setDescription(text);
-              },
-              style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
-            ),
-          ),
-        ),
-        SizedBox(height: 8.h),
-        //글자수 표시
+        SizedBox(height: 21.h),
         Padding(
-          padding: EdgeInsets.only(left: 307.w),
-          child: Text(
-            viewModel.textCount,
-            style: AppTextStyles.PR_SB_11
-                .copyWith(color: UsedColor.text_3), // 임의 색상
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-// MARK - 나이
-Widget _age(BuildContext context) {
-  final viewModel = Provider.of<MeetCreateViewModel>(context, listen: true);
-  List<String> options = [
-    "20대",
-    "30대",
-    "40대",
-    "50대",
-  ];
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: EdgeInsets.only(left: 33.w),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // 파란 동그라미
-            Container(
-              width: 8.w,
-              height: 8.w,
-              decoration:
-                  BoxDecoration(shape: BoxShape.circle, color: UsedColor.main),
-            ),
-            SizedBox(
-              width: 23.w,
-            ),
-            // title
-            Container(
-              alignment: Alignment.center,
-              child: Text(
-                '나이',
-                style: AppTextStyles.PR_SB_16,
-              ),
-            ),
-          ],
-        ),
-      ),
-      SizedBox(height: 21.h),
-      Padding(
-        padding: EdgeInsets.only(left: 36.w),
-        child: Wrap(
-          spacing: 7.62.w,
-          runSpacing: 7.62.h,
-          children: options.map((option) {
-            bool isSelected = viewModel.selectedAges.contains(option);
-            return GestureDetector(
-              onTap: () {
-                viewModel.selectAge(option);
-              },
-              child: Container(
-                width: 74.38.w,
-                height: 28.h,
-                decoration: BoxDecoration(
-                  color: isSelected ? UsedColor.button : Colors.white,
-                  borderRadius: BorderRadius.circular(19.r),
-                  border: Border.all(
-                    color:
-                        isSelected ? UsedColor.button : const Color(0xFFD2D8F8),
-                    width: 1.75.w,
+          padding: EdgeInsets.only(left: 36.w),
+          child: Wrap(
+            spacing: 7.62.w,
+            runSpacing: 7.62.h,
+            children: options.map((option) {
+              bool isSelected = viewModel.selectedAges.contains(option);
+              return GestureDetector(
+                onTap: () {
+                  viewModel.selectAge(option);
+                },
+                child: Container(
+                  width: 74.38.w,
+                  height: 28.h,
+                  decoration: BoxDecoration(
+                    color: isSelected ? UsedColor.button : Colors.white,
+                    borderRadius: BorderRadius.circular(19.r),
+                    border: Border.all(
+                      color: isSelected
+                          ? UsedColor.button
+                          : const Color(0xFFD2D8F8),
+                      width: 1.75.w,
+                    ),
                   ),
-                ),
-                child: Center(
-                  child: Text(
-                    option,
-                    style: AppTextStyles.PR_M_12.copyWith(
-                      color: isSelected ? Colors.white : Colors.black,
+                  child: Center(
+                    child: Text(
+                      option,
+                      style: AppTextStyles.PR_M_12.copyWith(
+                        color: isSelected ? Colors.white : Colors.black,
+                      ),
                     ),
                   ),
                 ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+// MARK: - gender ratio
+  Widget _genderRatio(BuildContext context) {
+    MeetCreateViewModel viewModel =
+        Provider.of<MeetCreateViewModel>(context, listen: true);
+
+    return Padding(
+      padding: EdgeInsets.only(left: 27.0.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 6.0.w),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // 파란 동그라미
+                Container(
+                  width: 8.w,
+                  height: 8.w,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: UsedColor.main),
+                ),
+                SizedBox(
+                  width: 13.85.w,
+                ),
+                // title
+                Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    '성비',
+                    style: AppTextStyles.PR_SB_16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 13.3.h),
+          Padding(
+            padding: EdgeInsets.only(left: 31.0.w),
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: () => viewModel.selectWomen4(),
+                  child: Image.asset(
+                    viewModel.roomGenderRatio == RoomGenderRatio.womanOnly
+                        ? ImagePath.grW4
+                        : ImagePath.grW4Empty,
+                    width: 76.w,
+                    height: 76.h,
+                  ),
+                ),
+                SizedBox(width: 24.w),
+                GestureDetector(
+                  onTap: () => viewModel.selectWomen2Men2(),
+                  child: Image.asset(
+                    viewModel.roomGenderRatio == RoomGenderRatio.mixed
+                        ? ImagePath.grW2M2
+                        : ImagePath.grW2M2Empty,
+                    width: 76.w,
+                    height: 76.h,
+                  ),
+                ),
+                SizedBox(width: 24.w),
+                GestureDetector(
+                  onTap: () => viewModel.selectMen4(),
+                  child: Image.asset(
+                    viewModel.roomGenderRatio == RoomGenderRatio.manOnly
+                        ? ImagePath.grM4
+                        : ImagePath.grM4Empty,
+                    width: 76.w,
+                    height: 76.h,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+// MARK: - 세부 규칙
+  Widget _rules(BuildContext context) {
+    MeetCreateViewModel viewModel = Provider.of<MeetCreateViewModel>(context);
+
+    return Padding(
+      padding: EdgeInsets.only(left: 27.0.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 6.0.w),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // 파란 동그라미
+                Container(
+                  width: 8.w,
+                  height: 8.w,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: UsedColor.main),
+                ),
+                SizedBox(
+                  width: 14.46.w,
+                ),
+                // title
+                Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    '세부 규칙',
+                    style: AppTextStyles.PR_SB_16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 27.1.h),
+          // contents
+          ...viewModel.rules.entries.map((entry) {
+            bool isSelected = entry.value ?? false;
+            return Padding(
+              padding: EdgeInsets.only(left: 28.46.w, right: 39.12.w),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(entry.key,
+                            style: isSelected
+                                ? AppTextStyles.PR_M_14
+                                    .copyWith(color: Colors.black)
+                                : AppTextStyles.PR_R_14
+                                    .copyWith(color: UsedColor.text_5)),
+                      ),
+                      _responseButton(context, entry.key, true),
+                      SizedBox(width: 7.12.w),
+                      _responseButton(context, entry.key, false),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 22.58.h,
+                  )
+                ],
               ),
             );
           }).toList(),
+        ],
+      ),
+    );
+  }
+
+// 세부 규칙 - 예, 아니요 컨테이너
+  Widget _responseButton(BuildContext context, String rule, bool response) {
+    MeetCreateViewModel viewModel =
+        Provider.of<MeetCreateViewModel>(context, listen: false);
+    bool isSelected = viewModel.rules[rule] == response;
+
+    return GestureDetector(
+      onTap: () {
+        viewModel.setRuleQuestion(rule, response);
+      },
+      child: Container(
+        width: 43.w,
+        height: 19.h,
+        decoration: BoxDecoration(
+            color: isSelected ? UsedColor.button : Colors.white,
+            borderRadius: BorderRadius.circular(9.9.r),
+            border: Border.all(
+                color: isSelected ? UsedColor.button : UsedColor.b_line,
+                width: 1.41.h)),
+        child: Center(
+          child: Text(response ? '가능' : '불가능',
+              style: AppTextStyles.PR_SB_11.copyWith(
+                color: isSelected ? Colors.white : UsedColor.charcoal_black,
+              )),
         ),
       ),
-    ],
-  );
-}
+    );
+  }
 
-// MARK - 성비
-Widget _genderRatio(BuildContext context) {
-  MeetCreateViewModel viewModel =
-      Provider.of<MeetCreateViewModel>(context, listen: true);
-
-  return Padding(
-    padding: EdgeInsets.only(left: 27.0.w),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: 6.0.w),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // 파란 동그라미
-              Container(
-                width: 8.w,
-                height: 8.w,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle, color: UsedColor.main),
-              ),
-              SizedBox(
-                width: 13.85.w,
-              ),
-              // title
-              Container(
-                alignment: Alignment.center,
-                child: Text(
-                  '성비',
-                  style: AppTextStyles.PR_SB_16,
-                ),
-              ),
-            ],
+// MARK: - bottom
+  Widget _bottom(BuildContext context) {
+    return Consumer<MeetCreateViewModel>(
+      builder: (context, viewModel, child) {
+        return NextButton(
+          onTap: () async {
+            // if (!viewModel.allCheckCompleted) return;
+            if (viewModel.allCheckCompleted) {
+              _checkBottomSheet(context);
+            }
+          },
+          height: 56.h,
+          text: '만남방 개설',
+          enable: viewModel.allCheckCompleted,
+          backgroundColor: viewModel.allCheckCompleted
+              ? UsedColor.button
+              : UsedColor.button_g,
+          textStyle: TextStyle(
+            color:
+                viewModel.allCheckCompleted ? Colors.white : UsedColor.text_2,
+            fontSize: 20.sp,
           ),
-        ),
-        SizedBox(height: 13.3.h),
-        Padding(
-          padding: EdgeInsets.only(left: 31.0.w),
-          child: Row(
-            children: [
-              GestureDetector(
-                onTap: () => viewModel.selectWomen4(),
-                child: Image.asset(
-                  viewModel.roomGenderRatio == RoomGenderRatio.womanOnly
-                      ? ImagePath.grW4
-                      : ImagePath.grW4Empty,
-                  width: 76.w,
-                  height: 76.h,
-                ),
-              ),
-              SizedBox(width: 24.w),
-              GestureDetector(
-                onTap: () => viewModel.selectWomen2Men2(),
-                child: Image.asset(
-                  viewModel.roomGenderRatio == RoomGenderRatio.mixed
-                      ? ImagePath.grW2M2
-                      : ImagePath.grW2M2Empty,
-                  width: 76.w,
-                  height: 76.h,
-                ),
-              ),
-              SizedBox(width: 24.w),
-              GestureDetector(
-                onTap: () => viewModel.selectMen4(),
-                child: Image.asset(
-                  viewModel.roomGenderRatio == RoomGenderRatio.manOnly
-                      ? ImagePath.grM4
-                      : ImagePath.grM4Empty,
-                  width: 76.w,
-                  height: 76.h,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
-}
+        );
+      },
+    );
+  }
 
-// MARK - 세부 규칙
-Widget _rules(BuildContext context) {
-  MeetCreateViewModel viewModel = Provider.of<MeetCreateViewModel>(context);
-
-  return Padding(
-    padding: EdgeInsets.only(left: 27.0.w),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: 6.0.w),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // 파란 동그라미
-              Container(
-                width: 8.w,
-                height: 8.w,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle, color: UsedColor.main),
+  // MARK: - 바텀시트
+  void _checkBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        final userViewModel =
+            Provider.of<UserViewModel>(context, listen: false);
+        return Consumer<MeetCreateViewModel>(
+            builder: (context, viewModel, child) {
+          return Container(
+            // 높이 501.h
+            height: 501.h,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(19.r),
+                topRight: Radius.circular(19.r),
               ),
-              SizedBox(
-                width: 14.46.w,
-              ),
-              // title
-              Container(
-                alignment: Alignment.center,
-                child: Text(
-                  '세부 규칙',
-                  style: AppTextStyles.PR_SB_16,
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 27.1.h),
-        // contents
-        ...viewModel.rules.entries.map((entry) {
-          bool isSelected = entry.value ?? false;
-          return Padding(
-            padding: EdgeInsets.only(left: 28.46.w, right: 39.12.w),
+            ),
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(entry.key,
-                          style: isSelected
-                              ? AppTextStyles.PR_M_14
-                                  .copyWith(color: Colors.black)
-                              : AppTextStyles.PR_R_14
-                                  .copyWith(color: UsedColor.text_5)),
+                SizedBox(height: 18.h),
+                // 바텀시트 상위 바
+                Center(
+                  child: Container(
+                    width: 58.w,
+                    height: 3.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(60.r),
+                      color: UsedColor.button_g,
                     ),
-                    _responseButton(context, entry.key, true),
-                    SizedBox(width: 7.12.w),
-                    _responseButton(context, entry.key, false),
-                  ],
+                  ),
                 ),
-                SizedBox(
-                  height: 22.58.h,
-                )
+
+                // title
+                Padding(
+                  padding: EdgeInsets.only(top: 51.h, left: 38.w, right: 31.w),
+                  child: Row(
+                    children: [
+                      Text(
+                        '만남방 개설 전 \n안내사항을 확인해주세요!',
+                        style: AppTextStyles.PR_SB_22,
+                      ),
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          viewModel.setAllAgreed(!viewModel.allAgreed);
+                        },
+                        child: viewModel.allAgreed
+                            ? Image.asset(ImagePath.checkBoxOn,
+                                width: 33.w, height: 33.h)
+                            : Image.asset(ImagePath.checkBoxOff,
+                                width: 33.w, height: 33.h),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(height: 33.h),
+                // 개별 체크
+                Padding(
+                  padding: EdgeInsets.only(left: 38.w),
+                  child: GestureDetector(
+                    onTap: () {
+                      viewModel.setIndividualAgreement1(
+                          !viewModel.individualAgreement1);
+                    },
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 5.h),
+                          child: Icon(
+                            Icons.check,
+                            color: viewModel.individualAgreement1
+                                ? UsedColor.violet
+                                : UsedColor.text_5,
+                            size: 20.w,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 17.w,
+                        ),
+                        Text(
+                          '만남방 개설 시, 모든 입장을 24시간\n안에 처리해야 합니다.\n\n그렇지 않은 경우 만남방은 파기되며,\n만남권은 환불되지 않습니다.',
+                          style: AppTextStyles.PR_R_17.copyWith(
+                              color: viewModel.individualAgreement1
+                                  ? Colors.black
+                                  : UsedColor.text_4),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 33.h),
+                Padding(
+                  padding: EdgeInsets.only(left: 38.w),
+                  child: GestureDetector(
+                    onTap: () {
+                      viewModel.setIndividualAgreement2(
+                          !viewModel.individualAgreement2);
+                    },
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 5.h),
+                          child: Icon(
+                            Icons.check,
+                            color: viewModel.individualAgreement2
+                                ? UsedColor.violet
+                                : UsedColor.text_5,
+                            size: 20.w,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 17.w,
+                        ),
+                        Text(
+                          '만남방 개설 시, 방장이 이탈 혹은\n방 삭제 시 만남권은 환불되지 않습니다.',
+                          style: AppTextStyles.PR_R_17.copyWith(
+                              color: viewModel.individualAgreement2
+                                  ? Colors.black
+                                  : UsedColor.text_4),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: 33.w, right: 51.w, top: 57.h, bottom: 10.h),
+                  child: NextButton(
+                    onTap: () async {
+                      debugPrint("완료");
+                      await viewModel.createRoom(uid: userViewModel.uid!);
+                      while (context.canPop()) {
+                        context.pop();
+                      }
+                    },
+                    height: 56.h,
+                    text: '동의하고 시작하기',
+                    enable: viewModel.isAllAgreed,
+                    backgroundColor: viewModel.isAllAgreed
+                        ? UsedColor.button
+                        : UsedColor.button_g,
+                    textStyle: TextStyle(
+                      color: viewModel.isAllAgreed
+                          ? Colors.white
+                          : UsedColor.text_2,
+                      fontSize: 20.sp,
+                    ),
+                  ),
+                ),
               ],
             ),
           );
-        }).toList(),
-      ],
-    ),
-  );
-}
-
-// MARK - 세부 규칙 - 예, 아니요 컨테이너
-Widget _responseButton(BuildContext context, String rule, bool response) {
-  MeetCreateViewModel viewModel =
-      Provider.of<MeetCreateViewModel>(context, listen: false);
-  bool isSelected = viewModel.rules[rule] == response;
-
-  return GestureDetector(
-    onTap: () {
-      viewModel.setRuleQuestion(rule, response);
-    },
-    child: Container(
-      width: 43.w,
-      height: 19.h,
-      decoration: BoxDecoration(
-          color: isSelected ? UsedColor.button : Colors.white,
-          borderRadius: BorderRadius.circular(9.9.r),
-          border: Border.all(
-              color: isSelected ? UsedColor.button : UsedColor.b_line,
-              width: 1.41.h)),
-      child: Center(
-        child: Text(response ? '가능' : '불가능',
-            style: AppTextStyles.PR_SB_11.copyWith(
-              color: isSelected ? Colors.white : UsedColor.charcoal_black,
-            )),
-      ),
-    ),
-  );
-}
-
-Widget _bottom(BuildContext context) {
-  return Consumer<MeetCreateViewModel>(
-    builder: (context, viewModel, child) {
-      return NextButton(
-        onTap: () async {
-          if (!viewModel.allCheckCompleted) {
-            return;
-          } else {
-            viewModel.createRoom(uid: "8Uk5SuhRGrOz4j0Nd5nHPnOy6sa2");
-            debugPrint("완료");
-          }
-        },
-        height: 56.h,
-        text: '만남방 개설',
-        enable: viewModel.allCheckCompleted,
-        backgroundColor:
-            viewModel.allCheckCompleted ? UsedColor.button : UsedColor.button_g,
-        textStyle: TextStyle(
-          color: viewModel.allCheckCompleted ? Colors.white : UsedColor.text_2,
-          fontSize: 20.sp,
-        ),
-      );
-    },
-  );
+        });
+      },
+    );
+  }
 }

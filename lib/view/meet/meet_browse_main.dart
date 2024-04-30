@@ -1,12 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
+import 'package:meet_up/view_model/meet/meet_browse_view_model.dart';
+import 'package:provider/provider.dart';
 
 class MeetBrowseMain extends StatelessWidget {
   const MeetBrowseMain({super.key});
@@ -72,128 +73,269 @@ class MeetBrowseMain extends StatelessWidget {
   Widget _main(BuildContext context) {
     return Container(
       color: Colors.white,
-      child: SingleChildScrollView(
-          // child: Padding(
-          // padding: EdgeInsets.only(
-          //   left: 20.0.w,
-          //   right: 20.0.w,
-          // ),
-          child: Column(children: [
-        SizedBox(height: 39.h),
+      child: Column(children: [
+        SizedBox(height: 29.h),
         _search(context),
-        SizedBox(height: 23.h),
+        SizedBox(height: 22.h),
         _filter(context),
-        SizedBox(height: 21.h),
+        SizedBox(height: 22.h),
         _divider(),
         SizedBox(height: 28.h),
         // _meetingRoom(context),
-      ])),
+      ]),
     );
   }
 
   Widget _search(BuildContext context) {
     TextEditingController controller = TextEditingController();
 
-    return SingleChildScrollView(
-      child: SizedBox(
-        width: 352.w,
-        height: 37.h,
-        child: Container(
-          decoration: BoxDecoration(
-            color: UsedColor.bg_color, // 배경색 설정
-            borderRadius: BorderRadius.circular(20.0), // 테두리를 둥글게 만듦
-          ),
-          child: TextField(
-            controller: controller,
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 10.0.h),
-              hintText: '만남방의 이름을 검색해 보세요.',
-              prefixIcon: Image.asset(
-                ImagePath.search,
-                width: 10.w,
-                height: 10.h,
-              ),
-              suffixIcon: GestureDetector(
-                onTap: () {
-                  controller.clear();
-                },
-                child: Image.asset(
-                  ImagePath.close,
-                  width: 23.w,
-                  height: 23.h,
-                ),
-              ),
-              // Remove border
-              border: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              errorBorder: InputBorder.none,
-              disabledBorder: InputBorder.none,
-
-              hintStyle:
-                  AppTextStyles.SU_R_14.copyWith(color: UsedColor.text_3),
+    return SizedBox(
+      width: 352.w,
+      height: 37.h,
+      child: Container(
+        decoration: BoxDecoration(
+          color: UsedColor.bg_color, // 배경색 설정
+          borderRadius: BorderRadius.circular(20.0), // 테두리를 둥글게 만듦
+        ),
+        child: TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 10.0.h),
+            hintText: '만남방의 이름을 검색해 보세요.',
+            prefixIcon: Image.asset(
+              ImagePath.search,
+              width: 10.w,
+              height: 10.h,
             ),
-            onChanged: (value) {},
+            suffixIcon: GestureDetector(
+              onTap: () {
+                controller.clear();
+              },
+              child: Image.asset(
+                ImagePath.close,
+                width: 23.w,
+                height: 23.h,
+              ),
+            ),
+            // Remove border
+            border: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            errorBorder: InputBorder.none,
+            disabledBorder: InputBorder.none,
+
+            hintStyle: AppTextStyles.SU_R_14.copyWith(color: UsedColor.text_3),
           ),
+          onChanged: (value) {},
         ),
       ),
     );
   }
 
   Widget _filter(BuildContext context) {
-    List<String> filters = ['카테고리', '지역', '나이', '성비', '세부규칙'];
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Wrap(
-        spacing: 4.0.w,
-        children: filters.map((category) {
-          double buttonWidth = 70.w;
-          if (category.length == 4) {
-            buttonWidth = 90.w;
-          }
-          return SizedBox(
-            width: buttonWidth,
-            height: 34.h,
-            child: ElevatedButton(
-              onPressed: () {
-                context.goNamed('meetFilterMain');
-              },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.zero,
-                // backgroundColor: Colors.white,
-                side: BorderSide(
-                  color: UsedColor.button_g,
-                  width: 1.w,
+    return Padding(
+      padding: EdgeInsets.only(left: 24.0.w),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Consumer<MeetBrowseViewModel>(builder: (context, viewModel, child) {
+              return _filterButton(
+                context,
+                onTap: () {
+                  if (viewModel.isAnyFilterSelected) {
+                    viewModel.clearAllFilters();
+                  } else {
+                    context.goNamed('meetFilterMain');
+                  }
+                },
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      viewModel.isAnyFilterSelected ? '초기화' : '필터 설정',
+                      style: AppTextStyles.PR_M_12
+                          .copyWith(color: UsedColor.text_2),
+                    ),
+                    SizedBox(width: 5.w),
+                    Image.asset(
+                      viewModel.isAnyFilterSelected
+                          ? ImagePath.resetIcon
+                          : ImagePath.filterIcon,
+                      width: 14.w,
+                      height: 11.h,
+                    ),
+                  ],
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(19.0),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(category,
-                        textAlign: TextAlign.center,
-                        style: AppTextStyles.PR_M_12.copyWith(
-                          color: UsedColor.text_2,
-                        )),
-                  ),
-                  //  const Spacer(),
-                  Image.asset(
-                    ImagePath.vector,
-                    width: 9.w,
-                    height: 9.h,
-                  ),
-                ],
-              ),
-            ),
-          );
-        }).toList(),
+                borderColor: UsedColor.button_g,
+                backgroundColor: Colors.white,
+              );
+            }),
+            SizedBox(width: 4.w),
+            _filterContainer(context, _selectedMainCategory(context),
+                UsedColor.B_line, UsedColor.image_card),
+            SizedBox(width: 4.w),
+            _filterContainer(context, _selectedSubCategory(context),
+                UsedColor.B_line, UsedColor.image_card),
+            SizedBox(width: 4.w),
+            _filterContainer(context, _selectedLocation(context),
+                UsedColor.B_line, UsedColor.image_card),
+            SizedBox(width: 4.w),
+            _filterContainer(context, _selectedAge(context), UsedColor.B_line,
+                UsedColor.image_card),
+            SizedBox(width: 4.w),
+            _filterContainer(context, _selectedGender(context),
+                UsedColor.B_line, UsedColor.image_card),
+            SizedBox(width: 4.w),
+            _filterContainer(context, _selectedRules(context), UsedColor.B_line,
+                UsedColor.image_card),
+          ],
+        ),
       ),
     );
   }
-}
+
+  Widget _filterButton(BuildContext context,
+      {required Widget content,
+      required Color borderColor,
+      required Color backgroundColor,
+      required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 92.w,
+        height: 34.h,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(19.r),
+          border: Border.all(width: 1.5.w, color: borderColor),
+          color: backgroundColor,
+        ),
+        child: content,
+      ),
+    );
+  }
+
+  Widget _filterContainer(BuildContext context, Widget content,
+      Color borderColor, Color backgroundColor) {
+    return Container(
+      height: 34.h,
+      width: 90.w,
+      // padding: EdgeInsets.symmetric(horizontal: 13.w),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(19.r),
+        border: Border.all(width: 1.5.w, color: borderColor),
+        color: backgroundColor,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [content],
+      ),
+    );
+  }
+
+  Widget _selectedMainCategory(BuildContext context) {
+    return Consumer<MeetBrowseViewModel>(
+      builder: (context, viewModel, child) {
+        if (viewModel.selectedMainCategory.isNotEmpty) {
+          return Text(
+            viewModel.selectedMainCategory,
+            style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
+          );
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
+    );
+  }
+
+  Widget _selectedSubCategory(BuildContext context) {
+    return Consumer<MeetBrowseViewModel>(
+      builder: (context, viewModel, child) {
+        if (viewModel.selectedMainCategory.isNotEmpty &&
+            viewModel.selectedSubCategory.isNotEmpty) {
+          return Text(
+            viewModel.selectedSubCategory,
+            style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
+          );
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
+    );
+  }
+
+  Widget _selectedLocation(BuildContext context) {
+    return Consumer<MeetBrowseViewModel>(
+      builder: (context, viewModel, child) {
+        if (viewModel.selectedProvince.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        String locationText = viewModel.selectedProvince.isEmpty
+            ? viewModel.selectedMainCategory
+            : '${viewModel.selectedProvince} > ${viewModel.selectedDistrict}';
+
+        return Text(
+          locationText,
+          style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
+        );
+      },
+    );
+  }
+
+  Widget _selectedAge(BuildContext context) {
+    return Consumer<MeetBrowseViewModel>(
+      builder: (context, viewModel, child) {
+        if (viewModel.selectedAge.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        return Text(
+          viewModel.selectedAge,
+          style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
+        );
+      },
+    );
+  }
+
+  Widget _selectedGender(BuildContext context) {
+    return Consumer<MeetBrowseViewModel>(
+      builder: (context, viewModel, child) {
+        String genderText = "";
+        if (viewModel.isWomen4Selected) {
+          genderText = "여성 4";
+        } else if (viewModel.isWomen2Men2Selected) {
+          genderText = "남성 2 / 여성 2";
+        } else if (viewModel.isMen4Selected) {
+          genderText = "남성 4";
+        }
+
+        if (genderText.isNotEmpty) {
+          return Text(
+            genderText,
+            style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
+          );
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
+    );
+  }
+
+  Widget _selectedRules(BuildContext context) {
+    return Consumer<MeetBrowseViewModel>(
+      builder: (context, viewModel, child) {
+        if (viewModel.numberOfSelectedRules == 0) {
+          return const SizedBox.shrink();
+        }
+        return Text(
+          '세부규칙 ${viewModel.numberOfSelectedRules}',
+          style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
+        );
+      },
+    );
+  }
 
 // Widget _meetingRoom(BuildContext context) {}
+}

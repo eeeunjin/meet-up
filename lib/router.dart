@@ -202,21 +202,21 @@ final router = GoRouter(
           },
         ),
         GoRoute(
-            path: 'meetFilterMain',
-            name: 'meetFilterMain',
-            builder: (context, state) {
-              return const Scaffold(body: MeetFilterMain());
-            },
-            routes: [
-              GoRoute(
-                path: 'meetFilterArea',
-                name: 'meetFilterArea',
-                builder: (context, state) {
-                  return const Scaffold(body: MeetFilterArea());
-                },
-              ),
-            ]),
-
+          path: 'meetFilterMain',
+          name: 'meetFilterMain',
+          builder: (context, state) {
+            return const Scaffold(body: MeetFilterMain());
+          },
+          routes: [
+            GoRoute(
+              path: 'meetFilterArea',
+              name: 'meetFilterArea',
+              builder: (context, state) {
+                return const Scaffold(body: MeetFilterArea());
+              },
+            ),
+          ],
+        ),
         GoRoute(
           path: 'coinMain',
           name: 'coinMainFromMeetMain',

@@ -35,7 +35,7 @@ class ImagePath {
   static String get grM4Empty => 'assets/images/grm4_empty.png';
   static String get grW2M2Empty => 'assets/images/grw2m2_empty.png';
   static String get grW4 => 'assets/images/grw4.png';
-  static String get grM4 => 'assets/images/grw4.png';
+  static String get grM4 => 'assets/images/grm4.png';
   static String get grW2M2 => 'assets/images/grw2m2.png';
 
   static String get closeIcon => 'assets/images/closeicon.png';
@@ -44,6 +44,12 @@ class ImagePath {
 
   static String get coinDollarIcon => 'assets/images/coin_dollar_icon.png';
   static String get coinWalletIcon => 'assets/images/coin_wallet_icon.png';
+
+  static String get filterIcon => 'assets/images/filter_icon.png';
+  static String get resetIcon => 'assets/images/reset.png';
+
+  static String get checkBoxOff => 'assets/images/checkboxoff.png';
+  static String get checkBoxOn => 'assets/images/checkboxon.png';
 
   // bot_nav
   static String get meetOn => 'assets/images/bot_nav_meet_on.png';

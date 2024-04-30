@@ -63,6 +63,10 @@ class MeetKeyWord extends StatelessWidget {
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        // 정보 초기화
+        final viewModel =
+            Provider.of<MeetCreateViewModel>(context, listen: false);
+        viewModel.backClearSelection();
         context.pop();
       },
       child: Image.asset(

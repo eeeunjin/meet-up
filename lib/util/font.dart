@@ -171,6 +171,11 @@ class AppTextStyles {
         fontSize: 20.sp,
       );
 
+  static TextStyle get PR_R_17 => TextStyle(
+        fontFamily: 'Pretendard',
+        fontSize: 17.sp,
+      );
+
   static TextStyle get PR_R_16 => TextStyle(
         fontFamily: 'Pretendard',
         fontSize: 16.sp,
