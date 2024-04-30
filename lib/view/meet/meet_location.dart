@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:meet_up/model/province_district_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
@@ -63,7 +64,11 @@ class MeetLocation extends StatelessWidget {
       padding: EdgeInsets.only(left: 9.h),
       child: GestureDetector(
         onTap: () {
-          Navigator.pop(context);
+          // 정보 초기화
+          final viewModel =
+              Provider.of<MeetCreateViewModel>(context, listen: false);
+          viewModel.backClearSelection();
+          context.pop(context);
         },
         child: Image.asset(
           ImagePath.close,
@@ -338,14 +343,15 @@ class MeetLocation extends StatelessWidget {
             Navigator.of(context).pop();
           },
           height: 54.h,
-          text: viewModel.isSelectionComplete ? '확인' : '다음',
-          enable: viewModel.isSelectionComplete,
-          backgroundColor: viewModel.isSelectionComplete
+          text: viewModel.isLocationSelectionComplete ? '확인' : '다음',
+          enable: viewModel.isLocationSelectionComplete,
+          backgroundColor: viewModel.isLocationSelectionComplete
               ? UsedColor.button
               : UsedColor.button_g,
           textStyle: TextStyle(
-            color:
-                viewModel.isSelectionComplete ? Colors.white : UsedColor.text_2,
+            color: viewModel.isLocationSelectionComplete
+                ? Colors.white
+                : UsedColor.text_2,
             fontSize: 20.sp,
           ),
         );

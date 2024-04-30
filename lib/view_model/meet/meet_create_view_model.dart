@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meet_up/model/province_district_model.dart';
 
 class MeetCreateViewModel with ChangeNotifier {
-  // naming
+  // MARK: - naming
   String _roomNaming = '';
 
   String get roomNaming => _roomNaming;
@@ -22,7 +22,7 @@ class MeetCreateViewModel with ChangeNotifier {
     return _roomNaming.trim().isNotEmpty;
   }
 
-  // detail
+  // MARK: - detail
   String _roomText = '';
 
   String get roomText => _roomText;
@@ -37,7 +37,11 @@ class MeetCreateViewModel with ChangeNotifier {
 
   String get textCount => '${_roomText.length}/50';
 
-  // age
+  bool get detailCompleted {
+    return _roomText.trim().isNotEmpty;
+  }
+
+  // MARK: - age
   final List<String> _selectedAges = [];
 
   List<String> get selectedAges => _selectedAges;
@@ -54,7 +58,9 @@ class MeetCreateViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  // gender ratio
+  bool get ageCompleted => selectedAges.isNotEmpty;
+
+  // MARK: - gender ratio
   bool _isWomen4Selected = false;
   bool _isWomen2Men2Selected = false;
   bool _isMen4Selected = false;
@@ -84,7 +90,10 @@ class MeetCreateViewModel with ChangeNotifier {
   bool get isWomen2Men2Selected => _isWomen2Men2Selected;
   bool get isMen4Selected => _isMen4Selected;
 
-  // rules
+  bool get genderRatioCompleted =>
+      _isWomen4Selected || _isWomen2Men2Selected || _isMen4Selected;
+
+  // MARK: - rules
   final Map<String, bool?> _rulesQuestion = {
     '만남 시 대화 녹음': null,
     '만남 후 앱을 통해 연락처 공유': null,
@@ -102,14 +111,10 @@ class MeetCreateViewModel with ChangeNotifier {
     }
   }
 
-  // check
+  bool get allRulesAnswered =>
+      _rulesQuestion.values.every((answer) => answer != null);
 
-  bool get allCheckCompleted {
-    return namingCompleted;
-  }
-
-  // MARK - CategoryPage
-
+  // MARK: - CategoryPage
   // 상세 카테고리
   final bool _isSelectedCategory = false;
   bool get isSelectedCategory => _isSelectedCategory;
@@ -155,6 +160,11 @@ class MeetCreateViewModel with ChangeNotifier {
     // 단일 선택
     _selectedMainCategories.clear();
     _selectedMainCategories.add(category);
+
+    // 기타 골랐을 시, 이전 내역 초기화
+    if (category == '기타') {
+      _selectedSubCategories.clear();
+    }
     notifyListeners();
   }
 
@@ -172,7 +182,7 @@ class MeetCreateViewModel with ChangeNotifier {
     return '';
   }
 
-  //Keyword
+  // MARK: - Keyword
 
   String _textCount = '';
 
@@ -232,7 +242,7 @@ class MeetCreateViewModel with ChangeNotifier {
   bool get keywordCheckComplted =>
       _keywords.isNotEmpty && _keywords.length <= 3;
 
-  // MARK - Location
+  // MARK: - Location
   String _selectedProvince = '';
   final ValueNotifier<String> _selectedProvinceNotifier = ValueNotifier('');
 
@@ -274,7 +284,89 @@ class MeetCreateViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  bool get isSelectionComplete {
+  bool get isLocationSelectionComplete {
     return _selectedProvince.isNotEmpty && _selectedDistrict.isNotEmpty;
+  }
+
+  // MARK: -  뒤로 가기 시 초기화
+  void backClearSelection() {
+    _roomNaming = '';
+    _roomText = '';
+    _selectedAges.clear();
+    _isWomen4Selected = false;
+    _isWomen2Men2Selected = false;
+    _isMen4Selected = false;
+    _rulesQuestion.forEach((key, value) => _rulesQuestion[key] = null);
+    _selectedMainCategories.clear();
+    _selectedSubCategories.clear();
+    _textCount = '';
+    _keywords.clear();
+    _currentInput = '';
+    _selectedProvince = '';
+    _selectedDistrict = '';
+    _selectedProvinceNotifier.value = '';
+    _selectedDistrictNotifier.value = '';
+    notifyListeners();
+  }
+
+  // category tap clear
+  void categoryClearSelection() {
+    _selectedMainCategories.clear();
+    _selectedSubCategories.clear();
+    notifyListeners();
+  }
+
+  // MARK: - All check
+  bool get allCheckCompleted {
+    return namingCompleted &&
+        isCategorySelectionComplete &&
+        isLocationSelectionComplete &&
+        keywordCheckComplted &&
+        detailCompleted &&
+        ageCompleted &&
+        genderRatioCompleted &&
+        allRulesAnswered;
+  }
+
+  // MARK: - check bottomsheet
+  bool _allAgreed = false;
+  bool get allAgreed => _allAgreed;
+
+  bool _individualAgreement1 = false;
+  bool _individualAgreement2 = false;
+  bool get individualAgreement1 => _individualAgreement1;
+  bool get individualAgreement2 => _individualAgreement2;
+
+  void setAllAgreed(bool agreed) {
+    _allAgreed = agreed;
+    _individualAgreement1 = agreed;
+    _individualAgreement2 = agreed;
+    notifyListeners();
+  }
+
+  void setIndividualAgreement1(bool agreed) {
+    _individualAgreement1 = agreed;
+    _checkAllAgreed();
+    notifyListeners();
+  }
+
+  void setIndividualAgreement2(bool agreed) {
+    _individualAgreement2 = agreed;
+    _checkAllAgreed();
+    notifyListeners();
+  }
+
+  void _checkAllAgreed() {
+    if (_individualAgreement1 && _individualAgreement2) {
+      _allAgreed = true;
+    } else {
+      _allAgreed = false;
+    }
+  }
+
+  bool get isAllAgreed {
+    return _allAgreed &&
+        individualAgreement1 &&
+        individualAgreement2 /* ... && individualAgreementN */;
   }
 }
