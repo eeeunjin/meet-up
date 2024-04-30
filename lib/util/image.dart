@@ -46,6 +46,7 @@ class ImagePath {
   static String get coinWalletIcon => 'assets/images/coin_wallet_icon.png';
 
   static String get filterIcon => 'assets/images/filter_icon.png';
+  static String get resetIcon => 'assets/images/reset.png';
 
   static String get checkBoxOff => 'assets/images/checkboxoff.png';
   static String get checkBoxOn => 'assets/images/checkboxon.png';

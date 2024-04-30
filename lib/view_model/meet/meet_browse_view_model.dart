@@ -3,7 +3,7 @@ import 'package:meet_up/model/province_district_model.dart';
 
 class MeetBrowseViewModel with ChangeNotifier {
   // MARK: - category
-  final bool _isSelectedCategory = false;
+  bool _isSelectedCategory = false;
   bool get isSelectedCategory => _isSelectedCategory;
 
   final List<String> _selectedMainCategories = [];
@@ -47,6 +47,7 @@ class MeetBrowseViewModel with ChangeNotifier {
     // 단일 선택
     _selectedMainCategories.clear();
     _selectedMainCategories.add(category);
+    _isSelectedCategory = true;
 
     // 기타 골랐을 시, 이전 내역 초기화
     if (category == '기타') {
@@ -56,17 +57,15 @@ class MeetBrowseViewModel with ChangeNotifier {
   }
 
   String get selectedMainCategory {
-    if (_selectedMainCategories.isNotEmpty) {
-      return _selectedMainCategories.first;
-    }
-    return '';
+    return _selectedMainCategories.isNotEmpty
+        ? _selectedMainCategories.first
+        : '';
   }
 
   String get selectedSubCategory {
-    if (_selectedSubCategories.isNotEmpty) {
-      return _selectedSubCategories.first;
-    }
-    return '';
+    return _selectedSubCategories.isNotEmpty
+        ? _selectedSubCategories.first
+        : '';
   }
 
   // MARK: - area
@@ -126,7 +125,7 @@ class MeetBrowseViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  // MARK : - gender ratio
+  // MARK: - gender ratio
   bool _isWomen4Selected = false;
   bool _isWomen2Men2Selected = false;
   bool _isMen4Selected = false;
@@ -174,23 +173,61 @@ class MeetBrowseViewModel with ChangeNotifier {
     }
   }
 
-// MARK : - bottom
+  int get numberOfSelectedRules {
+    return _rulesQuestion.values.where((value) => value == true).length;
+  }
+
+// MARK: - bottom
 
   bool get allCheckCompleted {
     bool ruleSelected =
         _rulesQuestion.values.any((isSelected) => isSelected == true);
 
     bool categoriesCompleted =
-        isSelectedCategory && isCategorySelectionComplete;
+        isSelectedCategory || isCategorySelectionComplete;
+
     bool areaCompleted = isSelectionComplete;
+
     bool ageCompleted = selectedAge.isNotEmpty;
+
     bool genderRatioCompleted =
         isWomen4Selected || isWomen2Men2Selected || isMen4Selected;
 
-    return ruleSelected &&
-        categoriesCompleted &&
-        areaCompleted &&
-        ageCompleted &&
+    bool allCompleted = ruleSelected ||
+        categoriesCompleted ||
+        areaCompleted ||
+        ageCompleted ||
         genderRatioCompleted;
+
+    return allCompleted;
+  }
+
+// MARK: - filter
+
+// 필터 선택 여부 체크
+  bool get isAnyFilterSelected {
+    return _selectedMainCategories.isNotEmpty ||
+        _selectedSubCategories.isNotEmpty ||
+        _selectedProvince.isNotEmpty ||
+        _selectedDistrict.isNotEmpty ||
+        _selectedAge.isNotEmpty ||
+        _isWomen4Selected ||
+        _isWomen2Men2Selected ||
+        _isMen4Selected ||
+        numberOfSelectedRules > 0;
+  }
+
+// 필터 초기화
+  void clearAllFilters() {
+    _selectedMainCategories.clear();
+    _selectedSubCategories.clear();
+    _selectedProvince = '';
+    _selectedDistrict = '';
+    _selectedAge = '';
+    _isWomen4Selected = false;
+    _isWomen2Men2Selected = false;
+    _isMen4Selected = false;
+    _rulesQuestion.forEach((key, value) => _rulesQuestion[key] = null);
+    notifyListeners();
   }
 }
