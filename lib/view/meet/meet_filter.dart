@@ -158,7 +158,7 @@ class MeetFilterMain extends StatelessWidget {
                           border: Border.all(
                             color: isSelected
                                 ? UsedColor.button
-                                : UsedColor.B_line,
+                                : UsedColor.b_line,
                             width: 2.25.w,
                           ),
                         ),
@@ -261,7 +261,7 @@ class MeetFilterMain extends StatelessWidget {
                   color: isSubSelected ? UsedColor.button : Colors.white,
                   borderRadius: BorderRadius.circular(12.61.r),
                   border: Border.all(
-                    color: isSubSelected ? UsedColor.button : UsedColor.B_line,
+                    color: isSubSelected ? UsedColor.button : UsedColor.b_line,
                     width: 2.25.w,
                   ),
                 ),

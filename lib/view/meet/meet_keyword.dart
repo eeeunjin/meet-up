@@ -8,7 +8,7 @@ import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
-import 'package:meet_up/meet_create_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
 import 'package:provider/provider.dart';
 
 class MeetKeyWord extends StatelessWidget {

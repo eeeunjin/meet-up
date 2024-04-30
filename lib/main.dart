@@ -8,7 +8,7 @@ import 'package:meet_up/view_model/bot_nav_view_model.dart';
 import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
 import 'package:meet_up/view_model/login/login_verification_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_browse_view_model.dart';
-import 'package:meet_up/meet_create_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
 import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
