@@ -151,7 +151,7 @@ class FirebaseCRUD {
       return firebaseRefs.colRefRoom
           .where('room_owner_reference',
               isEqualTo:
-                  firebaseRefs.colRefUser.doc("7qYDqcx4YqbgGxikqdRHJldbR3w1"))
+                  firebaseRefs.colRefUser.doc(uid))
           .orderBy("room_creation_date", descending: true)
           .snapshots();
     } else {
