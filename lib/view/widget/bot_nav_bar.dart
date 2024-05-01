@@ -27,17 +27,15 @@ class BotNavBar extends StatelessWidget {
         },
         child: Scaffold(
           resizeToAvoidBottomInset: false, // 키보드 픽셀 over 방지
-          body: SafeArea(
-            child: IndexedStack(
-              index: bottomNavViewModel.currentIndex,
-              children: const [
-                MeetMain(),
-                ChatMain(),
-                ScheduleMain(),
-                ReflectMain(),
-                ProfileMain(),
-              ],
-            ),
+          body: IndexedStack(
+            index: bottomNavViewModel.currentIndex,
+            children: const [
+              MeetMain(),
+              ChatMain(),
+              ScheduleMain(),
+              ReflectMain(),
+              ProfileMain(),
+            ],
           ),
           bottomNavigationBar: _bot_nav(context),
         ));
@@ -115,19 +113,19 @@ class BotNavBar extends StatelessWidget {
               BottomNavigationBarItem(
                 icon: Image.asset(
                   ImagePath.refOff,
-                  width: 33.14.w,
-                  height: 33.14.h,
+                  width: 33.w,
+                  height: 33.h,
                 ),
-                activeIcon: Image.asset(ImagePath.refOn,
-                    width: 33.14.w, height: 33.14.h),
+                activeIcon:
+                    Image.asset(ImagePath.refOn, width: 33.w, height: 33.h),
                 label: '성찰',
               ),
               // index - 4
               BottomNavigationBarItem(
                 icon: Image.asset(ImagePath.profileOff,
-                    width: 33.14.w, height: 33.14.h),
-                activeIcon: Image.asset(ImagePath.profileOff,
-                    width: 33.14.w, height: 33.14.h),
+                    width: 34.w, height: 34.h),
+                activeIcon:
+                    Image.asset(ImagePath.profileOn, width: 34.w, height: 34.h),
                 label: '프로필',
               ),
             ],

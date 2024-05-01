@@ -444,6 +444,23 @@ class MeetCreateViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  // location tap clear
+  void locationClearSelection() {
+    _selectedProvince = '';
+    _selectedDistrict = '';
+    _selectedProvinceNotifier.value = '';
+    _selectedDistrictNotifier.value = '';
+    notifyListeners();
+  }
+
+  // keyword tap clear
+  void keywordClearSelection() {
+    _textCount = '';
+    _currentInput = '';
+    _keywords.clear();
+    notifyListeners();
+  }
+
   // MARK: - all check
   bool get allCheckCompleted {
     return namingCompleted &&

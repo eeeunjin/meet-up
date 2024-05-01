@@ -10,22 +10,20 @@ class ReflectMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            if (Platform.isIOS)
-              _header(context)
-            else if (Platform.isAndroid)
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 58.h,
-                ),
-                child: _header(context),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          if (Platform.isIOS)
+            _header(context)
+          else if (Platform.isAndroid)
+            Padding(
+              padding: EdgeInsets.only(
+                top: 58.h,
               ),
-            // Expanded(child: _main(context)),
-          ],
-        ),
+              child: _header(context),
+            ),
+          // Expanded(child: _main(context)),
+        ],
       ),
     );
   }
