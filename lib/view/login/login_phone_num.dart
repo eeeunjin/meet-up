@@ -121,20 +121,27 @@ class LoginPhoneNum extends StatelessWidget {
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16.r),
                           borderSide: BorderSide(
-                              color: viewModel.controller.text.isNotEmpty
-                                  ? (viewModel.isPhoneNumberValid
-                                      ? UsedColor.green
-                                      : UsedColor.red)
-                                  : const Color(0xFFD2D8F8),
-                              width: 2.5.w),
+                            color: viewModel.controller.text.isNotEmpty
+                                ? (viewModel.isPhoneNumberValid
+                                    ? UsedColor.b_line
+                                    : UsedColor.red)
+                                : UsedColor.b_line,
+                            width: 2.5.w,
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16.r),
                           borderSide: BorderSide(
                               color: viewModel.isPhoneNumberValid
-                                  ? UsedColor.green
+                                  ? UsedColor.b_line
                                   : UsedColor.red,
                               width: 2.5.w),
+                        ),
+                        isDense: true,
+                        contentPadding: EdgeInsets.only(
+                          top: 20.h,
+                          left: 21.h,
+                          bottom: 20.h,
                         ),
                       ),
                       style: AppTextStyles.SU_L_24
@@ -186,10 +193,12 @@ class LoginPhoneNum extends StatelessWidget {
             fontSize: 18.sp,
             enable: viewModel.isPhoneNumberValid,
             backgroundColor: viewModel.isPhoneNumberValid
-                ? UsedColor.green
+                ? UsedColor.button
                 : UsedColor.grey1,
             textStyle: AppTextStyles.PR_SB_20.copyWith(
-              color: viewModel.isPhoneNumberValid ? Colors.white : Colors.black,
+              color: viewModel.isPhoneNumberValid
+                  ? Colors.white
+                  : UsedColor.text_2,
             )),
       ),
     );

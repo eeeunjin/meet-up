@@ -5,10 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/loginFunc.dart';
+import 'package:meet_up/util/color.dart';
+import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_verification_view_model.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
 class SignUpVerification extends StatelessWidget {
@@ -101,17 +105,22 @@ class SignUpVerification extends StatelessWidget {
           inputFormatters: [
             LengthLimitingTextInputFormatter(6),
           ],
+          cursorHeight: 32.h,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
             border: const OutlineInputBorder(),
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16.r),
-                borderSide:
-                    BorderSide(color: const Color(0xFFD2D8F8), width: 2.5.w)),
+                borderSide: BorderSide(color: UsedColor.b_line, width: 2.5.w)),
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16.r),
-                borderSide:
-                    BorderSide(color: const Color(0xFFD2D8F8), width: 2.5.w)),
+                borderSide: BorderSide(color: UsedColor.b_line, width: 2.5.w)),
+            contentPadding:
+                EdgeInsets.only(top: 15.h, bottom: 15.h, left: 21.h),
+          ),
+          style: AppTextStyles.PR_SB_26.copyWith(
+            color: UsedColor.charcoal_black,
+            height: 1.3.h,
           ),
         ),
         if (!viewModel.isTextFieldFocused && viewModel.controller.text.isEmpty)
@@ -120,7 +129,7 @@ class SignUpVerification extends StatelessWidget {
             left: 18.w,
             child: Text(
               "인증 번호",
-              style: TextStyle(fontSize: 12.sp, color: const Color(0xFF8D8D8D)),
+              style: AppTextStyles.SU_L_12.copyWith(color: UsedColor.text_4),
             ),
           ),
         Positioned(
@@ -128,10 +137,7 @@ class SignUpVerification extends StatelessWidget {
           right: 15.w,
           child: Text(
             viewModel.formattedRemainingTime,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
+            style: AppTextStyles.PR_SB_10.copyWith(color: UsedColor.text_4),
           ),
         ),
       ],
@@ -164,14 +170,11 @@ class SignUpVerification extends StatelessWidget {
             signUpVerificationViewModel.canResendCode
                 ? '인증번호 재전송'
                 : '인증번호가 재전송되었습니다',
-            style: TextStyle(
-              fontSize: 13,
+            style: AppTextStyles.SU_L_12.copyWith(
               decoration: signUpVerificationViewModel.canResendCode
                   ? TextDecoration.underline
                   : TextDecoration.none,
-              color: signUpVerificationViewModel.canResendCode
-                  ? Colors.grey
-                  : Colors.grey,
+              color: UsedColor.text_4,
             ),
           ),
         ),
@@ -179,10 +182,7 @@ class SignUpVerification extends StatelessWidget {
           const SizedBox(width: 8.0),
           Text(
             signUpVerificationViewModel.formattedRemainingTime,
-            style: const TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-            ),
+            style: AppTextStyles.PR_SB_10.copyWith(color: UsedColor.text_4),
           ),
         ],
       ],
@@ -197,7 +197,7 @@ class SignUpVerification extends StatelessWidget {
           padding: EdgeInsets.only(left: 32.0.w),
           child: Text(
             '인증번호를 입력해주세요',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.sp),
+            style: AppTextStyles.PR_SB_24,
           ),
         ),
         SizedBox(
@@ -238,13 +238,7 @@ class SignUpVerification extends StatelessWidget {
                 color: Colors.black.withOpacity(0.46),
               ),
               CupertinoAlertDialog(
-                title: Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 17.5,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                title: Text(message, style: AppTextStyles.PR_R_12),
                 content: Padding(
                   padding: const EdgeInsets.only(top: 5),
                   child: Text(
@@ -337,6 +331,7 @@ class SignUpVerification extends StatelessWidget {
 
   Widget _confirmButton(BuildContext context) {
     final phoneNumViewModel = Provider.of<SignUpPhoneNumViewModel>(context);
+    final userViewModel = Provider.of<UserViewModel>(context);
     final verificationViewModel =
         Provider.of<SignUpVerificationViewModel>(context);
     return GestureDetector(
@@ -375,7 +370,6 @@ class SignUpVerification extends StatelessWidget {
 
             // 새로운 유저가 아닌 경우
             else {
-              debugPrint("새로운 유저가 아닙니다.");
               // uid 저장
               phoneNumViewModel.getUID(credential.user!.uid);
 
@@ -388,9 +382,18 @@ class SignUpVerification extends StatelessWidget {
                 debugPrint("기존 프로필 정보가 있어서 로그인으로 연결");
                 if (context.mounted) {
                   showAlert(
-                    () {
+                    () async {
                       // 메인 홈 화면으로 이동 (로그인)
-                      context.pop();
+                      // Firebase secure storage에 uid 값 저장
+                      await userViewModel.login(uid: phoneNumViewModel.uid);
+
+                      if (LoginFunc.isLogined) {
+                        while (context.canPop()) {
+                          context.pop();
+                        }
+                        // 유저 모델 불러오기
+                        await userViewModel.loadUserModel();
+                      }
                     },
                     context: context,
                     title: "가입된 계정이 있습니다.",
@@ -427,20 +430,18 @@ class SignUpVerification extends StatelessWidget {
         height: 60.h,
         alignment: Alignment.center,
         decoration: ShapeDecoration(
-          color: const Color(0xFFE6E6E6),
+          color: UsedColor.grey1,
           shape: RoundedRectangleBorder(
               side: BorderSide(
                 width: 1.r,
-                color: const Color(0xFFE6E6E6),
+                color: UsedColor.grey1,
               ),
               borderRadius: BorderRadius.circular(19.r)),
         ),
         child: Text(
           "인증번호 확인",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 20.sp,
-            // fontFamily: '',
+          style: AppTextStyles.PR_SB_20.copyWith(
+            color: UsedColor.text_2,
           ),
         ),
       ),

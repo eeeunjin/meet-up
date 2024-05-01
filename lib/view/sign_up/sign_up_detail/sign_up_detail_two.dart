@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
+import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
@@ -17,6 +18,7 @@ class SignUpDetailTwo extends StatelessWidget {
     Provider.of<SignUpDetailViewModel>(context, listen: false);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,12 +113,12 @@ Widget _nickname(BuildContext context) {
       children: [
         Text(
           "닉네임을 입력해주세요.",
-          style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
+          style: AppTextStyles.PR_B_22.copyWith(color: Colors.black),
         ),
         SizedBox(height: 8.h),
         Text(
           "프로필에 표시되는 이름으로 언제든 변경할 수 있습니다.",
-          style: TextStyle(fontSize: 12.sp),
+          style: AppTextStyles.SU_R_12.copyWith(color: UsedColor.text_4),
         ),
         SizedBox(height: 27.h),
 
@@ -166,23 +168,22 @@ Widget _nickname(BuildContext context) {
                 ? Text(
                     viewModel.errorMessage,
                     style: TextStyle(
+                      fontFamily: "SUITE",
                       color: viewModel.errorMessage.contains('사용 가능한 닉네임입니다.')
-                          ? Colors.green
-                          : Colors.red,
+                          ? UsedColor.violet
+                          : UsedColor.red,
                       fontSize: 12.sp,
                     ),
                   )
                 : Text(
                     '4~12자의 한글, 영문 대소문자, 숫자만 사용 가능합니다.',
-                    style: TextStyle(fontSize: 12.sp),
+                    style:
+                        AppTextStyles.SU_R_12.copyWith(color: UsedColor.text_4),
                   ),
             const Spacer(),
             Text(
               '${viewModel.nicknameController.text.length}/12',
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: Colors.black,
-              ),
+              style: AppTextStyles.SU_R_12.copyWith(color: UsedColor.text_4),
               textAlign: TextAlign.right,
             ),
           ],
@@ -202,7 +203,7 @@ Widget _profile(BuildContext context) {
         padding: EdgeInsets.only(left: 25.0.h),
         child: Text(
           "프로필을 선택해주세요.",
-          style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
+          style: AppTextStyles.PR_B_22.copyWith(color: Colors.black),
         ),
       ),
       SizedBox(height: 35.h),
@@ -274,9 +275,8 @@ Widget _bottom(BuildContext context) {
         height: 56.h,
         fontSize: 20.sp,
         enable: viewModel.isNextButtonEnabled,
-        backgroundColor: viewModel.isNextButtonEnabled
-            ? UsedColor.green
-            : const Color(0xFFE6E6E6),
+        backgroundColor:
+            viewModel.isNextButtonEnabled ? UsedColor.button : UsedColor.grey1,
         textStyle: TextStyle(
           color: viewModel.isNextButtonEnabled ? Colors.white : Colors.black,
           fontSize: 18.sp,

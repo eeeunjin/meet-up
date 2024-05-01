@@ -1,0 +1,65 @@
+import 'package:flutter/material.dart';
+import 'package:meet_up/loginFunc.dart';
+import 'package:meet_up/model/user_model.dart';
+import 'package:meet_up/repository/user_repository.dart';
+
+class UserViewModel with ChangeNotifier {
+  // 유저 데이터 관리 레포지토리
+  final UserRepository _userRepository = UserRepository();
+
+  // 유저 정보
+  UserModel? userModel;
+  String? uid;
+
+  void setUserModel({required UserModel userModel}) {
+    this.userModel = userModel;
+    notifyListeners();
+  }
+
+  // 로그인이 된 경우, 유저 정보를 불러오는 함수
+  Future<void> loadUserModel() async {
+    // 처음 한번만 불러오도록 함
+    if (userModel != null) return;
+
+    // uid가 null이 아닌 경우 사용자 정보를 저장
+    if (uid != null) {
+      setUserModel(
+          userModel: await _userRepository.readUserDocument(uid: uid!));
+    } else {
+      debugPrint("Error: uid value is null");
+    }
+  }
+
+  // 로그인 & 회원가입 시, 로그인 정보 및 uid 저장
+  Future<void> login({required String? uid}) async {
+    try {
+      // router 시작 지점 변경
+      LoginFunc.isLogined = true;
+      // firebase secure storage에 uid 값 저장
+      await LoginFunc.storage.write(
+        key: "uid",
+        value: uid,
+      );
+      this.uid = uid;
+      // login 함수 호출 후, loadUserModel 함수를 호출 하기 때문에 notify는 하지 않음
+    } catch (e) {
+      Exception("Error: $e");
+      LoginFunc.isLogined = false;
+    }
+  }
+
+  // 로그아웃 시, 로그인 정보 및 uid 정보 삭제
+  Future<void> logout() async {
+    try {
+      LoginFunc.isLogined = false;
+      // firebase secure storage에 uid 값 삭제
+      await LoginFunc.storage.delete(key: "uid");
+      userModel = null;
+      uid = null;
+      notifyListeners();
+    } catch (e) {
+      Exception("Error: $e");
+      LoginFunc.isLogined = true;
+    }
+  }
+}

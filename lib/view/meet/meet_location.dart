@@ -286,7 +286,7 @@ class MeetLocation extends StatelessWidget {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(9.r),
                             border: Border.all(
-                                color: UsedColor.B_line, width: 1.5.w),
+                                color: UsedColor.b_line, width: 1.5.w),
                           ),
                           child: IntrinsicWidth(
                             child: Row(

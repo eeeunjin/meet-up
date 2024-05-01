@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
+import 'package:provider/provider.dart';
 
 class ProfileMain extends StatelessWidget {
   const ProfileMain({super.key});
@@ -75,6 +77,7 @@ class ProfileMain extends StatelessWidget {
   }
 
   Widget _topButtons(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     return Padding(
       padding: EdgeInsets.only(right: 27.0.w),
       child: Row(
@@ -103,8 +106,12 @@ class ProfileMain extends StatelessWidget {
           SizedBox(width: 4.w),
           // 설정 버튼
           GestureDetector(
-            onTap: () {
-              context.push('/settingMain');
+            onTap: () async {
+              await userViewModel.logout();
+              while (context.canPop()) {
+                context.pop();
+              }
+              // context.push('/settingMain');
             },
             child: Container(
               width: 41.w,
@@ -148,7 +155,7 @@ class ProfileMain extends StatelessWidget {
               height: 120.h,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(width: 1.5.w, color: UsedColor.B_line),
+                border: Border.all(width: 1.5.w, color: UsedColor.b_line),
               ),
             ),
             Padding(

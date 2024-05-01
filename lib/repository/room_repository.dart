@@ -218,7 +218,7 @@ enum Socializing {
 enum RoomAge {
   twenties,
   thirties,
-  forties,
+  fourties,
   fifties,
 }
 

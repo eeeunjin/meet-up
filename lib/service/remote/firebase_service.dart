@@ -236,7 +236,7 @@ class FirebaseCRUD {
 
       // snapshot의 정보를 json 형태로 불러오기
       Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
-
+      
       // 데이터가 존재하는 경우
       if (data != null) {
         if (T == UserModel) {

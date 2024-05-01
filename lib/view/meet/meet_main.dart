@@ -51,7 +51,7 @@ class MeetMain extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          // header(title: '만남', back: null),
+          // header(title: '만남', back: null);
           Text(
             '만남',
             style: AppTextStyles.SU_R_20.copyWith(color: UsedColor.text_3),

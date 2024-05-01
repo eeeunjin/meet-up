@@ -1,7 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:meet_up/model/room_model.dart';
+import 'package:meet_up/model/user_model.dart';
+import 'package:meet_up/repository/room_repository.dart';
+import 'package:meet_up/repository/user_repository.dart';
+import 'package:meet_up/service/remote/firebase_service.dart';
 import 'package:meet_up/model/province_district_model.dart';
 
 class MeetCreateViewModel with ChangeNotifier {
+  // Room 관련 DB 동작을 하는 Repository
+  final RoomRepository _roomRepository = RoomRepository();
+  final UserRepository _userRepository = UserRepository();
+  final FirebaseRefs _firebaseRefs = FirebaseRefs();
+
   // MARK: - naming
   String _roomNaming = '';
 
@@ -58,63 +69,46 @@ class MeetCreateViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  // MARK: - gender ratio
+  RoomGenderRatio _roomGenderRatio = RoomGenderRatio.womanOnly;
   bool get ageCompleted => selectedAges.isNotEmpty;
 
-  // MARK: - gender ratio
-  bool _isWomen4Selected = false;
-  bool _isWomen2Men2Selected = false;
-  bool _isMen4Selected = false;
-
   void selectWomen4() {
-    _isWomen4Selected = true;
-    _isWomen2Men2Selected = false;
-    _isMen4Selected = false;
+    _roomGenderRatio = RoomGenderRatio.womanOnly;
     notifyListeners();
   }
 
   void selectWomen2Men2() {
-    _isWomen4Selected = false;
-    _isWomen2Men2Selected = true;
-    _isMen4Selected = false;
+    _roomGenderRatio = RoomGenderRatio.mixed;
     notifyListeners();
   }
 
   void selectMen4() {
-    _isWomen4Selected = false;
-    _isWomen2Men2Selected = false;
-    _isMen4Selected = true;
+    _roomGenderRatio = RoomGenderRatio.manOnly;
     notifyListeners();
   }
 
-  bool get isWomen4Selected => _isWomen4Selected;
-  bool get isWomen2Men2Selected => _isWomen2Men2Selected;
-  bool get isMen4Selected => _isMen4Selected;
+  RoomGenderRatio get roomGenderRatio => _roomGenderRatio;
 
-  bool get genderRatioCompleted =>
-      _isWomen4Selected || _isWomen2Men2Selected || _isMen4Selected;
-
-  // MARK: - rules
-  final Map<String, bool?> _rulesQuestion = {
-    '만남 시 대화 녹음': null,
-    '만남 후 앱을 통해 연락처 공유': null,
-    '아는 지인과 동반 신청': null,
-    '첫 만남에 2차 이동': null,
-    '귀가 시 동성과 동행': null,
+  // rules
+  final Map<String, bool> _rulesQuestion = {
+    '만남 시 대화 녹음': false,
+    '만남 후 앱을 통해 연락처 공유': false,
+    '아는 지인과 동반 신청': false,
+    '첫 만남에 2차 이동': false,
+    '귀가 시 동성과 동행': false,
   };
 
-  Map<String, bool?> get rules => _rulesQuestion;
+  Map<String, bool> get rules => _rulesQuestion;
 
-  void setRuleQuestion(String rule, bool? agree) {
+  void setRuleQuestion(String rule, bool agree) {
     if (_rulesQuestion[rule] != agree) {
       _rulesQuestion[rule] = agree;
       notifyListeners();
     }
   }
 
-  bool get allRulesAnswered =>
-      _rulesQuestion.values.every((answer) => answer != null);
-
-  // MARK: - CategoryPage
+  // MARK: - categoryPage
   // 상세 카테고리
   final bool _isSelectedCategory = false;
   bool get isSelectedCategory => _isSelectedCategory;
@@ -182,7 +176,82 @@ class MeetCreateViewModel with ChangeNotifier {
     return '';
   }
 
-  // MARK: - Keyword
+  String findCategory({
+    required bool isMainCategory,
+    required String category,
+  }) {
+    if (isMainCategory) {
+      switch (selectedMainCategory) {
+        case "취미":
+          return RoomCategory.hobby.name;
+        case "운동":
+          return RoomCategory.exercise.name;
+        case "공부/학업":
+          return RoomCategory.study.name;
+        case "휴식/친목":
+          return RoomCategory.socializing.name;
+        case "기타":
+          return RoomCategory.etc.name;
+      }
+    } else {
+      switch (selectedSubCategory) {
+        case "여행":
+          return Hobby.travel.name;
+        case "맛집":
+          return Hobby.foodie.name;
+        case "연예인":
+          return Hobby.celebrity.name;
+        case "사진":
+          return Hobby.photography.name;
+        case "영화":
+          return Hobby.movies.name;
+        case "게임":
+          return Hobby.gaming.name;
+
+        case "축구":
+          return Exercise.soccer.name;
+        case "야구":
+          return Exercise.baseball.name;
+        case "농구":
+          return Exercise.basketball.name;
+        case "테니스":
+          return Exercise.tennis.name;
+        case "요가":
+          return Exercise.yoga.name;
+        case "헬스":
+          return Exercise.fitness.name;
+        case "탁구":
+          return Exercise.pingpong.name;
+        case "조깅":
+          return Exercise.jogging.name;
+        case "배드민턴":
+          return Exercise.badminton.name;
+
+        case "취업":
+          return Study.employment.name;
+        case "독서":
+          return Study.reading.name;
+        case "대학":
+          return Study.university.name;
+        case "미라클 모닝":
+          return Study.miracleMorning.name;
+        case "자격증":
+          return Study.certification.name;
+        case "아르바이트":
+          return Study.partTimeJob.name;
+
+        case "카페":
+          return Socializing.cafe.name;
+        case "산책":
+          return Socializing.walking.name;
+        case "저녁 식사":
+          return Socializing.dinner.name;
+      }
+    }
+    return "";
+  }
+
+  // MARK: - keyword
 
   String _textCount = '';
 
@@ -238,11 +307,10 @@ class MeetCreateViewModel with ChangeNotifier {
   }
 
   // check
-
   bool get keywordCheckComplted =>
       _keywords.isNotEmpty && _keywords.length <= 3;
 
-  // MARK: - Location
+  // MARK: - location
   String _selectedProvince = '';
   final ValueNotifier<String> _selectedProvinceNotifier = ValueNotifier('');
 
@@ -288,15 +356,75 @@ class MeetCreateViewModel with ChangeNotifier {
     return _selectedProvince.isNotEmpty && _selectedDistrict.isNotEmpty;
   }
 
-  // MARK: -  뒤로 가기 시 초기화
+  // MARK: - createRoom
+  Future<void> createRoom({required String uid}) async {
+    print("내가 왔따");
+    // 카테고리 변환
+    String mainCategory =
+        findCategory(isMainCategory: true, category: selectedMainCategory);
+    String subCategory =
+        findCategory(isMainCategory: false, category: selectedSubCategory);
+
+    // 나이대 변환
+    List<String> roomAge = selectedAges.map((string) {
+      switch (string) {
+        case "20대":
+          RoomAge.twenties;
+        case "30대":
+          RoomAge.thirties;
+        case "40대":
+          RoomAge.fourties;
+        case "50대":
+          RoomAge.fifties;
+      }
+      return string.toUpperCase();
+    }).toList();
+
+    // 규칙 변환
+    List<bool> roomRules = rules.values.toList();
+
+    // DB에 정보 방 정보 추가
+    // 방 정보 생성
+    RoomModel roomModel = RoomModel(
+      room_name: roomNaming,
+      room_category: mainCategory,
+      room_category_detail: subCategory,
+      room_region_province: selectedProvince,
+      room_region_district: selectedDistrict,
+      room_keyword: keywords,
+      room_description: roomText,
+      room_age: roomAge,
+      room_gender_ratio: roomGenderRatio.name,
+      room_rules: roomRules,
+      room_creation_date: Timestamp.now(),
+      room_owner_reference: _firebaseRefs.colRefUser.doc(uid),
+      room_participant_reference: [],
+    );
+    // 방 정보 저장
+    final roomDocRef =
+        await _roomRepository.createRoomDocument(data: roomModel);
+
+    // 유저 정보에 자신이 만든 방 정보 추가
+    // 유저의 방 정보 생성
+    final myRoomModel = MyRoomModel(
+      isMyRoom: true,
+      room_reference: roomDocRef,
+    );
+    // 유저의 방 정보 저장
+    _userRepository.createMyRoomDocument(
+      data: myRoomModel,
+      uid: uid,
+      roomId: roomDocRef.path.split('/').last,
+    );
+  }
+
+  // MARK: -  Reset state
   void backClearSelection() {
     _roomNaming = '';
     _roomText = '';
     _selectedAges.clear();
-    _isWomen4Selected = false;
-    _isWomen2Men2Selected = false;
-    _isMen4Selected = false;
-    _rulesQuestion.forEach((key, value) => _rulesQuestion[key] = null);
+    _roomGenderRatio = RoomGenderRatio.womanOnly;
+    _rulesQuestion.forEach((key, value) => _rulesQuestion[key] = false);
     _selectedMainCategories.clear();
     _selectedSubCategories.clear();
     _textCount = '';
@@ -316,16 +444,14 @@ class MeetCreateViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  // MARK: - All check
+  // MARK: - all check
   bool get allCheckCompleted {
     return namingCompleted &&
         isCategorySelectionComplete &&
         isLocationSelectionComplete &&
         keywordCheckComplted &&
         detailCompleted &&
-        ageCompleted &&
-        genderRatioCompleted &&
-        allRulesAnswered;
+        ageCompleted;
   }
 
   // MARK: - check bottomsheet

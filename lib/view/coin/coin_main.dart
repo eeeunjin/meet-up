@@ -61,9 +61,11 @@ class CoinMain extends StatelessWidget {
       onTap: () {
         // fromRoute에 따라 다른 페이지로 이동하도록 조건 추가
         if (fromRoute == 'meetMain') {
-          context.goNamed('meetMain');
+          // context.goNamed('meetMain');
+          context.pop();
         } else if (fromRoute == 'meetManageMain') {
-          context.goNamed('meetManageMain');
+          // context.goNamed('meetManageMain');
+          context.pop();
         } else {
           context.pop();
         }

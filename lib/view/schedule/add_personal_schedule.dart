@@ -169,7 +169,7 @@ class AddPersonalSchedule extends StatelessWidget {
                   height: 132.h,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(18.6.r),
-                    border: Border.all(width: 1.w, color: UsedColor.B_line),
+                    border: Border.all(width: 1.w, color: UsedColor.b_line),
                   ),
                   // 데이트 피커 넣기
                   child: const Center(

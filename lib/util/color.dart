@@ -20,7 +20,7 @@ class UsedColor {
   static Color green = const Color(0xff76e84e);
   static Color red = const Color(0xffff7878);
   static Color slected = const Color(0xffe6e6e6);
-  static Color B_line = const Color(0xffd2d8f8);
+  static Color b_line = const Color(0xffd2d8f8);
   static Color progress_bar = const Color(0xffa2a3ff);
   static Color progress_bar2 = const Color(0xfff1f3fd);
   static Color charcoal_black = const Color(0xff282828);
@@ -33,7 +33,7 @@ class UsedColor {
   static Color bg_color = const Color(0xfff4f4f4);
 
   //button
-  static Color violet = const Color(0xff564ec2);
+  static const Color violet = Color(0xff564ec2);
   static const Color button = Color(0xFF9798f1);
   static const Color button_g = Color(0xFFe6e6e6);
 

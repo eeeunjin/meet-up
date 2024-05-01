@@ -113,8 +113,8 @@ class SignUpDetailFour extends StatelessWidget {
         fontSize: 20.sp,
         enable: viewModel.isSectionsCompletedPageFour,
         backgroundColor: viewModel.isSectionsCompletedPageFour
-            ? UsedColor.green
-            : const Color(0xFFE6E6E6),
+            ? UsedColor.button
+            : UsedColor.grey1,
         textStyle: TextStyle(
           color: viewModel.isSectionsCompletedPageFour
               ? Colors.white
@@ -149,12 +149,12 @@ class SignUpDetailFour extends StatelessWidget {
         children: [
           Text(
             "관심사를 선택해주세요.",
-            style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
+            style: AppTextStyles.PR_B_22.copyWith(color: Colors.black),
           ),
           SizedBox(height: 8.h),
           Text(
             "가장 관심있는 분야 3가지를 선택해주세요.",
-            style: TextStyle(fontSize: 12.sp, color: const Color(0xFF868686)),
+            style: AppTextStyles.SU_R_12.copyWith(color: UsedColor.text_4),
           ),
           SizedBox(height: 24.h),
           // 12개 중 3개 선택
@@ -172,12 +172,12 @@ class SignUpDetailFour extends StatelessWidget {
                   width: 110.w,
                   height: 36.h,
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFF7C4DFF) : Colors.white,
+                    color: isSelected ? UsedColor.button : Colors.white,
                     borderRadius: BorderRadius.circular(14.r),
                     border: Border.all(
                       color: isSelected
-                          ? const Color(0xFF7C4DFF)
-                          : const Color(0xFFD2D8F8),
+                          ? UsedColor.button
+                          : UsedColor.b_line,
                       width: 2.5.w,
                     ),
                   ),

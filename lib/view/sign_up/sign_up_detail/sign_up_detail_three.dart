@@ -108,12 +108,12 @@ class SignUpDetailThree extends StatelessWidget {
         children: [
           Text(
             "대인관계 속 성격을 선택해주세요.",
-            style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
+            style: AppTextStyles.PR_B_22.copyWith(color: Colors.black),
           ),
           SizedBox(height: 8.h),
           Text(
             "나를 가장 잘 표현하는 키워드 3가지를 선택해주세요.",
-            style: TextStyle(fontSize: 12.sp, color: const Color(0xFF868686)),
+            style: AppTextStyles.SU_R_12.copyWith(color: UsedColor.text_4),
           ),
           SizedBox(height: 24.h),
           // 6개 중 3개 선택
@@ -131,12 +131,12 @@ class SignUpDetailThree extends StatelessWidget {
                   width: 110.w,
                   height: 36.h,
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFF7C4DFF) : Colors.white,
+                    color: isSelected ? UsedColor.button : Colors.white,
                     borderRadius: BorderRadius.circular(14.r),
                     border: Border.all(
                       color: isSelected
-                          ? const Color(0xFF7C4DFF)
-                          : const Color(0xFFD2D8F8),
+                          ? UsedColor.button
+                          : UsedColor.b_line,
                       width: 2.5.w,
                     ),
                   ),
@@ -168,12 +168,12 @@ class SignUpDetailThree extends StatelessWidget {
         children: [
           Text(
             "스스로의 삶 속 성격을 선택해주세요.",
-            style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
+            style: AppTextStyles.PR_B_22.copyWith(color: Colors.black),
           ),
           SizedBox(height: 8.h),
           Text(
             "나를 가장 잘 표현하는 키워드 3가지를 선택해주세요.",
-            style: TextStyle(fontSize: 12.sp, color: const Color(0xFF868686)),
+            style: AppTextStyles.SU_R_12.copyWith(color: UsedColor.text_4),
           ),
           SizedBox(height: 24.h),
           // 6개 중 3개 선택
@@ -191,12 +191,12 @@ class SignUpDetailThree extends StatelessWidget {
                   width: 110.w,
                   height: 36.h,
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFF7C4DFF) : Colors.white,
+                    color: isSelected ? UsedColor.button : Colors.white,
                     borderRadius: BorderRadius.circular(14.r),
                     border: Border.all(
                       color: isSelected
-                          ? const Color(0xFF7C4DFF)
-                          : const Color(0xFFD2D8F8),
+                          ? UsedColor.button
+                          : UsedColor.b_line,
                       width: 2.5.w,
                     ),
                   ),
@@ -230,8 +230,8 @@ class SignUpDetailThree extends StatelessWidget {
         fontSize: 20.sp,
         enable: viewModel.areBothSectionsCompleted,
         backgroundColor: viewModel.areBothSectionsCompleted
-            ? UsedColor.green
-            : const Color(0xFFE6E6E6),
+            ? UsedColor.button
+            : UsedColor.grey1,
         textStyle: TextStyle(
           color:
               viewModel.areBothSectionsCompleted ? Colors.white : Colors.black,

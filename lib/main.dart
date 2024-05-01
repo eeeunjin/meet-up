@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
+import 'package:meet_up/loginFunc.dart';
 import 'package:meet_up/router.dart';
 import 'package:meet_up/service/remote/firebase_options.dart';
 import 'package:meet_up/view_model/bot_nav_view_model.dart';
@@ -12,11 +13,12 @@ import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_verification_view_model.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   await initializeFirebase();
-
+  await LoginFunc.autoLogin();
   // await roomDocumentCreationTest();
 
   // FilterInfo filterInfo = FilterInfo(
@@ -53,6 +55,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => MeetCreateViewModel()),
         ChangeNotifierProvider(create: (context) => MeetBrowseViewModel()),
         ChangeNotifierProvider(create: (context) => ScheduleMainViewModel()),
+        ChangeNotifierProvider(create: (context) => UserViewModel()),
       ],
       child: const MyApp(),
     ),
@@ -71,19 +74,54 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(393, 852), // 화면 크기 설정
-      builder: (_, context) => MaterialApp.router(
-        // Go Router 설정
-        routerConfig: router,
-        // routeInformationParser: router.routeInformationParser,
-        // routerDelegate: router.routerDelegate,
-        theme: ThemeData(
-          // themedata 설정
-          scaffoldBackgroundColor: Colors.white,
+    final userModel = Provider.of<UserViewModel>(context);
+    // 자동 로그인 된 경우
+    if (LoginFunc.isLogined) {
+      userModel.uid = LoginFunc.uid;
+      return FutureBuilder<void>(
+        future: userModel.loadUserModel(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return const Center(
+              child: Text("Error Occur"),
+            );
+          } else {
+            return ScreenUtilInit(
+              designSize: const Size(393, 852), // 화면 크기 설정
+              builder: (_, context) => MaterialApp.router(
+                // Go Router 설정
+                routerConfig: router,
+                // routeInformationParser: router.routeInformationParser,
+                // routerDelegate: router.routerDelegate,
+                theme: ThemeData(
+                  // themedata 설정
+                  scaffoldBackgroundColor: Colors.white,
+                ),
+                debugShowCheckedModeBanner: false, // Debug 배너 없애기
+              ),
+            );
+          }
+        },
+      );
+    } 
+    // 자동 로그인 안된 경우
+    else {
+      return ScreenUtilInit(
+        designSize: const Size(393, 852), // 화면 크기 설정
+        builder: (_, context) => MaterialApp.router(
+          // Go Router 설정
+          routerConfig: router,
+          // routeInformationParser: router.routeInformationParser,
+          // routerDelegate: router.routerDelegate,
+          theme: ThemeData(
+            // themedata 설정
+            scaffoldBackgroundColor: Colors.white,
+          ),
+          debugShowCheckedModeBanner: false, // Debug 배너 없애기
         ),
-        debugShowCheckedModeBanner: false, // Debug 배너 없애기
-      ),
-    );
+      );
+    }
   }
 }

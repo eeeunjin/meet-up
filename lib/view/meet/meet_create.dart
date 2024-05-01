@@ -1,15 +1,15 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/repository/room_repository.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
 class MeetCreate extends StatelessWidget {
@@ -428,7 +428,7 @@ class MeetCreate extends StatelessWidget {
             height: 176.h,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(color: UsedColor.B_line, width: 2.h),
+              border: Border.all(color: UsedColor.b_line, width: 2.h),
             ),
             child: Padding(
               padding: EdgeInsets.only(left: 28.0.w, top: 15.h),
@@ -585,7 +585,7 @@ class MeetCreate extends StatelessWidget {
                 GestureDetector(
                   onTap: () => viewModel.selectWomen4(),
                   child: Image.asset(
-                    viewModel.isWomen4Selected
+                    viewModel.roomGenderRatio == RoomGenderRatio.womanOnly
                         ? ImagePath.grW4
                         : ImagePath.grW4Empty,
                     width: 76.w,
@@ -596,7 +596,7 @@ class MeetCreate extends StatelessWidget {
                 GestureDetector(
                   onTap: () => viewModel.selectWomen2Men2(),
                   child: Image.asset(
-                    viewModel.isWomen2Men2Selected
+                    viewModel.roomGenderRatio == RoomGenderRatio.mixed
                         ? ImagePath.grW2M2
                         : ImagePath.grW2M2Empty,
                     width: 76.w,
@@ -607,7 +607,7 @@ class MeetCreate extends StatelessWidget {
                 GestureDetector(
                   onTap: () => viewModel.selectMen4(),
                   child: Image.asset(
-                    viewModel.isMen4Selected
+                    viewModel.roomGenderRatio == RoomGenderRatio.manOnly
                         ? ImagePath.grM4
                         : ImagePath.grM4Empty,
                     width: 76.w,
@@ -710,7 +710,7 @@ class MeetCreate extends StatelessWidget {
             color: isSelected ? UsedColor.button : Colors.white,
             borderRadius: BorderRadius.circular(9.9.r),
             border: Border.all(
-                color: isSelected ? UsedColor.button : UsedColor.B_line,
+                color: isSelected ? UsedColor.button : UsedColor.b_line,
                 width: 1.41.h)),
         child: Center(
           child: Text(response ? '가능' : '불가능',
@@ -755,6 +755,8 @@ class MeetCreate extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
+        final userViewModel =
+            Provider.of<UserViewModel>(context, listen: false);
         return Consumer<MeetCreateViewModel>(
             builder: (context, viewModel, child) {
           return Container(
@@ -880,7 +882,13 @@ class MeetCreate extends StatelessWidget {
                   padding: EdgeInsets.only(
                       left: 33.w, right: 51.w, top: 57.h, bottom: 10.h),
                   child: NextButton(
-                    onTap: () async {},
+                    onTap: () async {
+                      debugPrint("완료");
+                      await viewModel.createRoom(uid: userViewModel.uid!);
+                      while (context.canPop()) {
+                        context.pop();
+                      }
+                    },
                     height: 56.h,
                     text: '동의하고 시작하기',
                     enable: viewModel.isAllAgreed,
