@@ -1,8 +1,13 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
+import 'package:meet_up/view_model/chat/chat_view_model.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
+import 'package:provider/provider.dart';
 
 class ChatMain extends StatelessWidget {
   const ChatMain({super.key});
@@ -23,7 +28,7 @@ class ChatMain extends StatelessWidget {
                 ),
                 child: _header(context),
               ),
-            // Expanded(child: _main(context)),
+            Expanded(child: _main(context)),
           ],
         ),
       ),
@@ -49,6 +54,43 @@ class ChatMain extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  // main
+  Widget _main(BuildContext context) {
+    final chatViewModel = Provider.of<ChatViewModel>(context);
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: chatViewModel.getMyRoomModel(myUid: userViewModel.uid!),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          print(snapshot.error);
+          return const Text("DB Load Error");
+        } else if (!snapshot.hasData) {
+          return const Text("Has No Data");
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          print(snapshot.data!.docs.length);
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              // 데이터를 사용하여 원하는 UI를 생성합니다.
+              var data =
+                  snapshot.data!.docs[index].data() as Map<String, dynamic>;
+              var roomModel = RoomModel.fromJson(data);
+              return ListTile(
+                title: Text(roomModel.room_name),
+                subtitle: Text(roomModel.room_category),
+              );
+            },
+          );
+        }
+      },
     );
   }
 }

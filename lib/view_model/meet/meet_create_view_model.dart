@@ -369,13 +369,13 @@ class MeetCreateViewModel with ChangeNotifier {
     List<String> roomAge = selectedAges.map((string) {
       switch (string) {
         case "20대":
-          RoomAge.twenties;
+          RoomAge.twenties.name;
         case "30대":
-          RoomAge.thirties;
+          RoomAge.thirties.name;
         case "40대":
-          RoomAge.fourties;
+          RoomAge.fourties.name;
         case "50대":
-          RoomAge.fifties;
+          RoomAge.fifties.name;
       }
       return string.toUpperCase();
     }).toList();

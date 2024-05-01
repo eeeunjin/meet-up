@@ -59,10 +59,7 @@ class UserRepository {
 
   Stream<QuerySnapshot<Object?>> readMyRoomCollectionStream(
       {required String uid}) {
-    CollectionReference myRoomCollectionReference =
-        _firebaseRefs.colRefUser.doc(uid).collection("myRooms");
-    return _firebaseService.readCollectionStream<MyRoomModel>(
-        colRef: myRoomCollectionReference);
+    return _firebaseService.readCollectionStreamByQuery<MyRoomModel>(uid: uid);
   }
 
   Future<bool> createMyRoomDocument({
