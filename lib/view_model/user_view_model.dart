@@ -40,6 +40,7 @@ class UserViewModel with ChangeNotifier {
         key: "uid",
         value: uid,
       );
+      LoginFunc.uid = uid;
       this.uid = uid;
       // login 함수 호출 후, loadUserModel 함수를 호출 하기 때문에 notify는 하지 않음
     } catch (e) {

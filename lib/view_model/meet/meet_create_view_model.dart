@@ -358,7 +358,6 @@ class MeetCreateViewModel with ChangeNotifier {
 
   // MARK: - createRoom
   Future<void> createRoom({required String uid}) async {
-    print("내가 왔따");
     // 카테고리 변환
     String mainCategory =
         findCategory(isMainCategory: true, category: selectedMainCategory);

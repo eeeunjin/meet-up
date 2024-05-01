@@ -756,7 +756,7 @@ class MeetCreate extends StatelessWidget {
       isScrollControlled: true,
       builder: (BuildContext context) {
         final userViewModel =
-            Provider.of<UserViewModel>(context, listen: false);
+            Provider.of<UserViewModel>(context);
         return Consumer<MeetCreateViewModel>(
             builder: (context, viewModel, child) {
           return Container(
@@ -883,7 +883,6 @@ class MeetCreate extends StatelessWidget {
                       left: 33.w, right: 51.w, top: 57.h, bottom: 10.h),
                   child: NextButton(
                     onTap: () async {
-                      debugPrint("완료");
                       await viewModel.createRoom(uid: userViewModel.uid!);
                       while (context.canPop()) {
                         context.pop();
