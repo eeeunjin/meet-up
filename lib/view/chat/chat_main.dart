@@ -61,7 +61,11 @@ class ChatMain extends StatelessWidget {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
 
     return StreamBuilder<QuerySnapshot>(
-      stream: chatViewModel.getMyRoomModel(myUid: userViewModel.uid!),
+      // 내가 만든 방
+      // stream: chatViewModel.getMyRoomModel(myUid: userViewModel.uid!),
+
+      // 내가 만든 방을 제외한 다른 사람의 방
+      stream: chatViewModel.getOthersRoomModel(myUid: userViewModel.uid!),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           print(snapshot.error);

@@ -40,15 +40,19 @@ class RoomRepository {
   Stream<QuerySnapshot<Object?>> readRoomCollectionStream({
     int? limit,
     FilterInfo? filterInfo,
+    String? myUid,
   }) {
     if (limit == null) {
       if (filterInfo == null) {
         return _firebaseService.readCollectionStream<RoomModel>(
-            colRef: _firebaseRefs.colRefRoom);
+          colRef: _firebaseRefs.colRefRoom,
+          myUID: myUid,
+        );
       } else {
         return _firebaseService.readCollectionStream<RoomModel>(
           colRef: _firebaseRefs.colRefRoom,
           filterInfo: filterInfo,
+          myUID: myUid,
         );
       }
     } else {
@@ -56,12 +60,14 @@ class RoomRepository {
         return _firebaseService.readCollectionStream<RoomModel>(
           limit: limit,
           colRef: _firebaseRefs.colRefRoom,
+          myUID: myUid,
         );
       } else {
         return _firebaseService.readCollectionStream<RoomModel>(
           limit: limit,
           filterInfo: filterInfo,
           colRef: _firebaseRefs.colRefRoom,
+          myUID: myUid,
         );
       }
     }

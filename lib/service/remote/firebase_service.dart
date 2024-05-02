@@ -101,21 +101,31 @@ class FirebaseCRUD {
   Stream<QuerySnapshot<Object?>> readCollectionStream<T>({
     int? limit,
     FilterInfo? filterInfo,
+    String? myUID,
     required CollectionReference colRef,
   }) {
     // 콜렉션 스냅샷 스트림 정보를 반환
     // 실시간으로 스트림 정보를 Read 할 수 있음
+    final firebaseRefs = FirebaseRefs();
     if (limit == null) {
       if (T == RoomModel) {
         if (filterInfo == null) {
           return colRef
+              .where("room_owner_reference",
+                  isNotEqualTo: firebaseRefs.colRefUser.doc(myUID!))
+              .orderBy("room_owner_reference")
               .orderBy("room_creation_date", descending: true)
               .snapshots();
         } else {
           return createFilterQuery(
             filterInfo: filterInfo,
             colRef: colRef,
-          ).orderBy("room_creation_date", descending: true).snapshots();
+          )
+              .where("room_owner_reference",
+                  isNotEqualTo: firebaseRefs.colRefRoom.doc(myUID!))
+              .orderBy("room_owner_reference")
+              .orderBy("room_creation_date", descending: true)
+              .snapshots();
         }
       } else {
         return colRef.snapshots();
@@ -124,6 +134,9 @@ class FirebaseCRUD {
       if (T == RoomModel) {
         if (filterInfo == null) {
           return colRef
+              .where("room_owner_reference",
+                  isNotEqualTo: firebaseRefs.colRefRoom.doc(myUID!))
+              .orderBy("room_owner_reference")
               .orderBy("room_creation_date", descending: true)
               .limit(limit)
               .snapshots();
@@ -132,6 +145,9 @@ class FirebaseCRUD {
             colRef: colRef,
             filterInfo: filterInfo,
           )
+              .where("room_owner_reference",
+                  isNotEqualTo: firebaseRefs.colRefRoom.doc(myUID!))
+              .orderBy("room_owner_reference")
               .orderBy("room_creation_date", descending: true)
               .limit(limit)
               .snapshots();
@@ -150,8 +166,7 @@ class FirebaseCRUD {
     if (T == MyRoomModel) {
       return firebaseRefs.colRefRoom
           .where('room_owner_reference',
-              isEqualTo:
-                  firebaseRefs.colRefUser.doc(uid))
+              isEqualTo: firebaseRefs.colRefUser.doc(uid))
           .orderBy("room_creation_date", descending: true)
           .snapshots();
     } else {
