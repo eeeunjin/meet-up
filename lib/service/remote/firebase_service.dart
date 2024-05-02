@@ -142,6 +142,23 @@ class FirebaseCRUD {
     }
   }
 
+  /// 쿼리로 stream snapshots을 불러오는 함수
+  Stream<QuerySnapshot<Object?>> readCollectionStreamByQuery<T>(
+      {required String uid}) {
+    final firebaseRefs = FirebaseRefs();
+
+    if (T == MyRoomModel) {
+      return firebaseRefs.colRefRoom
+          .where('room_owner_reference',
+              isEqualTo:
+                  firebaseRefs.colRefUser.doc(uid))
+          .orderBy("room_creation_date", descending: true)
+          .snapshots();
+    } else {
+      return const Stream.empty();
+    }
+  }
+
   // Room Model의 필터 정보에 맞게 쿼리를 반환해주는 함수
   Query<Object?> createFilterQuery({
     required FilterInfo filterInfo,
@@ -236,7 +253,7 @@ class FirebaseCRUD {
 
       // snapshot의 정보를 json 형태로 불러오기
       Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
-      
+
       // 데이터가 존재하는 경우
       if (data != null) {
         if (T == UserModel) {

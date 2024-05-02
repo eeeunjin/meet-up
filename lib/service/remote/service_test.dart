@@ -152,19 +152,19 @@ Future<void> roomDocumentCreationTest() async {
   // );
 
   RoomModel roomModel = RoomModel(
-    room_name: "같이 사진 찍으러 가실 분들",
-    room_category: RoomCategory.hobby.name,
-    room_category_detail: Hobby.photography.name,
-    room_region_province: "서울",
-    room_region_district: "종로구",
-    room_keyword: ["사진", "동호회", "사진촬영"],
-    room_description: "사진 찍기가 취미인 사람들의 모임입니다. 완전 초보들만 !!",
-    room_age: [RoomAge.twenties.name, RoomAge.thirties.name],
-    room_gender_ratio: RoomGenderRatio.mixed.name,
-    room_rules: [false, false, false, false, false],
+    room_name: "조기 축구 (토요일)",
+    room_category: RoomCategory.exercise.name,
+    room_category_detail: Exercise.soccer.name,
+    room_region_province: "부산",
+    room_region_district: "사하구",
+    room_keyword: ["조축", "축구", "풋살"],
+    room_description: "매주 토요일 아침 간단하게 축구 하실 분 구해요 ~",
+    room_age: [RoomAge.twenties.name],
+    room_gender_ratio: RoomGenderRatio.manOnly.name,
+    room_rules: [true, true, true, true, true],
     room_creation_date: Timestamp.now(),
     room_owner_reference:
-        firebaseRefs.colRefUser.doc("j9YUl33nHTdtVLZMSuKXYaUQL7d2"),
+        firebaseRefs.colRefUser.doc("7qYDqcx4YqbgGxikqdRHJldbR3w1"),
     room_participant_reference: [],
   );
 
@@ -178,7 +178,7 @@ Future<void> roomDocumentCreationTest() async {
 
   userRepository.createMyRoomDocument(
     data: myRoomModel,
-    uid: "j9YUl33nHTdtVLZMSuKXYaUQL7d2",
+    uid: "7qYDqcx4YqbgGxikqdRHJldbR3w1",
     roomId: docRef.path.split('/').last,
   );
 }
