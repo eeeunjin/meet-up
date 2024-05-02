@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -17,15 +16,12 @@ class ProfileMain extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          if (Platform.isIOS)
-            _header(context)
-          else if (Platform.isAndroid)
-            Padding(
-              padding: EdgeInsets.only(
-                top: 58.h,
-              ),
-              child: _header(context),
+          Padding(
+            padding: EdgeInsets.only(
+              top: 58.h,
             ),
+            child: _header(context),
+          ),
           Expanded(child: _main(context)),
         ],
       ),
