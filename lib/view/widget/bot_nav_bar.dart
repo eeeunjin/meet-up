@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meet_up/util/color.dart';
@@ -46,7 +48,7 @@ class BotNavBar extends StatelessWidget {
         Provider.of<BottomNavigationBarViewModel>(context);
 
     return Container(
-      height: 95.h,
+      height: (Platform.isIOS) ? 105.h : 85.h,
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(

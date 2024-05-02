@@ -16,15 +16,12 @@ class MeetMain extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          if (Platform.isIOS)
-            _header(context)
-          else if (Platform.isAndroid)
-            Padding(
-              padding: EdgeInsets.only(
-                top: 58.h,
-              ),
-              child: _header(context),
+          Padding(
+            padding: EdgeInsets.only(
+              top: 58.h,
             ),
+            child: _header(context),
+          ),
           Expanded(child: _main(context)),
         ],
       ),
