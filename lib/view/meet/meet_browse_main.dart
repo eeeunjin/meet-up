@@ -176,7 +176,7 @@ class MeetBrowseMain extends StatelessWidget {
             _filterContainer(
               context,
               filter,
-              UsedColor.B_line,
+              UsedColor.b_line,
               UsedColor.image_card,
             ),
           );
