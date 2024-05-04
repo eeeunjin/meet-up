@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,15 +17,12 @@ class ChatMain extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          if (Platform.isIOS)
-            _header(context)
-          else if (Platform.isAndroid)
-            Padding(
-              padding: EdgeInsets.only(
-                top: 58.h,
-              ),
-              child: _header(context),
+          Padding(
+            padding: EdgeInsets.only(
+              top: 58.h,
             ),
+            child: _header(context),
+          ),
           Expanded(child: _main(context)),
         ],
       ),
