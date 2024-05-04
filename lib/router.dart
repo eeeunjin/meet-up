@@ -191,7 +191,10 @@ final router = GoRouter(
               path: 'roomDetail',
               name: 'roomDetail',
               builder: (context, state) {
-                final roomModel = state.extra as RoomModel;
+                final roomModel = state.extra as RoomModel?;
+                if (roomModel == null) {
+                  return const Text('error');
+                }
                 return RoomDetail(roomModel: roomModel);
               },
             ),
