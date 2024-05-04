@@ -3,6 +3,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RoomModel {
+  String roomId; // 방 고유 번호
+
   String room_name;
   String room_category;
   String room_category_detail;
@@ -18,6 +20,7 @@ class RoomModel {
   List<dynamic> room_participant_reference;
 
   RoomModel({
+    this.roomId = '',
     required this.room_name,
     required this.room_category,
     required this.room_category_detail,
@@ -54,6 +57,7 @@ class RoomModel {
 
   Map<String, Object?> toJson() {
     return {
+      'roomId': roomId,
       'room_name': room_name,
       'room_category': room_category,
       'room_category_detail': room_category_detail,

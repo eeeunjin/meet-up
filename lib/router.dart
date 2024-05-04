@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/loginFunc.dart';
+import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/view/chat/chat_main.dart';
 import 'package:meet_up/view/coin/coin_main.dart';
 import 'package:meet_up/view/login/login_main.dart';
@@ -15,6 +16,7 @@ import 'package:meet_up/view/meet/meet_filter.dart';
 import 'package:meet_up/view/meet/meet_filter_area.dart';
 import 'package:meet_up/view/meet/meet_keyword.dart';
 import 'package:meet_up/view/meet/meet_main.dart';
+import 'package:meet_up/view/meet/meet_room_detail.dart';
 import 'package:meet_up/view/meet/meet_search_main.dart';
 import 'package:meet_up/view/profile/profile_edit.dart';
 import 'package:meet_up/view/profile/profile_main.dart';
@@ -89,7 +91,7 @@ final router = GoRouter(
         }
       },
       routes: [
-        // Login
+        //MARK: - Login
         GoRoute(
           path: 'loginPhoneNum',
           name: 'loginPhoneNum',
@@ -107,7 +109,7 @@ final router = GoRouter(
           ],
         ),
 
-        // SignUp
+        //MARK: - SignUp
         GoRoute(
           path: 'signUpPhoneNum',
           name: 'signUpPhoneNum',
@@ -170,7 +172,7 @@ final router = GoRouter(
           ],
         ),
 
-        // Meet
+        //MARK: - Meet
         GoRoute(
           path: 'meetManageMain',
           name: 'meetManageMain',
@@ -183,6 +185,14 @@ final router = GoRouter(
               name: 'coinMainFromMeetManageMain',
               builder: (context, state) {
                 return const CoinMain(fromRoute: 'meetManageMain');
+              },
+            ),
+            GoRoute(
+              path: 'roomDetail',
+              name: 'roomDetail',
+              builder: (context, state) {
+                final roomModel = state.extra as RoomModel;
+                return RoomDetail(roomModel: roomModel);
               },
             ),
           ],
@@ -255,7 +265,7 @@ final router = GoRouter(
           ],
         ),
 
-        // Schedule
+        //MARK: - Schedule
         GoRoute(
           path: 'addPersonalSchedule',
           builder: (context, state) {
@@ -263,7 +273,7 @@ final router = GoRouter(
           },
         ),
 
-        // Profile
+        //MARK: - Profile
         GoRoute(
           path: 'profileEdit',
           builder: (context, state) {

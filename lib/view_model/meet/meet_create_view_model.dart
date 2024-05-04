@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
@@ -12,6 +13,7 @@ class MeetCreateViewModel with ChangeNotifier {
   final RoomRepository _roomRepository = RoomRepository();
   final UserRepository _userRepository = UserRepository();
   final FirebaseRefs _firebaseRefs = FirebaseRefs();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // MARK: - naming
   String _roomNaming = '';
@@ -384,6 +386,24 @@ class MeetCreateViewModel with ChangeNotifier {
     List<bool> roomRules = rules.values.toList();
 
     // DB에 정보 방 정보 추가
+// 방 정보를 Firestore에 추가하는 함수
+    Future<DocumentReference?> createRoom(RoomModel roomModel) async {
+      try {
+        DocumentReference ref = _firestore.collection('rooms').doc();
+        roomModel.roomId = ref.id; // 문서 ID를 roomId로 설정
+        await ref.set(roomModel.toJson());
+        if (kDebugMode) {
+          print("Room successfully created with ID: ${ref.id}");
+        }
+        return ref;
+      } catch (e) {
+        if (kDebugMode) {
+          print("Error creating room: $e");
+        }
+        return null; // 에러 발생 시 null 반환
+      }
+    }
+
     // 방 정보 생성
     RoomModel roomModel = RoomModel(
       room_name: roomNaming,
@@ -403,10 +423,11 @@ class MeetCreateViewModel with ChangeNotifier {
     // 방 정보 저장
     final roomDocRef =
         await _roomRepository.createRoomDocument(data: roomModel);
+    // DocumentReference roomDocRef = await createRoom(roomModel);
 
     // 유저 정보에 자신이 만든 방 정보 추가
     // 유저의 방 정보 생성
-    final myRoomModel = MyRoomModel(
+    MyRoomModel myRoomModel = MyRoomModel(
       isMyRoom: true,
       room_reference: roomDocRef,
     );
@@ -416,6 +437,18 @@ class MeetCreateViewModel with ChangeNotifier {
       uid: uid,
       roomId: roomDocRef.path.split('/').last,
     );
+  }
+
+  void createMyRoomDocument(
+      {required MyRoomModel data,
+      required String uid,
+      required String roomId}) {
+    _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('myRooms')
+        .doc(roomId)
+        .set(data.toJson());
   }
 
   // MARK: -  Reset state

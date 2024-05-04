@@ -168,10 +168,11 @@ class MeetManageMain extends StatelessWidget {
                     children: rooms.map((room) {
                       var roomData = room.data() as Map<String, dynamic>;
                       var roomModel = RoomModel.fromJson(roomData);
+
                       // 개별 컨테이너
                       return GestureDetector(
                         onTap: () {
-                          // 방 상세정보
+                          context.goNamed('roomDetail', extra: roomModel);
                         },
                         child: Container(
                           width: 355.w,
