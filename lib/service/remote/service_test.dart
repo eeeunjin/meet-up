@@ -152,6 +152,7 @@ Future<void> roomDocumentCreationTest() async {
   // );
 
   RoomModel roomModel = RoomModel(
+    roomId: '',
     room_name: "조기 축구 (토요일)",
     room_category: RoomCategory.exercise.name,
     room_category_detail: Exercise.soccer.name,

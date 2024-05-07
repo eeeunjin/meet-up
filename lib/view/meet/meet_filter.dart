@@ -326,12 +326,18 @@ class MeetFilterMain extends StatelessWidget {
         if (viewModel.selectedProvince.isEmpty) {
           return const SizedBox.shrink();
         }
-        String locationText = viewModel.selectedProvince.isEmpty
-            ? viewModel.selectedMainCategory
-            : '${viewModel.selectedProvince} ${viewModel.selectedDistrict}';
+        String location = '';
+
+        if (viewModel.selectedProvince != '전체') {
+          location += viewModel.selectedProvince;
+        }
+
+        if (!viewModel.selectedDistrict.contains("전체")) {
+          location += ' ${viewModel.selectedDistrict}';
+        }
 
         return Text(
-          locationText,
+          location,
           style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_2),
         );
       },

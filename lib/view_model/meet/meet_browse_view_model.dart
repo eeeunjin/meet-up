@@ -27,6 +27,7 @@ class MeetBrowseViewModel with ChangeNotifier {
     // 상세 카테고리 선택 로직, 단일 선택
     _selectedSubCategories.clear();
     _selectedSubCategories.add(subCategory);
+    addFilter(subCategory);
     notifyListeners();
   }
 
@@ -48,6 +49,7 @@ class MeetBrowseViewModel with ChangeNotifier {
     _selectedMainCategories.clear();
     _selectedMainCategories.add(category);
     _isSelectedCategory = true;
+    addFilter(category);
 
     // 기타 골랐을 시, 이전 내역 초기화
     if (category == '기타') {
@@ -84,22 +86,35 @@ class MeetBrowseViewModel with ChangeNotifier {
   ValueNotifier<String> get selectedDistrictNotifier =>
       _selectedDistrictNotifier;
 
+  void updateLocationFilter() {
+    selectedFilters.removeWhere((item) => item.contains(' > '));
+    if (_selectedProvince.isNotEmpty && _selectedDistrict.isNotEmpty) {
+      String combinedLocation = '$_selectedProvince > $_selectedDistrict';
+      selectedFilters.add(combinedLocation);
+    }
+    notifyListeners();
+  }
+
   set selectedProvince(String province) {
     _selectedProvince = province;
     _selectedProvinceNotifier.value = province;
+    if (_selectedDistrict.isNotEmpty) {
+      // 구/군이 이미 선택된 경우에만 업데이트
+      updateLocationFilter();
+    }
     notifyListeners();
-    debugPrint(' $province');
+    debugPrint('Selected province: $province');
   }
 
   set selectedDistrict(String district) {
     _selectedDistrict = district;
     _selectedDistrictNotifier.value = district;
+    if (_selectedProvince.isNotEmpty) {
+      // 시/도가 이미 선택된 경우에만 업데이트
+      updateLocationFilter();
+    }
     notifyListeners();
-    debugPrint(district);
-  }
-
-  List<String> getDistrictsByProvince(String province) {
-    return ProvinceDistrict.entireDistricts[province] ?? [];
+    debugPrint('Selected district: $district');
   }
 
   void clearSelection() {
@@ -107,7 +122,12 @@ class MeetBrowseViewModel with ChangeNotifier {
     _selectedDistrict = ''; // 선택된 시/도/군 초기화
     _selectedProvinceNotifier.value = '';
     _selectedDistrictNotifier.value = '';
+    selectedFilters.removeWhere((item) => item.contains(' > ')); // 지역 필터 제거
     notifyListeners();
+  }
+
+  List<String> getDistrictsByProvince(String province) {
+    return ProvinceDistrict.entireDistricts[province] ?? [];
   }
 
   bool get isSelectionComplete {
@@ -121,6 +141,7 @@ class MeetBrowseViewModel with ChangeNotifier {
 
   void selectAge(String age) {
     _selectedAge = age;
+    addFilter(age);
     debugPrint('Selected age: $_selectedAge');
     notifyListeners();
   }
@@ -134,6 +155,7 @@ class MeetBrowseViewModel with ChangeNotifier {
     _isWomen4Selected = true;
     _isWomen2Men2Selected = false;
     _isMen4Selected = false;
+    addFilter("여성4");
     notifyListeners();
   }
 
@@ -141,6 +163,7 @@ class MeetBrowseViewModel with ChangeNotifier {
     _isWomen4Selected = false;
     _isWomen2Men2Selected = true;
     _isMen4Selected = false;
+    addFilter("남성2,여성2");
     notifyListeners();
   }
 
@@ -148,6 +171,7 @@ class MeetBrowseViewModel with ChangeNotifier {
     _isWomen4Selected = false;
     _isWomen2Men2Selected = false;
     _isMen4Selected = true;
+    addFilter("남성4");
     notifyListeners();
   }
 
@@ -165,16 +189,25 @@ class MeetBrowseViewModel with ChangeNotifier {
   };
 
   Map<String, bool?> get rules => _rulesQuestion;
-
   void setRuleQuestion(String rule, bool? agree) {
     if (_rulesQuestion[rule] != agree) {
       _rulesQuestion[rule] = agree;
+      updateRulesFilter();
       notifyListeners();
     }
   }
 
   int get numberOfSelectedRules {
     return _rulesQuestion.values.where((value) => value == true).length;
+  }
+
+  void updateRulesFilter() {
+    int count = numberOfSelectedRules;
+    selectedFilters.removeWhere((item) => item.startsWith('세부 규칙 '));
+    if (count > 0) {
+      selectedFilters.add('세부 규칙 $count');
+    }
+    notifyListeners();
   }
 
 // MARK: - bottom
@@ -228,6 +261,24 @@ class MeetBrowseViewModel with ChangeNotifier {
     _isWomen2Men2Selected = false;
     _isMen4Selected = false;
     _rulesQuestion.forEach((key, value) => _rulesQuestion[key] = null);
+    selectedFilters.clear();
     notifyListeners();
+  }
+
+  // Filter management
+  List<String> selectedFilters = [];
+
+  void addFilter(String filter) {
+    if (!selectedFilters.contains(filter)) {
+      selectedFilters.add(filter);
+      notifyListeners();
+    }
+  }
+
+  void removeFilter(String filter) {
+    if (selectedFilters.contains(filter)) {
+      selectedFilters.remove(filter);
+      notifyListeners();
+    }
   }
 }

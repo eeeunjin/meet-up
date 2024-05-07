@@ -241,6 +241,11 @@ class AppTextStyles {
         fontSize: 12.sp,
       );
 
+  static TextStyle get SU_SB_9 => TextStyle(
+        fontFamily: 'SUITE-SB',
+        fontSize: 9.sp,
+      );
+
   static TextStyle get SU_R_20 => TextStyle(
         fontFamily: 'SUITE',
         fontWeight: FontWeight.normal,
@@ -281,6 +286,12 @@ class AppTextStyles {
         fontFamily: 'SUITE-L',
         fontWeight: FontWeight.normal,
         fontSize: 12.sp,
+      );
+
+  static TextStyle get SU_M_13 => TextStyle(
+        fontFamily: 'SUITE-M',
+        fontWeight: FontWeight.normal,
+        fontSize: 13.sp,
       );
 
   static TextStyle get SU_M_17 => TextStyle(
