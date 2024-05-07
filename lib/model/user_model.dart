@@ -108,23 +108,23 @@ class MyRoomModel {
 
 class MyEnterRequestModel {
   bool isAccepted;
-  DocumentReference room_reference;
+  String room_id;
 
   MyEnterRequestModel({
     required this.isAccepted,
-    required this.room_reference,
+    required this.room_id,
   });
 
   MyEnterRequestModel.fromJson(Map<String, Object?> json)
       : this(
           isAccepted: json["isAccepted"]! as bool,
-          room_reference: json["room_reference"]! as DocumentReference,
+          room_id: json["room_id"]! as String,
         );
 
   Map<String, dynamic> toJson() {
     return {
       'isAccepted': isAccepted,
-      'room_reference': room_reference,
+      'room_id': room_id,
     };
   }
 }

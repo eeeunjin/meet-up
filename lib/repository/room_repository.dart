@@ -40,15 +40,19 @@ class RoomRepository {
   Stream<QuerySnapshot<Object?>> readRoomCollectionStream({
     int? limit,
     FilterInfo? filterInfo,
+    String? myUid,
   }) {
     if (limit == null) {
       if (filterInfo == null) {
         return _firebaseService.readCollectionStream<RoomModel>(
-            colRef: _firebaseRefs.colRefRoom);
+          colRef: _firebaseRefs.colRefRoom,
+          myUID: myUid,
+        );
       } else {
         return _firebaseService.readCollectionStream<RoomModel>(
           colRef: _firebaseRefs.colRefRoom,
           filterInfo: filterInfo,
+          myUID: myUid,
         );
       }
     } else {
@@ -56,12 +60,14 @@ class RoomRepository {
         return _firebaseService.readCollectionStream<RoomModel>(
           limit: limit,
           colRef: _firebaseRefs.colRefRoom,
+          myUID: myUid,
         );
       } else {
         return _firebaseService.readCollectionStream<RoomModel>(
           limit: limit,
           filterInfo: filterInfo,
           colRef: _firebaseRefs.colRefRoom,
+          myUID: myUid,
         );
       }
     }
@@ -115,16 +121,17 @@ class RoomRepository {
         colRef: enterRequestCollectionReference);
   }
 
-  Future<bool> createEnterRequestDocument({
+  Future<String> createEnterRequestDocument({
     required String roomId,
     required EnterRequestModel data,
   }) async {
     DocumentReference enterRequestDocumentReference =
-        _firebaseRefs.colRefUser.doc(roomId).collection("enterRequests").doc();
-    return await _firebaseService.createDocument<EnterRequestModel>(
+        _firebaseRefs.colRefRoom.doc(roomId).collection("enterRequests").doc();
+    await _firebaseService.createDocument<EnterRequestModel>(
       docRef: enterRequestDocumentReference,
       data: data,
     );
+    return enterRequestDocumentReference.path.split('/').last;
   }
 
   Future<EnterRequestModel> readEnterRequestDocument({

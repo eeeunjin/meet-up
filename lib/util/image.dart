@@ -61,6 +61,7 @@ class ImagePath {
   static String get refOn => 'assets/images/bot_nav_ref_on.png';
   static String get refOff => 'assets/images/bot_nav_ref_off.png';
   static String get profileOff => 'assets/images/bot_nav_profile_off.png';
+  static String get profileOn => 'assets/images/bot_nav_profile_on.png';
 
   // setting
   static String get setIcon1 => 'assets/images/set_icon_1.png';

@@ -13,22 +13,17 @@ class MeetMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            if (Platform.isIOS)
-              _header(context)
-            else if (Platform.isAndroid)
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 58.h,
-                ),
-                child: _header(context),
-              ),
-            Expanded(child: _main(context)),
-          ],
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: 58.h,
+            ),
+            child: _header(context),
+          ),
+          Expanded(child: _main(context)),
+        ],
       ),
       // 만남방 개설하기 플로팅액션 버튼
       floatingActionButton: FloatingActionButton(

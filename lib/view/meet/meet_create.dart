@@ -322,7 +322,7 @@ class MeetCreate extends StatelessWidget {
     );
   }
 
-// MARK - 키워드
+// MARK: - 키워드
   Widget _keyword(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w),
@@ -886,6 +886,7 @@ class MeetCreate extends StatelessWidget {
                       await viewModel.createRoom(uid: userViewModel.uid!);
                       while (context.canPop()) {
                         context.pop();
+                        debugPrint("완료");
                       }
                     },
                     height: 56.h,

@@ -3,6 +3,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RoomModel {
+  String roomId; // 방 고유 번호
+
   String room_name;
   String room_category;
   String room_category_detail;
@@ -18,6 +20,7 @@ class RoomModel {
   List<dynamic> room_participant_reference;
 
   RoomModel({
+    this.roomId = '',
     required this.room_name,
     required this.room_category,
     required this.room_category_detail,
@@ -54,6 +57,7 @@ class RoomModel {
 
   Map<String, Object?> toJson() {
     return {
+      'roomId': roomId,
       'room_name': room_name,
       'room_category': room_category,
       'room_category_detail': room_category_detail,
@@ -73,26 +77,25 @@ class RoomModel {
 
 class EnterRequestModel {
   Timestamp end_date_time;
-  DocumentReference requester_reference;
+  String requester_uid;
   bool isAccepted;
 
   EnterRequestModel(
       {required this.end_date_time,
-      required this.requester_reference,
+      required this.requester_uid,
       required this.isAccepted});
 
   EnterRequestModel.fromJson(Map<String, Object?> json)
       : this(
           end_date_time: json['end_date_time']! as Timestamp,
-          requester_reference:
-              json['requester_reference']! as DocumentReference,
+          requester_uid: json['requester_uid']! as String,
           isAccepted: json['isAccepted']! as bool,
         );
 
   Map<String, Object?> toJson() {
     return {
       'end_date_time': end_date_time,
-      'requester_reference': requester_reference,
+      'requester_uid': requester_uid,
       'isAccepted': isAccepted,
     };
   }

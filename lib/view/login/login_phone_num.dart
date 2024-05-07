@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,27 +20,22 @@ class LoginPhoneNum extends StatelessWidget {
     final double keyboardOpen = MediaQuery.of(context).viewInsets.bottom;
     final double bottomPadding = keyboardOpen > 0 ? 30.0 : 80.0.h;
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (Platform.isIOS)
-              _header(context)
-            else if (Platform.isAndroid)
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 15.h,
-                ),
-                child: _header(context),
-              ),
-            SizedBox(height: 73.h),
-            _main(context),
-            Padding(
-              padding: EdgeInsets.only(bottom: bottomPadding),
-              child: _bottom(context),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: 15.h,
             ),
-          ],
-        ),
+            child: _header(context),
+          ),
+          SizedBox(height: 73.h),
+          _main(context),
+          Padding(
+            padding: EdgeInsets.only(bottom: bottomPadding),
+            child: _bottom(context),
+          ),
+        ],
       ),
     );
   }

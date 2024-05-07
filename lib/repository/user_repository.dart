@@ -33,6 +33,11 @@ class UserRepository {
         docRef: _firebaseRefs.colRefUser.doc(uid));
   }
 
+  Future<UserModel> readUserDocumentByDocRef(
+      {required DocumentReference docRef}) async {
+    return await _firebaseService.readDocument<UserModel>(docRef: docRef);
+  }
+
   Future<bool> updateUserDocument({
     required String uid,
     required Map<String, dynamic> data,
@@ -59,10 +64,7 @@ class UserRepository {
 
   Stream<QuerySnapshot<Object?>> readMyRoomCollectionStream(
       {required String uid}) {
-    CollectionReference myRoomCollectionReference =
-        _firebaseRefs.colRefUser.doc(uid).collection("myRooms");
-    return _firebaseService.readCollectionStream<MyRoomModel>(
-        colRef: myRoomCollectionReference);
+    return _firebaseService.readCollectionStreamByQuery<MyRoomModel>(uid: uid);
   }
 
   Future<bool> createMyRoomDocument({

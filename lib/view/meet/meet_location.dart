@@ -67,7 +67,7 @@ class MeetLocation extends StatelessWidget {
           // 정보 초기화
           final viewModel =
               Provider.of<MeetCreateViewModel>(context, listen: false);
-          viewModel.backClearSelection();
+          viewModel.locationClearSelection();
           context.pop(context);
         },
         child: Image.asset(

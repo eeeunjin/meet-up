@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
@@ -12,6 +13,7 @@ class MeetCreateViewModel with ChangeNotifier {
   final RoomRepository _roomRepository = RoomRepository();
   final UserRepository _userRepository = UserRepository();
   final FirebaseRefs _firebaseRefs = FirebaseRefs();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // MARK: - naming
   String _roomNaming = '';
@@ -176,83 +178,7 @@ class MeetCreateViewModel with ChangeNotifier {
     return '';
   }
 
-  String findCategory({
-    required bool isMainCategory,
-    required String category,
-  }) {
-    if (isMainCategory) {
-      switch (selectedMainCategory) {
-        case "취미":
-          return RoomCategory.hobby.name;
-        case "운동":
-          return RoomCategory.exercise.name;
-        case "공부/학업":
-          return RoomCategory.study.name;
-        case "휴식/친목":
-          return RoomCategory.socializing.name;
-        case "기타":
-          return RoomCategory.etc.name;
-      }
-    } else {
-      switch (selectedSubCategory) {
-        case "여행":
-          return Hobby.travel.name;
-        case "맛집":
-          return Hobby.foodie.name;
-        case "연예인":
-          return Hobby.celebrity.name;
-        case "사진":
-          return Hobby.photography.name;
-        case "영화":
-          return Hobby.movies.name;
-        case "게임":
-          return Hobby.gaming.name;
-
-        case "축구":
-          return Exercise.soccer.name;
-        case "야구":
-          return Exercise.baseball.name;
-        case "농구":
-          return Exercise.basketball.name;
-        case "테니스":
-          return Exercise.tennis.name;
-        case "요가":
-          return Exercise.yoga.name;
-        case "헬스":
-          return Exercise.fitness.name;
-        case "탁구":
-          return Exercise.pingpong.name;
-        case "조깅":
-          return Exercise.jogging.name;
-        case "배드민턴":
-          return Exercise.badminton.name;
-
-        case "취업":
-          return Study.employment.name;
-        case "독서":
-          return Study.reading.name;
-        case "대학":
-          return Study.university.name;
-        case "미라클 모닝":
-          return Study.miracleMorning.name;
-        case "자격증":
-          return Study.certification.name;
-        case "아르바이트":
-          return Study.partTimeJob.name;
-
-        case "카페":
-          return Socializing.cafe.name;
-        case "산책":
-          return Socializing.walking.name;
-        case "저녁 식사":
-          return Socializing.dinner.name;
-      }
-    }
-    return "";
-  }
-
   // MARK: - keyword
-
   String _textCount = '';
 
   String get textKeywordCount => _textCount;
@@ -359,25 +285,13 @@ class MeetCreateViewModel with ChangeNotifier {
   // MARK: - createRoom
   Future<void> createRoom({required String uid}) async {
     // 카테고리 변환
-    String mainCategory =
-        findCategory(isMainCategory: true, category: selectedMainCategory);
-    String subCategory =
-        findCategory(isMainCategory: false, category: selectedSubCategory);
+    String mainCategory = convertCategoryToEng(
+        isMainCategory: true, category: selectedMainCategory);
+    String subCategory = convertCategoryToEng(
+        isMainCategory: false, category: selectedSubCategory);
 
     // 나이대 변환
-    List<String> roomAge = selectedAges.map((string) {
-      switch (string) {
-        case "20대":
-          RoomAge.twenties;
-        case "30대":
-          RoomAge.thirties;
-        case "40대":
-          RoomAge.fourties;
-        case "50대":
-          RoomAge.fifties;
-      }
-      return string.toUpperCase();
-    }).toList();
+    List<String> roomAge = convertAgeToEng(ages: selectedAges);
 
     // 규칙 변환
     List<bool> roomRules = rules.values.toList();
@@ -402,10 +316,11 @@ class MeetCreateViewModel with ChangeNotifier {
     // 방 정보 저장
     final roomDocRef =
         await _roomRepository.createRoomDocument(data: roomModel);
+    // DocumentReference roomDocRef = await createRoom(roomModel);
 
     // 유저 정보에 자신이 만든 방 정보 추가
     // 유저의 방 정보 생성
-    final myRoomModel = MyRoomModel(
+    MyRoomModel myRoomModel = MyRoomModel(
       isMyRoom: true,
       room_reference: roomDocRef,
     );
@@ -415,6 +330,102 @@ class MeetCreateViewModel with ChangeNotifier {
       uid: uid,
       roomId: roomDocRef.path.split('/').last,
     );
+  }
+
+  // 카테고리를 한글에서 영어로 바꿔주는 함수
+  String convertCategoryToEng({
+    required bool isMainCategory,
+    required String category,
+  }) {
+    if (isMainCategory) {
+      switch (selectedMainCategory) {
+        case "취미":
+          return RoomCategory.hobby.name;
+        case "운동":
+          return RoomCategory.exercise.name;
+        case "공부/학업":
+          return RoomCategory.study.name;
+        case "휴식/친목":
+          return RoomCategory.socializing.name;
+        case "기타":
+          return RoomCategory.etc.name;
+      }
+    } else {
+      switch (selectedSubCategory) {
+        case "여행":
+          return Hobby.travel.name;
+        case "맛집":
+          return Hobby.foodie.name;
+        case "연예인":
+          return Hobby.celebrity.name;
+        case "사진":
+          return Hobby.photography.name;
+        case "영화":
+          return Hobby.movies.name;
+        case "게임":
+          return Hobby.gaming.name;
+
+        case "축구":
+          return Exercise.soccer.name;
+        case "야구":
+          return Exercise.baseball.name;
+        case "농구":
+          return Exercise.basketball.name;
+        case "테니스":
+          return Exercise.tennis.name;
+        case "요가":
+          return Exercise.yoga.name;
+        case "헬스":
+          return Exercise.fitness.name;
+        case "탁구":
+          return Exercise.pingpong.name;
+        case "조깅":
+          return Exercise.jogging.name;
+        case "배드민턴":
+          return Exercise.badminton.name;
+
+        case "취업":
+          return Study.employment.name;
+        case "독서":
+          return Study.reading.name;
+        case "대학":
+          return Study.university.name;
+        case "미라클 모닝":
+          return Study.miracleMorning.name;
+        case "자격증":
+          return Study.certification.name;
+        case "아르바이트":
+          return Study.partTimeJob.name;
+
+        case "카페":
+          return Socializing.cafe.name;
+        case "산책":
+          return Socializing.walking.name;
+        case "저녁 식사":
+          return Socializing.dinner.name;
+      }
+    }
+    return "";
+  }
+
+  // 나이를 한글에서 영어로 바꿔주는 함수
+  List<String> convertAgeToEng({required List<dynamic> ages}) {
+    return selectedAges.map(
+      (string) {
+        switch (string) {
+          case "20대":
+            return RoomAge.twenties.name;
+          case "30대":
+            return RoomAge.thirties.name;
+          case "40대":
+            return RoomAge.fourties.name;
+          case "50대":
+            return RoomAge.fifties.name;
+          default:
+            return "Error";
+        }
+      },
+    ).toList();
   }
 
   // MARK: -  Reset state
@@ -440,6 +451,23 @@ class MeetCreateViewModel with ChangeNotifier {
   void categoryClearSelection() {
     _selectedMainCategories.clear();
     _selectedSubCategories.clear();
+    notifyListeners();
+  }
+
+  // location tap clear
+  void locationClearSelection() {
+    _selectedProvince = '';
+    _selectedDistrict = '';
+    _selectedProvinceNotifier.value = '';
+    _selectedDistrictNotifier.value = '';
+    notifyListeners();
+  }
+
+  // keyword tap clear
+  void keywordClearSelection() {
+    _textCount = '';
+    _currentInput = '';
+    _keywords.clear();
     notifyListeners();
   }
 

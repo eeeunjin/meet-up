@@ -5,10 +5,12 @@ import 'package:meet_up/loginFunc.dart';
 import 'package:meet_up/router.dart';
 import 'package:meet_up/service/remote/firebase_options.dart';
 import 'package:meet_up/view_model/bot_nav_view_model.dart';
+import 'package:meet_up/view_model/chat/chat_view_model.dart';
 import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
 import 'package:meet_up/view_model/login/login_verification_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_browse_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_manage_view_model.dart';
 import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
@@ -53,9 +55,11 @@ void main() async {
           ),
         ),
         ChangeNotifierProvider(create: (context) => MeetCreateViewModel()),
+        ChangeNotifierProvider(create: (context) => MeetManageViewModel()),
         ChangeNotifierProvider(create: (context) => MeetBrowseViewModel()),
         ChangeNotifierProvider(create: (context) => ScheduleMainViewModel()),
         ChangeNotifierProvider(create: (context) => UserViewModel()),
+        ChangeNotifierProvider(create: (context) => ChatViewModel()),
       ],
       child: const MyApp(),
     ),
@@ -105,7 +109,7 @@ class MyApp extends StatelessWidget {
           }
         },
       );
-    } 
+    }
     // 자동 로그인 안된 경우
     else {
       return ScreenUtilInit(
