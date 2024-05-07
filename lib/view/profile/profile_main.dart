@@ -128,6 +128,7 @@ class ProfileMain extends StatelessWidget {
   }
 
   Widget _profileBox(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context);
     return Container(
       width: 340.w,
       height: 176.h,
