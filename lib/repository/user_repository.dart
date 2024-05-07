@@ -33,6 +33,11 @@ class UserRepository {
         docRef: _firebaseRefs.colRefUser.doc(uid));
   }
 
+  Future<UserModel> readUserDocumentByDocRef(
+      {required DocumentReference docRef}) async {
+    return await _firebaseService.readDocument<UserModel>(docRef: docRef);
+  }
+
   Future<bool> updateUserDocument({
     required String uid,
     required Map<String, dynamic> data,

@@ -73,26 +73,25 @@ class RoomModel {
 
 class EnterRequestModel {
   Timestamp end_date_time;
-  DocumentReference requester_reference;
+  String requester_uid;
   bool isAccepted;
 
   EnterRequestModel(
       {required this.end_date_time,
-      required this.requester_reference,
+      required this.requester_uid,
       required this.isAccepted});
 
   EnterRequestModel.fromJson(Map<String, Object?> json)
       : this(
           end_date_time: json['end_date_time']! as Timestamp,
-          requester_reference:
-              json['requester_reference']! as DocumentReference,
+          requester_uid: json['requester_uid']! as String,
           isAccepted: json['isAccepted']! as bool,
         );
 
   Map<String, Object?> toJson() {
     return {
       'end_date_time': end_date_time,
-      'requester_reference': requester_reference,
+      'requester_uid': requester_uid,
       'isAccepted': isAccepted,
     };
   }

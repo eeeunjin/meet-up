@@ -121,16 +121,17 @@ class RoomRepository {
         colRef: enterRequestCollectionReference);
   }
 
-  Future<bool> createEnterRequestDocument({
+  Future<String> createEnterRequestDocument({
     required String roomId,
     required EnterRequestModel data,
   }) async {
     DocumentReference enterRequestDocumentReference =
-        _firebaseRefs.colRefUser.doc(roomId).collection("enterRequests").doc();
-    return await _firebaseService.createDocument<EnterRequestModel>(
+        _firebaseRefs.colRefRoom.doc(roomId).collection("enterRequests").doc();
+    await _firebaseService.createDocument<EnterRequestModel>(
       docRef: enterRequestDocumentReference,
       data: data,
     );
+    return enterRequestDocumentReference.path.split('/').last;
   }
 
   Future<EnterRequestModel> readEnterRequestDocument({
