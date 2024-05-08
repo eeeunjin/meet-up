@@ -154,10 +154,15 @@ class RoomDetail extends StatelessWidget {
                                         style: AppTextStyles.PR_R_12
                                             .copyWith(color: UsedColor.text_5)),
                                   ),
-                                  _responseBox(context, index, true), // '가능' 버튼
+                                  _responseBox(
+                                      context,
+                                      decodedRoomModel.room_rules[index],
+                                      true), // '가능' 버튼
                                   SizedBox(width: 7.12.w),
                                   _responseBox(
-                                      context, index, false), // '불가능' 버튼
+                                      context,
+                                      decodedRoomModel.room_rules[index],
+                                      false), // '불가능' 버튼
                                 ],
                               ),
                               Divider(color: UsedColor.line, thickness: 0.3.h),
@@ -214,25 +219,27 @@ class RoomDetail extends StatelessWidget {
   }
 
 // 세부 규칙 - 예, 아니요 컨테이너
-  Widget _responseBox(BuildContext context, int index, bool response) {
-    MeetManageViewModel viewModel = Provider.of<MeetManageViewModel>(context);
-    bool isSelected = viewModel.roomRules.length > index &&
-        viewModel.roomRules[index] == response;
-
+  Widget _responseBox(BuildContext context, bool isSelected, bool response) {
     return Container(
       width: 43.w,
       height: 19.h,
       decoration: BoxDecoration(
-          color: isSelected ? UsedColor.button : Colors.white,
+          color: (isSelected == response) ? UsedColor.button : Colors.white,
           borderRadius: BorderRadius.circular(9.9.r),
           border: Border.all(
-              color: isSelected ? UsedColor.button : UsedColor.b_line,
+              color: (isSelected == response)
+                  ? UsedColor.button
+                  : UsedColor.b_line,
               width: 1.41.h)),
       child: Center(
-        child: Text(response ? '가능' : '불가능',
-            style: AppTextStyles.PR_SB_11.copyWith(
-              color: isSelected ? Colors.white : UsedColor.charcoal_black,
-            )),
+        child: Text(
+          response ? '가능' : '불가능',
+          style: AppTextStyles.PR_SB_11.copyWith(
+            color: (isSelected == response)
+                ? Colors.white
+                : UsedColor.charcoal_black,
+          ),
+        ),
       ),
     );
   }
