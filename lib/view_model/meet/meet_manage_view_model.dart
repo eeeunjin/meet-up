@@ -7,6 +7,7 @@ import 'package:meet_up/repository/user_repository.dart';
 class MeetManageViewModel with ChangeNotifier {
   final UserRepository _userRepository = UserRepository();
   final RoomRepository _roomRepository = RoomRepository();
+  RoomModel? currentRoomModel; // 현재 방 모델
 
   // MARK - 내가 만든 방 불러오는 함수
   Stream<QuerySnapshot<Object?>> getMyRoomModel({required String myUid}) {
@@ -133,4 +134,14 @@ class MeetManageViewModel with ChangeNotifier {
 
     return roomAge;
   }
+
+  // rules
+  List<String> get rulesDescriptions => [
+        '만남 시 대화 녹음',
+        '만남 후 앱을 통해 연락처 공유',
+        '아는 지인과 동반 신청',
+        '첫 만남에 2차 이동',
+        '귀가 시 동성과 동행',
+      ];
+  List<bool> get roomRules => currentRoomModel?.room_rules.cast<bool>() ?? [];
 }
