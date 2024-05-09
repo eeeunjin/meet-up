@@ -106,45 +106,51 @@ class MeetBrowseMain extends StatelessWidget {
   Widget _search(BuildContext context) {
     TextEditingController controller = TextEditingController();
 
-    return SizedBox(
+    return Container(
       width: 352.w,
       height: 37.h,
-      child: Container(
-        decoration: BoxDecoration(
-          color: UsedColor.bg_color,
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        child: TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 10.0.h),
-            hintText: '만남방의 이름을 검색해 보세요.',
-            prefixIcon: Image.asset(
-              ImagePath.search,
-              width: 10.w,
-              height: 10.h,
-            ),
-            suffixIcon: GestureDetector(
-              onTap: () {
-                controller.clear();
-              },
-              child: Image.asset(
-                ImagePath.close,
-                width: 23.w,
-                height: 23.h,
-              ),
-            ),
-            // Remove border
-            border: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            errorBorder: InputBorder.none,
-            disabledBorder: InputBorder.none,
-
-            hintStyle: AppTextStyles.SU_R_14.copyWith(color: UsedColor.text_3),
+      decoration: BoxDecoration(
+        color: UsedColor.bg_color,
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: Row(
+        children: [
+          SizedBox(width: 20.w),
+          Image.asset(
+            ImagePath.search,
+            width: 19.w,
+            height: 19.h,
           ),
-          onChanged: (value) {},
-        ),
+          SizedBox(width: 14.w),
+          Expanded(
+            child: TextField(
+              controller: controller,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.symmetric(vertical: 10.0.h),
+                hintText: '만남방의 이름을 검색해 보세요.',
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                hintStyle:
+                    AppTextStyles.SU_R_14.copyWith(color: UsedColor.text_3),
+              ),
+              onChanged: (value) {},
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              controller.clear();
+            },
+            child: Image.asset(
+              ImagePath.close,
+              width: 23.w,
+              height: 23.h,
+            ),
+          ),
+          SizedBox(width: 15.w),
+        ],
       ),
     );
   }
