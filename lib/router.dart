@@ -7,6 +7,7 @@ import 'package:meet_up/view/coin/coin_main.dart';
 import 'package:meet_up/view/login/login_main.dart';
 import 'package:meet_up/view/login/login_phone_num.dart';
 import 'package:meet_up/view/login/login_verification.dart';
+import 'package:meet_up/view/meet/meet_detail_room.dart';
 import 'package:meet_up/view/meet/meet_location.dart';
 import 'package:meet_up/view/meet/meet_manage_main.dart';
 import 'package:meet_up/view/meet/meet_browse_main.dart';
@@ -211,8 +212,20 @@ final router = GoRouter(
           path: 'meetBrowseMain',
           name: 'meetBrowseMain',
           builder: (context, state) {
-            return const Scaffold(body: MeetBrowseMain());
+            return const Scaffold(
+                body: MeetBrowseMain(
+              myUid: '',
+            ));
           },
+          routes: [
+            GoRoute(
+              path: 'meetDetailRoom',
+              name: 'meetDetailRoom',
+              builder: (context, state) {
+                return const Scaffold(body: MeetDetailRoom());
+              },
+            ),
+          ],
         ),
         GoRoute(
           path: 'meetFilterMain',

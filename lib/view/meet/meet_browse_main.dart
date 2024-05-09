@@ -1,16 +1,23 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:meet_up/model/room_model.dart';
+import 'package:meet_up/repository/room_repository.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view_model/meet/meet_browse_view_model.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
 class MeetBrowseMain extends StatelessWidget {
-  const MeetBrowseMain({super.key});
+  final String myUid;
+
+  const MeetBrowseMain({super.key, required this.myUid});
 
   @override
   Widget build(BuildContext context) {
@@ -73,16 +80,26 @@ class MeetBrowseMain extends StatelessWidget {
   Widget _main(BuildContext context) {
     return Container(
       color: Colors.white,
-      child: Column(children: [
-        SizedBox(height: 29.h),
-        _search(context),
-        SizedBox(height: 22.h),
-        _filter(context),
-        SizedBox(height: 22.h),
-        _divider(),
-        SizedBox(height: 28.h),
-        // _meetingRoom(context),
-      ]),
+      child: Column(
+        children: [
+          SizedBox(height: 29.h),
+          _search(context),
+          SizedBox(height: 22.h),
+          _filter(context),
+          SizedBox(height: 22.h),
+          _divider(),
+          Expanded(
+            child: Container(
+              color: UsedColor.bg_color, // 원하는 배경색으로 변경
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: 20.w, vertical: 28.h), // 원하는 여백 설정
+                child: _meetingRoom(context),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -245,106 +262,146 @@ class MeetBrowseMain extends StatelessWidget {
     );
   }
 
-  // Widget _selectedMainCategory(BuildContext context) {
-  //   return Consumer<MeetBrowseViewModel>(
-  //     builder: (context, viewModel, child) {
-  //       if (viewModel.selectedMainCategory.isNotEmpty) {
-  //         return Text(
-  //           viewModel.selectedMainCategory,
-  //           style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
-  //         );
-  //       } else {
-  //         return const SizedBox.shrink();
-  //       }
-  //     },
-  //   );
-  // }
+  Widget _meetingRoom(BuildContext context) {
+    return Consumer2<UserViewModel, MeetBrowseViewModel>(
+        builder: (context, userViewModel, myRoomsViewModel, child) {
+      final String? myUid = userViewModel.uid;
 
-  // Widget _selectedSubCategory(BuildContext context) {
-  //   return Consumer<MeetBrowseViewModel>(
-  //     builder: (context, viewModel, child) {
-  //       if (viewModel.selectedMainCategory.isNotEmpty &&
-  //           viewModel.selectedSubCategory.isNotEmpty) {
-  //         return Text(
-  //           viewModel.selectedSubCategory,
-  //           style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
-  //         );
-  //       } else {
-  //         return const SizedBox.shrink();
-  //       }
-  //     },
-  //   );
-  // }
+      if (myUid == null) {
+        return const Center(child: Text('User ID is null'));
+      }
 
-  // Widget _selectedLocation(BuildContext context) {
-  //   return Consumer<MeetBrowseViewModel>(
-  //     builder: (context, viewModel, child) {
-  //       if (viewModel.selectedProvince.isEmpty) {
-  //         return const SizedBox.shrink();
-  //       }
-  //       String locationText = viewModel.selectedProvince.isEmpty
-  //           ? viewModel.selectedMainCategory
-  //           : '${viewModel.selectedProvince} > ${viewModel.selectedDistrict}';
+      Stream<QuerySnapshot<Object?>> roomStream;
+      if (myRoomsViewModel.isAnyFilterSelected) {
+        roomStream = myRoomsViewModel.getOthersRoomModelByFilter(myUid: myUid);
+      } else {
+        roomStream = myRoomsViewModel.getOthersRoomModel(myUid: myUid);
+      }
 
-  //       return Text(
-  //         locationText,
-  //         style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
-  //       );
-  //     },
-  //   );
-  // }
+      return StreamBuilder<QuerySnapshot<Object?>>(
+        stream: roomStream,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(
+                child:
+                    Text('Error loading rooms: ${snapshot.error.toString()}'));
+          }
 
-  // Widget _selectedAge(BuildContext context) {
-  //   return Consumer<MeetBrowseViewModel>(
-  //     builder: (context, viewModel, child) {
-  //       if (viewModel.selectedAge.isEmpty) {
-  //         return const SizedBox.shrink();
-  //       }
-  //       return Text(
-  //         viewModel.selectedAge,
-  //         style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
-  //       );
-  //     },
-  //   );
-  // }
+          List<RoomModel> rooms = snapshot.data?.docs.map((doc) {
+                Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+                RoomModel room = RoomModel.fromJson(data);
+                room = myRoomsViewModel.decodingRoomModel(roomModel: room);
+                return room;
+              }).toList() ??
+              [];
 
-  // Widget _selectedGender(BuildContext context) {
-  //   return Consumer<MeetBrowseViewModel>(
-  //     builder: (context, viewModel, child) {
-  //       String genderText = "";
-  //       if (viewModel.isWomen4Selected) {
-  //         genderText = "여성 4";
-  //       } else if (viewModel.isWomen2Men2Selected) {
-  //         genderText = "남성 2 / 여성 2";
-  //       } else if (viewModel.isMen4Selected) {
-  //         genderText = "남성 4";
-  //       }
-
-  //       if (genderText.isNotEmpty) {
-  //         return Text(
-  //           genderText,
-  //           style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
-  //         );
-  //       } else {
-  //         return const SizedBox.shrink();
-  //       }
-  //     },
-  //   );
-  // }
-
-  // Widget _selectedRules(BuildContext context) {
-  //   return Consumer<MeetBrowseViewModel>(
-  //     builder: (context, viewModel, child) {
-  //       if (viewModel.numberOfSelectedRules == 0) {
-  //         return const SizedBox.shrink();
-  //       }
-  //       return Text(
-  //         '세부규칙 ${viewModel.numberOfSelectedRules}',
-  //         style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
-  //       );
-  //     },
-  //   );
-  // }
-
-// Widget _meetingRoom(BuildContext context) {}
+          return Expanded(
+            child: ListView.builder(
+              itemCount: rooms.length,
+              itemBuilder: (context, index) {
+                final RoomModel room = rooms[index];
+                return GestureDetector(
+                  onTap: () {
+                    context.goNamed('meetDetailRoom');
+                  },
+                  child: Container(
+                    width: 355.w,
+                    height: 108.h,
+                    margin: EdgeInsets.only(bottom: 10.h),
+                    // padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: Card(
+                      color: const Color(0xFFFFFFFF),
+                      elevation: 0,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.w,
+                          vertical: 8.h,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        room.room_name, // 방 명
+                                        style: AppTextStyles.PR_SB_17.copyWith(
+                                            color: UsedColor.charcoal_black),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      SizedBox(width: 11.w),
+                                      Text.rich(
+                                        TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text:
+                                                  '${room.room_participant_reference.length + 1}',
+                                              style: AppTextStyles.PR_B_12
+                                                  .copyWith(
+                                                      color: UsedColor.violet),
+                                            ),
+                                            TextSpan(
+                                              text: '/4명',
+                                              style: AppTextStyles.PR_M_12
+                                                  .copyWith(
+                                                      color: UsedColor.text_3),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 8.h,
+                            ),
+                            Text(
+                              room.room_description, // 방 설명
+                              style: AppTextStyles.PR_R_12
+                                  .copyWith(color: UsedColor.text_3),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(
+                              height: 16.h,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  '#${room.room_keyword.join(' #')}', // 키워드
+                                  style: AppTextStyles.SU_L_12
+                                      .copyWith(color: UsedColor.main),
+                                ),
+                                Text(
+                                  '${DateFormat('yyyy.MM.dd').format(room.room_creation_date.toDate())} 생성',
+                                  style: AppTextStyles.SU_R_10
+                                      .copyWith(color: UsedColor.text_5),
+                                ),
+                              ],
+                            ),
+                            // SizedBox(
+                            //   height: 17.h,
+                            // ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      );
+    });
+  }
 }
