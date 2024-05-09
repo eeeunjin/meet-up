@@ -108,7 +108,7 @@ class FilterInfo {
   String? room_region_district;
   String? room_age;
   String? room_gender_ratio;
-  List<bool?> room_rules;
+  List<bool>? room_rules;
 
   FilterInfo({
     this.room_category,
@@ -117,6 +117,6 @@ class FilterInfo {
     this.room_region_district,
     this.room_age,
     this.room_gender_ratio,
-    required this.room_rules,
+    this.room_rules,
   });
 }

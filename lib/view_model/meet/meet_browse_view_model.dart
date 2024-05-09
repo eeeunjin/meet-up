@@ -32,7 +32,6 @@ class MeetBrowseViewModel with ChangeNotifier {
     // 상세 카테고리 선택 로직, 단일 선택
     _selectedSubCategories.clear();
     _selectedSubCategories.add(subCategory);
-    addFilter(subCategory);
     notifyListeners();
   }
 
@@ -54,7 +53,6 @@ class MeetBrowseViewModel with ChangeNotifier {
     _selectedMainCategories.clear();
     _selectedMainCategories.add(category);
     _isSelectedCategory = true;
-    addFilter(category);
 
     // 기타 골랐을 시, 이전 내역 초기화
     if (category == '기타') {
@@ -91,22 +89,9 @@ class MeetBrowseViewModel with ChangeNotifier {
   ValueNotifier<String> get selectedDistrictNotifier =>
       _selectedDistrictNotifier;
 
-  void updateLocationFilter() {
-    selectedFilters.removeWhere((item) => item.contains(' > '));
-    if (_selectedProvince.isNotEmpty && _selectedDistrict.isNotEmpty) {
-      String combinedLocation = '$_selectedProvince > $_selectedDistrict';
-      selectedFilters.add(combinedLocation);
-    }
-    notifyListeners();
-  }
-
   set selectedProvince(String province) {
     _selectedProvince = province;
     _selectedProvinceNotifier.value = province;
-    if (_selectedDistrict.isNotEmpty) {
-      // 구/군이 이미 선택된 경우에만 업데이트
-      updateLocationFilter();
-    }
     notifyListeners();
     debugPrint('Selected province: $province');
   }
@@ -114,10 +99,6 @@ class MeetBrowseViewModel with ChangeNotifier {
   set selectedDistrict(String district) {
     _selectedDistrict = district;
     _selectedDistrictNotifier.value = district;
-    if (_selectedProvince.isNotEmpty) {
-      // 시/도가 이미 선택된 경우에만 업데이트
-      updateLocationFilter();
-    }
     notifyListeners();
     debugPrint('Selected district: $district');
   }
@@ -127,7 +108,6 @@ class MeetBrowseViewModel with ChangeNotifier {
     _selectedDistrict = ''; // 선택된 시/도/군 초기화
     _selectedProvinceNotifier.value = '';
     _selectedDistrictNotifier.value = '';
-    selectedFilters.removeWhere((item) => item.contains(' > ')); // 지역 필터 제거
     notifyListeners();
   }
 
@@ -135,7 +115,7 @@ class MeetBrowseViewModel with ChangeNotifier {
     return ProvinceDistrict.entireDistricts[province] ?? [];
   }
 
-  bool get isSelectionComplete {
+  bool get isAreaSelectionComplete {
     return _selectedProvince.isNotEmpty && _selectedDistrict.isNotEmpty;
   }
 
@@ -146,73 +126,49 @@ class MeetBrowseViewModel with ChangeNotifier {
 
   void selectAge(String age) {
     _selectedAge = age;
-    addFilter(age);
     debugPrint('Selected age: $_selectedAge');
     notifyListeners();
   }
 
   // MARK: - gender ratio
-  bool _isWomen4Selected = false;
-  bool _isWomen2Men2Selected = false;
-  bool _isMen4Selected = false;
+  RoomGenderRatio? _roomGenderRatio;
 
   void selectWomen4() {
-    _isWomen4Selected = true;
-    _isWomen2Men2Selected = false;
-    _isMen4Selected = false;
-    addFilter("여성4");
+    _roomGenderRatio = RoomGenderRatio.womanOnly;
     notifyListeners();
   }
 
   void selectWomen2Men2() {
-    _isWomen4Selected = false;
-    _isWomen2Men2Selected = true;
-    _isMen4Selected = false;
-    addFilter("남성2,여성2");
+    _roomGenderRatio = RoomGenderRatio.mixed;
     notifyListeners();
   }
 
   void selectMen4() {
-    _isWomen4Selected = false;
-    _isWomen2Men2Selected = false;
-    _isMen4Selected = true;
-    addFilter("남성4");
+    _roomGenderRatio = RoomGenderRatio.manOnly;
     notifyListeners();
   }
 
-  bool get isWomen4Selected => _isWomen4Selected;
-  bool get isWomen2Men2Selected => _isWomen2Men2Selected;
-  bool get isMen4Selected => _isMen4Selected;
+  RoomGenderRatio? get roomGenderRatio => _roomGenderRatio;
 
   // MARK: - detailedRules
-  final Map<String, bool?> _rulesQuestion = {
-    '만남 시 대화 녹음': null,
-    '만남 후 앱을 통해 연락처 공유': null,
-    '아는 지인과 동반 신청': null,
-    '첫 만남에 2차 이동': null,
-    '귀가 시 동성과 동행': null,
+  final Map<String, bool> _rulesQuestion = {
+    '만남 시 대화 녹음': false,
+    '만남 후 앱을 통해 연락처 공유': false,
+    '아는 지인과 동반 신청': false,
+    '첫 만남에 2차 이동': false,
+    '귀가 시 동성과 동행': false,
   };
 
   Map<String, bool?> get rules => _rulesQuestion;
-  void setRuleQuestion(String rule, bool? agree) {
+  void setRuleQuestion(String rule, bool agree) {
     if (_rulesQuestion[rule] != agree) {
       _rulesQuestion[rule] = agree;
-      updateRulesFilter();
       notifyListeners();
     }
   }
 
   int get numberOfSelectedRules {
     return _rulesQuestion.values.where((value) => value == true).length;
-  }
-
-  void updateRulesFilter() {
-    int count = numberOfSelectedRules;
-    selectedFilters.removeWhere((item) => item.startsWith('세부 규칙 '));
-    if (count > 0) {
-      selectedFilters.add('세부 규칙 $count');
-    }
-    notifyListeners();
   }
 
 // MARK: - bottom
@@ -224,13 +180,11 @@ class MeetBrowseViewModel with ChangeNotifier {
     bool categoriesCompleted =
         isSelectedCategory || isCategorySelectionComplete;
 
-    bool areaCompleted = isSelectionComplete;
+    bool areaCompleted = isAreaSelectionComplete;
 
     bool ageCompleted = selectedAge.isNotEmpty;
 
-    bool genderRatioCompleted =
-        isWomen4Selected || isWomen2Men2Selected || isMen4Selected;
-
+    bool genderRatioCompleted = (roomGenderRatio != null);
     bool allCompleted = ruleSelected ||
         categoriesCompleted ||
         areaCompleted ||
@@ -244,15 +198,21 @@ class MeetBrowseViewModel with ChangeNotifier {
 
 // 필터 선택 여부 체크
   bool get isAnyFilterSelected {
-    return _selectedMainCategories.isNotEmpty ||
-        _selectedSubCategories.isNotEmpty ||
-        _selectedProvince.isNotEmpty ||
-        _selectedDistrict.isNotEmpty ||
-        _selectedAge.isNotEmpty ||
-        _isWomen4Selected ||
-        _isWomen2Men2Selected ||
-        _isMen4Selected ||
-        numberOfSelectedRules > 0;
+    return (_selectedMainCategories.isNotEmpty ||
+            _selectedSubCategories.isNotEmpty ||
+            _selectedProvince.isNotEmpty ||
+            _selectedDistrict.isNotEmpty ||
+            _selectedAge.isNotEmpty ||
+            _roomGenderRatio != null ||
+            numberOfSelectedRules > 0) &&
+        isFilterApplied;
+  }
+
+  bool isFilterApplied = false;
+
+  void setIsFilterApplied(bool isFilterApplied) {
+    this.isFilterApplied = isFilterApplied;
+    notifyListeners();
   }
 
 // 필터 초기화
@@ -262,29 +222,46 @@ class MeetBrowseViewModel with ChangeNotifier {
     _selectedProvince = '';
     _selectedDistrict = '';
     _selectedAge = '';
-    _isWomen4Selected = false;
-    _isWomen2Men2Selected = false;
-    _isMen4Selected = false;
-    _rulesQuestion.forEach((key, value) => _rulesQuestion[key] = null);
+    _roomGenderRatio = null;
+    _rulesQuestion.forEach((key, value) => _rulesQuestion[key] = false);
     selectedFilters.clear();
+    setIsFilterApplied(false);
     notifyListeners();
   }
 
   // Filter management
   List<String> selectedFilters = [];
 
-  void addFilter(String filter) {
-    if (!selectedFilters.contains(filter)) {
-      selectedFilters.add(filter);
-      notifyListeners();
+  void addFilter() {
+    if (_selectedMainCategories.isNotEmpty) {
+      selectedFilters.add(_selectedMainCategories.first);
     }
-  }
-
-  void removeFilter(String filter) {
-    if (selectedFilters.contains(filter)) {
-      selectedFilters.remove(filter);
-      notifyListeners();
+    if (_selectedSubCategories.isNotEmpty) {
+      selectedFilters.add(_selectedSubCategories.first);
     }
+    if (_selectedProvince.isNotEmpty && _selectedDistrict.isNotEmpty) {
+      String combinedLocation = '$_selectedProvince > $_selectedDistrict';
+      selectedFilters.add(combinedLocation);
+    }
+    if (_selectedAge.isNotEmpty) selectedFilters.add(_selectedAge);
+    if (_roomGenderRatio != null) {
+      switch (_roomGenderRatio!.name) {
+        case "womanOnly":
+          selectedFilters.add("여성 4");
+        case "mixed":
+          selectedFilters.add("여성 2, 남성 2");
+        case "manOnly":
+          selectedFilters.add("남성 4");
+      }
+    }
+    if (_rulesQuestion.containsValue(true)) {
+      {
+        selectedFilters.add(
+            "세부 규칙 ${_rulesQuestion.values.where((element) => element == true).length}");
+      }
+    }
+    setIsFilterApplied(true);
+    notifyListeners();
   }
 
 // MARK: - 방 만들기
@@ -436,25 +413,29 @@ class MeetBrowseViewModel with ChangeNotifier {
     int? limit,
   }) {
     RoomRepository roomRepository = RoomRepository();
-    List<bool?> rulesList = _rulesQuestion.values.toList();
+    List<bool> rulesList = _rulesQuestion.values.toList();
+
+    final roomCategory = convertCategoryToEng(
+        isMainCategory: true,
+        category: _selectedMainCategories.isNotEmpty
+            ? _selectedMainCategories.first
+            : '');
+    final roomCategoryDetail = convertCategoryToEng(
+        isMainCategory: false,
+        category: _selectedSubCategories.isNotEmpty
+            ? _selectedSubCategories.first
+            : '');
+    final roomAge = convertAgeToEng(age: _selectedAge);
 
     FilterInfo filterInfo = FilterInfo(
-      room_category: _selectedMainCategories.isNotEmpty
-          ? _selectedMainCategories.first
-          : '',
+      room_category: roomCategory.isNotEmpty ? roomCategory : null,
       room_category_detail:
-          _selectedSubCategories.isNotEmpty ? _selectedSubCategories.first : '',
-      room_region_province: _selectedProvince,
-      room_region_district: _selectedDistrict,
-      room_age: _selectedAge,
-      room_gender_ratio: _isWomen4Selected
-          ? '여성4'
-          : _isWomen2Men2Selected
-              ? '남성2,여성2'
-              : _isMen4Selected
-                  ? '남성4'
-                  : '',
-      room_rules: rulesList,
+          roomCategoryDetail.isNotEmpty ? roomCategoryDetail : null,
+      room_region_province: _selectedProvince != '' ? _selectedProvince : null,
+      room_region_district: _selectedDistrict != '' ? _selectedDistrict : null,
+      room_age: roomAge != '' ? roomAge : null,
+      room_gender_ratio: _roomGenderRatio?.name,
+      room_rules: _rulesQuestion.containsValue(true) ? rulesList : null,
     );
 
     Stream<QuerySnapshot<Object?>> roomCollectionStream;
@@ -471,6 +452,98 @@ class MeetBrowseViewModel with ChangeNotifier {
       );
     }
     return roomCollectionStream;
+  }
+
+  // MARK: -  카테고리를 한글에서 영어로 바꿔주는 함수
+  String convertCategoryToEng({
+    required bool isMainCategory,
+    required String category,
+  }) {
+    if (isMainCategory) {
+      switch (selectedMainCategory) {
+        case "취미":
+          return RoomCategory.hobby.name;
+        case "운동":
+          return RoomCategory.exercise.name;
+        case "공부/학업":
+          return RoomCategory.study.name;
+        case "휴식/친목":
+          return RoomCategory.socializing.name;
+        case "기타":
+          return RoomCategory.etc.name;
+      }
+    } else {
+      switch (selectedSubCategory) {
+        case "여행":
+          return Hobby.travel.name;
+        case "맛집":
+          return Hobby.foodie.name;
+        case "연예인":
+          return Hobby.celebrity.name;
+        case "사진":
+          return Hobby.photography.name;
+        case "영화":
+          return Hobby.movies.name;
+        case "게임":
+          return Hobby.gaming.name;
+
+        case "축구":
+          return Exercise.soccer.name;
+        case "야구":
+          return Exercise.baseball.name;
+        case "농구":
+          return Exercise.basketball.name;
+        case "테니스":
+          return Exercise.tennis.name;
+        case "요가":
+          return Exercise.yoga.name;
+        case "헬스":
+          return Exercise.fitness.name;
+        case "탁구":
+          return Exercise.pingpong.name;
+        case "조깅":
+          return Exercise.jogging.name;
+        case "배드민턴":
+          return Exercise.badminton.name;
+
+        case "취업":
+          return Study.employment.name;
+        case "독서":
+          return Study.reading.name;
+        case "대학":
+          return Study.university.name;
+        case "미라클 모닝":
+          return Study.miracleMorning.name;
+        case "자격증":
+          return Study.certification.name;
+        case "아르바이트":
+          return Study.partTimeJob.name;
+
+        case "카페":
+          return Socializing.cafe.name;
+        case "산책":
+          return Socializing.walking.name;
+        case "저녁 식사":
+          return Socializing.dinner.name;
+      }
+    }
+    return "";
+  }
+
+  // MARK: -  나이를 한글에서 영어로 바꿔주는 함수
+  String convertAgeToEng({required String age}) {
+    switch (age) {
+      case "20대":
+        return RoomAge.twenties.name;
+      case "30대":
+        return RoomAge.thirties.name;
+      case "40대":
+        return RoomAge.fourties.name;
+      case "50대":
+        return RoomAge.fifties.name;
+      default:
+        return "";
+    }
   }
 
   // MARK: - 상세정보 불러오면서 참여자 정보 가져오는 함수

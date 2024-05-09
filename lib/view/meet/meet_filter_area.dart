@@ -336,17 +336,18 @@ class MeetFilterArea extends StatelessWidget {
       builder: (context, viewModel, child) {
         return NextButton(
           onTap: () async {
-            context.goNamed('meetFilterMain');
+            context.pop();
           },
           height: 54.h,
-          text: viewModel.isSelectionComplete ? '확인' : '다음',
-          enable: viewModel.isSelectionComplete,
-          backgroundColor: viewModel.isSelectionComplete
+          text: viewModel.isAreaSelectionComplete ? '확인' : '다음',
+          enable: viewModel.isAreaSelectionComplete,
+          backgroundColor: viewModel.isAreaSelectionComplete
               ? UsedColor.button
               : UsedColor.button_g,
           textStyle: TextStyle(
-            color:
-                viewModel.isSelectionComplete ? Colors.white : UsedColor.text_2,
+            color: viewModel.isAreaSelectionComplete
+                ? Colors.white
+                : UsedColor.text_2,
             fontSize: 20.sp,
           ),
         );

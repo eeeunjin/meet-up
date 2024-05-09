@@ -56,11 +56,14 @@ class MeetFilterMain extends StatelessWidget {
   }
 
   Widget _back(BuildContext context) {
+    final meetBorwseViewModel =
+        Provider.of<MeetBrowseViewModel>(context, listen: false);
     return Padding(
       padding: EdgeInsets.only(left: 9.h),
       child: GestureDetector(
         onTap: () {
-          Navigator.pop(context);
+          meetBorwseViewModel.clearAllFilters();
+          context.pop();
         },
         child: Image.asset(
           ImagePath.close,
@@ -204,21 +207,25 @@ class MeetFilterMain extends StatelessWidget {
                 ],
               ),
               if (viewModel.selectedMainCategories.isEmpty)
-                Padding(
-                  padding: EdgeInsets.only(top: 8.0.h, left: 14.76.w),
-                  child: Text(
-                    '상위 카테고리를 먼저 선택해주세요.',
-                    style:
-                        AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_5),
-                  ),
+                Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.0.h, left: 22.46.w),
+                      child: Text(
+                        '상위 카테고리를 먼저 선택해주세요.',
+                        style: AppTextStyles.PR_R_14
+                            .copyWith(color: UsedColor.text_5),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 29.52.h,
+                    )
+                  ],
                 )
               else
                 // 선택된 각 메인 카테고리에 대해 상세 카테고리 리스트를 표시
                 ...viewModel.selectedMainCategories.map(
-                  (mainCategory) => Padding(
-                    padding: EdgeInsets.only(top: 19.0.h),
-                    child: _subCategoryList(context, mainCategory),
-                  ),
+                  (mainCategory) => _subCategoryList(context, mainCategory),
                 ),
             ],
           ),
@@ -230,55 +237,63 @@ class MeetFilterMain extends StatelessWidget {
   Widget _subCategoryList(BuildContext context, String mainCategory) {
     final viewModel = Provider.of<MeetBrowseViewModel>(context, listen: true);
     if (mainCategory == '기타') {
-      return Padding(
-        padding: EdgeInsets.only(top: 8.0.h),
-        child: Padding(
-          padding: EdgeInsets.only(top: 7.0.h, left: 14.76.w),
-          child: Text(
-            '상위 카테고리를 먼저 선택해주세요.',
-            style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_5),
+      return Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 8.0.h, left: 22.46.w),
+            child: Text(
+              '상위 카테고리를 먼저 선택해주세요.',
+              style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_5),
+            ),
           ),
-        ),
+          SizedBox(
+            height: 29.52.h,
+          )
+        ],
       );
     }
     List<String> subCategories = viewModel.getSubCategories(mainCategory);
 
-    return Column(
-      children: [
-        Wrap(
-          spacing: 8.w,
-          runSpacing: 8.h,
-          children: subCategories.map((subCategory) {
-            bool isSubSelected = viewModel.isSubCategorySelected(subCategory);
-            return GestureDetector(
-              onTap: () {
-                viewModel.selectSubCategory(subCategory);
-              },
-              child: Container(
-                width: 99.w,
-                height: 32.h,
-                decoration: BoxDecoration(
-                  color: isSubSelected ? UsedColor.button : Colors.white,
-                  borderRadius: BorderRadius.circular(12.61.r),
-                  border: Border.all(
-                    color: isSubSelected ? UsedColor.button : UsedColor.b_line,
-                    width: 2.25.w,
+    return Padding(
+      padding: EdgeInsets.only(top: 19.0.h),
+      child: Column(
+        children: [
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 8.h,
+            children: subCategories.map((subCategory) {
+              bool isSubSelected = viewModel.isSubCategorySelected(subCategory);
+              return GestureDetector(
+                onTap: () {
+                  viewModel.selectSubCategory(subCategory);
+                },
+                child: Container(
+                  width: 99.w,
+                  height: 32.h,
+                  decoration: BoxDecoration(
+                    color: isSubSelected ? UsedColor.button : Colors.white,
+                    borderRadius: BorderRadius.circular(12.61.r),
+                    border: Border.all(
+                      color:
+                          isSubSelected ? UsedColor.button : UsedColor.b_line,
+                      width: 2.25.w,
+                    ),
                   ),
-                ),
-                child: Center(
-                  child: Text(
-                    subCategory,
-                    style: AppTextStyles.PR_SB_14.copyWith(
-                      color: isSubSelected ? Colors.white : Colors.black,
+                  child: Center(
+                    child: Text(
+                      subCategory,
+                      style: AppTextStyles.PR_SB_14.copyWith(
+                        color: isSubSelected ? Colors.white : Colors.black,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          }).toList(),
-        ),
-        SizedBox(height: 28.h),
-      ],
+              );
+            }).toList(),
+          ),
+          SizedBox(height: 28.h),
+        ],
+      ),
     );
   }
 
@@ -453,9 +468,11 @@ class MeetFilterMain extends StatelessWidget {
                 GestureDetector(
                   onTap: () => viewModel.selectWomen4(),
                   child: Image.asset(
-                    viewModel.isWomen4Selected
-                        ? ImagePath.grW4
-                        : ImagePath.grW4Empty,
+                    (viewModel.roomGenderRatio == null)
+                        ? ImagePath.grW4Empty
+                        : (viewModel.roomGenderRatio!.name == "womanOnly")
+                            ? ImagePath.grW4
+                            : ImagePath.grW4Empty,
                     width: 76.w,
                     height: 76.h,
                   ),
@@ -464,9 +481,11 @@ class MeetFilterMain extends StatelessWidget {
                 GestureDetector(
                   onTap: () => viewModel.selectWomen2Men2(),
                   child: Image.asset(
-                    viewModel.isWomen2Men2Selected
-                        ? ImagePath.grW2M2
-                        : ImagePath.grW2M2Empty,
+                    (viewModel.roomGenderRatio == null)
+                        ? ImagePath.grW2M2Empty
+                        : (viewModel.roomGenderRatio!.name == "mixed")
+                            ? ImagePath.grW2M2
+                            : ImagePath.grW2M2Empty,
                     width: 76.w,
                     height: 76.h,
                   ),
@@ -475,9 +494,11 @@ class MeetFilterMain extends StatelessWidget {
                 GestureDetector(
                   onTap: () => viewModel.selectMen4(),
                   child: Image.asset(
-                    viewModel.isMen4Selected
-                        ? ImagePath.grM4
-                        : ImagePath.grM4Empty,
+                    (viewModel.roomGenderRatio == null)
+                        ? ImagePath.grM4Empty
+                        : (viewModel.roomGenderRatio!.name == "manOnly")
+                            ? ImagePath.grM4
+                            : ImagePath.grM4Empty,
                     width: 76.w,
                     height: 76.h,
                   ),
@@ -570,7 +591,8 @@ class MeetFilterMain extends StatelessWidget {
         bool isAllCompleted = viewModel.allCheckCompleted;
         return NextButton(
           onTap: () async {
-            context.goNamed('meetBrowseMain');
+            viewModel.addFilter();
+            context.pop();
           },
           height: 56.h,
           text: '다음',

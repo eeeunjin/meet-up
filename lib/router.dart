@@ -213,9 +213,8 @@ final router = GoRouter(
           name: 'meetBrowseMain',
           builder: (context, state) {
             return const Scaffold(
-                body: MeetBrowseMain(
-              myUid: '',
-            ));
+              body: MeetBrowseMain(),
+            );
           },
           routes: [
             GoRoute(
@@ -225,21 +224,21 @@ final router = GoRouter(
                 return const Scaffold(body: MeetDetailRoom());
               },
             ),
-          ],
-        ),
-        GoRoute(
-          path: 'meetFilterMain',
-          name: 'meetFilterMain',
-          builder: (context, state) {
-            return const Scaffold(body: MeetFilterMain());
-          },
-          routes: [
             GoRoute(
-              path: 'meetFilterArea',
-              name: 'meetFilterArea',
+              path: 'meetFilterMain',
+              name: 'meetFilterMain',
               builder: (context, state) {
-                return const Scaffold(body: MeetFilterArea());
+                return const Scaffold(body: MeetFilterMain());
               },
+              routes: [
+                GoRoute(
+                  path: 'meetFilterArea',
+                  name: 'meetFilterArea',
+                  builder: (context, state) {
+                    return const Scaffold(body: MeetFilterArea());
+                  },
+                ),
+              ],
             ),
           ],
         ),
