@@ -395,7 +395,7 @@ class MeetBrowseMain extends StatelessWidget {
                                     .copyWith(color: UsedColor.main),
                               ),
                               Text(
-                                '${DateFormat('yyyy.MM.dd').format(room.room_creation_date.toDate())} 생성',
+                                '${DateFormat('yyyy.MM.dd').format(room.room_creation_date.toDate().add(Duration(days: 7)))} 만료',
                                 style: AppTextStyles.SU_R_10
                                     .copyWith(color: UsedColor.text_5),
                               ),

@@ -29,10 +29,15 @@ class MeetManageViewModel with ChangeNotifier {
       age: roomModel.room_age,
     );
 
+    // 성비
+    String genderRatio =
+        convertGenderRatio(genderRatio: roomModel.room_gender_ratio);
+
     RoomModel decodedRoomModel = roomModel;
     decodedRoomModel.room_category = mainCategory;
     decodedRoomModel.room_category_detail = subCategory;
     decodedRoomModel.room_age = roomAges;
+    decodedRoomModel.room_gender_ratio = genderRatio;
 
     return decodedRoomModel;
   }
@@ -131,6 +136,20 @@ class MeetManageViewModel with ChangeNotifier {
     }).toList();
 
     return roomAge;
+  }
+
+  // MARK: - 성비를 한글로 변환하는 함수
+  String convertGenderRatio({required String genderRatio}) {
+    switch (genderRatio) {
+      case "womanOnly":
+        return "여성 4명";
+      case "mixed":
+        return "남성 2명 + 여성 2명";
+      case "manOnly":
+        return "남성 4명";
+      default:
+        return "Error";
+    }
   }
 
   // rules

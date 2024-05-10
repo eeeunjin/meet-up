@@ -8,7 +8,7 @@ import 'package:meet_up/repository/user_repository.dart';
 class MeetBrowseViewModel with ChangeNotifier {
   // Filter management
   List<String> selectedFilters = [];
-  
+
   void clearSelectedFilters() {
     selectedFilters.clear();
     notifyListeners();
@@ -102,10 +102,14 @@ class MeetBrowseViewModel with ChangeNotifier {
       age: roomModel.room_age,
     );
 
+    String genderRatio =
+        convertGenderRatio(genderRatio: roomModel.room_gender_ratio);
+
     RoomModel decodedRoomModel = roomModel;
     decodedRoomModel.room_category = mainCategory;
     decodedRoomModel.room_category_detail = subCategory;
     decodedRoomModel.room_age = roomAges;
+    decodedRoomModel.room_gender_ratio = genderRatio;
 
     return decodedRoomModel;
   }
@@ -204,6 +208,20 @@ class MeetBrowseViewModel with ChangeNotifier {
     }).toList();
 
     return roomAge;
+  }
+
+  // MARK: - 성비를 한글로 변환하는 함수
+  String convertGenderRatio({required String genderRatio}) {
+    switch (genderRatio) {
+      case "womanOnly":
+        return "여성 4명";
+      case "mixed":
+        return "남성 2명 + 여성 2명";
+      case "manOnly":
+        return "남성 4명";
+      default:
+        return "Error";
+    }
   }
 
   // MARK: - 다른 사람들 방 불러오는 함수
