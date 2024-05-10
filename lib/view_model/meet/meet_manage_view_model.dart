@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_up/model/room_model.dart';
-import 'package:meet_up/repository/room_repository.dart';
 import 'package:meet_up/repository/user_repository.dart';
 
 class MeetManageViewModel with ChangeNotifier {
   final UserRepository _userRepository = UserRepository();
-  final RoomRepository _roomRepository = RoomRepository();
   RoomModel? currentRoomModel; // 현재 방 모델
 
   // MARK - 내가 만든 방 불러오는 함수

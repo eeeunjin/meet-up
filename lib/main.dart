@@ -11,6 +11,7 @@ import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
 import 'package:meet_up/view_model/login/login_verification_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_browse_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_filter_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_manage_view_model.dart';
 import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
@@ -24,20 +25,6 @@ Logger logger = Logger();
 void main() async {
   await initializeFirebase();
   await LoginFunc.autoLogin();
-  // await roomDocumentCreationTest();
-
-  // FilterInfo filterInfo = FilterInfo(
-  //   room_category: RoomCategory.hobby.name,
-  //   room_category_detail: Hobby.photography.name,
-  //   room_region_province: "서울",
-  //   room_region_district: "종로구",
-  //   room_age: RoomAge.twenties.name,
-  //   room_gender_ratio: RoomGenderRatio.mixed.name,
-  //   room_rules: [false, false, false, false, false],
-  // );
-
-  // await roomCollectionReadTest(filterInfo: filterInfo, limit: 2);
-  // await roomCollectionStreamReadTest(filterInfo: filterInfo);
 
   runApp(
     MultiProvider(
@@ -60,6 +47,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => MeetCreateViewModel()),
         ChangeNotifierProvider(create: (context) => MeetManageViewModel()),
         ChangeNotifierProvider(create: (context) => MeetBrowseViewModel()),
+        ChangeNotifierProvider(create: (context) => MeetFilterViewModel()),
         ChangeNotifierProvider(create: (context) => ScheduleMainViewModel()),
         ChangeNotifierProvider(create: (context) => UserViewModel()),
         ChangeNotifierProvider(create: (context) => ChatViewModel()),

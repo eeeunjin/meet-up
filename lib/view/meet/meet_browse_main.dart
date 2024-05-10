@@ -10,6 +10,7 @@ import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view_model/meet/meet_browse_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_filter_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -158,14 +159,15 @@ class MeetBrowseMain extends StatelessWidget {
   Widget _filter(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 24.0.w),
-      child:
-          Consumer<MeetBrowseViewModel>(builder: (context, viewModel, child) {
+      child: Consumer2<MeetBrowseViewModel, MeetFilterViewModel>(
+          builder: (context, meetBrowseViewModel, meetFilterViewModel, child) {
         List<Widget> filterWidgets = [
           _filterButton(
             context,
             onTap: () {
-              if (viewModel.selectedFilters.isNotEmpty) {
-                viewModel.clearAllFilters();
+              if (meetBrowseViewModel.selectedFilters.isNotEmpty) {
+                meetFilterViewModel.clearAllFilters();
+                meetBrowseViewModel.clearSelectedFilters();
               } else {
                 context.goNamed('meetFilterMain');
               }
@@ -174,13 +176,15 @@ class MeetBrowseMain extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  viewModel.selectedFilters.isNotEmpty ? '초기화' : '필터 설정',
+                  meetBrowseViewModel.selectedFilters.isNotEmpty
+                      ? '초기화'
+                      : '필터 설정',
                   style:
                       AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_2),
                 ),
                 SizedBox(width: 5.w),
                 Image.asset(
-                  viewModel.selectedFilters.isNotEmpty
+                  meetBrowseViewModel.selectedFilters.isNotEmpty
                       ? ImagePath.resetIcon
                       : ImagePath.filterIcon,
                   width: 14.w,
@@ -193,7 +197,7 @@ class MeetBrowseMain extends StatelessWidget {
           ),
         ];
 
-        for (var filter in viewModel.selectedFilters) {
+        for (var filter in meetBrowseViewModel.selectedFilters) {
           filterWidgets.add(SizedBox(width: 4.0.w));
           filterWidgets.add(
             _filterContainer(
@@ -270,12 +274,16 @@ class MeetBrowseMain extends StatelessWidget {
 
   Widget _meetingRoom(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final meetFilterViewModel =
+        Provider.of<MeetFilterViewModel>(context, listen: false);
     final meetBrowseViewModel = Provider.of<MeetBrowseViewModel>(context);
     return StreamBuilder<QuerySnapshot<Object?>>(
-      stream: !meetBrowseViewModel.isAnyFilterSelected
+      stream: !meetBrowseViewModel.isFilterApplied
           ? meetBrowseViewModel.getOthersRoomModel(myUid: userViewModel.uid!)
           : meetBrowseViewModel.getOthersRoomModelByFilter(
-              myUid: userViewModel.uid!),
+              myUid: userViewModel.uid!,
+              filterInfo: meetFilterViewModel.getFilterInfo(),
+            ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());

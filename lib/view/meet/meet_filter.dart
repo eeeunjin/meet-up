@@ -8,6 +8,7 @@ import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/meet/meet_browse_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_filter_view_model.dart';
 import 'package:provider/provider.dart';
 
 class MeetFilterMain extends StatelessWidget {
@@ -56,13 +57,13 @@ class MeetFilterMain extends StatelessWidget {
   }
 
   Widget _back(BuildContext context) {
-    final meetBorwseViewModel =
-        Provider.of<MeetBrowseViewModel>(context, listen: false);
+    final meetFilterViewModel =
+        Provider.of<MeetFilterViewModel>(context, listen: false);
     return Padding(
       padding: EdgeInsets.only(left: 9.h),
       child: GestureDetector(
         onTap: () {
-          meetBorwseViewModel.clearAllFilters();
+          meetFilterViewModel.clearAllFilters();
           context.pop();
         },
         child: Image.asset(
@@ -112,7 +113,7 @@ class MeetFilterMain extends StatelessWidget {
   }
 
   Widget _mainCategory(BuildContext context) {
-    final viewModel = Provider.of<MeetBrowseViewModel>(context, listen: true);
+    final viewModel = Provider.of<MeetFilterViewModel>(context, listen: true);
     List<String> options = ['취미', '운동', '공부/학업', '휴식/친목', '기타'];
 
     // 메인 카테고리
@@ -235,7 +236,7 @@ class MeetFilterMain extends StatelessWidget {
   }
 
   Widget _subCategoryList(BuildContext context, String mainCategory) {
-    final viewModel = Provider.of<MeetBrowseViewModel>(context, listen: true);
+    final viewModel = Provider.of<MeetFilterViewModel>(context, listen: true);
     if (mainCategory == '기타') {
       return Column(
         children: [
@@ -336,7 +337,7 @@ class MeetFilterMain extends StatelessWidget {
   }
 
   Widget _selectedLocation(BuildContext context) {
-    return Consumer<MeetBrowseViewModel>(
+    return Consumer<MeetFilterViewModel>(
       builder: (context, viewModel, child) {
         if (viewModel.selectedProvince.isEmpty) {
           return const SizedBox.shrink();
@@ -362,7 +363,7 @@ class MeetFilterMain extends StatelessWidget {
   Widget _age(BuildContext context) {
     List<String> options = ['20대', '30대', '40대', '50대'];
 
-    return Consumer<MeetBrowseViewModel>(
+    return Consumer<MeetFilterViewModel>(
       builder: (context, viewModel, _) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -427,8 +428,7 @@ class MeetFilterMain extends StatelessWidget {
   }
 
   Widget _genderRatio(BuildContext context) {
-    MeetBrowseViewModel viewModel =
-        Provider.of<MeetBrowseViewModel>(context, listen: true);
+    final viewModel = Provider.of<MeetFilterViewModel>(context, listen: true);
 
     return Padding(
       padding: EdgeInsets.only(left: 27.0.w),
@@ -538,7 +538,7 @@ class MeetFilterMain extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20.h),
-          Consumer<MeetBrowseViewModel>(
+          Consumer<MeetFilterViewModel>(
             builder: (context, viewModel, child) {
               return Column(
                 children: viewModel.rules.entries.map((entry) {
@@ -586,12 +586,21 @@ class MeetFilterMain extends StatelessWidget {
 
 // MARK: - bottom
   Widget _bottom(BuildContext context) {
-    return Consumer<MeetBrowseViewModel>(
-      builder: (context, viewModel, child) {
-        bool isAllCompleted = viewModel.allCheckCompleted;
+    return Consumer2<MeetFilterViewModel, MeetBrowseViewModel>(
+      builder: (context, meetFilterViewModel, meetBrowseViewModel, child) {
+        bool isAllCompleted = meetFilterViewModel.allCheckCompleted;
         return NextButton(
           onTap: () async {
-            viewModel.addFilter();
+            meetBrowseViewModel.addFilter(
+              selectedMainCategories:
+                  meetFilterViewModel.selectedMainCategories,
+              selectedSubCategories: meetFilterViewModel.selectedSubCategories,
+              selectedProvince: meetFilterViewModel.selectedProvince,
+              selectedDistrict: meetFilterViewModel.selectedDistrict,
+              selectedAge: meetFilterViewModel.selectedAge,
+              roomGenderRatio: meetFilterViewModel.roomGenderRatio,
+              selectedRules: meetFilterViewModel.rules,
+            );
             context.pop();
           },
           height: 56.h,

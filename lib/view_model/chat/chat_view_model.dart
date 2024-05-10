@@ -5,7 +5,6 @@ import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/repository/room_repository.dart';
 import 'package:meet_up/repository/user_repository.dart';
-import 'package:meet_up/view_model/user_view_model.dart';
 
 class ChatViewModel with ChangeNotifier {
   final UserRepository _userRepository = UserRepository();

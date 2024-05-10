@@ -660,7 +660,7 @@ class MeetCreate extends StatelessWidget {
           SizedBox(height: 27.1.h),
           // contents
           ...viewModel.rules.entries.map((entry) {
-            bool isSelected = entry.value ?? false;
+            bool isSelected = entry.value;
             return Padding(
               padding: EdgeInsets.only(left: 28.46.w, right: 39.12.w),
               child: Column(
