@@ -117,6 +117,7 @@ class MyApp extends StatelessWidget {
     else {
       return ScreenUtilInit(
         designSize: const Size(393, 852), // 화면 크기 설정
+        // minTextAdapt: true,
         builder: (_, context) => MaterialApp.router(
           // Go Router 설정
           routerConfig: router,

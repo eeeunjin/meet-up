@@ -89,8 +89,7 @@ class MeetBrowseMain extends StatelessWidget {
             child: Container(
               color: UsedColor.bg_color, // 원하는 배경색으로 변경
               child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 20.w, vertical: 28.h), // 원하는 여백 설정
+                padding: EdgeInsets.symmetric(horizontal: 19.w),
                 child: _meetingRoom(context),
               ),
             ),
@@ -290,6 +289,10 @@ class MeetBrowseMain extends StatelessWidget {
 
         return ListView.builder(
           itemCount: rooms.length,
+          padding: EdgeInsets.only(
+            top: 20.h,
+            bottom: 20.h,
+          ),
           itemBuilder: (context, index) {
             final RoomModel room = rooms[index];
             return GestureDetector(
@@ -297,89 +300,95 @@ class MeetBrowseMain extends StatelessWidget {
                 context.goNamed('meetDetailRoom');
               },
               child: Container(
+                height: 124.h,
                 width: 355.w,
-                height: 108.h,
-                margin: EdgeInsets.only(bottom: 10.h),
-                // padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Card(
-                  color: const Color(0xFFFFFFFF),
-                  elevation: 0,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20.w,
-                      vertical: 8.h,
+                color: Colors.transparent,
+                child: Center(
+                  child: Container(
+                    width: 355.w,
+                    height: 108.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.r),
+                      color: Colors.white,
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  Text(
-                                    room.room_name, // 방 명
-                                    style: AppTextStyles.PR_SB_17.copyWith(
-                                        color: UsedColor.charcoal_black),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  SizedBox(width: 11.w),
-                                  Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text:
-                                              '${room.room_participant_reference.length + 1}',
-                                          style: AppTextStyles.PR_B_12.copyWith(
-                                              color: UsedColor.violet),
-                                        ),
-                                        TextSpan(
-                                          text: '/4명',
-                                          style: AppTextStyles.PR_M_12.copyWith(
-                                              color: UsedColor.text_3),
-                                        ),
-                                      ],
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 20.w, right: 20.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 18.h,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      room.room_name, // 방 명
+                                      style: AppTextStyles.PR_SB_17.copyWith(
+                                          color: UsedColor.charcoal_black),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                  ),
-                                ],
+                                    SizedBox(width: 11.w),
+                                    Text.rich(
+                                      TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text:
+                                                '${room.room_participant_reference.length + 1}',
+                                            style: AppTextStyles.PR_B_12
+                                                .copyWith(
+                                                    color: UsedColor.violet),
+                                          ),
+                                          TextSpan(
+                                            text: '/4명',
+                                            style: AppTextStyles.PR_M_12
+                                                .copyWith(
+                                                    color: UsedColor.text_3),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 8.h,
-                        ),
-                        Text(
-                          room.room_description, // 방 설명
-                          style: AppTextStyles.PR_R_12
-                              .copyWith(color: UsedColor.text_3),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(
-                          height: 16.h,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '#${room.room_keyword.join(' #')}', // 키워드
-                              style: AppTextStyles.SU_L_12
-                                  .copyWith(color: UsedColor.main),
-                            ),
-                            Text(
-                              '${DateFormat('yyyy.MM.dd').format(room.room_creation_date.toDate())} 생성',
-                              style: AppTextStyles.SU_R_10
-                                  .copyWith(color: UsedColor.text_5),
-                            ),
-                          ],
-                        ),
-                        // SizedBox(
-                        //   height: 17.h,
-                        // ),
-                      ],
+                            ],
+                          ),
+                          SizedBox(
+                            height: 8.h,
+                          ),
+                          Text(
+                            room.room_description, // 방 설명
+                            style: AppTextStyles.PR_R_12
+                                .copyWith(color: UsedColor.text_3),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(
+                            height: 16.h,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '#${room.room_keyword.join(' #')}', // 키워드
+                                style: AppTextStyles.SU_L_12
+                                    .copyWith(color: UsedColor.main),
+                              ),
+                              Text(
+                                '${DateFormat('yyyy.MM.dd').format(room.room_creation_date.toDate())} 생성',
+                                style: AppTextStyles.SU_R_10
+                                    .copyWith(color: UsedColor.text_5),
+                              ),
+                            ],
+                          ),
+                          // SizedBox(
+                          //   height: 17.h,
+                          // ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
