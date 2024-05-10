@@ -100,8 +100,7 @@ class MeetBrowseMain extends StatelessWidget {
   }
 
   Widget _search(BuildContext context) {
-    TextEditingController controller = TextEditingController();
-
+    final meetBrowseViewModel = Provider.of<MeetBrowseViewModel>(context);
     return Container(
       width: 352.w,
       height: 37.h,
@@ -121,7 +120,10 @@ class MeetBrowseMain extends StatelessWidget {
           Expanded(
             child: TextField(
               style: AppTextStyles.SU_R_14.copyWith(color: UsedColor.text_3),
-              controller: controller,
+              controller: meetBrowseViewModel.searchTextEditingControlller,
+              onSubmitted: (String text) {
+                meetBrowseViewModel.submitSearchTextEditingControlller();
+              },
               decoration: InputDecoration(
                 hintText: '만남방의 이름을 검색해 보세요.',
                 border: InputBorder.none,
@@ -132,12 +134,14 @@ class MeetBrowseMain extends StatelessWidget {
                 hintStyle:
                     AppTextStyles.SU_R_14.copyWith(color: UsedColor.text_3),
               ),
-              onChanged: (value) {},
             ),
           ),
           GestureDetector(
             onTap: () {
-              controller.clear();
+              if (meetBrowseViewModel.searchTextEditingControlller.text != "") {
+                meetBrowseViewModel.searchTextEditingControlller.clear();
+                meetBrowseViewModel.submitSearchTextEditingControlller();
+              }
             },
             child: Image.asset(
               ImagePath.close,
@@ -286,6 +290,11 @@ class MeetBrowseMain extends StatelessWidget {
               return room;
             }).toList() ??
             [];
+
+        if (meetBrowseViewModel.searchTextEditingControlller.text != "") {
+          rooms.removeWhere((element) => !element.room_name
+              .contains(meetBrowseViewModel.searchTextEditingControlller.text));
+        }
 
         return ListView.builder(
           itemCount: rooms.length,

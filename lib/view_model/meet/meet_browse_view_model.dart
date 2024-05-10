@@ -266,7 +266,14 @@ class MeetBrowseViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-// MARK: - 방 만들기
+  // MARK: - 방 이름 검색
+  TextEditingController searchTextEditingControlller = TextEditingController();
+
+  void submitSearchTextEditingControlller() {
+    notifyListeners();
+  }
+
+  // MARK: - 방 만들기
   final UserRepository _userRepository = UserRepository();
   final RoomRepository _roomRepository = RoomRepository();
 
