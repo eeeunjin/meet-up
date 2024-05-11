@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view_model/meet/meet_browse_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_detail_room_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_filter_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
@@ -277,6 +279,8 @@ class MeetBrowseMain extends StatelessWidget {
     final meetFilterViewModel =
         Provider.of<MeetFilterViewModel>(context, listen: false);
     final meetBrowseViewModel = Provider.of<MeetBrowseViewModel>(context);
+    final meetDetailRoomViewModel =
+        Provider.of<MeetDetailRoomViewModel>(context);
     return StreamBuilder<QuerySnapshot<Object?>>(
       stream: !meetBrowseViewModel.isFilterApplied
           ? meetBrowseViewModel.getOthersRoomModel(myUid: userViewModel.uid!)
@@ -294,7 +298,7 @@ class MeetBrowseMain extends StatelessWidget {
         List<RoomModel> rooms = snapshot.data?.docs.map((doc) {
               Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
               RoomModel room = RoomModel.fromJson(data);
-              room = meetBrowseViewModel.decodingRoomModel(roomModel: room);
+              room.roomId = doc.id;
               return room;
             }).toList() ??
             [];
@@ -314,7 +318,11 @@ class MeetBrowseMain extends StatelessWidget {
             final RoomModel room = rooms[index];
             return GestureDetector(
               onTap: () {
-                context.goNamed('meetDetailRoom');
+                meetDetailRoomViewModel.setCurrentRoomModel(roomModel: room);
+                meetDetailRoomViewModel.setIsMyRoom(isMyRoom: false);
+                logger.d(
+                    "room category: ${room.room_category} && room sub Category : ${room.room_category_detail}");
+                context.goNamed('meetDetailRoom_browse');
               },
               child: Container(
                 height: 124.h,
@@ -395,7 +403,7 @@ class MeetBrowseMain extends StatelessWidget {
                                     .copyWith(color: UsedColor.main),
                               ),
                               Text(
-                                '${DateFormat('yyyy.MM.dd').format(room.room_creation_date.toDate().add(Duration(days: 7)))} 만료',
+                                '${DateFormat('yyyy.MM.dd').format(room.room_creation_date.toDate().add(const Duration(days: 7)))} 만료',
                                 style: AppTextStyles.SU_R_10
                                     .copyWith(color: UsedColor.text_5),
                               ),

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/loginFunc.dart';
-import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/view/chat/chat_main.dart';
 import 'package:meet_up/view/coin/coin_main.dart';
 import 'package:meet_up/view/login/login_main.dart';
 import 'package:meet_up/view/login/login_phone_num.dart';
 import 'package:meet_up/view/login/login_verification.dart';
-import 'package:meet_up/view/meet/meet_detail_room.dart';
 import 'package:meet_up/view/meet/meet_location.dart';
 import 'package:meet_up/view/meet/meet_manage_main.dart';
 import 'package:meet_up/view/meet/meet_browse_main.dart';
@@ -17,7 +15,7 @@ import 'package:meet_up/view/meet/meet_filter.dart';
 import 'package:meet_up/view/meet/meet_filter_area.dart';
 import 'package:meet_up/view/meet/meet_keyword.dart';
 import 'package:meet_up/view/meet/meet_main.dart';
-import 'package:meet_up/view/meet/meet_room_detail.dart';
+import 'package:meet_up/view/meet/meet_detail_room.dart';
 import 'package:meet_up/view/meet/meet_search_main.dart';
 import 'package:meet_up/view/profile/profile_edit.dart';
 import 'package:meet_up/view/profile/profile_main.dart';
@@ -189,14 +187,10 @@ final router = GoRouter(
               },
             ),
             GoRoute(
-              path: 'roomDetail',
-              name: 'roomDetail',
+              path: 'meetDetailRoom_manage',
+              name: 'meetDetailRoom_manage',
               builder: (context, state) {
-                final roomModel = state.extra as RoomModel?;
-                if (roomModel == null) {
-                  return const Text('error');
-                }
-                return RoomDetail(roomModel: roomModel);
+                return const MeetDetailRoom();
               },
             ),
           ],
@@ -218,8 +212,8 @@ final router = GoRouter(
           },
           routes: [
             GoRoute(
-              path: 'meetDetailRoom',
-              name: 'meetDetailRoom',
+              path: 'meetDetailRoom_browse',
+              name: 'meetDetailRoom_browse',
               builder: (context, state) {
                 return const Scaffold(body: MeetDetailRoom());
               },

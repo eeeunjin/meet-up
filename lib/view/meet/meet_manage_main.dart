@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
@@ -10,6 +11,7 @@ import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/coin_widget.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view_model/meet/meet_manage_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_detail_room_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -92,19 +94,21 @@ class MeetManageMain extends StatelessWidget {
 
   Widget _title(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Padding(
           padding: EdgeInsets.only(left: 5.0.w, right: 8.w),
           child: Text(
-            '만남권 관리',
+            '만남방 관리',
             style: AppTextStyles.PR_SB_22,
           ),
         ),
         // 방 개수
-        Text(
-          '6개',
-          style: AppTextStyles.SU_SB_16.copyWith(color: UsedColor.text_3),
+        Padding(
+          padding: EdgeInsets.only(top: 2.0.h),
+          child: Text(
+            '6개',
+            style: AppTextStyles.SU_SB_16.copyWith(color: UsedColor.text_3),
+          ),
         ),
         SizedBox(width: 118.w),
         GestureDetector(
@@ -118,6 +122,8 @@ class MeetManageMain extends StatelessWidget {
 
   Widget _rooms(BuildContext context) {
     final meetViewModel = Provider.of<MeetManageViewModel>(context);
+    final meetDetailRoomViewModel =
+        Provider.of<MeetDetailRoomViewModel>(context);
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
 
     return StreamBuilder<QuerySnapshot>(
@@ -168,11 +174,17 @@ class MeetManageMain extends StatelessWidget {
                     children: rooms.map((room) {
                       var roomData = room.data() as Map<String, dynamic>;
                       var roomModel = RoomModel.fromJson(roomData);
+                      roomModel.roomId = room.id;
+                      logger.d(
+                          "${roomModel.room_name}의 room id는 [${room.id}] 입니다 ~");
 
                       // 개별 컨테이너
                       return GestureDetector(
                         onTap: () {
-                          context.goNamed('roomDetail', extra: roomModel);
+                          meetDetailRoomViewModel.setCurrentRoomModel(
+                              roomModel: roomModel);
+                          meetDetailRoomViewModel.setIsMyRoom(isMyRoom: true);
+                          context.goNamed('meetDetailRoom_manage');
                         },
                         child: Container(
                           width: 355.w,

@@ -1,10 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:meet_up/loginFunc.dart';
-import 'package:meet_up/notificationHandler.dart';
 import 'package:meet_up/router.dart';
 import 'package:meet_up/service/remote/firebase_options.dart';
 import 'package:meet_up/view_model/bot_nav_view_model.dart';
@@ -13,6 +11,7 @@ import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
 import 'package:meet_up/view_model/login/login_verification_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_browse_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_detail_room_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_filter_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_manage_view_model.dart';
 import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
@@ -20,7 +19,6 @@ import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_verification_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 Logger logger = Logger();
@@ -50,6 +48,7 @@ void main() async {
         ),
         ChangeNotifierProvider(create: (context) => MeetCreateViewModel()),
         ChangeNotifierProvider(create: (context) => MeetManageViewModel()),
+        ChangeNotifierProvider(create: (context) => MeetDetailRoomViewModel()),
         ChangeNotifierProvider(create: (context) => MeetBrowseViewModel()),
         ChangeNotifierProvider(create: (context) => MeetFilterViewModel()),
         ChangeNotifierProvider(create: (context) => ScheduleMainViewModel()),
@@ -90,6 +89,7 @@ class MyApp extends StatelessWidget {
           } else {
             return ScreenUtilInit(
               designSize: const Size(393, 852), // 화면 크기 설정
+              minTextAdapt: true,
               builder: (_, context) => MaterialApp.router(
                 // Go Router 설정
                 routerConfig: router,
