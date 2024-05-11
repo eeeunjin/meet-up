@@ -178,7 +178,7 @@ class MeetMain extends StatelessWidget {
           Row(
             children: [
               Image.asset(
-                ImagePath.meetIcon1,
+                ImagePath.meetIcon2,
                 width: 20.w,
                 height: 20.h,
               ),
@@ -253,7 +253,7 @@ class MeetMain extends StatelessWidget {
         Row(
           children: [
             Image.asset(
-              ImagePath.meetIcon1,
+              ImagePath.meetIcon3,
               width: 20.w,
               height: 20.h,
             ),

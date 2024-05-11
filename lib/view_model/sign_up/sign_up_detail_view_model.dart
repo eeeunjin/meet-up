@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_up/main.dart';
 import 'package:meet_up/model/province_district_model.dart';
+import 'package:meet_up/model/room_model.dart';
+import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/repository/user_repository.dart';
 import 'package:meet_up/util/image.dart';
 
@@ -314,9 +317,9 @@ class SignUpDetailViewModel with ChangeNotifier {
   }
 
   Future<bool> updateNewUser({required String uid}) async {
-    Map<String, dynamic> data = {
+    Map<String, dynamic> newUserData = {
       "nickname": nicknameController.text,
-      "profileIcon": selectedImagePath!,
+      "profile_icon": selectedImagePath!,
       "birthday": selectedDate,
       "gender": selectedGender.name,
       "region": {
@@ -324,11 +327,11 @@ class SignUpDetailViewModel with ChangeNotifier {
         "district": selectedDistrict,
       },
       "job": selectedAffiliation.name,
-      "personalityRelationship": selectedRelationshipKeywords,
-      "personalitySelf": selectedLifestyleKeywords,
+      "personality_relationship": selectedRelationshipKeywords,
+      "personality_self": selectedLifestyleKeywords,
       "interest": selectedInterestedKeywords,
       "purpose": selectedPurposeKeywords,
-      "acceptedPolicies": [
+      "accepted_policies": [
         acceptedPolicies[5],
         acceptedPolicies[6],
       ],
@@ -336,7 +339,7 @@ class SignUpDetailViewModel with ChangeNotifier {
 
     return await _userRepository.updateUserDocument(
       uid: uid,
-      data: data,
+      data: newUserData,
     );
   }
 }

@@ -83,9 +83,7 @@ class MyApp extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return const Center(
-              child: Text("Error Occur"),
-            );
+            return const Center(child: CircularProgressIndicator());
           } else {
             return ScreenUtilInit(
               designSize: const Size(393, 852), // 화면 크기 설정

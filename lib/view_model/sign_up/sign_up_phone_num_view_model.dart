@@ -95,7 +95,6 @@ class SignUpPhoneNumViewModel with ChangeNotifier {
           _verificationId = verificationId;
           _codeSent = true;
           context.goNamed('signUpVerification');
-          resetState();
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           debugPrint("handling code auto retrieval timeout");

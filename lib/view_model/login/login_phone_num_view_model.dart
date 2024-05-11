@@ -94,7 +94,6 @@ class LoginPhoneNumViewModel with ChangeNotifier {
           _verificationId = verificationId;
           _codeSent = true;
           context.goNamed('loginVerification');
-          resetState();
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           debugPrint("handling code auto retrieval timeout");
