@@ -90,7 +90,7 @@ class LoginVerificationViewModel with ChangeNotifier {
     _remainingTime = 180;
     _canResendCode = true;
     _showErrorMessage = false;
-    controller.clear();
+    controller.text = '';
     _isTextFieldFocused = false;
     _textFieldHasSixWord = false;
   }
