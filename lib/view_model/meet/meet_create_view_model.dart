@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
@@ -13,7 +12,6 @@ class MeetCreateViewModel with ChangeNotifier {
   final RoomRepository _roomRepository = RoomRepository();
   final UserRepository _userRepository = UserRepository();
   final FirebaseRefs _firebaseRefs = FirebaseRefs();
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // MARK: - naming
   String _roomNaming = '';

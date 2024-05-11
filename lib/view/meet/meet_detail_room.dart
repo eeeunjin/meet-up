@@ -7,8 +7,8 @@ import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 
-class MeetDetail extends StatelessWidget {
-  const MeetDetail({super.key});
+class MeetDetailRoom extends StatelessWidget {
+  const MeetDetailRoom({super.key});
 
   @override
   Widget build(BuildContext context) {

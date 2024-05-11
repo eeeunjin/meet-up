@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
 
@@ -122,7 +123,7 @@ class FirebaseCRUD {
             colRef: colRef,
           )
               .where("room_owner_reference",
-                  isNotEqualTo: firebaseRefs.colRefRoom.doc(myUID!))
+                  isNotEqualTo: firebaseRefs.colRefUser.doc(myUID!))
               .orderBy("room_owner_reference")
               .orderBy("room_creation_date", descending: true)
               .snapshots();
@@ -135,7 +136,7 @@ class FirebaseCRUD {
         if (filterInfo == null) {
           return colRef
               .where("room_owner_reference",
-                  isNotEqualTo: firebaseRefs.colRefRoom.doc(myUID!))
+                  isNotEqualTo: firebaseRefs.colRefUser.doc(myUID!))
               .orderBy("room_owner_reference")
               .orderBy("room_creation_date", descending: true)
               .limit(limit)
@@ -146,7 +147,7 @@ class FirebaseCRUD {
             filterInfo: filterInfo,
           )
               .where("room_owner_reference",
-                  isNotEqualTo: firebaseRefs.colRefRoom.doc(myUID!))
+                  isNotEqualTo: firebaseRefs.colRefUser.doc(myUID!))
               .orderBy("room_owner_reference")
               .orderBy("room_creation_date", descending: true)
               .limit(limit)

@@ -8,7 +8,7 @@ import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
-import 'package:meet_up/view_model/meet/meet_browse_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_filter_view_model.dart';
 import 'package:provider/provider.dart';
 
 class MeetFilterArea extends StatelessWidget {
@@ -98,7 +98,7 @@ class MeetFilterArea extends StatelessWidget {
   }
 
   Widget _selectArea(BuildContext context) {
-    final viewModel = Provider.of<MeetBrowseViewModel>(context, listen: false);
+    final viewModel = Provider.of<MeetFilterViewModel>(context, listen: false);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -332,21 +332,22 @@ class MeetFilterArea extends StatelessWidget {
   }
 
   Widget _bottom(BuildContext context) {
-    return Consumer<MeetBrowseViewModel>(
+    return Consumer<MeetFilterViewModel>(
       builder: (context, viewModel, child) {
         return NextButton(
           onTap: () async {
-            context.goNamed('meetFilterMain');
+            context.pop();
           },
           height: 54.h,
-          text: viewModel.isSelectionComplete ? '확인' : '다음',
-          enable: viewModel.isSelectionComplete,
-          backgroundColor: viewModel.isSelectionComplete
+          text: viewModel.isAreaSelectionComplete ? '확인' : '다음',
+          enable: viewModel.isAreaSelectionComplete,
+          backgroundColor: viewModel.isAreaSelectionComplete
               ? UsedColor.button
               : UsedColor.button_g,
           textStyle: TextStyle(
-            color:
-                viewModel.isSelectionComplete ? Colors.white : UsedColor.text_2,
+            color: viewModel.isAreaSelectionComplete
+                ? Colors.white
+                : UsedColor.text_2,
             fontSize: 20.sp,
           ),
         );
