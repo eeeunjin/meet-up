@@ -59,8 +59,7 @@ class MeetCategory extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // 정보 초기화
-        final viewModel =
-            Provider.of<MeetCreateViewModel>(context, listen: false);
+        final viewModel = Provider.of<MeetCreateViewModel>(context);
         viewModel.categoryClearSelection();
         context.pop();
       },

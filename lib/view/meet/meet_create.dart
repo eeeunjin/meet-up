@@ -755,8 +755,7 @@ class MeetCreate extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        final userViewModel =
-            Provider.of<UserViewModel>(context);
+        final userViewModel = Provider.of<UserViewModel>(context);
         return Consumer<MeetCreateViewModel>(
             builder: (context, viewModel, child) {
           return Container(
@@ -886,6 +885,7 @@ class MeetCreate extends StatelessWidget {
                       await viewModel.createRoom(uid: userViewModel.uid!);
                       while (context.canPop()) {
                         context.pop();
+                        viewModel.backClearSelection(); // 내용 초기화
                         debugPrint("완료");
                       }
                     },
