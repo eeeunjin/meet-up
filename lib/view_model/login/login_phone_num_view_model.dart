@@ -94,6 +94,7 @@ class LoginPhoneNumViewModel with ChangeNotifier {
           _verificationId = verificationId;
           _codeSent = true;
           context.goNamed('loginVerification');
+          FocusManager.instance.primaryFocus?.unfocus(); 
           resetState();
         },
         codeAutoRetrievalTimeout: (String verificationId) {
@@ -165,8 +166,12 @@ class LoginPhoneNumViewModel with ChangeNotifier {
   }
 
   void resetState() {
+    controller.clear();
     _isTextFieldFocused = false;
     _isPhoneNumberValid = false;
     _codeSent = false;
+    _verificationId = '';
+    _uid = '';
+    _userInfo = null;
   }
 }

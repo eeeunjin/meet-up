@@ -44,11 +44,13 @@ class LoginPhoneNum extends StatelessWidget {
 
   // header
   Widget _back(BuildContext context) {
-    final viewModel =
+    final loginPhoneNumViewModel =
         Provider.of<LoginPhoneNumViewModel>(context, listen: false);
+
     return GestureDetector(
       onTap: () {
-        viewModel.resetState();
+        loginPhoneNumViewModel.resetState();
+        FocusManager.instance.primaryFocus?.unfocus();
         context.pop();
       },
       child: Image.asset(
@@ -170,32 +172,31 @@ class LoginPhoneNum extends StatelessWidget {
       builder: (context, viewModel, child) => Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
         child: NextButton(
-            onTap: () async {
-              // phoneNum 유효성 검사 실패 시, return
-              if (!viewModel.isPhoneNumberValid) return;
+          onTap: () async {
+            // phoneNum 유효성 검사 실패 시, return
+            if (!viewModel.isPhoneNumberValid) return;
 
-              // Auth 관련 동작 - viewModel에서 진행
-              final isSigned = await viewModel.signInWithPhoneNumber(context);
+            // Auth 관련 동작 - viewModel에서 진행
+            final isSigned = await viewModel.signInWithPhoneNumber(context);
 
-              // 다양한 이유로 코드가 전달되지 않은 경우
-              if (!isSigned) {
-                debugPrint("코드 전달 실패.");
-              } else {
-                loginVerificationViewModel.startTimer();
-              }
-            },
-            text: '다음',
-            height: 60.h,
-            fontSize: 18.sp,
-            enable: viewModel.isPhoneNumberValid,
-            backgroundColor: viewModel.isPhoneNumberValid
-                ? UsedColor.button
-                : UsedColor.grey1,
-            textStyle: AppTextStyles.PR_SB_20.copyWith(
-              color: viewModel.isPhoneNumberValid
-                  ? Colors.white
-                  : UsedColor.text_2,
-            )),
+            // 다양한 이유로 코드가 전달되지 않은 경우
+            if (!isSigned) {
+              debugPrint("코드 전달 실패.");
+            } else {
+              loginVerificationViewModel.startTimer();
+            }
+          },
+          text: '다음',
+          height: 60.h,
+          fontSize: 18.sp,
+          enable: viewModel.isPhoneNumberValid,
+          backgroundColor:
+              viewModel.isPhoneNumberValid ? UsedColor.button : UsedColor.grey1,
+          textStyle: AppTextStyles.PR_SB_20.copyWith(
+            color:
+                viewModel.isPhoneNumberValid ? Colors.white : UsedColor.text_2,
+          ),
+        ),
       ),
     );
   }

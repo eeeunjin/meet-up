@@ -126,19 +126,20 @@ Widget _nickname(BuildContext context) {
         Stack(children: [
           Container(
             width: 345.w,
-            height: 20.h,
+            height: 30.h,
             decoration: const BoxDecoration(
               border: Border(bottom: BorderSide(color: Colors.grey)),
             ),
             child: TextField(
               //maxLengthEnforcement: MaxLengthEnforcement.enforced,
-              controller: viewModel.nicknameController,
+              controller: viewModel.nicknameController, 
               decoration: const InputDecoration(
                 border: InputBorder.none,
               ),
               onChanged: (value) {
                 viewModel.validateNickname(value);
               },
+              style: AppTextStyles.PR_R_24,
               // 최대 글자 수 강제 여부
             ),
           ),
@@ -208,19 +209,21 @@ Widget _profile(BuildContext context) {
       ),
       SizedBox(height: 35.h),
       Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          _buildProfileImage(context, ImagePath.image1),
-          _buildProfileImage(context, ImagePath.image2),
-          _buildProfileImage(context, ImagePath.image3),
+          SizedBox(width: 22.w),
+          _buildProfileImage(context, ImagePath.cogyDeselect),
+          _buildProfileImage(context, ImagePath.piggyDeselect),
+          _buildProfileImage(context, ImagePath.aengmuDeselect),
         ],
       ),
       SizedBox(height: 16.h),
       Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          _buildProfileImage(context, ImagePath.image4),
-          _buildProfileImage(context, ImagePath.image5),
+          SizedBox(width: 73.w),
+          _buildProfileImage(context, ImagePath.hamDeselect),
+          _buildProfileImage(context, ImagePath.fedroDeselect),
         ],
       ),
     ],
@@ -228,35 +231,22 @@ Widget _profile(BuildContext context) {
 }
 
 Widget _buildProfileImage(BuildContext context, String imagePath) {
-  final imageSelectionProvider = Provider.of<SignUpDetailViewModel>(context);
-  final isSelected = imageSelectionProvider.selectedImagePath == imagePath;
+  final signUpDetailViewModel = Provider.of<SignUpDetailViewModel>(context);
+  final isSelected = signUpDetailViewModel.selectedImagePath == imagePath;
 
   return GestureDetector(
     onTap: () {
-      imageSelectionProvider.selectImage(imagePath);
+      signUpDetailViewModel.selectImage(imagePath);
     },
     child: Padding(
       padding: EdgeInsets.only(
-        right: 0.0.h,
-        left: 12.0.h,
+        left: 13.0.h,
       ),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: isSelected ? Colors.blue : Colors.transparent,
-            width: 1.0.w,
-          ),
-          borderRadius: BorderRadius.circular(50.0.r),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(50.0.r),
-          child: Image.asset(
-            imagePath,
-            width: 100.0.w,
-            height: 100.0.h,
-            fit: BoxFit.cover,
-          ),
-        ),
+      child: Image.asset(
+        isSelected ? signUpDetailViewModel.getIconPath() : imagePath,
+        width: 100.0.h,
+        height: 100.0.h,
+        fit: BoxFit.contain,
       ),
     ),
   );

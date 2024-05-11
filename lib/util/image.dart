@@ -14,15 +14,20 @@ class ImagePath {
   static String get signUpProgressBar_5 =>
       'assets/images/signupprogressbar5.png';
 
-  static String get image1 => 'assets/images/image1.jpg';
-  static String get image2 => 'assets/images/image2.jpg';
-  static String get image3 => 'assets/images/image3.jpg';
-  static String get image4 => 'assets/images/image4.jpg';
-  static String get image5 => 'assets/images/image5.jpg';
+  static String get cogySelect => 'assets/images/cogy_select.png';
+  static String get piggySelect => 'assets/images/piggy_select.png';
+  static String get aengmuSelect => 'assets/images/aengmu_select.png';
+  static String get hamSelect => 'assets/images/ham_select.png';
+  static String get fedroSelect => 'assets/images/fedro_select.png';
+  static String get cogyDeselect => 'assets/images/cogy_deselect.png';
+  static String get piggyDeselect => 'assets/images/piggy_deselect.png';
+  static String get aengmuDeselect => 'assets/images/aengmu_deselect.png';
+  static String get hamDeselect => 'assets/images/ham_deselect.png';
+  static String get fedroDeselect => 'assets/images/fedro_deselect.png';
 
   // meet
-  static String get meetIcon1 => 'assets/images/meeticon1.png';
-  static String get meetIcon2 => 'assets/images/meeticon2.png';
+  static String get meetIcon1 => 'assets/images/meet_icon_1.png';
+  static String get meetIcon2 => 'assets/images/meet_icon_2.png';
   static String get meetIcon3 => 'assets/images/meeticon3.png';
 
   static String get meetImage1 => 'assets/images/meetimage1.png';

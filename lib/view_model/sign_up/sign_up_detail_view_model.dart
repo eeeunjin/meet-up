@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/model/province_district_model.dart';
 import 'package:meet_up/repository/user_repository.dart';
+import 'package:meet_up/util/image.dart';
 
 class SignUpDetailViewModel with ChangeNotifier {
   final UserRepository _userRepository = UserRepository();
 
-  // MARK : - Page 1
+  // MARK: - Page 1
   Gender _selectedGender = Gender.none;
   Gender get selectedGender => _selectedGender; // 선택된 성별
 
@@ -15,16 +17,6 @@ class SignUpDetailViewModel with ChangeNotifier {
 
   Affiliation _selectedAffiliation = Affiliation.none;
   Affiliation get selectedAffiliation => _selectedAffiliation; // 선택된 소속
-
-  // String _selectedProvince = '서울';
-  // String get selectedProvince => _selectedProvince; // 선택된 도/시
-  // FixedExtentScrollController provinceScrollController =
-  //     FixedExtentScrollController(initialItem: 0);
-
-  // String _selectedDistrict = '강남구';
-  // String get selectedDistrict => _selectedDistrict; // 선택된 구/군
-  // FixedExtentScrollController districtScrollController =
-  //     FixedExtentScrollController(initialItem: 0);
 
   bool get selectedAllComponents =>
       (selectedGender != Gender.none) &&
@@ -36,20 +28,6 @@ class SignUpDetailViewModel with ChangeNotifier {
       notifyListeners();
     }
   }
-
-  // void selectProvince(String province) {
-  //   if (_selectedProvince != province) {
-  //     _selectedProvince = province;
-  //     notifyListeners();
-  //   }
-  // }
-
-  // void selectDistrict(String district) {
-  //   if (_selectedDistrict != district) {
-  //     _selectedDistrict = district;
-  //     notifyListeners();
-  //   }
-  // }
 
   String _selectedProvince = '서울';
   String get selectedProvince => _selectedProvince; // 선택된 도/시
@@ -87,7 +65,7 @@ class SignUpDetailViewModel with ChangeNotifier {
     }
   }
 
-  //datepicker
+  // datepicker
   final DateTime _start;
   final DateTime _end;
 
@@ -155,7 +133,7 @@ class SignUpDetailViewModel with ChangeNotifier {
     return List<int>.generate(lastDateOfMonth.day, (index) => index + 1);
   }
 
-  // Mark : page 2
+  // MARK: - Page 2
   TextEditingController nicknameController = TextEditingController();
   String errorMessage = '';
   String? _selectedImagePath;
@@ -163,6 +141,7 @@ class SignUpDetailViewModel with ChangeNotifier {
 
   bool get isNicknameValid => _isNicknameValid;
   String? get selectedImagePath => _selectedImagePath;
+  String? get selectedIcon => selectedImagePath!.split('/').last;
 
   void validateNickname(String value) {
     RegExp regExp = RegExp(r'^[a-zA-Z0-9가-힣]{4,12}$');
@@ -184,11 +163,31 @@ class SignUpDetailViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  String getIconPath() {
+    switch (selectedIcon) {
+      case "cogy_deselect.png":
+        return ImagePath.cogySelect;
+      case "piggy_deselect.png":
+        return ImagePath.piggySelect;
+      case "aengmu_deselect.png":
+        return ImagePath.aengmuSelect;
+      case "ham_deselect.png":
+        return ImagePath.hamSelect;
+      case "fedro_deselect.png":
+        return ImagePath.fedroSelect;
+      default:
+        {
+          logger.e("해당 아이콘이 없습니다.");
+          return "";
+        }
+    }
+  }
+
   bool get isNextButtonEnabled {
     return isNicknameValid && selectedImagePath != null;
   }
-  // MARK : - Page 3
 
+  // MARK: - Page 3
   void _selectKeyword(String keyword, List<String> targetList) {
     if (targetList.contains(keyword)) {
       targetList.remove(keyword);
@@ -230,8 +229,7 @@ class SignUpDetailViewModel with ChangeNotifier {
     return selectedLifestyleKeywords.length == 3;
   }
 
-  // MARK : - Page 4
-
+  // MARK: - Page 4
   bool get isSectionsCompletedPageFour {
     return areThreeInterestedKeywordsSelected;
   }
@@ -248,8 +246,7 @@ class SignUpDetailViewModel with ChangeNotifier {
     return selectedInterestedKeywords.length == 3;
   }
 
-  // MARK : - Page 5
-
+  // MARK: - Page 5
   bool get isSectionsCompletedPageFive {
     return areThreePurposeKeywordsSelected;
   }
@@ -267,8 +264,7 @@ class SignUpDetailViewModel with ChangeNotifier {
         selectedPurposeKeywords.isNotEmpty;
   }
 
-  // MARK: - page 6
-
+  // MARK: - Page 6
   List<bool> acceptedPolicies = [
     false, // 필수
     false, // 필수
@@ -315,22 +311,6 @@ class SignUpDetailViewModel with ChangeNotifier {
       isAcceptionValid = false;
     }
     notifyListeners();
-  }
-
-  void printAllInfo() {
-    debugPrint("$selectedGender");
-    debugPrint("$selectedDate");
-    debugPrint(selectedProvince);
-    debugPrint(selectedDistrict);
-    debugPrint("$selectedAffiliation");
-    debugPrint(nicknameController.text);
-    debugPrint("$_selectedImagePath");
-    debugPrint("$selectedRelationshipKeywords");
-    debugPrint("$selectedLifestyleKeywords");
-    debugPrint("$selectedInterestedKeywords");
-    debugPrint("$selectedPurposeKeywords");
-    debugPrint("선택1: ${acceptedPolicies[5]}");
-    debugPrint("선택2: ${acceptedPolicies[6]}");
   }
 
   Future<bool> updateNewUser({required String uid}) async {

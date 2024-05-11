@@ -8,7 +8,6 @@ import 'package:go_router/go_router.dart';
 import 'package:meet_up/loginFunc.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
-import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_verification_view_model.dart';
@@ -27,56 +26,59 @@ class SignUpVerification extends StatelessWidget {
     final double bottomPadding = keyboardOpen > 0 ? 30.0 : 80.0.h;
 
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (Platform.isIOS)
-              _header(context)
-            else if (Platform.isAndroid)
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 15.h,
+      body: PopScope(
+        canPop: false,
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (Platform.isIOS)
+                _header(context)
+              else if (Platform.isAndroid)
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: 15.h,
+                  ),
+                  child: _header(context),
                 ),
-                child: _header(context),
+              SizedBox(
+                height: 73.h,
               ),
-            SizedBox(
-              height: 73.h,
-            ),
-            _main(context),
-            const Spacer(),
-            Padding(
-              // Apply the padding dynamically based on the keyboard state
-              padding: EdgeInsets.only(bottom: bottomPadding),
-              child: _bottom(context),
-            ),
-            const Offstage()
-          ],
+              _main(context),
+              const Spacer(),
+              Padding(
+                // Apply the padding dynamically based on the keyboard state
+                padding: EdgeInsets.only(bottom: bottomPadding),
+                child: _bottom(context),
+              ),
+              const Offstage()
+            ],
+          ),
         ),
       ),
     );
   }
 
   // header
-  Widget _back(BuildContext context) {
-    final viewModel =
-        Provider.of<SignUpVerificationViewModel>(context, listen: false);
-    return GestureDetector(
-      onTap: () {
-        context.pop();
-        viewModel.resetState();
-      }, // 뒤로가기
-      child: Image.asset(
-        ImagePath.back,
-        width: 40.w,
-        height: 40.h,
-      ),
-    );
-  }
+  // Widget _back(BuildContext context) {
+  //   final viewModel =
+  //       Provider.of<SignUpVerificationViewModel>(context, listen: false);
+  //   return GestureDetector(
+  //     onTap: () {
+  //       context.pop();
+  //       viewModel.resetState();
+  //     }, // 뒤로가기
+  //     child: Image.asset(
+  //       ImagePath.back,
+  //       width: 40.w,
+  //       height: 40.h,
+  //     ),
+  //   );
+  // }
 
   Widget _header(BuildContext context) {
     return header(
-      back: _back(context),
+      back: null,
       title: "회원가입",
     );
   }
@@ -93,6 +95,12 @@ class SignUpVerification extends StatelessWidget {
             if (viewModel.isTextFieldFocused != shouldFieldBeFocused) {
               viewModel.setIsTextFieldFocusd(
                   isTextFieldFocused: shouldFieldBeFocused);
+            }
+            // 6자가 되면 유효성 bool 변수 true로 만들기
+            if (value.length == 6) {
+              viewModel.setTextFieldHasSixWord(textFieldHasSixWord: true);
+            } else {
+              viewModel.setTextFieldHasSixWord(textFieldHasSixWord: false);
             }
           },
           onTap: () {
@@ -238,7 +246,10 @@ class SignUpVerification extends StatelessWidget {
                 color: Colors.black.withOpacity(0.46),
               ),
               CupertinoAlertDialog(
-                title: Text(message, style: AppTextStyles.PR_R_12),
+                title: Text(
+                  title,
+                  style: AppTextStyles.PR_R_12,
+                ),
                 content: Padding(
                   padding: const EdgeInsets.only(top: 5),
                   child: Text(
@@ -430,18 +441,19 @@ class SignUpVerification extends StatelessWidget {
         height: 60.h,
         alignment: Alignment.center,
         decoration: ShapeDecoration(
-          color: UsedColor.grey1,
+          color: verificationViewModel.textFieldHasSixWord
+              ? UsedColor.button
+              : UsedColor.grey1,
           shape: RoundedRectangleBorder(
-              side: BorderSide(
-                width: 1.r,
-                color: UsedColor.grey1,
-              ),
-              borderRadius: BorderRadius.circular(19.r)),
+            borderRadius: BorderRadius.circular(19.r),
+          ),
         ),
         child: Text(
           "인증번호 확인",
           style: AppTextStyles.PR_SB_20.copyWith(
-            color: UsedColor.text_2,
+            color: verificationViewModel.textFieldHasSixWord
+                ? Colors.white
+                : UsedColor.text_2,
           ),
         ),
       ),

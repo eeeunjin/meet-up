@@ -22,6 +22,14 @@ class LoginVerificationViewModel with ChangeNotifier {
   bool _isTextFieldFocused = false;
   bool get isTextFieldFocused => _isTextFieldFocused;
 
+  bool _textFieldHasSixWord = false;
+  bool get textFieldHasSixWord => _textFieldHasSixWord;
+
+  void setTextFieldHasSixWord({required bool textFieldHasSixWord}) {
+    _textFieldHasSixWord = textFieldHasSixWord;
+    notifyListeners();
+  }
+
   //
   // MARK: - Methods
   //
@@ -82,7 +90,8 @@ class LoginVerificationViewModel with ChangeNotifier {
     _remainingTime = 180;
     _canResendCode = true;
     _showErrorMessage = false;
-    controller.text = '';
+    controller.clear();
     _isTextFieldFocused = false;
+    _textFieldHasSixWord = false;
   }
 }
