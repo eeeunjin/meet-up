@@ -303,6 +303,12 @@ class MeetBrowseMain extends StatelessWidget {
             }).toList() ??
             [];
 
+        rooms.sort(
+          (a, b) {
+            return b.room_creation_date.compareTo(a.room_creation_date);
+          },
+        );
+
         if (meetBrowseViewModel.searchTextEditingControlller.text != "") {
           rooms.removeWhere((element) => !element.room_name
               .contains(meetBrowseViewModel.searchTextEditingControlller.text));

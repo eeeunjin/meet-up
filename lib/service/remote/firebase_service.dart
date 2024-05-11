@@ -38,14 +38,13 @@ class FirebaseCRUD {
         if (T == RoomModel) {
           if (filterInfo == null) {
             querySnapshot = await colRef
-                .orderBy("room_creation_date", descending: true)
                 .get();
           } else {
             // 최신 순으로 정렬해서 가져오기
             querySnapshot = await createFilterQuery(
               filterInfo: filterInfo,
               colRef: colRef,
-            ).orderBy("room_creation_date", descending: true).get();
+            ).get();
           }
         } else {
           querySnapshot = await colRef.get();
@@ -54,7 +53,6 @@ class FirebaseCRUD {
         if (T == RoomModel) {
           if (filterInfo == null) {
             querySnapshot = await colRef
-                .orderBy("room_creation_date", descending: true)
                 .limit(limit)
                 .get();
           } else {
@@ -63,7 +61,6 @@ class FirebaseCRUD {
               colRef: colRef,
               filterInfo: filterInfo,
             )
-                .orderBy("room_creation_date", descending: true)
                 .limit(limit)
                 .get();
           }
@@ -115,7 +112,6 @@ class FirebaseCRUD {
               .where("room_owner_reference",
                   isNotEqualTo: firebaseRefs.colRefUser.doc(myUID!))
               .orderBy("room_owner_reference")
-              .orderBy("room_creation_date", descending: true)
               .snapshots();
         } else {
           return createFilterQuery(
@@ -125,7 +121,6 @@ class FirebaseCRUD {
               .where("room_owner_reference",
                   isNotEqualTo: firebaseRefs.colRefUser.doc(myUID!))
               .orderBy("room_owner_reference")
-              .orderBy("room_creation_date", descending: true)
               .snapshots();
         }
       } else {
@@ -138,7 +133,6 @@ class FirebaseCRUD {
               .where("room_owner_reference",
                   isNotEqualTo: firebaseRefs.colRefUser.doc(myUID!))
               .orderBy("room_owner_reference")
-              .orderBy("room_creation_date", descending: true)
               .limit(limit)
               .snapshots();
         } else {
@@ -149,7 +143,6 @@ class FirebaseCRUD {
               .where("room_owner_reference",
                   isNotEqualTo: firebaseRefs.colRefUser.doc(myUID!))
               .orderBy("room_owner_reference")
-              .orderBy("room_creation_date", descending: true)
               .limit(limit)
               .snapshots();
         }
@@ -168,7 +161,6 @@ class FirebaseCRUD {
       return firebaseRefs.colRefRoom
           .where('room_owner_reference',
               isEqualTo: firebaseRefs.colRefUser.doc(uid))
-          .orderBy("room_creation_date", descending: true)
           .snapshots();
     } else {
       return const Stream.empty();
