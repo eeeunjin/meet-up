@@ -401,10 +401,12 @@ class MeetDetailRoom extends StatelessWidget {
       padding: EdgeInsets.only(bottom: 56.h, left: 6.w, right: 6.w),
       child: GestureDetector(
         onTap: () async {
-          // 삭제 or 참여 요청 버튼
-          await meetDetailRoomViewModel.deleteRoom(myUid: userViewModel.uid!);
-          // 삭제가 완료 되면 뒤로 가기
-          if(context.mounted) context.pop();
+          if (meetDetailRoomViewModel.isMyRoom!) {
+            // 삭제 or 참여 요청 버튼
+            await meetDetailRoomViewModel.deleteRoom(myUid: userViewModel.uid!);
+            // 삭제가 완료 되면 뒤로 가기
+            if (context.mounted) context.pop();
+          }
         },
         child: Container(
           width: 327.w,
