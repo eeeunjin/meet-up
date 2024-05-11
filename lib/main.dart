@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_up/loginFunc.dart';
+import 'package:meet_up/notificationHandler.dart';
 import 'package:meet_up/router.dart';
 import 'package:meet_up/service/remote/firebase_options.dart';
 import 'package:meet_up/view_model/bot_nav_view_model.dart';
@@ -16,25 +18,13 @@ import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_verification_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await initializeFirebase();
   await LoginFunc.autoLogin();
-  // await roomDocumentCreationTest();
-
-  // FilterInfo filterInfo = FilterInfo(
-  //   room_category: RoomCategory.hobby.name,
-  //   room_category_detail: Hobby.photography.name,
-  //   room_region_province: "서울",
-  //   room_region_district: "종로구",
-  //   room_age: RoomAge.twenties.name,
-  //   room_gender_ratio: RoomGenderRatio.mixed.name,
-  //   room_rules: [false, false, false, false, false],
-  // );
-
-  // await roomCollectionReadTest(filterInfo: filterInfo, limit: 2);
-  // await roomCollectionStreamReadTest(filterInfo: filterInfo);
 
   runApp(
     MultiProvider(
@@ -79,6 +69,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userModel = Provider.of<UserViewModel>(context);
+
     // 자동 로그인 된 경우
     if (LoginFunc.isLogined) {
       userModel.uid = LoginFunc.uid;
