@@ -64,7 +64,7 @@ class LoginVerification extends StatelessWidget {
   //       Provider.of<LoginVerificationViewModel>(context, listen: false);
   //   return GestureDetector(
   //     onTap: () {
-  //       FocusManager.instance.primaryFocus?.unfocus(); 
+  //       FocusManager.instance.primaryFocus?.unfocus();
   //       viewModel.resetState();
   //       context.pop();
   //     }, // 뒤로가기
@@ -335,6 +335,10 @@ class LoginVerification extends StatelessWidget {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     return GestureDetector(
       onTap: () async {
+        if (!verificationViewModel.textFieldHasSixWord) {
+          return;
+        }
+
         // 시간이 만료된 경우
         if (verificationViewModel.remainingTime == 0) {
           // 인증 만료 alert 띄우기
@@ -387,28 +391,26 @@ class LoginVerification extends StatelessWidget {
                   while (context.canPop()) {
                     context.pop();
                   }
-                  FocusManager.instance.primaryFocus?.unfocus(); 
+                  FocusManager.instance.primaryFocus?.unfocus();
                   // 유저 모델 불러오기
                   await userViewModel.loadUserModel();
                 }
               }
-              // 기본 프로필 정보 중 전화 번호만 있는 경우
-              else {
-                if (context.mounted) {
-                  showAlert(
-                    () async {
-                      // 유저 정보 생성
-                      await phoneNumViewModel.createUserDocument(
-                          uid: credential.user!.uid);
-                      if (context.mounted) {
-                        context.goNamed('signUpDetailOne');
-                      }
-                    },
-                    context: context,
-                    title: "가입된 회원 정보가 없습니다.",
-                    message: "회원가입 하시겠습니까?",
-                  );
-                }
+              // 전화 번호만 있는 경우
+              if (context.mounted) {
+                showAlert(
+                  () async {
+                    // 유저 정보 생성
+                    await phoneNumViewModel.createUserDocument(
+                        uid: credential.user!.uid);
+                    if (context.mounted) {
+                      context.goNamed('signUpDetailOne');
+                    }
+                  },
+                  context: context,
+                  title: "가입된 회원 정보가 없습니다.",
+                  message: "회원가입 하시겠습니까?",
+                );
               }
             }
           } else {
@@ -416,14 +418,34 @@ class LoginVerification extends StatelessWidget {
           }
         } catch (e) {
           // smsCode가 동일하지 않은 경우 alert 출력
-          logger.e("Error message : ${e} \n Error code: ${e.hashCode}");
-          if (context.mounted) {
-            showAlert(
-              null,
-              context: context,
-              title: "인증번호가 일치하지 않습니다.",
-              message: "인증번호를 다시 입력해 주십시오.",
-            );
+          logger.e("Error message : $e \n Error type: ${e.runtimeType}");
+          if (e.runtimeType == FirebaseAuthException) {
+            if (context.mounted) {
+              showAlert(
+                null,
+                context: context,
+                title: "인증번호가 일치하지 않습니다.",
+                message: "인증번호를 다시 입력해 주십시오.",
+              );
+            }
+          } else {
+            if (context.mounted) {
+              UserCredential credential = await phoneNumViewModel
+                  .signInWithSmsCode(verificationViewModel.controller.text);
+              showAlert(
+                () async {
+                  // 유저 정보 생성
+                  await phoneNumViewModel.createUserDocument(
+                      uid: credential.user!.uid);
+                  if (context.mounted) {
+                    context.goNamed('signUpDetailOne');
+                  }
+                },
+                context: context,
+                title: "가입된 회원 정보가 없습니다.",
+                message: "회원가입 하시겠습니까?",
+              );
+            }
           }
         }
       },

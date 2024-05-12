@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/loginFunc.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
@@ -347,6 +348,10 @@ class SignUpVerification extends StatelessWidget {
         Provider.of<SignUpVerificationViewModel>(context);
     return GestureDetector(
       onTap: () async {
+        if (!verificationViewModel.textFieldHasSixWord) {
+          return;
+        }
+        
         // 시간이 만료된 경우
         if (verificationViewModel.remainingTime == 0) {
           // 인증 만료 alert 띄우기
@@ -384,7 +389,7 @@ class SignUpVerification extends StatelessWidget {
               // uid 저장
               phoneNumViewModel.getUID(credential.user!.uid);
 
-              // 기존 정보 DB에서 불러오기
+              // 기존 유저의 정보 불러오기
               await phoneNumViewModel.readUserDocument(
                   uid: phoneNumViewModel.uid);
 
@@ -413,12 +418,10 @@ class SignUpVerification extends StatelessWidget {
                 }
               }
               // 기본 프로필 정보 중 전화 번호만 있는 경우
-              else {
-                debugPrint("기존 프로필 정보가 없기 때문에 프로필 설정부터.");
-                // 프로필 설정 페이지로 이동
-                if (context.mounted) {
-                  context.goNamed('signUpDetailOne');
-                }
+              debugPrint("기존 프로필 정보가 없기 때문에 프로필 설정부터.");
+              // 프로필 설정 페이지로 이동
+              if (context.mounted) {
+                context.goNamed('signUpDetailOne');
               }
             }
           } else {
@@ -426,13 +429,34 @@ class SignUpVerification extends StatelessWidget {
           }
         } catch (e) {
           // smsCode가 동일하지 않은 경우 alert 출력
-          if (context.mounted) {
-            showAlert(
-              null,
-              context: context,
-              title: "인증번호가 일치하지 않습니다.",
-              message: "인증번호를 다시 입력해 주십시오.",
-            );
+          logger.e("Error message : $e \n Error type: ${e.runtimeType}");
+          if (e.runtimeType == FirebaseAuthException) {
+            if (context.mounted) {
+              showAlert(
+                null,
+                context: context,
+                title: "인증번호가 일치하지 않습니다.",
+                message: "인증번호를 다시 입력해 주십시오.",
+              );
+            }
+          } else {
+            if (context.mounted) {
+              UserCredential credential = await phoneNumViewModel
+                  .signInWithSmsCode(verificationViewModel.controller.text);
+              showAlert(
+                () async {
+                  // 유저 정보 생성
+                  await phoneNumViewModel.createUserDocument(
+                      uid: credential.user!.uid);
+                  if (context.mounted) {
+                    context.goNamed('signUpDetailOne');
+                  }
+                },
+                context: context,
+                title: "가입된 회원 정보가 없습니다.",
+                message: "회원가입 하시겠습니까?",
+              );
+            }
           }
         }
       },

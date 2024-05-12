@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userModel = Provider.of<UserViewModel>(context);
-
+    
     // 자동 로그인 된 경우
     if (LoginFunc.isLogined) {
       userModel.uid = LoginFunc.uid;
