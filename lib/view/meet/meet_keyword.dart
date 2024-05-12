@@ -6,9 +6,11 @@ import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
+import 'package:meet_up/view/meet/meet_create.dart';
 import 'package:meet_up/view/widget/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_keyword_view_model.dart';
 import 'package:provider/provider.dart';
 
 class MeetKeyWord extends StatelessWidget {
@@ -16,7 +18,7 @@ class MeetKeyWord extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<MeetCreateViewModel>(context);
+    final viewModel = Provider.of<MeetKeywordViewModel>(context);
 
     return Scaffold(
       body: SafeArea(
@@ -65,7 +67,7 @@ class MeetKeyWord extends StatelessWidget {
       onTap: () {
         // 정보 초기화
         final viewModel =
-            Provider.of<MeetCreateViewModel>(context, listen: false);
+            Provider.of<MeetKeywordViewModel>(context, listen: false);
         viewModel.keywordClearSelection();
         context.pop();
       },
@@ -77,7 +79,7 @@ class MeetKeyWord extends StatelessWidget {
     );
   }
 
-  Widget _main(BuildContext context, MeetCreateViewModel viewModel) {
+  Widget _main(BuildContext context, MeetKeywordViewModel viewModel) {
     return Padding(
       padding: EdgeInsets.only(left: 29.w, right: 26.w),
       child: Column(
@@ -176,7 +178,7 @@ class MeetKeyWord extends StatelessWidget {
     );
   }
 
-  Widget _keywordList(BuildContext context, MeetCreateViewModel viewModel) {
+  Widget _keywordList(BuildContext context, MeetKeywordViewModel viewModel) {
     return Wrap(
       // 자동 줄바꿈
       spacing: 4.0, // 좌우 간격
@@ -220,7 +222,7 @@ class MeetKeyWord extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              Provider.of<MeetCreateViewModel>(context, listen: false)
+              Provider.of<MeetKeywordViewModel>(context, listen: false)
                   .removeKeyword(keyword);
             },
             child: Padding(
@@ -240,25 +242,27 @@ class MeetKeyWord extends StatelessWidget {
   Widget _bottom(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w, right: 33.w, bottom: 56.h),
-      child:
-          Consumer<MeetCreateViewModel>(builder: (context, viewModel, child) {
+      child: Consumer2<MeetKeywordViewModel, MeetCreateViewModel>(
+          builder: (context, meetKeywordViewModel, meetCreateViewModel, child) {
         return NextButton(
           onTap: () async {
-            if (viewModel.keywordCheckComplted) {
-              // viewModel.saveKeywords();
-              Navigator.of(context).pop();
+            if (meetKeywordViewModel.keywordCheckComplted) {
+              meetCreateViewModel.selectedKeywords =
+                  List.from(meetKeywordViewModel.keywords);
+              meetKeywordViewModel.keywordClearSelection();
+              context.pop();
             } else {
               return;
             }
           },
           height: 56.h,
-          text: viewModel.keywordCheckComplted ? '저장' : '저장 안됨',
-          enable: viewModel.keywordCheckComplted,
-          backgroundColor: viewModel.keywordCheckComplted
+          text: meetKeywordViewModel.keywordCheckComplted ? '저장' : '저장 안됨',
+          enable: meetKeywordViewModel.keywordCheckComplted,
+          backgroundColor: meetKeywordViewModel.keywordCheckComplted
               ? UsedColor.button
               : UsedColor.button_g,
           textStyle: TextStyle(
-            color: viewModel.keywordCheckComplted
+            color: meetKeywordViewModel.keywordCheckComplted
                 ? Colors.white
                 : UsedColor.text_2,
           ),

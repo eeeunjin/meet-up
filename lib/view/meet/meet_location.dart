@@ -140,7 +140,7 @@ class MeetLocation extends StatelessWidget {
                             .elementAt(index);
                         return InkWell(
                           onTap: () {
-                            viewModel.selectedProvince = province;
+                            viewModel.selectedProvinceInAreaPage = province;
                           },
                           child: ValueListenableBuilder<String>(
                             valueListenable: viewModel.selectedProvinceNotifier,
@@ -221,7 +221,8 @@ class MeetLocation extends StatelessWidget {
                                 }
                                 return InkWell(
                                   onTap: () {
-                                    viewModel.selectedDistrict = district;
+                                    viewModel.selectedDistrictInAreaPage =
+                                        district;
                                   },
                                   child: Container(
                                     height: 43.h,
@@ -340,7 +341,11 @@ class MeetLocation extends StatelessWidget {
       builder: (context, viewModel, child) {
         return NextButton(
           onTap: () async {
-            Navigator.of(context).pop();
+            viewModel.setSelectedArea(
+              province: viewModel.selectedProvinceInAreaPage,
+              district: viewModel.selectedDistrictInAreaPage,
+            );
+            context.pop();
           },
           height: 54.h,
           text: viewModel.isLocationSelectionComplete ? '확인' : '다음',

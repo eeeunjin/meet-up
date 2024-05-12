@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
@@ -59,8 +60,13 @@ class MeetCategory extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // 정보 초기화
-        final viewModel = Provider.of<MeetCreateViewModel>(context);
-        viewModel.categoryClearSelection();
+        final viewModel = Provider.of<MeetCreateViewModel>(
+          context,
+          listen: false,
+        );
+        if (viewModel.selectedMainCategoriesInCategoryPage.isNotEmpty) {
+          viewModel.categoryClearSelection();
+        }
         context.pop();
       },
       child: Image.asset(
@@ -114,10 +120,16 @@ class MeetCategory extends StatelessWidget {
                   spacing: 8.w,
                   runSpacing: 8.h,
                   children: options.map((option) {
-                    bool isSelected =
-                        viewModel.selectedMainCategories.contains(option);
+                    bool isSelected = viewModel
+                        .selectedMainCategoriesInCategoryPage
+                        .contains(option);
                     return GestureDetector(
                       onTap: () {
+                        logger.d("option: $option");
+                        logger.d(
+                            "mainCategories: ${viewModel.selectedMainCategories}}");
+                        logger.d(
+                            "mainCategoriesInCP: ${viewModel.selectedMainCategoriesInCategoryPage}}");
                         viewModel.selectMainCategory(option);
                       },
                       child: Container(
@@ -174,7 +186,7 @@ class MeetCategory extends StatelessWidget {
                   ),
                 ],
               ),
-              if (viewModel.selectedMainCategories.isEmpty)
+              if (viewModel.selectedMainCategoriesInCategoryPage.isEmpty)
                 Padding(
                   padding: EdgeInsets.only(top: 7.0.h, left: 14.76.w),
                   child: Text(
@@ -185,7 +197,7 @@ class MeetCategory extends StatelessWidget {
                 )
               else
                 // 선택된 각 메인 카테고리에 대해 상세 카테고리 리스트를 표시
-                ...viewModel.selectedMainCategories.map(
+                ...viewModel.selectedMainCategoriesInCategoryPage.map(
                   (mainCategory) => Padding(
                     padding: EdgeInsets.only(top: 8.0.h),
                     child: _subCategoryList(context, mainCategory),
@@ -261,8 +273,10 @@ class MeetCategory extends StatelessWidget {
         return NextButton(
           onTap: () async {
             if (viewModel.isCategorySelectionComplete) {
-              Navigator.of(context).pop();
+              viewModel.setSelectedCategories();
+              context.pop();
             } else {
+              logger.d("message");
               return;
             }
           },

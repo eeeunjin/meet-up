@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/repository/room_repository.dart';
@@ -14,42 +15,32 @@ class MeetCreateViewModel with ChangeNotifier {
   final FirebaseRefs _firebaseRefs = FirebaseRefs();
 
   // MARK: - naming
-  String _roomNaming = '';
+  TextEditingController roomNamingTextController = TextEditingController();
+  String _namingCount = '0/16';
+  String get namingCount => _namingCount;
 
-  String get roomNaming => _roomNaming;
-
-  void namingContents(String newNamingCount) {
-    if (_roomNaming != newNamingCount) {
-      _roomNaming = newNamingCount;
-      debugPrint('방 명 : $_roomNaming');
-      notifyListeners();
-    }
+  void setNamingCount() {
+    _namingCount = '${roomNamingTextController.text.length}/16';
+    notifyListeners();
   }
-
-  String get namingCount => '${_roomNaming.length}/16';
 
   // naming check
   bool get namingCompleted {
-    return _roomNaming.trim().isNotEmpty;
+    return roomNamingTextController.text.isNotEmpty;
   }
 
   // MARK: - detail
-  String _roomText = '';
+  TextEditingController descriptionTextController = TextEditingController();
+  String _textCount = '0/50';
+  String get textCount => _textCount;
 
-  String get roomText => _roomText;
-
-  void setDescription(String newTextCount) {
-    if (_roomText != newTextCount) {
-      _roomText = newTextCount;
-      debugPrint('상세내용 : $_roomText');
-      notifyListeners();
-    }
+  void setTextCount() {
+    _textCount = '${descriptionTextController.text.length}/50';
+    notifyListeners();
   }
 
-  String get textCount => '${_roomText.length}/50';
-
   bool get detailCompleted {
-    return _roomText.trim().isNotEmpty;
+    return descriptionTextController.text.isNotEmpty;
   }
 
   // MARK: - age
@@ -114,7 +105,13 @@ class MeetCreateViewModel with ChangeNotifier {
   bool get isSelectedCategory => _isSelectedCategory;
 
   final List<String> _selectedMainCategories = [];
+  final List<String> _selectedMainCategoriesInCategoryPage = [];
   List<String> get selectedMainCategories => _selectedMainCategories;
+  List<String> get selectedMainCategoriesInCategoryPage =>
+      _selectedMainCategoriesInCategoryPage;
+
+  final List<String> _selectedSubCategories = [];
+  final List<String> _selectedSubCategoriesInCategoryPage = [];
 
   final Map<String, List<String>> _subCategoriesMap = {
     '취미': ['여행', '맛집', '연예인', '사진', '영화', '게임'],
@@ -123,45 +120,11 @@ class MeetCreateViewModel with ChangeNotifier {
     '휴식/친목': ['카페', '산책', '저녁 식사'],
     '기타': [],
   };
-
   List<String> getSubCategories(String mainCategory) {
     return _subCategoriesMap[mainCategory] ?? [];
   }
 
-  final List<String> _selectedSubCategories = [];
-
-  void selectSubCategory(String subCategory) {
-    // 상세 카테고리 선택 로직, 단일 선택
-    _selectedSubCategories.clear();
-    _selectedSubCategories.add(subCategory);
-    notifyListeners();
-  }
-
-  bool isSubCategorySelected(String subCategory) {
-    return _selectedSubCategories.contains(subCategory);
-  }
-
-  bool get isCategorySelectionComplete {
-    if (_selectedMainCategories.isNotEmpty &&
-        _selectedMainCategories.first == '기타') {
-      return true;
-    }
-    return _selectedMainCategories.isNotEmpty &&
-        _selectedSubCategories.isNotEmpty;
-  }
-
-  void selectMainCategory(String category) {
-    // 단일 선택
-    _selectedMainCategories.clear();
-    _selectedMainCategories.add(category);
-
-    // 기타 골랐을 시, 이전 내역 초기화
-    if (category == '기타') {
-      _selectedSubCategories.clear();
-    }
-    notifyListeners();
-  }
-
+  // 선택된 메인 카테고리 불러오기 (생성 페이지)
   String get selectedMainCategory {
     if (_selectedMainCategories.isNotEmpty) {
       return _selectedMainCategories.first;
@@ -169,6 +132,7 @@ class MeetCreateViewModel with ChangeNotifier {
     return '';
   }
 
+  // 선택된 서브 카테고리 불러오기 (생성 페이지)
   String get selectedSubCategory {
     if (_selectedSubCategories.isNotEmpty) {
       return _selectedSubCategories.first;
@@ -176,73 +140,63 @@ class MeetCreateViewModel with ChangeNotifier {
     return '';
   }
 
-  // MARK: - keyword
-  String _textCount = '';
+  // 메인 카테고리 선택 (카테고리 페이지)
+  void selectMainCategory(String category) {
+    // 단일 선택
+    _selectedMainCategoriesInCategoryPage.clear();
+    _selectedSubCategoriesInCategoryPage.clear();
+    _selectedMainCategoriesInCategoryPage.add(category);
 
-  String get textKeywordCount => _textCount;
-
-  void setKeywordDescription(String newTextCount) {
-    if (_textCount != newTextCount) {
-      _textCount = newTextCount;
-      notifyListeners();
-    }
-  }
-
-  // 키워드 저장
-  void saveKeywords() {
-    debugPrint('$keywords');
-  }
-
-  String get subTextCount => '${_textCount.length}/6';
-
-  // list
-  final TextEditingController textController = TextEditingController();
-
-  final List<String> _keywords = [];
-  List<String> get keywords => _keywords;
-
-  void addKeyword(String keyword) {
-    if (keyword.isNotEmpty && !_keywords.contains(keyword)) {
-      _keywords.add(keyword);
-      notifyListeners();
-    }
-  }
-
-  String _currentInput = '';
-
-  String get currentInput => _currentInput;
-
-  void removeKeyword(String keyword) {
-    _keywords.remove(keyword);
     notifyListeners();
   }
 
-  void updateCurrentInput(String input) {
-    if (input.length <= 6) {
-      _currentInput = input;
-      notifyListeners();
+  // 서브 카테고리 선택 (카테고리 페이지)
+  void selectSubCategory(String subCategory) {
+    // 상세 카테고리 선택 로직, 단일 선택
+    _selectedSubCategoriesInCategoryPage.clear();
+    _selectedSubCategoriesInCategoryPage.add(subCategory);
+    notifyListeners();
+  }
+
+  // 해당 서브 카테고리가 선택됬는지 판별 (카테고리 페이지)
+  bool isSubCategorySelected(String subCategory) {
+    return _selectedSubCategoriesInCategoryPage.contains(subCategory);
+  }
+
+  // 저장 버튼을 누를 수 있는지 판별하는 함수 (카테고리 페이지)
+  bool get isCategorySelectionComplete {
+    if (_selectedMainCategoriesInCategoryPage.isNotEmpty &&
+        _selectedMainCategoriesInCategoryPage.first == '기타') {
+      return true;
     }
+    return _selectedMainCategoriesInCategoryPage.isNotEmpty &&
+        _selectedSubCategoriesInCategoryPage.isNotEmpty;
   }
 
-  @override
-  void dispose() {
-    textController.dispose();
-    super.dispose();
+  // 카테고리 페이지의 정보를 생성 페이지로 넘기는 함수
+  void setSelectedCategories() {
+    _selectedMainCategories.clear();
+    _selectedSubCategories.clear();
+    _selectedMainCategories.add(_selectedMainCategoriesInCategoryPage.first);
+    if (_selectedSubCategoriesInCategoryPage.isNotEmpty) {
+      _selectedSubCategories.add(_selectedSubCategoriesInCategoryPage.first);
+    }
+    notifyListeners();
   }
 
-  // check
-  bool get keywordCheckComplted =>
-      _keywords.isNotEmpty && _keywords.length <= 3;
-
-  // MARK: - location
-  String _selectedProvince = '';
+  // MARK: - Filter area
+  String _selectedProvinceInAreaPage = '';
   final ValueNotifier<String> _selectedProvinceNotifier = ValueNotifier('');
-
-  String _selectedDistrict = '';
-  final ValueNotifier<String> _selectedDistrictNotifier = ValueNotifier('');
-
+  String _selectedProvince = '';
   String get selectedProvince => _selectedProvince;
+
+  String _selectedDistrictInAreaPage = '';
+  final ValueNotifier<String> _selectedDistrictNotifier = ValueNotifier('');
+  String _selectedDistrict = '';
   String get selectedDistrict => _selectedDistrict;
+
+  String get selectedProvinceInAreaPage => _selectedProvinceInAreaPage;
+  String get selectedDistrictInAreaPage => _selectedDistrictInAreaPage;
 
   ValueNotifier<String> get selectedProvinceNotifier =>
       _selectedProvinceNotifier;
@@ -250,18 +204,24 @@ class MeetCreateViewModel with ChangeNotifier {
   ValueNotifier<String> get selectedDistrictNotifier =>
       _selectedDistrictNotifier;
 
-  set selectedProvince(String province) {
-    _selectedProvince = province;
+  set selectedProvinceInAreaPage(String province) {
+    _selectedProvinceInAreaPage = province;
     _selectedProvinceNotifier.value = province;
     notifyListeners();
-    debugPrint(' $province');
+  }
+
+  set selectedDistrictInAreaPage(String district) {
+    _selectedDistrictInAreaPage = district;
+    _selectedDistrictNotifier.value = district;
+    notifyListeners();
+  }
+
+  set selectedProvince(String province) {
+    _selectedProvince = province;
   }
 
   set selectedDistrict(String district) {
     _selectedDistrict = district;
-    _selectedDistrictNotifier.value = district;
-    notifyListeners();
-    debugPrint(district);
   }
 
   List<String> getDistrictsByProvince(String province) {
@@ -269,15 +229,32 @@ class MeetCreateViewModel with ChangeNotifier {
   }
 
   void clearSelection() {
-    _selectedProvince = ''; // 선택된 시/도 초기화
-    _selectedDistrict = ''; // 선택된 시/도/군 초기화
+    _selectedProvinceInAreaPage = ''; // 선택된 시/도 초기화
+    _selectedDistrictInAreaPage = ''; // 선택된 시/도/군 초기화
     _selectedProvinceNotifier.value = '';
     _selectedDistrictNotifier.value = '';
     notifyListeners();
   }
 
   bool get isLocationSelectionComplete {
-    return _selectedProvince.isNotEmpty && _selectedDistrict.isNotEmpty;
+    return _selectedProvinceInAreaPage.isNotEmpty &&
+        _selectedDistrictInAreaPage.isNotEmpty;
+  }
+
+  // 확인을 누르면 Filter Area 페이지에서 Create View 페이지 변수로 정보 전달
+  void setSelectedArea({required String province, required String district}) {
+    _selectedProvince = province;
+    _selectedDistrict = district;
+    notifyListeners();
+  }
+
+  // MARK: - keywords
+  List<String> _selectedKeywords = [];
+  List<String> get selectedKeywords => _selectedKeywords;
+
+  set selectedKeywords(List<String> keywords) {
+    _selectedKeywords = keywords;
+    notifyListeners();
   }
 
   // MARK: - createRoom
@@ -297,13 +274,13 @@ class MeetCreateViewModel with ChangeNotifier {
     // DB에 정보 방 정보 추가
     // 방 정보 생성
     RoomModel roomModel = RoomModel(
-      room_name: roomNaming,
+      room_name: roomNamingTextController.text,
       room_category: mainCategory,
       room_category_detail: subCategory,
-      room_region_province: selectedProvince,
-      room_region_district: selectedDistrict,
-      room_keyword: keywords,
-      room_description: roomText,
+      room_region_province: selectedProvinceInAreaPage,
+      room_region_district: selectedDistrictInAreaPage,
+      room_keyword: selectedKeywords,
+      room_description: descriptionTextController.text,
       room_age: roomAge,
       room_gender_ratio: roomGenderRatio.name,
       room_rules: roomRules,
@@ -428,16 +405,16 @@ class MeetCreateViewModel with ChangeNotifier {
 
   // MARK: -  Reset state
   void backClearSelection() {
-    _roomNaming = '';
-    _roomText = '';
+    roomNamingTextController.clear();
+    setNamingCount();
+    _selectedKeywords.clear();
+    descriptionTextController.clear();
+    setTextCount();
     _selectedAges.clear();
     _roomGenderRatio = RoomGenderRatio.womanOnly;
     _rulesQuestion.forEach((key, value) => _rulesQuestion[key] = false);
     _selectedMainCategories.clear();
     _selectedSubCategories.clear();
-    _textCount = '';
-    _keywords.clear();
-    _currentInput = '';
     _selectedProvince = '';
     _selectedDistrict = '';
     _selectedProvinceNotifier.value = '';
@@ -447,25 +424,17 @@ class MeetCreateViewModel with ChangeNotifier {
 
   // category tap clear
   void categoryClearSelection() {
-    _selectedMainCategories.clear();
-    _selectedSubCategories.clear();
+    _selectedMainCategoriesInCategoryPage.clear();
+    _selectedSubCategoriesInCategoryPage.clear();
     notifyListeners();
   }
 
   // location tap clear
   void locationClearSelection() {
-    _selectedProvince = '';
-    _selectedDistrict = '';
+    _selectedProvinceInAreaPage = '';
+    _selectedDistrictInAreaPage = '';
     _selectedProvinceNotifier.value = '';
     _selectedDistrictNotifier.value = '';
-    notifyListeners();
-  }
-
-  // keyword tap clear
-  void keywordClearSelection() {
-    _textCount = '';
-    _currentInput = '';
-    _keywords.clear();
     notifyListeners();
   }
 
@@ -474,7 +443,6 @@ class MeetCreateViewModel with ChangeNotifier {
     return namingCompleted &&
         isCategorySelectionComplete &&
         isLocationSelectionComplete &&
-        keywordCheckComplted &&
         detailCompleted &&
         ageCompleted;
   }

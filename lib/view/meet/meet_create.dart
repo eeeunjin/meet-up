@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/repository/room_repository.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
@@ -17,35 +18,43 @@ class MeetCreate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            if (Platform.isIOS)
-              _header(context)
-            else if (Platform.isAndroid)
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 15.h,
-                ),
-                child: _header(context),
-              ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _main(context),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          left: 33.w, right: 32.w, bottom: 56.h),
-                      child: _bottom(context),
+    return PopScope(
+      canPop: false,
+      child: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: Scaffold(
+          body: SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                if (Platform.isIOS)
+                  _header(context)
+                else if (Platform.isAndroid)
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: 15.h,
                     ),
-                  ],
+                    child: _header(context),
+                  ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _main(context),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: 33.w, right: 32.w, bottom: 56.h),
+                          child: _bottom(context),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -160,16 +169,19 @@ class MeetCreate extends StatelessWidget {
             child: Stack(
               children: [
                 Transform.translate(
-                  offset: Offset(0, -4.0.h), // text와 높이를 맞추기 위한 임의 값
+                  offset: Offset(0, -2.0.h), // text와 높이를 맞추기 위한 임의 값
                   child: Container(
                     alignment: Alignment.center,
                     width: 210.w, // 임의 값
                     height: 19.h,
                     child: TextField(
-                      onChanged: (text) {
-                        viewModel.namingContents(text);
+                      maxLength: 16,
+                      controller: viewModel.roomNamingTextController,
+                      onChanged: (_) {
+                        viewModel.setNamingCount();
                       },
                       decoration: const InputDecoration(
+                        counterText: '',
                         isDense: true,
                         contentPadding: EdgeInsets.zero,
                         border: InputBorder.none,
@@ -311,7 +323,7 @@ class MeetCreate extends StatelessWidget {
           return const SizedBox.shrink();
         }
         String locationText = viewModel.selectedProvince.isEmpty
-            ? viewModel.selectedMainCategory
+            ? viewModel.selectedProvince
             : '${viewModel.selectedProvince} > ${viewModel.selectedDistrict}';
 
         return Text(
@@ -371,7 +383,8 @@ class MeetCreate extends StatelessWidget {
   Widget _selectedKeywords(BuildContext context) {
     return Consumer<MeetCreateViewModel>(
       builder: (context, viewModel, child) {
-        List<Widget> keywordWidgets = viewModel.keywords
+        logger.d("${viewModel.selectedKeywords}");
+        List<Widget> keywordWidgets = viewModel.selectedKeywords
             .map((keyword) => Text(
                   '#$keyword ',
                   style:
@@ -431,16 +444,25 @@ class MeetCreate extends StatelessWidget {
               border: Border.all(color: UsedColor.b_line, width: 2.h),
             ),
             child: Padding(
-              padding: EdgeInsets.only(left: 28.0.w, top: 15.h),
+              padding: EdgeInsets.only(
+                left: 28.0.w,
+                top: 15.h,
+                right: 28.0.h,
+                bottom: 15.h,
+              ),
               child: TextField(
+                maxLines: 10,
+                controller: viewModel.descriptionTextController,
+                maxLength: 50,
                 decoration: const InputDecoration(
+                    counterText: '',
                     isDense: true,
                     contentPadding: EdgeInsets.zero,
                     border: InputBorder.none,
                     hintText: '만남 목표를 간단히 입력해 주세요. (50자 제한)',
                     hintStyle: TextStyle(color: UsedColor.text_5)),
                 onChanged: (text) {
-                  viewModel.setDescription(text);
+                  viewModel.setTextCount();
                 },
                 style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
               ),
