@@ -40,12 +40,6 @@ class MeetKeywordViewModel with ChangeNotifier {
     }
   }
 
-  // @override
-  // void dispose() {
-  //   textController.dispose();
-  //   super.dispose();
-  // }
-
   // check
   bool get keywordCheckComplted =>
       _keywords.isNotEmpty && _keywords.length <= 3;

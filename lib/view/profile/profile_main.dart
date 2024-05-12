@@ -12,6 +12,23 @@ class ProfileMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    // final profileIcon = userViewModel.userModel!.profile_icon;
+    // final profileIconName = profileIcon.split('/').last.split('_').first;
+    // String path = '';
+    // switch (profileIconName) {
+    //   case "fedro":
+    //     path = ImagePath.fedroSelect;
+    //   case "cogy":
+    //     path = ImagePath.cogySelect;
+    //   case "piggy":
+    //     path = ImagePath.piggySelect;
+    //   case "ham":
+    //     path = ImagePath.hamSelect;
+    //   case "aengmu":
+    //     path = ImagePath.aengmuSelect;
+    // }
+    // logger.d(path);
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,

@@ -7,7 +7,7 @@ class UserViewModel with ChangeNotifier {
   // 유저 데이터 관리 레포지토리
   final UserRepository _userRepository = UserRepository();
 
-  // 유저 정보
+  // 유저 정보 (사용자)
   UserModel? userModel;
   String? uid;
 
