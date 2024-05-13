@@ -36,6 +36,12 @@ class AppTextStyles {
       );
 
   //PR_SB
+  static TextStyle get PR_SB_30 => TextStyle(
+        fontFamily: 'Pretendard-SB',
+        fontWeight: FontWeight.bold,
+        fontSize: 30.h,
+      );
+
   static TextStyle get PR_SB_26 => TextStyle(
         fontFamily: 'Pretendard-SB',
         fontWeight: FontWeight.bold,
@@ -280,6 +286,12 @@ class AppTextStyles {
         fontFamily: 'SUITE',
         fontWeight: FontWeight.normal,
         fontSize: 11.h,
+      );
+
+  static TextStyle get SU_R_15 => TextStyle(
+        fontFamily: 'SUITE',
+        fontWeight: FontWeight.normal,
+        fontSize: 15.h,
       );
 
   static TextStyle get SU_L_24 => TextStyle(

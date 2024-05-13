@@ -52,10 +52,27 @@ class MeetDetailRoom extends StatelessWidget {
 
   // header
   Widget _header(BuildContext context) {
+    final meetDetailRoomViewModel =
+        Provider.of<MeetDetailRoomViewModel>(context, listen: false);
     return Center(
       child: Column(
         children: [
-          header(back: _back(context), title: '세부 정보'),
+          Stack(
+            children: [
+              header(back: _back(context), title: '세부 정보'),
+              // 신고 버튼
+              if (!meetDetailRoomViewModel.isMyRoom!)
+                Positioned(
+                  right: 24.w,
+                  top: 3.h,
+                  child: Image.asset(
+                    ImagePath.reportIcon,
+                    width: 29.w,
+                    height: 29.h,
+                  ),
+                ),
+            ],
+          ),
           SizedBox(
             height: 11.h,
           ),
@@ -110,11 +127,14 @@ class MeetDetailRoom extends StatelessWidget {
               ),
               SizedBox(height: 21.h),
               // keywords
-              Wrap(
-                spacing: 7.w,
-                children: decodedRoomModel.room_keyword
-                    .map<Widget>((keyword) => _keywordContainer(keyword))
-                    .toList(),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Wrap(
+                  spacing: 8.w,
+                  children: decodedRoomModel.room_keyword
+                      .map<Widget>((keyword) => _keywordContainer(keyword))
+                      .toList(),
+                ),
               ),
               SizedBox(height: 28.h),
               _etcBox(context, decodedRoomModel, ageString),
@@ -388,16 +408,16 @@ class MeetDetailRoom extends StatelessWidget {
   //MARK: - 키워드
   Widget _keywordContainer(String keyword) {
     return Container(
-      width: 68.w,
-      height: 19.h,
+      height: 21.h,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(15.r),
+        borderRadius: BorderRadius.circular(9.r),
       ),
-      child: Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 3.h),
         child: Text(
           '#$keyword',
-          style: AppTextStyles.SU_SB_9.copyWith(color: UsedColor.violet),
+          style: AppTextStyles.SU_SB_12.copyWith(color: UsedColor.violet),
         ),
       ),
     );

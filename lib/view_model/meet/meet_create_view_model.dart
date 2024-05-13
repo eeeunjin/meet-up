@@ -62,6 +62,9 @@ class MeetCreateViewModel with ChangeNotifier {
   }
 
   // MARK: - gender ratio
+
+  // 유저 정보 불러오기
+
   RoomGenderRatio _roomGenderRatio = RoomGenderRatio.womanOnly;
   bool get ageCompleted => selectedAges.isNotEmpty;
 

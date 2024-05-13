@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/main.dart';
@@ -565,8 +566,7 @@ class MeetCreate extends StatelessWidget {
 
 // MARK: - gender ratio
   Widget _genderRatio(BuildContext context) {
-    MeetCreateViewModel viewModel =
-        Provider.of<MeetCreateViewModel>(context, listen: true);
+    MeetCreateViewModel viewModel = Provider.of<MeetCreateViewModel>(context);
 
     return Padding(
       padding: EdgeInsets.only(left: 27.0.w),
