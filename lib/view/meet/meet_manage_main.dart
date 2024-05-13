@@ -93,6 +93,7 @@ class MeetManageMain extends StatelessWidget {
   }
 
   Widget _title(BuildContext context) {
+    final meetViewModel = Provider.of<MeetManageViewModel>(context);
     return Row(
       children: [
         Padding(
@@ -106,7 +107,7 @@ class MeetManageMain extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(top: 2.0.h),
           child: Text(
-            '6개',
+            '${meetViewModel.roomNum}',
             style: AppTextStyles.SU_SB_16.copyWith(color: UsedColor.text_3),
           ),
         ),
@@ -121,16 +122,17 @@ class MeetManageMain extends StatelessWidget {
   }
 
   Widget _rooms(BuildContext context) {
-    final meetViewModel = Provider.of<MeetManageViewModel>(context);
+    final meetViewModel =
+        Provider.of<MeetManageViewModel>(context, listen: false);
     final meetDetailRoomViewModel =
-        Provider.of<MeetDetailRoomViewModel>(context);
+        Provider.of<MeetDetailRoomViewModel>(context, listen: false);
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
 
     return StreamBuilder<QuerySnapshot>(
       stream: meetViewModel.getMyRoomModel(myUid: userViewModel.uid!),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          print(snapshot.error);
+          logger.e(snapshot.error);
           return const Text("DB Load Error");
         } else if (!snapshot.hasData) {
           return const Text("Has No Data");
@@ -141,6 +143,7 @@ class MeetManageMain extends StatelessWidget {
         } else {
           // 정렬
           var docs = snapshot.data!.docs;
+          meetViewModel.setRoomNum(roomNum: docs.length);
           // 날짜로 그룹화
           Map<String, List<DocumentSnapshot>> groupedByDate = {};
           for (var doc in docs) {

@@ -6,9 +6,17 @@ import 'package:meet_up/repository/user_repository.dart';
 class MeetManageViewModel with ChangeNotifier {
   final UserRepository _userRepository = UserRepository();
 
+  int roomNum = 0;
+
   // MARK - 내가 만든 방 불러오는 함수
   Stream<QuerySnapshot<Object?>> getMyRoomModel({required String myUid}) {
     return _userRepository.readMyRoomCollectionStream(uid: myUid);
+  }
+
+  // 방 개수 읽어오기
+  void setRoomNum({required int roomNum}) {
+    this.roomNum = roomNum;
+    notifyListeners();
   }
 
   // MARK: - 불러온 RoomModel 정보 한글로 변환
