@@ -56,6 +56,8 @@ class ImagePath {
   static String get checkBoxOff => 'assets/images/checkboxoff.png';
   static String get checkBoxOn => 'assets/images/checkboxon.png';
 
+  static String get crownIcon => 'assets/images/crown_icon.png';
+
   // bot_nav
   static String get meetOn => 'assets/images/bot_nav_meet_on.png';
   static String get meetOff => 'assets/images/bot_nav_meet_off.png';

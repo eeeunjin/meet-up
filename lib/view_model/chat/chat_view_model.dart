@@ -172,7 +172,7 @@ class ChatViewModel with ChangeNotifier {
   }
 
   // MARK: - 상세정보 불러오면서 참여자 정보 가져오는 함수
-  Future<void> getParticipantInfo(
+  Future<List<UserModel>> getParticipantInfo(
       {required List<DocumentReference> docRefs}) async {
     List<UserModel> userModels = List.empty(growable: true);
     for (DocumentReference docRef in docRefs) {
@@ -183,6 +183,7 @@ class ChatViewModel with ChangeNotifier {
       debugPrint(userModel.nickname);
       debugPrint(userModel.gender);
     }
+    return userModels;
   }
 
   // MARK: - 입장 요청을 보내는 함수
