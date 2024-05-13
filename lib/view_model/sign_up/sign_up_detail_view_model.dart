@@ -316,7 +316,7 @@ class SignUpDetailViewModel with ChangeNotifier {
   Future<bool> updateNewUser({required String uid}) async {
     Map<String, dynamic> newUserData = {
       "nickname": nicknameController.text,
-      "profile_icon": selectedImagePath!,
+      "profile_icon": selectedImagePath!.replaceAll("deselect", "select"),
       "birthday": selectedDate,
       "gender": selectedGender.name,
       "region": {

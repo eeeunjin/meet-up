@@ -36,6 +36,23 @@ class RoomModel {
     required this.room_participant_reference,
   });
 
+  RoomModel clone() {
+    return RoomModel(
+        room_name: room_name,
+        room_category: room_category,
+        room_category_detail: room_category_detail,
+        room_region_province: room_region_province,
+        room_region_district: room_region_district,
+        room_keyword: room_keyword,
+        room_description: room_description,
+        room_age: room_age,
+        room_gender_ratio: room_gender_ratio,
+        room_rules: room_rules,
+        room_creation_date: room_creation_date,
+        room_owner_reference: room_owner_reference,
+        room_participant_reference: room_participant_reference);
+  }
+
   RoomModel.fromJson(Map<String, Object?> json)
       : this(
           room_name: json['room_name']! as String,

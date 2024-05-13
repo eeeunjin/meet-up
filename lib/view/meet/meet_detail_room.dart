@@ -1,8 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/main.dart';
 import 'package:meet_up/model/room_model.dart';
+import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
@@ -81,6 +84,8 @@ class MeetDetailRoom extends StatelessWidget {
   Widget _main(
       BuildContext context, RoomModel decodedRoomModel, String ageString) {
     MeetManageViewModel viewModel = Provider.of<MeetManageViewModel>(context);
+    MeetDetailRoomViewModel meetDetailRoomViewModel =
+        Provider.of<MeetDetailRoomViewModel>(context, listen: false);
     return Container(
       width: double.infinity,
       height: 131.h,
@@ -185,38 +190,165 @@ class MeetDetailRoom extends StatelessWidget {
               ),
               SizedBox(height: 16.h),
               // MARK: - 참여 중인 인원
-              Container(
-                width: 340.w,
-                height: 175.h,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.r),
-                  color: Colors.white,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.only(left: 24.w, top: 20.h),
-                  child: Column(
-                    children: [
-                      Row(
+              FutureBuilder(
+                future: meetDetailRoomViewModel.getParticipantInfo(),
+                builder: (context, snapshot) {
+                  List<UserModel>? userModels = snapshot.data;
+                  if (userModels == null) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return Container(
+                    width: 340.w,
+                    height: 175.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.r),
+                      color: Colors.white,
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 24.w, top: 20.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            width: 8.w,
-                            height: 8.w,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle, color: UsedColor.main),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 8.w,
+                                height: 8.w,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: UsedColor.main),
+                              ),
+                              SizedBox(
+                                width: 17.w,
+                              ),
+                              SizedBox(
+                                height: 14.h,
+                                child: Text(
+                                  '참여 중인 인원',
+                                  style: AppTextStyles.PR_SB_12
+                                      .copyWith(color: Colors.black),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 7.w,
+                              ),
+                              Text(
+                                "${meetDetailRoomViewModel.currentRoomModel!.room_participant_reference.length + 1}",
+                                style: AppTextStyles.PR_SB_12
+                                    .copyWith(color: UsedColor.violet),
+                              ),
+                              Text(
+                                '/4',
+                                style: AppTextStyles.PR_SB_12
+                                    .copyWith(color: UsedColor.text_3),
+                              ),
+                              SizedBox(
+                                width: 3.0.w,
+                              ),
+                              Text(
+                                // '(여자 1자리, 남자 1자리 남음)',
+                                meetDetailRoomViewModel.calRestParticipantNum(
+                                    userModels: userModels),
+                                style: AppTextStyles.PR_SB_12
+                                    .copyWith(color: UsedColor.text_5),
+                              )
+                            ],
                           ),
                           SizedBox(
-                            width: 17.w,
+                            height: 17.0.h,
                           ),
-                          Text(
-                            '참여 중인 인원',
-                            style: AppTextStyles.PR_SB_12
-                                .copyWith(color: Colors.black),
+                          Padding(
+                            padding: EdgeInsets.only(left: 20.w),
+                            child: SizedBox(
+                              width: 252.w,
+                              height: 97.h,
+                              child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: userModels.length,
+                                separatorBuilder: (context, index) =>
+                                    SizedBox(width: 24.w), // 간격 조절
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      // 눌렀을 때 프로필 상세 정보로 넘어가기
+                                      logger.d(
+                                        "nickname: ${userModels[index].nickname}\nbirthday: ${userModels[index].birthday}\ngender: ${userModels[index].gender}\njob: ${userModels[index].job}",
+                                      );
+                                    },
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          width: 45.w,
+                                          height: 45.h,
+                                          child: (index == 0)
+                                              ? Stack(
+                                                  alignment:
+                                                      Alignment.bottomRight,
+                                                  children: [
+                                                    Image.asset(
+                                                      userModels[index]
+                                                          .profile_icon,
+                                                    ),
+                                                    Image.asset(
+                                                      width: 19.w,
+                                                      height: 19.h,
+                                                      ImagePath.crownIcon,
+                                                    ),
+                                                  ],
+                                                )
+                                              : Image.asset(
+                                                  userModels[index]
+                                                      .profile_icon,
+                                                ),
+                                        ),
+                                        SizedBox(
+                                          height: 12.h,
+                                        ),
+                                        SizedBox(
+                                          height: 14.h,
+                                          child: Text(
+                                            userModels[index].nickname,
+                                            style: AppTextStyles.PR_SB_12
+                                                .copyWith(color: Colors.black),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 8.h,
+                                        ),
+                                        Container(
+                                          width: 45.w,
+                                          height: 18.h,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8.5.r),
+                                            color: UsedColor.image_card,
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              userModels[index].gender == 'male'
+                                                  ? '남성'
+                                                  : '여성',
+                                              style: AppTextStyles.SU_M_10
+                                                  .copyWith(
+                                                      color: UsedColor.violet),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               ),
               SizedBox(height: 48.h),
               _removeButton(context),
