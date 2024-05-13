@@ -80,10 +80,9 @@ class MeetManageMain extends StatelessWidget {
         if (snapshot.hasError) {
           logger.e(snapshot.error);
           return const Text("DB Load Error");
-        } else if (!snapshot.hasData) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+        } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          // 생성된 방 없을 때
+          return _emptyRoom();
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
             child: CircularProgressIndicator(),
@@ -280,6 +279,15 @@ class MeetManageMain extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: dateSections,
+      ),
+    );
+  }
+
+  Widget _emptyRoom() {
+    return Center(
+      child: Text(
+        '생성된 만남 방이 없습니다.',
+        style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_2),
       ),
     );
   }

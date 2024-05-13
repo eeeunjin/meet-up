@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class MeetKeywordViewModel with ChangeNotifier {
   // MARK: - keyword
   String _textCount = '';
   String get textKeywordCount => _textCount;
-  String get subTextCount => '${_textCount.length}/6';
 
   void setKeywordDescription(String newTextCount) {
     if (_textCount != newTextCount) {
@@ -21,6 +21,7 @@ class MeetKeywordViewModel with ChangeNotifier {
   void addKeyword(String keyword) {
     if (keyword.isNotEmpty && !_keywords.contains(keyword)) {
       _keywords.add(keyword);
+      _keywordCount = '0/8';
       notifyListeners();
     }
   }
@@ -49,6 +50,16 @@ class MeetKeywordViewModel with ChangeNotifier {
     _textCount = '';
     _currentInput = '';
     _keywords.clear();
+    notifyListeners();
+  }
+
+  // MARK: - keyword 입력 읽어오기
+  TextEditingController keywordTextController = TextEditingController();
+  String _keywordCount = '0/8';
+  String get keywordCount => _keywordCount;
+
+  void setKeywordCount() {
+    _keywordCount = '${textController.text.length}/8';
     notifyListeners();
   }
 }

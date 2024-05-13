@@ -97,10 +97,11 @@ class MeetKeyWord extends StatelessWidget {
               ),
               // 텍스트 필드
               TextField(
+                maxLength: 8,
                 controller: viewModel.textController,
                 cursorColor: Colors.black, // 커서 색상 변경
                 decoration: InputDecoration(
-                  // border: InputBorder.none,
+                  counterText: '',
                   hintText: '관련 키워드를 입력해주세요. (최대 3개)',
                   hintStyle:
                       AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_5),
@@ -111,6 +112,7 @@ class MeetKeyWord extends StatelessWidget {
                   ),
                 ),
                 onChanged: (text) {
+                  viewModel.setKeywordCount();
                   // 3개 입력하면 더 입력 못하도록 막음
                   if (viewModel.keywords.length >= 3) {
                     viewModel.textController.clear();
@@ -138,7 +140,7 @@ class MeetKeyWord extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  viewModel.subTextCount,
+                  viewModel.keywordCount,
                   style:
                       AppTextStyles.PR_SB_11.copyWith(color: UsedColor.text_4),
                 ),
@@ -255,7 +257,7 @@ class MeetKeyWord extends StatelessWidget {
             }
           },
           height: 56.h,
-          text: meetKeywordViewModel.keywordCheckComplted ? '저장' : '저장 안됨',
+          text: meetKeywordViewModel.keywordCheckComplted ? '저장' : '저장',
           enable: meetKeywordViewModel.keywordCheckComplted,
           backgroundColor: meetKeywordViewModel.keywordCheckComplted
               ? UsedColor.button
