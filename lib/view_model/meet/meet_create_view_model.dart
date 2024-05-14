@@ -212,6 +212,8 @@ class MeetCreateViewModel with ChangeNotifier {
   set selectedProvinceInAreaPage(String province) {
     _selectedProvinceInAreaPage = province;
     _selectedProvinceNotifier.value = province;
+    _selectedDistrictInAreaPage = '';
+    _selectedDistrictNotifier.value = '';
     notifyListeners();
   }
 
@@ -416,7 +418,7 @@ class MeetCreateViewModel with ChangeNotifier {
     descriptionTextController.clear();
     setTextCount();
     _selectedAges.clear();
-    _roomGenderRatio = RoomGenderRatio.womanOnly;
+    _roomGenderRatio = null;
     _rulesQuestion.forEach((key, value) => _rulesQuestion[key] = false);
     _selectedMainCategories.clear();
     _selectedSubCategories.clear();

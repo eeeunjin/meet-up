@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/model/province_district_model.dart';
@@ -21,15 +22,12 @@ class MeetFilterArea extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            if (Platform.isIOS)
-              _header(context)
-            else if (Platform.isAndroid)
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 15.h,
-                ),
-                child: _header(context),
+            Padding(
+              padding: EdgeInsets.only(
+                top: 25.h,
               ),
+              child: _header(context),
+            ),
             Expanded(child: _main(context)),
             Padding(
               padding: EdgeInsets.only(left: 33.w, right: 32.w, bottom: 56.h),
@@ -51,7 +49,8 @@ class MeetFilterArea extends StatelessWidget {
             height: 22.h,
           ),
           Divider(
-            height: 0.3.h,
+            thickness: 0.3.h,
+            height: 0.h,
             color: UsedColor.line,
           ),
         ],
@@ -60,16 +59,18 @@ class MeetFilterArea extends StatelessWidget {
   }
 
   Widget _back(BuildContext context) {
+    final viewModel = Provider.of<MeetFilterViewModel>(context);
     return Padding(
       padding: EdgeInsets.only(left: 9.h),
       child: GestureDetector(
         onTap: () {
-          Navigator.pop(context);
+          viewModel.clearAreaPageSelection();
+          context.pop();
         },
         child: Image.asset(
-          ImagePath.close,
-          width: 40.w,
-          height: 40.h,
+          ImagePath.back,
+          width: 10.w,
+          height: 20.h,
         ),
       ),
     );
@@ -77,8 +78,9 @@ class MeetFilterArea extends StatelessWidget {
 
   Widget _divider() {
     return Divider(
-      height: 0.91.h,
-      color: const Color(0xffd9d9d9),
+      thickness: 0.3.h,
+      height: 0.h,
+      color: UsedColor.line,
     );
   }
 
@@ -103,134 +105,62 @@ class MeetFilterArea extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 56.h,
-                  width: 140.w,
-                  child: Container(
-                    alignment: Alignment.center,
-                    color: UsedColor.bg_color,
-                    child: Text(
-                      '시 · 도',
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.PR_SB_17
-                          .copyWith(color: UsedColor.charcoal_black),
-                    ),
-                  ),
-                ),
-                SingleChildScrollView(
-                  child: SizedBox(
-                    height: 419.h,
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 56.h,
                     width: 140.w,
-                    child: ListView.builder(
-                      primary: false,
-                      shrinkWrap: true,
-                      itemCount: ProvinceDistrict.entireDistricts.keys.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        String province = ProvinceDistrict.entireDistricts.keys
-                            .elementAt(index);
-                        return InkWell(
-                          onTap: () {
-                            viewModel.selectedProvince = province;
-                          },
-                          child: ValueListenableBuilder<String>(
-                            valueListenable: viewModel.selectedProvinceNotifier,
-                            builder: (context, selectedProvince, child) {
-                              bool isSelected = selectedProvince == province;
-                              return Container(
-                                height: 43.h,
-                                width: 140.w,
-                                color: isSelected
-                                    ? UsedColor.main
-                                    : Colors.transparent,
-                                child: Center(
-                                  child: Text(
-                                    province,
-                                    textAlign: TextAlign.center,
-                                    style: AppTextStyles.PR_R_15.copyWith(
-                                        color: isSelected
-                                            ? Colors.white
-                                            : UsedColor.charcoal_black),
-                                  ),
-                                ),
-                              );
+                    child: Container(
+                      alignment: Alignment.center,
+                      color: UsedColor.bg_color,
+                      child: Text(
+                        '시 · 도',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.PR_SB_17
+                            .copyWith(color: UsedColor.charcoal_black),
+                      ),
+                    ),
+                  ),
+                  SingleChildScrollView(
+                    child: SizedBox(
+                      height: 466.h,
+                      width: 140.w,
+                      child: ListView.builder(
+                        primary: false,
+                        shrinkWrap: true,
+                        itemCount: ProvinceDistrict.entireDistricts.keys.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          String province = ProvinceDistrict
+                              .entireDistricts.keys
+                              .elementAt(index);
+                          return InkWell(
+                            onTap: () {
+                              viewModel.selectedProvinceInAreaPage = province;
                             },
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Container(width: 0.3.w, height: 475.h, color: UsedColor.line),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 56.h,
-                  width: 252.w,
-                  child: Container(
-                    alignment: Alignment.center,
-                    color: UsedColor.bg_color,
-                    child: Text(
-                      '시 · 도 · 군',
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.PR_SB_17
-                          .copyWith(color: UsedColor.charcoal_black),
-                    ),
-                  ),
-                ),
-                SingleChildScrollView(
-                  child: ValueListenableBuilder<String>(
-                    valueListenable: viewModel.selectedProvinceNotifier,
-                    builder: (BuildContext context, String selectedProvince,
-                        Widget? child) {
-                      return ValueListenableBuilder<String>(
-                        valueListenable: viewModel.selectedDistrictNotifier,
-                        builder: (BuildContext context, String selectedDistrict,
-                            Widget? child) {
-                          return SizedBox(
-                            height: 419.h,
-                            width: 252.w,
-                            child: ListView.builder(
-                              primary: false,
-                              shrinkWrap: true,
-                              itemCount: viewModel
-                                  .getDistrictsByProvince(selectedProvince)
-                                  .length,
-                              itemBuilder: (BuildContext context, int index) {
-                                String district =
-                                    viewModel.getDistrictsByProvince(
-                                        selectedProvince)[index];
-
-                                TextStyle textStyle = AppTextStyles.PR_R_15
-                                    .copyWith(color: UsedColor.charcoal_black);
-                                if (index == 0) {
-                                  textStyle = AppTextStyles.PR_SB_15
-                                      .copyWith(fontWeight: FontWeight.bold);
-                                }
-                                return InkWell(
-                                  onTap: () {
-                                    viewModel.selectedDistrict = district;
-                                  },
-                                  child: Container(
-                                    height: 43.h,
-                                    width: 250.w,
-                                    color: selectedDistrict == district
-                                        ? UsedColor.image_card
-                                        : Colors.transparent,
-                                    child: Center(
-                                      child: Text(
-                                        district,
-                                        textAlign: TextAlign.center,
-                                        style: textStyle,
-                                      ),
+                            child: ValueListenableBuilder<String>(
+                              valueListenable:
+                                  viewModel.selectedProvinceNotifier,
+                              builder: (context, selectedProvince, child) {
+                                bool isSelected = selectedProvince == province;
+                                return Container(
+                                  height: 43.h,
+                                  width: 140.w,
+                                  color: isSelected
+                                      ? UsedColor.main
+                                      : Colors.transparent,
+                                  child: Center(
+                                    child: Text(
+                                      province,
+                                      textAlign: TextAlign.center,
+                                      style: AppTextStyles.PR_R_15.copyWith(
+                                          color: isSelected
+                                              ? Colors.white
+                                              : UsedColor.charcoal_black),
                                     ),
                                   ),
                                 );
@@ -238,16 +168,101 @@ class MeetFilterArea extends StatelessWidget {
                             ),
                           );
                         },
-                      );
-                    },
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+              VerticalDivider(
+                thickness: 0.3.h,
+                width: 0.0.h,
+                color: UsedColor.line,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 56.h,
+                    width: 252.w,
+                    child: Container(
+                      alignment: Alignment.center,
+                      color: UsedColor.bg_color,
+                      child: Text(
+                        '시 · 도 · 군',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.PR_SB_17
+                            .copyWith(color: UsedColor.charcoal_black),
+                      ),
+                    ),
+                  ),
+                  SingleChildScrollView(
+                    child: ValueListenableBuilder<String>(
+                      valueListenable: viewModel.selectedProvinceNotifier,
+                      builder: (BuildContext context, String selectedProvince,
+                          Widget? child) {
+                        return ValueListenableBuilder<String>(
+                          valueListenable: viewModel.selectedDistrictNotifier,
+                          builder: (BuildContext context,
+                              String selectedDistrict, Widget? child) {
+                            return SizedBox(
+                              height: 466.h,
+                              width: 252.w,
+                              child: ListView.builder(
+                                primary: false,
+                                shrinkWrap: true,
+                                itemCount: viewModel
+                                    .getDistrictsByProvince(selectedProvince)
+                                    .length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  String district =
+                                      viewModel.getDistrictsByProvince(
+                                          selectedProvince)[index];
+
+                                  TextStyle textStyle = AppTextStyles.PR_R_15
+                                      .copyWith(
+                                          color: UsedColor.charcoal_black);
+                                  if (index == 0) {
+                                    textStyle = AppTextStyles.PR_SB_15
+                                        .copyWith(fontWeight: FontWeight.bold);
+                                  }
+                                  return InkWell(
+                                    onTap: () {
+                                      viewModel.selectedDistrictInAreaPage =
+                                          district;
+                                    },
+                                    child: Container(
+                                      height: 43.h,
+                                      width: 250.w,
+                                      color: selectedDistrict == district
+                                          ? UsedColor.image_card
+                                          : Colors.transparent,
+                                      child: Center(
+                                        child: Text(
+                                          district,
+                                          textAlign: TextAlign.center,
+                                          style: textStyle,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-        // SizedBox(height: 7.h),
-        Divider(color: const Color(0xffd9d9d9), thickness: 0.91.h),
+        Divider(
+          color: UsedColor.line,
+          thickness: 0.3.h,
+          height: 1.h,
+        ),
         Padding(
           padding: EdgeInsets.only(
             left: 26.w,
@@ -275,7 +290,7 @@ class MeetFilterArea extends StatelessWidget {
                       ),
                       SizedBox(height: 9.h),
                       Visibility(
-                        visible: selectedProvince.isNotEmpty ||
+                        visible: selectedProvince.isNotEmpty &&
                             selectedDistrict.isNotEmpty,
                         child: Container(
                           height: 31.h,
@@ -318,7 +333,10 @@ class MeetFilterArea extends StatelessWidget {
                         ),
                       ),
                       SizedBox(
-                        height: 23.h,
+                        height: (selectedProvince.isNotEmpty &&
+                                selectedDistrict.isNotEmpty)
+                            ? 23.h
+                            : 54.h,
                       ),
                     ],
                   );
@@ -336,6 +354,8 @@ class MeetFilterArea extends StatelessWidget {
       builder: (context, viewModel, child) {
         return NextButton(
           onTap: () async {
+            viewModel.saveAreaFilterInfo();
+            viewModel.clearAreaPageSelection();
             context.pop();
           },
           height: 54.h,

@@ -57,7 +57,8 @@ class MeetMain extends StatelessWidget {
             height: 16.h,
           ),
           Divider(
-            height: 0.3.h,
+            thickness: 0.3.h,
+            height: 0.h,
             color: UsedColor.line,
           ),
         ],

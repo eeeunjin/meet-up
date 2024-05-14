@@ -20,24 +20,22 @@ class LoginPhoneNum extends StatelessWidget {
     final double keyboardOpen = MediaQuery.of(context).viewInsets.bottom;
     final double bottomPadding = keyboardOpen > 0 ? 30.0 : 80.0.h;
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                top: 15.h,
-              ),
-              child: _header(context),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: 58.h,
             ),
-            SizedBox(height: 73.h),
-            _main(context),
-            Padding(
-              padding: EdgeInsets.only(bottom: bottomPadding),
-              child: _bottom(context),
-            ),
-          ],
-        ),
+            child: _header(context),
+          ),
+          SizedBox(height: 73.h),
+          _main(context),
+          Padding(
+            padding: EdgeInsets.only(bottom: bottomPadding),
+            child: _bottom(context),
+          ),
+        ],
       ),
     );
   }
@@ -55,8 +53,8 @@ class LoginPhoneNum extends StatelessWidget {
       },
       child: Image.asset(
         ImagePath.back,
-        width: 40.w,
-        height: 40.h,
+        width: 10.w,
+        height: 20.h,
       ),
     );
   }

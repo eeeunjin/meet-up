@@ -27,35 +27,30 @@ class MeetCreate extends StatelessWidget {
           FocusManager.instance.primaryFocus?.unfocus();
         },
         child: Scaffold(
-          body: SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                if (Platform.isIOS)
-                  _header(context)
-                else if (Platform.isAndroid)
-                  Padding(
-                    padding: EdgeInsets.only(
-                      top: 15.h,
-                    ),
-                    child: _header(context),
-                  ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        _main(context),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: 33.w, right: 32.w, bottom: 56.h),
-                          child: _bottom(context),
-                        ),
-                      ],
-                    ),
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                  top: 58.h,
+                ),
+                child: _header(context),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      _main(context),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: 33.w, right: 32.w, bottom: 56.h),
+                        child: _bottom(context),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -67,11 +62,18 @@ class MeetCreate extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          header(back: _back(context), title: '만남방 개설하기'),
-          SizedBox(
-            height: 11.h,
+          header(
+            back: _back(context),
+            title: '만남방 개설하기',
           ),
-          _divider(),
+          SizedBox(
+            height: 16.h,
+          ),
+          Divider(
+            thickness: 0.3.h,
+            height: 0.h,
+            color: UsedColor.line,
+          ),
         ],
       ),
     );
@@ -88,8 +90,8 @@ class MeetCreate extends StatelessWidget {
       },
       child: Image.asset(
         ImagePath.back,
-        width: 40.w,
-        height: 40.h,
+        width: 10.w,
+        height: 20.h,
       ),
     );
   }
@@ -104,15 +106,15 @@ class MeetCreate extends StatelessWidget {
         _divider(),
         SizedBox(height: 33.h),
         _category(context),
-        SizedBox(height: 31.h),
+        SizedBox(height: 33.h),
         _divider(),
         SizedBox(height: 33.h),
         _location(context),
-        SizedBox(height: 31.h),
+        SizedBox(height: 33.h),
         _divider(),
-        SizedBox(height: 32.91.h),
+        SizedBox(height: 33.h),
         _keyword(context),
-        SizedBox(height: 31.h),
+        SizedBox(height: 33.h),
         _divider(),
         SizedBox(height: 32.31.h),
         _detail(context),
@@ -134,7 +136,8 @@ class MeetCreate extends StatelessWidget {
   // 구분선
   Widget _divider() {
     return Divider(
-      height: 0.91.h,
+      thickness: 0.91.h,
+      height: 0.h,
       color: const Color(0xffd9d9d9),
     );
   }
@@ -213,8 +216,10 @@ class MeetCreate extends StatelessWidget {
           Container(
             width: 8.w,
             height: 8.w,
-            decoration:
-                BoxDecoration(shape: BoxShape.circle, color: UsedColor.main),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: UsedColor.main,
+            ),
           ),
           SizedBox(
             width: 23.w,
@@ -233,14 +238,14 @@ class MeetCreate extends StatelessWidget {
           _selectedCategory(context),
           const Spacer(),
           Padding(
-            padding: EdgeInsets.only(right: 7.0.w),
+            padding: EdgeInsets.only(right: 26.0.w),
             child: GestureDetector(
               onTap: () {
                 context.goNamed('meetCategory');
               },
               child: SizedBox(
-                  width: 48.w,
-                  height: 48.w,
+                  width: 9.w,
+                  height: 17.h,
                   child: Image.asset(ImagePath.nextArrow)),
             ),
           ),
@@ -298,10 +303,15 @@ class MeetCreate extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(right: 26.0.w),
             child: GestureDetector(
-                onTap: () {
-                  context.goNamed('meetLocation');
-                },
-                child: Image.asset(ImagePath.nextArrow)),
+              onTap: () {
+                context.goNamed('meetLocation');
+              },
+              child: Image.asset(
+                ImagePath.nextArrow,
+                width: 9.w,
+                height: 17.h,
+              ),
+            ),
           ),
         ],
       ),
@@ -356,14 +366,14 @@ class MeetCreate extends StatelessWidget {
           _selectedKeywords(context),
           const Spacer(),
           Padding(
-            padding: EdgeInsets.only(right: 7.0.w),
+            padding: EdgeInsets.only(right: 26.0.w),
             child: GestureDetector(
               onTap: () {
                 context.goNamed('meetKeyWord');
               },
               child: SizedBox(
-                  width: 48.w,
-                  height: 48.w,
+                  width: 9.w,
+                  height: 17.w,
                   child: Image.asset(ImagePath.nextArrow)),
             ),
           ),

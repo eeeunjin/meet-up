@@ -70,13 +70,17 @@ class MeetFilterViewModel with ChangeNotifier {
 
   // MARK: - Area
   String _selectedProvince = '';
+  String _selectedProvinceInAreaPage = '';
   final ValueNotifier<String> _selectedProvinceNotifier = ValueNotifier('');
 
   String _selectedDistrict = '';
+  String _selectedDistrictInAreaPage = '';
   final ValueNotifier<String> _selectedDistrictNotifier = ValueNotifier('');
 
   String get selectedProvince => _selectedProvince;
+  String get selectedProvinceInAreaPage => _selectedProvinceInAreaPage;
   String get selectedDistrict => _selectedDistrict;
+  String get selectedDistrictInAreaPage => _selectedDistrictInAreaPage;
 
   ValueNotifier<String> get selectedProvinceNotifier =>
       _selectedProvinceNotifier;
@@ -84,25 +88,31 @@ class MeetFilterViewModel with ChangeNotifier {
   ValueNotifier<String> get selectedDistrictNotifier =>
       _selectedDistrictNotifier;
 
-  set selectedProvince(String province) {
-    _selectedProvince = province;
+  set selectedProvinceInAreaPage(String province) {
+    _selectedDistrictInAreaPage = '';
+    _selectedDistrictNotifier.value = '';
+    _selectedProvinceInAreaPage = province;
     _selectedProvinceNotifier.value = province;
     notifyListeners();
-    debugPrint('Selected province: $province');
   }
 
-  set selectedDistrict(String district) {
-    _selectedDistrict = district;
+  set selectedDistrictInAreaPage(String district) {
+    _selectedDistrictInAreaPage = district;
     _selectedDistrictNotifier.value = district;
     notifyListeners();
-    debugPrint('Selected district: $district');
+  }
+
+  void clearAreaPageSelection() {
+    _selectedProvinceInAreaPage = '';
+    _selectedDistrictInAreaPage = '';
+    _selectedProvinceNotifier.value = '';
+    _selectedDistrictNotifier.value = '';
+    notifyListeners();
   }
 
   void clearSelection() {
     _selectedProvince = ''; // 선택된 시/도 초기화
     _selectedDistrict = ''; // 선택된 시/도/군 초기화
-    _selectedProvinceNotifier.value = '';
-    _selectedDistrictNotifier.value = '';
     notifyListeners();
   }
 
@@ -111,7 +121,13 @@ class MeetFilterViewModel with ChangeNotifier {
   }
 
   bool get isAreaSelectionComplete {
-    return _selectedProvince.isNotEmpty && _selectedDistrict.isNotEmpty;
+    return _selectedProvinceInAreaPage.isNotEmpty && _selectedDistrictInAreaPage.isNotEmpty;
+  }
+
+  void saveAreaFilterInfo() {
+    _selectedProvince = _selectedProvinceInAreaPage;
+    _selectedDistrict = _selectedDistrictInAreaPage;
+    notifyListeners();
   }
 
   // MARK: - Age

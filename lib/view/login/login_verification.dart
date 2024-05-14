@@ -29,52 +29,29 @@ class LoginVerification extends StatelessWidget {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (Platform.isIOS)
-                _header(context)
-              else if (Platform.isAndroid)
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 15.h,
-                  ),
-                  child: _header(context),
-                ),
-              SizedBox(
-                height: 73.h,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                top: 58.h,
               ),
-              _main(context),
-              const Spacer(),
-              Padding(
-                padding: EdgeInsets.only(bottom: bottomPadding),
-                child: _bottom(context),
-              ),
-            ],
-          ),
+              child: _header(context),
+            ),
+            SizedBox(
+              height: 73.h,
+            ),
+            _main(context),
+            const Spacer(),
+            Padding(
+              padding: EdgeInsets.only(bottom: bottomPadding),
+              child: _bottom(context),
+            ),
+          ],
         ),
       ),
     );
   }
-
-  // header
-  // Widget _back(BuildContext context) {
-  //   final viewModel =
-  //       Provider.of<LoginVerificationViewModel>(context, listen: false);
-  //   return GestureDetector(
-  //     onTap: () {
-  //       FocusManager.instance.primaryFocus?.unfocus();
-  //       viewModel.resetState();
-  //       context.pop();
-  //     }, // 뒤로가기
-  //     child: Image.asset(
-  //       ImagePath.back,
-  //       width: 40.w,
-  //       height: 40.h,
-  //     ),
-  //   );
-  // }
 
   Widget _header(BuildContext context) {
     return header(
@@ -391,26 +368,28 @@ class LoginVerification extends StatelessWidget {
                   while (context.canPop()) {
                     context.pop();
                   }
-                  FocusManager.instance.primaryFocus?.unfocus();
                   // 유저 모델 불러오기
                   await userViewModel.loadUserModel();
+                  FocusManager.instance.primaryFocus?.unfocus();
                 }
               }
               // 전화 번호만 있는 경우
-              if (context.mounted) {
-                showAlert(
-                  () async {
-                    // 유저 정보 생성
-                    await phoneNumViewModel.createUserDocument(
-                        uid: credential.user!.uid);
-                    if (context.mounted) {
-                      context.goNamed('signUpDetailOne');
-                    }
-                  },
-                  context: context,
-                  title: "가입된 회원 정보가 없습니다.",
-                  message: "회원가입 하시겠습니까?",
-                );
+              else {
+                if (context.mounted) {
+                  showAlert(
+                    () async {
+                      // 유저 정보 생성
+                      await phoneNumViewModel.createUserDocument(
+                          uid: credential.user!.uid);
+                      if (context.mounted) {
+                        context.goNamed('signUpDetailOne');
+                      }
+                    },
+                    context: context,
+                    title: "가입된 회원 정보가 없습니다.",
+                    message: "회원가입 하시겠습니까?",
+                  );
+                }
               }
             }
           } else {

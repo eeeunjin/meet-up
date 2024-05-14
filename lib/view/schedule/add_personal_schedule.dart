@@ -85,8 +85,8 @@ class AddPersonalSchedule extends StatelessWidget {
   // 구분선
   Widget _divider() {
     return Divider(
-      height: 0.3.h,
-      // thickness: 0.3.h,
+            thickness: 0.3.h,
+            height: 0.h,
       color: UsedColor.line,
     );
   }

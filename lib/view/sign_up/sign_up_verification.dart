@@ -29,53 +29,31 @@ class SignUpVerification extends StatelessWidget {
     return Scaffold(
       body: PopScope(
         canPop: false,
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (Platform.isIOS)
-                _header(context)
-              else if (Platform.isAndroid)
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 15.h,
-                  ),
-                  child: _header(context),
-                ),
-              SizedBox(
-                height: 73.h,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                top: 58.h,
               ),
-              _main(context),
-              const Spacer(),
-              Padding(
-                // Apply the padding dynamically based on the keyboard state
-                padding: EdgeInsets.only(bottom: bottomPadding),
-                child: _bottom(context),
-              ),
-              const Offstage()
-            ],
-          ),
+              child: _header(context),
+            ),
+            SizedBox(
+              height: 73.h,
+            ),
+            _main(context),
+            const Spacer(),
+            Padding(
+              // Apply the padding dynamically based on the keyboard state
+              padding: EdgeInsets.only(bottom: bottomPadding),
+              child: _bottom(context),
+            ),
+            const Offstage()
+          ],
         ),
       ),
     );
   }
-
-  // header
-  // Widget _back(BuildContext context) {
-  //   final viewModel =
-  //       Provider.of<SignUpVerificationViewModel>(context, listen: false);
-  //   return GestureDetector(
-  //     onTap: () {
-  //       context.pop();
-  //       viewModel.resetState();
-  //     }, // 뒤로가기
-  //     child: Image.asset(
-  //       ImagePath.back,
-  //       width: 40.w,
-  //       height: 40.h,
-  //     ),
-  //   );
-  // }
 
   Widget _header(BuildContext context) {
     return header(
@@ -351,7 +329,7 @@ class SignUpVerification extends StatelessWidget {
         if (!verificationViewModel.textFieldHasSixWord) {
           return;
         }
-        
+
         // 시간이 만료된 경우
         if (verificationViewModel.remainingTime == 0) {
           // 인증 만료 alert 띄우기
@@ -402,26 +380,26 @@ class SignUpVerification extends StatelessWidget {
                       // 메인 홈 화면으로 이동 (로그인)
                       // Firebase secure storage에 uid 값 저장
                       await userViewModel.login(uid: phoneNumViewModel.uid);
-
+                      // 유저 모델 불러오기
                       if (LoginFunc.isLogined) {
                         while (context.canPop()) {
                           context.pop();
                         }
-                        // 유저 모델 불러오기
-                        await userViewModel.loadUserModel();
                       }
+                      await userViewModel.loadUserModel();
                     },
                     context: context,
                     title: "가입된 계정이 있습니다.",
                     message: "로그인 하시겠습니까?",
                   );
                 }
-              }
-              // 기본 프로필 정보 중 전화 번호만 있는 경우
-              debugPrint("기존 프로필 정보가 없기 때문에 프로필 설정부터.");
-              // 프로필 설정 페이지로 이동
-              if (context.mounted) {
-                context.goNamed('signUpDetailOne');
+              } else {
+                // 기본 프로필 정보 중 전화 번호만 있는 경우
+                debugPrint("기존 프로필 정보가 없기 때문에 프로필 설정부터.");
+                // 프로필 설정 페이지로 이동
+                if (context.mounted) {
+                  context.goNamed('signUpDetailOne');
+                }
               }
             }
           } else {

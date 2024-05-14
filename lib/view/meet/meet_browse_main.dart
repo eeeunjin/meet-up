@@ -22,23 +22,18 @@ class MeetBrowseMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            if (Platform.isIOS)
-              _header(context)
-            else if (Platform.isAndroid)
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 15.h,
-                ),
-                child: _header(context),
-              ),
-            Expanded(child: _main(context)),
-            // _main(context),
-          ],
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: 58.h,
+            ),
+            child: _header(context),
+          ),
+          Expanded(child: _main(context)),
+          // _main(context),
+        ],
       ),
     );
   }
@@ -48,7 +43,13 @@ class MeetBrowseMain extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          header(back: _back(context), title: '만남방 둘러보기'),
+          header(
+            back: _back(context),
+            title: '만남 방 둘러보기',
+          ),
+          SizedBox(
+            height: 16.h,
+          ),
         ],
       ),
     );
@@ -63,8 +64,8 @@ class MeetBrowseMain extends StatelessWidget {
         },
         child: Image.asset(
           ImagePath.back,
-          width: 40.w,
-          height: 40.h,
+          width: 10.w,
+          height: 20.h,
         ),
       ),
     );
@@ -72,7 +73,8 @@ class MeetBrowseMain extends StatelessWidget {
 
   Widget _divider() {
     return Divider(
-      height: 0.91.h,
+      thickness: 0.3.h,
+      height: 0.h,
       color: const Color(0xffd9d9d9),
     );
   }

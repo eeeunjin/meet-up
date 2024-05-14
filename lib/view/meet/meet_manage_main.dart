@@ -43,12 +43,16 @@ class MeetManageMain extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          header(back: _back(context), title: '내가 만든 만남방'),
+          header(
+            back: _back(context),
+            title: '내가 만든 만남방',
+          ),
           SizedBox(
-            height: 11.h,
+            height: 16.h,
           ),
           Divider(
-            height: 0.3.h,
+            thickness: 0.3.h,
+            height: 0.h,
             color: UsedColor.line,
           ),
         ],
@@ -63,8 +67,8 @@ class MeetManageMain extends StatelessWidget {
       },
       child: Image.asset(
         ImagePath.back,
-        width: 40.w,
-        height: 40.h,
+        width: 10.w,
+        height: 20.h,
       ),
     );
   }

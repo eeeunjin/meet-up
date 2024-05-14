@@ -14,24 +14,19 @@ class SignUpDetailOne extends StatelessWidget {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (Platform.isIOS)
-                _header(context)
-              else if (Platform.isAndroid)
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 15.h,
-                  ),
-                  child: _header(context),
-                ),
-              SizedBox(height: 17.h),
-              _progressBar(),
-              _main(context),
-            ],
-          ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                top: 58.h,
+              ),
+              child: _header(context),
+            ),
+            SizedBox(height: 17.h),
+            _progressBar(),
+            _main(context),
+          ],
         ),
       ),
     );
@@ -42,8 +37,8 @@ class SignUpDetailOne extends StatelessWidget {
       onTap: () => context.pop(), // 뒤로가기
       child: Image.asset(
         ImagePath.back,
-        width: 40.w,
-        height: 40.h,
+        width: 10.w,
+        height: 20.h,
       ),
     );
   }

@@ -17,29 +17,25 @@ class SignUpDetailFive extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (Platform.isIOS)
-              _header(context)
-            else if (Platform.isAndroid)
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 15.h,
-                ),
-                child: _header(context),
-              ),
-            SizedBox(height: 17.h),
-            _progressBar(),
-            _main(context),
-            const Spacer(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+         
             Padding(
-              padding: EdgeInsets.only(left: 32.w, right: 33.w, bottom: 25.h),
-              child: _bottom(context),
+              padding: EdgeInsets.only(
+                top: 58.h,
+              ),
+              child: _header(context),
             ),
-          ],
-        ),
+          SizedBox(height: 17.h),
+          _progressBar(),
+          _main(context),
+          const Spacer(),
+          Padding(
+            padding: EdgeInsets.only(left: 32.w, right: 33.w, bottom: 25.h),
+            child: _bottom(context),
+          ),
+        ],
       ),
     );
   }
@@ -55,8 +51,8 @@ class SignUpDetailFive extends StatelessWidget {
       },
       child: Image.asset(
         ImagePath.back,
-        width: 40.w,
-        height: 40.h,
+        width: 10.w,
+        height: 20.h,
       ),
     );
   }

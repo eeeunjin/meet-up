@@ -12,19 +12,17 @@ class SettingMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                top: 15.h,
-              ),
-              child: _header(context),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: 58.h,
             ),
-            _main(context),
-          ],
-        ),
+            child: _header(context),
+          ),
+          _main(context),
+        ],
       ),
     );
   }
@@ -39,7 +37,8 @@ class SettingMain extends StatelessWidget {
             height: 16.h,
           ),
           Divider(
-            height: 0.3.h,
+            thickness: 0.3.h,
+            height: 0.h,
             color: UsedColor.line,
           ),
         ],
@@ -54,8 +53,8 @@ class SettingMain extends StatelessWidget {
       },
       child: Image.asset(
         ImagePath.back,
-        width: 40.w,
-        height: 40.h,
+        width: 10.w,
+        height: 20.h,
       ),
     );
   }
@@ -69,7 +68,8 @@ class SettingMain extends StatelessWidget {
           SizedBox(height: 20.0.h),
           _personalSetting(context),
           Divider(
-            height: 0.3.h,
+            thickness: 0.3.h,
+            height: 0.h,
             color: UsedColor.grey1,
           ),
           SizedBox(height: 12.h),

@@ -74,10 +74,11 @@ class MeetDetailRoom extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: 11.h,
+            height: 16.h,
           ),
           Divider(
-            height: 0.3.h,
+            thickness: 0.3.h,
+            height: 0.h,
             color: UsedColor.line,
           ),
         ],
@@ -92,8 +93,8 @@ class MeetDetailRoom extends StatelessWidget {
       },
       child: Image.asset(
         ImagePath.back,
-        width: 40.w,
-        height: 40.h,
+        width: 10.w,
+        height: 20.h,
       ),
     );
   }
@@ -199,7 +200,10 @@ class MeetDetailRoom extends StatelessWidget {
                                       false), // '불가능' 버튼
                                 ],
                               ),
-                              Divider(color: UsedColor.line, thickness: 0.3.h),
+                              Divider(
+                                color: UsedColor.line,
+                                thickness: 0.3.h,
+                              ),
                             ],
                           ),
                         );

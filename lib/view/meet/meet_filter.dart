@@ -17,26 +17,21 @@ class MeetFilterMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            if (Platform.isIOS)
-              _header(context)
-            else if (Platform.isAndroid)
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 15.h,
-                ),
-                child: _header(context),
-              ),
-            Expanded(child: _main(context)),
-            Padding(
-              padding: EdgeInsets.only(left: 33.w, right: 32.w, bottom: 27.h),
-              child: _bottom(context),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: 58.h,
             ),
-          ],
-        ),
+            child: _header(context),
+          ),
+          Expanded(child: _main(context)),
+          Padding(
+            padding: EdgeInsets.only(left: 33.w, right: 32.w, bottom: 27.h),
+            child: _bottom(context),
+          ),
+        ],
       ),
     );
   }
@@ -48,7 +43,7 @@ class MeetFilterMain extends StatelessWidget {
         children: [
           header(back: _back(context), title: '필터'),
           SizedBox(
-            height: 22.h,
+            height: 16.h,
           ),
           _divider(),
         ],
@@ -67,9 +62,9 @@ class MeetFilterMain extends StatelessWidget {
           context.pop();
         },
         child: Image.asset(
-          ImagePath.close,
-          width: 40.w,
-          height: 40.h,
+          ImagePath.back,
+          width: 10.w,
+          height: 20.h,
         ),
       ),
     );
@@ -77,7 +72,8 @@ class MeetFilterMain extends StatelessWidget {
 
   Widget _divider() {
     return Divider(
-      height: 0.91.h,
+      thickness: 0.91.h,
+      height: 0.h,
       color: const Color(0xffd9d9d9),
     );
   }
@@ -326,7 +322,13 @@ class MeetFilterMain extends StatelessWidget {
                   onTap: () {
                     context.goNamed('meetFilterArea');
                   },
-                  child: SizedBox(child: Image.asset(ImagePath.nextArrow)),
+                  child: SizedBox(
+                    child: Image.asset(
+                      ImagePath.nextArrow,
+                      width: 9.w,
+                      height: 17.h,
+                    ),
+                  ),
                 ),
               ),
             ],

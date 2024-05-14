@@ -15,27 +15,22 @@ class CoinMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          color: UsedColor.bg_color,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              if (Platform.isIOS)
-                _header(context)
-              else if (Platform.isAndroid)
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 15.h,
-                  ),
-                  child: _header(context),
-                ),
-              SizedBox(height: 45.h),
-              _currentCoin(),
-              SizedBox(height: 52.h),
-              _currentTicket(),
-            ],
-          ),
+      body: Container(
+        color: UsedColor.bg_color,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                top: 58.h,
+              ),
+              child: _header(context),
+            ),
+            SizedBox(height: 45.h),
+            _currentCoin(),
+            SizedBox(height: 52.h),
+            _currentTicket(),
+          ],
         ),
       ),
     );
@@ -48,10 +43,11 @@ class CoinMain extends StatelessWidget {
         children: [
           header(back: _back(context), title: '코인/만남권'),
           SizedBox(
-            height: 11.h,
+            height: 16.h,
           ),
           Divider(
-            height: 0.3.h,
+            thickness: 0.3.h,
+            height: 0.h,
             color: UsedColor.line,
           )
         ],
@@ -75,8 +71,8 @@ class CoinMain extends StatelessWidget {
       },
       child: Image.asset(
         ImagePath.back,
-        width: 40.w,
-        height: 40.h,
+        width: 10.w,
+        height: 20.h,
       ),
     );
   }
