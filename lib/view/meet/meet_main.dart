@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/coin_widget.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
+import 'package:provider/provider.dart';
 
 class MeetMain extends StatelessWidget {
   const MeetMain({super.key});
@@ -78,9 +81,6 @@ class MeetMain extends StatelessWidget {
               _manageMeetList(context),
               SizedBox(height: 28.h),
               _searchMeetList(context),
-              SizedBox(height: 28.h),
-              _checkMeetList(),
-              SizedBox(height: 89.h),
             ],
           ),
         ),
@@ -246,95 +246,29 @@ class MeetMain extends StatelessWidget {
     );
   }
 
-  // Mark - 만남 요청 리스트
-  Widget _checkMeetList() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Image.asset(
-              ImagePath.meetIcon3,
-              width: 20.w,
-              height: 20.h,
-            ),
-            SizedBox(
-              width: 8.w,
-            ),
-            Text(
-              '내가 만든 만남방을 관리해보세요!',
-              style: AppTextStyles.SU_R_14.copyWith(color: UsedColor.text_3),
-            ),
-          ],
-        ),
-        SizedBox(height: 16.h),
-        Container(
-          width: 353.w,
-          height: 115.h,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(19.r),
-          ),
-          child: Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 25.0.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 25.h,
-                    ),
-                    Text(
-                      '입장 요청 리스트',
-                      style: AppTextStyles.PR_SB_20
-                          .copyWith(color: UsedColor.violet),
-                    ),
-                    SizedBox(
-                      height: 30.h,
-                    ),
-                    Text(
-                      '더보기 >',
-                      style: AppTextStyles.SU_R_12
-                          .copyWith(color: UsedColor.text_5),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: 110.w,
-              ),
-              Image.asset(
-                ImagePath.meetImage3,
-                width: 70.w,
-                height: 70.h,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _event() {
-    return Container(
+    return SizedBox(
       width: 354.w,
       height: 120.h,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-      ),
+      child: Image.asset(ImagePath.eventImage1),
     );
   }
 
   Widget _coinWidget(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context);
     return Padding(
       padding: EdgeInsets.only(right: 3.0.h),
       child: GestureDetector(
         onTap: () {
           context.push('/coinMain');
         },
-        child: const Align(
+        child: Align(
           alignment: Alignment.centerRight,
-          child: CoinWidget(coinAmount: '600', itemCount: 5),
+          child: CoinWidget(
+            coinAmount: userViewModel.userModel!.coin,
+            ticketAmount: userViewModel.userModel!.ticket,
+            isFixed: userViewModel.userModel!.isFixedTicket,
+          ),
         ),
       ),
     );

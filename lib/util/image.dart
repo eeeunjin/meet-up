@@ -28,11 +28,11 @@ class ImagePath {
   // meet
   static String get meetIcon1 => 'assets/images/meet_icon_1.png';
   static String get meetIcon2 => 'assets/images/meet_icon_2.png';
-  static String get meetIcon3 => 'assets/images/meeticon3.png';
 
   static String get meetImage1 => 'assets/images/meet_image_1.png';
   static String get meetImage2 => 'assets/images/meet_image_2.png';
-  static String get meetImage3 => 'assets/images/meetimage3.png';
+
+  static String get eventImage1 => 'assets/images/event_image_1.png';
 
   static String get nextArrow => 'assets/images/nextarrow.png';
 

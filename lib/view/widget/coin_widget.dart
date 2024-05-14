@@ -6,48 +6,50 @@ import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 
 class CoinWidget extends StatelessWidget {
-  final String coinAmount;
-  final int itemCount;
+  final int coinAmount;
+  final int ticketAmount;
+  final bool isFixed;
 
   const CoinWidget({
     Key? key,
     required this.coinAmount,
-    required this.itemCount,
+    required this.ticketAmount,
+    required this.isFixed,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 100.w,
+      padding: EdgeInsets.symmetric(horizontal: 8.0.w),
       height: 24.h,
       decoration: BoxDecoration(
         color: UsedColor.charcoal_black,
         borderRadius: BorderRadius.circular(19.r),
       ),
-      child: Padding(
-        padding: EdgeInsets.only(left: 8.0.w),
-        child: Row(
-          children: [
-            // dollar icon
-            Image.asset(ImagePath.coinDollarIcon, width: 10.5.w, height: 10.h),
-            SizedBox(width: 1.2.w),
-            // 충전된 달러 양
-            Text(
-              coinAmount,
-              style: AppTextStyles.PR_R_9.copyWith(color: UsedColor.coin),
-            ),
-            SizedBox(width: 4.3.w),
-            // wallet icon
-            Image.asset(ImagePath.coinWalletIcon,
-                width: 11.5.w, height: 11.5.h),
-            SizedBox(width: 1.18.w),
-            // 입장권 개수
-            Text(
-              itemCount.toString(),
-              style: AppTextStyles.PR_R_9.copyWith(color: UsedColor.coin),
-            ),
-            SizedBox(width: 3.w),
-            // 정기권 여부
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // dollar icon
+          Image.asset(ImagePath.coinDollarIcon, width: 10.5.w, height: 10.h),
+          SizedBox(width: 1.2.w),
+          // 충전된 달러 양
+          Text(
+            coinAmount.toString(),
+            style: AppTextStyles.PR_R_9.copyWith(color: UsedColor.coin),
+          ),
+          SizedBox(width: 4.3.w),
+          // wallet icon
+          Image.asset(ImagePath.coinWalletIcon,
+              width: 11.5.w, height: 11.5.h),
+          SizedBox(width: 1.18.w),
+          // 입장권 개수
+          Text(
+            ticketAmount.toString(),
+            style: AppTextStyles.PR_R_9.copyWith(color: UsedColor.coin),
+          ),
+          if (isFixed) SizedBox(width: 3.w),
+          // 정기권 여부
+          if (isFixed)
             Container(
               width: 30.w,
               height: 10.h,
@@ -62,8 +64,7 @@ class CoinWidget extends StatelessWidget {
                 ),
               ),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }
