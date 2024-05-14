@@ -348,7 +348,7 @@ class MeetBrowseMain extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
-                            height: 18.h,
+                            height: 17.h,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -403,10 +403,14 @@ class MeetBrowseMain extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                '#${room.room_keyword.join(' #')}', // 키워드
-                                style: AppTextStyles.SU_L_12
-                                    .copyWith(color: UsedColor.main),
+                              SizedBox(
+                                width: 235.w,
+                                child: Text(
+                                  '#${room.room_keyword.join(' #')}', // 키워드
+                                  style: AppTextStyles.SU_L_12
+                                      .copyWith(color: UsedColor.main),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                               Text(
                                 '${DateFormat('yyyy.MM.dd').format(room.room_creation_date.toDate().add(const Duration(days: 7)))} 만료',

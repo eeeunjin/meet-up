@@ -119,6 +119,7 @@ class MeetManageMain extends StatelessWidget {
     BuildContext context,
     List<QueryDocumentSnapshot<Object?>> docs,
   ) {
+    final userViewModel = Provider.of<UserViewModel>(context);
     return Row(
       children: [
         Padding(
@@ -136,12 +137,20 @@ class MeetManageMain extends StatelessWidget {
             style: AppTextStyles.SU_SB_16.copyWith(color: UsedColor.text_3),
           ),
         ),
-        SizedBox(width: 118.w),
-        GestureDetector(
+        const Spacer(),
+        Padding(
+          padding: EdgeInsets.only(right: 18.0.w),
+          child: GestureDetector(
             onTap: () {
               context.goNamed('coinMainFromMeetManageMain');
             },
-            child: const CoinWidget(coinAmount: '600', itemCount: 5)),
+            child: CoinWidget(
+              coinAmount: userViewModel.userModel!.coin,
+              ticketAmount: userViewModel.userModel!.ticket,
+              isFixed: userViewModel.userModel!.isFixedTicket,
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -203,68 +212,47 @@ class MeetManageMain extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15.r),
                       color: Colors.white,
                     ),
-                    child: Stack(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 21.w, top: 19.h),
-                          // title & 인원 수
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 21.w, top: 19.h),
+                      // title & 인원 수
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(roomModel.room_name,
-                                      style: AppTextStyles.PR_SB_16),
-                                  SizedBox(width: 10.w),
-                                  Padding(
-                                    padding: EdgeInsets.only(bottom: 3.0.h),
-                                    child: Text(
-                                      '1',
-                                      style: AppTextStyles.PR_SB_10
-                                          .copyWith(color: UsedColor.violet),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(bottom: 3.0.h),
-                                    child: Text(
-                                      '/4명',
-                                      style: AppTextStyles.PR_SB_10
-                                          .copyWith(color: UsedColor.text_4),
-                                    ),
-                                  ),
-                                ],
+                              Text(roomModel.room_name,
+                                  style: AppTextStyles.PR_SB_16),
+                              SizedBox(width: 10.w),
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 3.0.h),
+                                child: Text(
+                                  '1',
+                                  style: AppTextStyles.PR_SB_10
+                                      .copyWith(color: UsedColor.violet),
+                                ),
                               ),
-                              SizedBox(height: 10.h),
-                              // detail
-                              Text(
-                                roomModel.room_description,
-                                style: AppTextStyles.PR_R_12
-                                    .copyWith(color: UsedColor.text_5),
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 3.0.h),
+                                child: Text(
+                                  '/4명',
+                                  style: AppTextStyles.PR_SB_10
+                                      .copyWith(color: UsedColor.text_4),
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                        Positioned(
-                          right: 19.w,
-                          top: 29.h,
-                          child: Container(
-                            width: 83.w,
-                            height: 26.h,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15.r),
-                                color: UsedColor.image_card),
-                            child: Center(
-                              child: Text(
-                                '입장 요청',
-                                style: AppTextStyles.SU_M_13
-                                    .copyWith(color: Colors.black),
-                              ),
-                            ),
+                          SizedBox(height: 10.h),
+                          // detail
+                          Text(
+                            roomModel.room_description,
+                            style: AppTextStyles.PR_R_12
+                                .copyWith(color: UsedColor.text_5),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        )
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );

@@ -47,6 +47,7 @@ class MeetKeywordViewModel with ChangeNotifier {
 
   // keyword tap clear
   void keywordClearSelection() {
+    textController.clear();
     _textCount = '';
     _currentInput = '';
     _keywords.clear();

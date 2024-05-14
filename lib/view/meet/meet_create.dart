@@ -385,17 +385,18 @@ class MeetCreate extends StatelessWidget {
     return Consumer<MeetCreateViewModel>(
       builder: (context, viewModel, child) {
         logger.d("${viewModel.selectedKeywords}");
-        List<Widget> keywordWidgets = viewModel.selectedKeywords
-            .map((keyword) => Text(
-                  '#$keyword ',
-                  style:
-                      AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
-                ))
-            .toList();
-        return Wrap(
-          spacing: 0,
-          runSpacing: 0.h,
-          children: keywordWidgets,
+        List<String> keywords = viewModel.selectedKeywords;
+        String resultString = '';
+        for (String keyword in keywords) {
+          resultString += '#$keyword ';
+        }
+        return SizedBox(
+          width: 200.w,
+          child: Text(
+            resultString,
+            style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
+            overflow: TextOverflow.ellipsis,
+          ),
         );
       },
     );

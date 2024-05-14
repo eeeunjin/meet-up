@@ -50,7 +50,8 @@ class RoomModel {
         room_rules: room_rules,
         room_creation_date: room_creation_date,
         room_owner_reference: room_owner_reference,
-        room_participant_reference: room_participant_reference);
+        room_participant_reference: room_participant_reference,
+        roomId: roomId);
   }
 
   RoomModel.fromJson(Map<String, Object?> json)

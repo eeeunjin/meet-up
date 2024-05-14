@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
@@ -97,11 +98,9 @@ class MeetKeyWord extends StatelessWidget {
               ),
               // 텍스트 필드
               TextField(
-                maxLength: 8,
                 controller: viewModel.textController,
                 cursorColor: Colors.black, // 커서 색상 변경
                 decoration: InputDecoration(
-                  counterText: '',
                   hintText: '관련 키워드를 입력해주세요. (최대 3개)',
                   hintStyle:
                       AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_5),
@@ -113,21 +112,29 @@ class MeetKeyWord extends StatelessWidget {
                 ),
                 onChanged: (text) {
                   viewModel.setKeywordCount();
+                  logger.d(text);
                   // 3개 입력하면 더 입력 못하도록 막음
                   if (viewModel.keywords.length >= 3) {
                     viewModel.textController.clear();
                     return;
                   }
-                  // 스페이스와 엔터로 저장
-                  if (text.isNotEmpty && text.characters.last == ' ') {
-                    final keyword = text.trim();
-                    if (keyword.isNotEmpty) {
+                  if (text.length > 8) {
+                    // 스페이스바로 저장
+                    if (text.characters.last == ' ') {
+                      final keyword = text.trim();
                       viewModel.addKeyword(keyword);
                       viewModel.textController.clear();
+                    }
+                    // 스페이스바가 아닌 경우 입력 막기
+                    else {
+                      viewModel.textController.text =
+                          viewModel.textController.text.substring(0, 8);
+                      viewModel.setKeywordCount();
                     }
                   }
                 },
                 onSubmitted: (text) {
+                  // 엔터로 저장
                   final keyword = text.trim();
                   if (keyword.isNotEmpty) {
                     viewModel.addKeyword(keyword);
