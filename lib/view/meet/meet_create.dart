@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/main.dart';
+import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/repository/room_repository.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
@@ -488,6 +489,14 @@ class MeetCreate extends StatelessWidget {
 // MARK: - age
   Widget _age(BuildContext context) {
     final viewModel = Provider.of<MeetCreateViewModel>(context, listen: true);
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+
+    if (userViewModel.userModel != null) {
+      Duration difference =
+          DateTime.now().difference(userViewModel.userModel!.birthday);
+      logger.d('날짜 차이 : ${difference.inDays}');
+    }
+
     List<String> options = [
       "20대",
       "30대",
@@ -568,6 +577,7 @@ class MeetCreate extends StatelessWidget {
 // MARK: - gender ratio
   Widget _genderRatio(BuildContext context) {
     MeetCreateViewModel viewModel = Provider.of<MeetCreateViewModel>(context);
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
 
     return Padding(
       padding: EdgeInsets.only(left: 27.0.w),
@@ -606,11 +616,15 @@ class MeetCreate extends StatelessWidget {
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: () => viewModel.selectWomen4(),
+                  onTap: () => userViewModel.userModel!.gender == 'male'
+                      ? null
+                      : viewModel.selectWomen4(),
                   child: Image.asset(
-                    viewModel.roomGenderRatio == RoomGenderRatio.womanOnly
-                        ? ImagePath.grW4
-                        : ImagePath.grW4Empty,
+                    userViewModel.userModel!.gender == 'male'
+                        ? ImagePath.grW4Blur
+                        : viewModel.roomGenderRatio == RoomGenderRatio.womanOnly
+                            ? ImagePath.grW4
+                            : ImagePath.grW4Empty,
                     width: 76.w,
                     height: 76.h,
                   ),
@@ -628,11 +642,15 @@ class MeetCreate extends StatelessWidget {
                 ),
                 SizedBox(width: 24.w),
                 GestureDetector(
-                  onTap: () => viewModel.selectMen4(),
+                  onTap: () => userViewModel.userModel!.gender == 'female'
+                      ? null
+                      : viewModel.selectMen4(),
                   child: Image.asset(
-                    viewModel.roomGenderRatio == RoomGenderRatio.manOnly
-                        ? ImagePath.grM4
-                        : ImagePath.grM4Empty,
+                    userViewModel.userModel!.gender == 'female'
+                        ? ImagePath.grW4Blur
+                        : viewModel.roomGenderRatio == RoomGenderRatio.manOnly
+                            ? ImagePath.grM4
+                            : ImagePath.grM4Empty,
                     width: 76.w,
                     height: 76.h,
                   ),

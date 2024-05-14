@@ -63,9 +63,7 @@ class MeetCreateViewModel with ChangeNotifier {
 
   // MARK: - gender ratio
 
-  // 유저 정보 불러오기
-
-  RoomGenderRatio _roomGenderRatio = RoomGenderRatio.womanOnly;
+  RoomGenderRatio? _roomGenderRatio;
   bool get ageCompleted => selectedAges.isNotEmpty;
 
   void selectWomen4() {
@@ -83,7 +81,7 @@ class MeetCreateViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  RoomGenderRatio get roomGenderRatio => _roomGenderRatio;
+  RoomGenderRatio? get roomGenderRatio => _roomGenderRatio;
 
   // rules
   final Map<String, bool> _rulesQuestion = {
@@ -286,7 +284,7 @@ class MeetCreateViewModel with ChangeNotifier {
       room_keyword: selectedKeywords,
       room_description: descriptionTextController.text,
       room_age: roomAge,
-      room_gender_ratio: roomGenderRatio.name,
+      room_gender_ratio: roomGenderRatio!.name,
       room_rules: roomRules,
       room_creation_date: Timestamp.now(),
       room_owner_reference: _firebaseRefs.colRefUser.doc(uid),
@@ -448,7 +446,8 @@ class MeetCreateViewModel with ChangeNotifier {
         isCategorySelectionComplete &&
         isLocationSelectionComplete &&
         detailCompleted &&
-        ageCompleted;
+        ageCompleted &&
+        roomGenderRatio != null;
   }
 
   // MARK: - check bottomsheet
