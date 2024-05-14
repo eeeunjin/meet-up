@@ -967,7 +967,7 @@ PODS:
   - Firebase/Messaging (10.25.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 10.25.0)
-  - firebase_auth (4.19.4):
+  - firebase_auth (4.18.0):
     - Firebase/Auth (= 10.25.0)
     - firebase_core
     - Flutter
@@ -1217,7 +1217,7 @@ SPEC CHECKSUMS:
   BoringSSL-GRPC: 1e2348957acdbcad360b80a264a90799984b2ba6
   cloud_firestore: 7c1af65241571424792ea77afa21b39f997c09b6
   Firebase: 0312a2352584f782ea56f66d91606891d4607f06
-  firebase_auth: 59b73550b86d6213a4e9509a9c21b59ea524c647
+  firebase_auth: 81b37b5c30605cfa8378e73fd8483af9b116622d
   firebase_core: 0b39f4f424e02eecabb2356ddf331fa07b772af8
   firebase_messaging: 8999827b6efc9c3ab4b1f9dc246deaa7f13dbf88
   FirebaseAppCheckInterop: 5da5ce93e8797a215e3f677fb0654b74e736c8b8
@@ -1247,4 +1247,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: bc53cb186bb692ffb1ab3042c2cad02bfc8d25ae
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.15.2
