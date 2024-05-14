@@ -167,44 +167,34 @@ class MeetCreate extends StatelessWidget {
           ),
           SizedBox(width: 23.w),
           // text field
-          Expanded(
-            child: Stack(
-              children: [
-                Transform.translate(
-                  offset: Offset(0, -2.0.h), // text와 높이를 맞추기 위한 임의 값
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: 210.w, // 임의 값
-                    height: 19.h,
-                    child: TextField(
-                      maxLength: 16,
-                      controller: viewModel.roomNamingTextController,
-                      onChanged: (_) {
-                        viewModel.setNamingCount();
-                      },
-                      decoration: const InputDecoration(
-                        counterText: '',
-                        isDense: true,
-                        contentPadding: EdgeInsets.zero,
-                        border: InputBorder.none,
-                        hintText: '방 명을 입력해주세요',
-                        hintStyle: TextStyle(color: UsedColor.text_5),
-                      ),
-                      style: AppTextStyles.PR_R_15
-                          .copyWith(color: UsedColor.text_5),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 26.0.w,
-                  bottom: 0.0.h,
-                  child: Text(
-                    viewModel.namingCount,
-                    style: AppTextStyles.PR_SB_11
-                        .copyWith(color: UsedColor.text_3), // 임의 색상
-                  ),
-                ),
-              ],
+          Container(
+            alignment: Alignment.center,
+            width: 210.w, // 임의 값
+            height: 19.h,
+            child: TextField(
+              maxLength: 16,
+              controller: viewModel.roomNamingTextController,
+              onChanged: (_) {
+                viewModel.setNamingCount();
+              },
+              decoration: const InputDecoration(
+                counterText: '',
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
+                border: InputBorder.none,
+                hintText: '방 명을 입력해주세요',
+                hintStyle: TextStyle(color: UsedColor.text_5),
+              ),
+              style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
+            ),
+          ),
+          const Spacer(),
+          Padding(
+            padding: EdgeInsets.only(right: 26.w),
+            child: Text(
+              viewModel.namingCount,
+              style: AppTextStyles.PR_SB_11
+                  .copyWith(color: UsedColor.text_3), // 임의 색상
             ),
           ),
         ],

@@ -136,6 +136,7 @@ class MeetBrowseMain extends StatelessWidget {
                 disabledBorder: InputBorder.none,
                 hintStyle:
                     AppTextStyles.SU_R_14.copyWith(color: UsedColor.text_3),
+                isDense: true,
               ),
             ),
           ),

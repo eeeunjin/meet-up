@@ -10,49 +10,49 @@ class AppTextStyles {
         fontFamily: 'Pretendard',
         fontWeight: FontWeight.bold,
         fontSize: 24.sp,
-        height: (29/24).h,
+        height: (29 / 24).h,
       );
 
   static TextStyle get PR_B_22 => TextStyle(
         fontFamily: 'Pretendard',
         fontWeight: FontWeight.bold,
         fontSize: 22.sp,
-        height: (26/22).h,
+        height: (26 / 22).h,
       );
 
   static TextStyle get PR_B_19 => TextStyle(
         fontFamily: 'Pretendard',
         fontWeight: FontWeight.bold,
         fontSize: 19.sp,
-        height: (23/19).h,
+        height: (23 / 19).h,
       );
 
   static TextStyle get PR_B_18 => TextStyle(
         fontFamily: 'Pretendard',
         fontWeight: FontWeight.bold,
         fontSize: 18.sp,
-        height: (21/18).h,
+        height: (21 / 18).h,
       );
 
   static TextStyle get PR_B_16 => TextStyle(
         fontFamily: 'Pretendard',
         fontWeight: FontWeight.bold,
         fontSize: 16.sp,
-        height: (19/16).h,
+        height: (19 / 16).h,
       );
 
   static TextStyle get PR_B_15 => TextStyle(
         fontFamily: 'Pretendard',
         fontWeight: FontWeight.bold,
         fontSize: 15.sp,
-        height: (18/15).h,
+        height: (18 / 15).h,
       );
 
   static TextStyle get PR_B_12 => TextStyle(
         fontFamily: 'Pretendard',
         fontWeight: FontWeight.bold,
         fontSize: 12.sp,
-        height: (14/12).h,
+        height: (14 / 12).h,
       );
 
   //PR_SB
@@ -60,7 +60,7 @@ class AppTextStyles {
         fontFamily: 'Pretendard-SB',
         fontWeight: FontWeight.bold,
         fontSize: 36.sp,
-        height: (43/36).h,
+        height: (43 / 36).h,
       );
 
   // design 표에 없음
@@ -75,215 +75,218 @@ class AppTextStyles {
         fontFamily: 'Pretendard-SB',
         fontWeight: FontWeight.bold,
         fontSize: 26.sp,
-        height: (31/26).h,
+        height: (31 / 26).h,
       );
 
   static TextStyle get PR_SB_24 => TextStyle(
         fontFamily: 'Pretendard-SB',
         fontWeight: FontWeight.bold,
         fontSize: 24.sp,
-        height: (29/24).h,
+        height: (29 / 24).h,
       );
 
   static TextStyle get PR_SB_22 => TextStyle(
         fontFamily: 'Pretendard-SB',
         fontWeight: FontWeight.bold,
         fontSize: 22.sp,
-        height: (26/22).h,
+        height: (26 / 22).h,
       );
 
   static TextStyle get PR_SB_20 => TextStyle(
         fontFamily: 'Pretendard-SB',
         fontSize: 20.sp,
-        height: (24/20).h,
+        height: (24 / 20).h,
       );
 
   static TextStyle get PR_SB_18 => TextStyle(
         fontFamily: 'Pretendard-SB',
         fontSize: 18.sp,
-        height: (21/18).h,
+        height: (21 / 18).h,
       );
 
   static TextStyle get PR_SB_17 => TextStyle(
         fontFamily: 'Pretendard-SB',
         fontSize: 17.sp,
-        height: (20/17).h,
+        height: (20 / 17).h,
       );
 
   static TextStyle get PR_SB_16 => TextStyle(
         fontFamily: 'Pretendard-SB',
         fontSize: 16.sp,
-        height: (19/16).h,
+        height: (19 / 16).h,
       );
 
   static TextStyle get PR_SB_15 => TextStyle(
         fontFamily: 'Pretendard-SB',
         fontSize: 15.sp,
-        height: (19/15).h,
+        height: (19 / 15).h,
       );
 
   static TextStyle get PR_SB_14 => TextStyle(
         fontFamily: 'Pretendard-SB',
         fontSize: 14.sp,
-        height: (17/14).h,
+        height: (17 / 14).h,
       );
 
   static TextStyle get PR_SB_13 => TextStyle(
         fontFamily: 'Pretendard-SB',
         fontSize: 13.sp,
-        height: (16/13).h,
+        height: (16 / 13).h,
       );
 
   static TextStyle get PR_SB_12 => TextStyle(
         fontFamily: 'Pretendard-SB',
         fontSize: 12.sp,
-        height: (14/12).h,
+        height: (14 / 12).h,
       );
 
   static TextStyle get PR_SB_11 => TextStyle(
         fontFamily: 'Pretendard-SB',
         fontSize: 11.sp,
-        height: (13/11).h,
+        height: (13 / 11).h,
       );
 
   static TextStyle get PR_SB_10 => TextStyle(
         fontFamily: 'Pretendard-SB',
         fontSize: 10.sp,
-        height: (12/10).h,
+        height: (12 / 10).h,
       );
 
   //PR_M
   static TextStyle get PR_M_24 => TextStyle(
         fontFamily: 'Pretendard-M',
         fontSize: 24.sp,
-        height: (29/24).h,
+        height: (29 / 24).h,
       );
 
   static TextStyle get PR_M_20 => TextStyle(
         fontFamily: 'Pretendard-M',
         fontSize: 20.sp,
-        height: (24/20).h,
+        height: (24 / 20).h,
       );
 
   static TextStyle get PR_M_17 => TextStyle(
         fontFamily: 'Pretendard-M',
         fontSize: 17.sp,
-        height: (20/17).h,
+        height: (20 / 17).h,
       );
 
   static TextStyle get PR_M_16 => TextStyle(
         fontFamily: 'Pretendard-M',
         fontSize: 16.sp,
-        height: (19/16).h,
+        height: (19 / 16).h,
       );
 
   static TextStyle get PR_M_15 => TextStyle(
         fontFamily: 'Pretendard-M',
         fontSize: 15.sp,
-        height: (18/15).h,
+        height: (18 / 15).h,
       );
 
   static TextStyle get PR_M_14 => TextStyle(
         fontFamily: 'Pretendard-M',
         fontSize: 14.sp,
-        height: (17/14).h,
+        height: (17 / 14).h,
       );
 
   static TextStyle get PR_M_13 => TextStyle(
         fontFamily: 'Pretendard-M',
         fontSize: 13.sp,
-        height: (16/13).h,
+        height: (16 / 13).h,
       );
 
   static TextStyle get PR_M_12 => TextStyle(
         fontFamily: 'Pretendard-M',
         fontSize: 12.sp,
-        height: (14/12).h,
+        height: (14 / 12).h,
       );
 
   static TextStyle get PR_M_11 => TextStyle(
         fontFamily: 'Pretendard-M',
         fontSize: 11.sp,
-        height: (13/11).h,
+        height: (13 / 11).h,
       );
 
   static TextStyle get PR_M_10 => TextStyle(
         fontFamily: 'Pretendard-M',
         fontSize: 10.sp,
-        height: (12/10).h,
+        height: (12 / 10).h,
       );
 
   static TextStyle get PR_M_9 => TextStyle(
         fontFamily: 'Pretendard-M',
         fontSize: 9.sp,
-        height: (11/9).h,
+        height: (11 / 9).h,
       );
 
   //PR_R
   static TextStyle get PR_R_24 => TextStyle(
         fontFamily: 'Pretendard',
         fontSize: 24.sp,
-        height: (29/24).h,
+        height: (29 / 24).h,
       );
 
   static TextStyle get PR_R_20 => TextStyle(
         fontFamily: 'Pretendard',
         fontSize: 20.sp,
-        height: (24/20).h,
+        height: (24 / 20).h,
       );
 
   static TextStyle get PR_R_17 => TextStyle(
         fontFamily: 'Pretendard',
         fontSize: 17.sp,
-        height: (20/17).h,
+        height: (20 / 17).h,
       );
 
   static TextStyle get PR_R_16 => TextStyle(
         fontFamily: 'Pretendard',
         fontSize: 16.sp,
-        height: (19/16).h,
+        height: (19 / 16).h,
       );
 
   static TextStyle get PR_R_15 => TextStyle(
         fontFamily: 'Pretendard',
         fontSize: 15.sp,
-        height: (18/15).h,
+        height: (18 / 15).h,
       );
 
   static TextStyle get PR_R_14 => TextStyle(
         fontFamily: 'Pretendard',
         fontSize: 14.sp,
-        height: (17/14).h,
+        height: (17 / 14).h,
       );
 
-  static TextStyle get PR_R_13 =>
-      TextStyle(fontFamily: 'Pretendard', fontSize: 13.sp, height: (16/13).h,);
+  static TextStyle get PR_R_13 => TextStyle(
+        fontFamily: 'Pretendard',
+        fontSize: 13.sp,
+        height: (16 / 13).h,
+      );
 
   static TextStyle get PR_R_12 => TextStyle(
         fontFamily: 'Pretendard',
         fontSize: 12.sp,
-        height: (14/12).h,
+        height: (14 / 12).h,
       );
   static TextStyle get PR_R_11 => TextStyle(
         fontFamily: 'Pretendard',
         fontSize: 11.sp,
-        height: (13/11).h,
+        height: (13 / 11).h,
       );
 
   static TextStyle get PR_R_10 => TextStyle(
         fontFamily: 'Pretendard',
         fontSize: 10.sp,
-        height: (12/10).h,
+        height: (12 / 10).h,
       );
   static TextStyle get PR_R_9 => TextStyle(
         fontFamily: 'Pretendard',
         fontSize: 9.sp,
-        height: (11/9).h,
+        height: (11 / 9).h,
       );
   static TextStyle get PR_R_7 => TextStyle(
         fontFamily: 'Pretendard',
         fontSize: 7.sp,
-        height: (8/7).h,
+        height: (8 / 7).h,
       );
 
   // SUITE
@@ -330,7 +333,7 @@ class AppTextStyles {
         fontFamily: 'SUITE',
         fontWeight: FontWeight.normal,
         fontSize: 14.sp,
-        height: (17/14).h,
+        height: (1.1).h,
       );
 
   static TextStyle get SU_R_7 => TextStyle(
