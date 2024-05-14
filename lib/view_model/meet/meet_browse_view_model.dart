@@ -11,6 +11,7 @@ class MeetBrowseViewModel with ChangeNotifier {
 
   void clearSelectedFilters() {
     selectedFilters.clear();
+    isFilterApplied = false;
     notifyListeners();
   }
 

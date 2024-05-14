@@ -29,6 +29,21 @@ void main() async {
   await initializeFirebase();
   await LoginFunc.autoLogin();
 
+  DateTime currentDate = DateTime.now();
+  DateTime birthDate19YearsAgo =
+      DateTime(currentDate.year - 19, currentDate.month, currentDate.day);
+  if (!isDateValid(birthDate19YearsAgo)) {
+    // 유효하지 않으면 1일 전의 날짜를 다시 계산
+    birthDate19YearsAgo =
+        DateTime(currentDate.year - 19, currentDate.month, currentDate.day - 1);
+  }
+  DateTime birthDate60YearsAgo =
+      DateTime(currentDate.year - 60, currentDate.month, currentDate.day);
+  if (!isDateValid(birthDate60YearsAgo)) {
+    // 유효하지 않으면 1일 전의 날짜를 다시 계산
+    birthDate60YearsAgo =
+        DateTime(currentDate.year - 60, currentDate.month, currentDate.day - 1);
+  }
   runApp(
     MultiProvider(
       providers: [
@@ -42,9 +57,9 @@ void main() async {
         ChangeNotifierProvider(create: (context) => LoginPhoneNumViewModel()),
         ChangeNotifierProvider(
           create: (context) => SignUpDetailViewModel(
-            init: DateTime.now().subtract(const Duration(days: 365 * 19)),
-            start: DateTime.now().subtract(const Duration(days: 365 * 60)),
-            end: DateTime.now().subtract(const Duration(days: 365 * 19)),
+            init: DateTime.now().subtract(const Duration(days: 365 * 20)),
+            start: birthDate60YearsAgo,
+            end: birthDate19YearsAgo,
           ),
         ),
         ChangeNotifierProvider(create: (context) => MeetCreateViewModel()),
@@ -62,6 +77,18 @@ void main() async {
   );
 }
 
+bool isDateValid(DateTime date) {
+  // 유효한 날짜인지 확인하는 코드
+  try {
+    // DateTime 객체를 생성하면서 예외가 발생하지 않으면 유효한 날짜
+    DateTime(date.year, date.month, date.day);
+    return true;
+  } catch (e) {
+    // 예외가 발생하면 유효하지 않은 날짜
+    return false;
+  }
+}
+
 Future<void> initializeFirebase() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -75,7 +102,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userModel = Provider.of<UserViewModel>(context);
-    
+
     // 자동 로그인 된 경우
     if (LoginFunc.isLogined) {
       userModel.uid = LoginFunc.uid;

@@ -131,6 +131,13 @@ class MeetKeyWord extends StatelessWidget {
                           viewModel.textController.text.substring(0, 8);
                       viewModel.setKeywordCount();
                     }
+                  } else {
+                    // 스페이스바로 저장
+                    if (text.characters.last == ' ') {
+                      final keyword = text.trim();
+                      viewModel.addKeyword(keyword);
+                      viewModel.textController.clear();
+                    }
                   }
                 },
                 onSubmitted: (text) {

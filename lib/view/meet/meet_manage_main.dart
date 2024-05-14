@@ -80,9 +80,9 @@ class MeetManageMain extends StatelessWidget {
         if (snapshot.hasError) {
           logger.e(snapshot.error);
           return const Text("DB Load Error");
-        } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+        } else if (!snapshot.hasData) {
           // 생성된 방 없을 때
-          return _emptyRoom();
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
             child: CircularProgressIndicator(),
@@ -100,11 +100,19 @@ class MeetManageMain extends StatelessWidget {
                   children: [
                     SizedBox(height: 31.h),
                     _title(context, docs),
-                    SizedBox(height: 30.h),
-                    Padding(
-                      padding: EdgeInsets.only(right: 19.0.w),
-                      child: _rooms(context, docs),
-                    ),
+                    if (docs.isEmpty) ...[
+                      SizedBox(
+                        height: 293.h,
+                      ),
+                      _emptyRoom(),
+                    ],
+                    if (docs.isNotEmpty) ...[
+                      SizedBox(height: 30.h),
+                      Padding(
+                        padding: EdgeInsets.only(right: 19.0.w),
+                        child: _rooms(context, docs),
+                      ),
+                    ],
                   ],
                 ),
               ),

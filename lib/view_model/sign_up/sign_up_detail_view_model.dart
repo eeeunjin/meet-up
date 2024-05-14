@@ -124,12 +124,19 @@ class SignUpDetailViewModel with ChangeNotifier {
   }
 
   List<int> getMonthList() {
-    return List<int>.generate(12, (index) => index + 1);
+    if (selectedDate.year == end.year) {
+      return List<int>.generate(end.month, (index) => index + 1);
+    } else {
+      return List<int>.generate(12, (index) => index + 1);
+    }
   }
 
   List<int> getDayList() {
     DateTime lastDateOfMonth =
         DateTime(selectedDate.year, selectedDate.month + 1, 0);
+    if (selectedDate.year == end.year && selectedDate.month == end.month) {
+      return List<int>.generate(end.day, (index) => index + 1);
+    }
     return List<int>.generate(lastDateOfMonth.day, (index) => index + 1);
   }
 

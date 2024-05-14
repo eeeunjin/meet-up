@@ -203,6 +203,7 @@ class MeetFilterViewModel with ChangeNotifier {
   // 필터 초기화
   void clearAllFilters() {
     _selectedMainCategories.clear();
+    _isSelectedCategory = false;
     _selectedSubCategories.clear();
     _selectedProvince = '';
     _selectedDistrict = '';

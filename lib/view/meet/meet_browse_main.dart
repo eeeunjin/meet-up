@@ -314,6 +314,25 @@ class MeetBrowseMain extends StatelessWidget {
               .contains(meetBrowseViewModel.searchTextEditingControlller.text));
         }
 
+        if (rooms.isEmpty && !meetBrowseViewModel.isFilterApplied) {
+          return Center(
+            child: Text(
+              "생성된 만남 방이 없습니다.",
+              style: AppTextStyles.PR_R_16.copyWith(
+                color: UsedColor.text_2,
+              ),
+            ),
+          );
+        } else if (rooms.isEmpty && meetBrowseViewModel.isFilterApplied) {
+          return Center(
+            child: Text(
+              "조건에 맞는 만남 방이 없습니다.",
+              style: AppTextStyles.PR_R_16.copyWith(
+                color: UsedColor.text_2,
+              ),
+            ),
+          );
+        }
         return ListView.builder(
           itemCount: rooms.length,
           padding: EdgeInsets.only(

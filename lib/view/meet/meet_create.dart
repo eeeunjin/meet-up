@@ -490,11 +490,8 @@ class MeetCreate extends StatelessWidget {
   Widget _age(BuildContext context) {
     final viewModel = Provider.of<MeetCreateViewModel>(context, listen: true);
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-
-    if (userViewModel.userModel != null) {
-      Duration difference =
-          DateTime.now().difference(userViewModel.userModel!.birthday);
-      logger.d('날짜 차이 : ${difference.inDays}');
+    if (!viewModel.selectedAges.contains(userViewModel.getAgeRange())) {
+      viewModel.selectAge(userViewModel.getAgeRange(), false);
     }
 
     List<String> options = [
@@ -542,7 +539,9 @@ class MeetCreate extends StatelessWidget {
               bool isSelected = viewModel.selectedAges.contains(option);
               return GestureDetector(
                 onTap: () {
-                  viewModel.selectAge(option);
+                  // 나의 나이대는 선택으로 고정
+                  if (userViewModel.getAgeRange() == option) return;
+                  viewModel.selectAge(option, true);
                 },
                 child: Container(
                   width: 74.38.w,

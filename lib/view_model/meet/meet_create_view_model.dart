@@ -49,7 +49,7 @@ class MeetCreateViewModel with ChangeNotifier {
 
   List<String> get selectedAges => _selectedAges;
 
-  void selectAge(String age) {
+  void selectAge(String age, bool sendNotify) {
     if (_selectedAges.contains(age)) {
       // 이미 선택된 나이라면 리스트에서 제거
       _selectedAges.remove(age);
@@ -58,7 +58,10 @@ class MeetCreateViewModel with ChangeNotifier {
       _selectedAges.add(age);
     }
     debugPrint('Selected ages: $_selectedAges');
-    notifyListeners();
+
+    if (sendNotify) {
+      notifyListeners();
+    }
   }
 
   // MARK: - gender ratio
