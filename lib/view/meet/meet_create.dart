@@ -854,7 +854,7 @@ class MeetCreate extends StatelessWidget {
                           width: 17.w,
                         ),
                         Text(
-                          '만남방 개설 시, 모든 입장을 24시간\n안에 처리해야 합니다.\n\n그렇지 않은 경우 만남방은 파기되며,\n만남권은 환불되지 않습니다.',
+                          '방장이 만남방 이탈 혹은 삭제시 만남방과 \n채팅방은 완전히 삭제됩니다.',
                           style: AppTextStyles.PR_R_17.copyWith(
                               color: viewModel.individualAgreement1
                                   ? Colors.black
@@ -864,7 +864,7 @@ class MeetCreate extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 33.h),
+                SizedBox(height: 12.h),
                 Padding(
                   padding: EdgeInsets.only(left: 38.w),
                   child: GestureDetector(
@@ -889,9 +889,44 @@ class MeetCreate extends StatelessWidget {
                           width: 17.w,
                         ),
                         Text(
-                          '만남방 개설 시, 방장이 이탈 혹은\n방 삭제 시 만남권은 환불되지 않습니다.',
+                          '만남방 개설 후, 7일 이내에 일정 등록이\n되지 않으면 만남방이 삭제되고, 만남권은\n환불됩니다.',
                           style: AppTextStyles.PR_R_17.copyWith(
                               color: viewModel.individualAgreement2
+                                  ? Colors.black
+                                  : UsedColor.text_4),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                Padding(
+                  padding: EdgeInsets.only(left: 38.w),
+                  child: GestureDetector(
+                    onTap: () {
+                      viewModel.setIndividualAgreement3(
+                          !viewModel.individualAgreement3);
+                    },
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 5.h),
+                          child: Icon(
+                            Icons.check,
+                            color: viewModel.individualAgreement3
+                                ? UsedColor.violet
+                                : UsedColor.text_5,
+                            size: 20.w,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 17.w,
+                        ),
+                        Text(
+                          '만남방 개설 시, 방장이 이탈 혹은\n방 삭제 시 만남권은 환불되지 않습니다.',
+                          style: AppTextStyles.PR_R_17.copyWith(
+                              color: viewModel.individualAgreement3
                                   ? Colors.black
                                   : UsedColor.text_4),
                         ),

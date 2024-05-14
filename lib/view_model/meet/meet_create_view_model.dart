@@ -457,13 +457,16 @@ class MeetCreateViewModel with ChangeNotifier {
 
   bool _individualAgreement1 = false;
   bool _individualAgreement2 = false;
+  bool _individualAgreement3 = false;
   bool get individualAgreement1 => _individualAgreement1;
   bool get individualAgreement2 => _individualAgreement2;
+  bool get individualAgreement3 => _individualAgreement3;
 
   void setAllAgreed(bool agreed) {
     _allAgreed = agreed;
     _individualAgreement1 = agreed;
     _individualAgreement2 = agreed;
+    _individualAgreement3 = agreed;
     notifyListeners();
   }
 
@@ -479,8 +482,16 @@ class MeetCreateViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  void setIndividualAgreement3(bool agreed) {
+    _individualAgreement3 = agreed;
+    _checkAllAgreed();
+    notifyListeners();
+  }
+
   void _checkAllAgreed() {
-    if (_individualAgreement1 && _individualAgreement2) {
+    if (_individualAgreement1 &&
+        _individualAgreement2 &&
+        _individualAgreement3) {
       _allAgreed = true;
     } else {
       _allAgreed = false;
