@@ -86,15 +86,18 @@ class MeetUserInfo extends StatelessWidget {
               color: UsedColor.bg_color,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _profile(context, user),
-                    SizedBox(height: 16.h),
-                    _userInfo(context, userViewModel),
-                    SizedBox(height: 16.h),
-                    _userPersonality(context, user),
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(height: 32.h),
+                      _profile(context, user),
+                      SizedBox(height: 16.h),
+                      _userInfo(context, userViewModel),
+                      SizedBox(height: 16.h),
+                      _userPersonality(context, user),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -113,55 +116,73 @@ class MeetUserInfo extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.r),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Stack(
+          Row(
             children: [
-              CircleAvatar(
-                radius: 120.r,
-                backgroundImage: NetworkImage(user.profile_icon),
-              ),
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  width: 27.w,
-                  height: 27.h,
-                  decoration: BoxDecoration(
-                    color: UsedColor.main,
-                    shape: BoxShape.circle,
+              Stack(
+                children: [
+                  CircleAvatar(
+                    radius: 120.r,
+                    backgroundImage: NetworkImage(user.profile_icon),
                   ),
-                  child: Image.asset(ImagePath.infoIcon1,
-                      height: 18.h, width: 18.w),
-                ),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Container(
+                      width: 27.w,
+                      height: 27.h,
+                      decoration: BoxDecoration(
+                        color: UsedColor.main,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(4.0.w),
+                        child: Image.asset(
+                          ImagePath.infoIcon1,
+                          height: 18.h,
+                          width: 18.w,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(width: 21.w),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    user.nickname,
+                    style: AppTextStyles.PR_SB_18.copyWith(
+                      color: UsedColor.charcoal_black,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: UsedColor.image_card,
+                      borderRadius: BorderRadius.circular(9.r),
+                    ),
+                    child: Text(
+                      '정기권 혜택 적용중',
+                      style: AppTextStyles.SU_M_12.copyWith(
+                        color: UsedColor.violet,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-          SizedBox(width: 21.w),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                user.nickname,
-                style: AppTextStyles.PR_SB_18.copyWith(
-                  color: UsedColor.charcoal_black,
-                ),
-              ),
-              SizedBox(height: 10.h),
-              Text(
-                '정기권 혜택 이용중',
-                style: AppTextStyles.SU_M_12.copyWith(
-                  color: UsedColor.violet,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-          const Spacer(),
+          SizedBox(height: 25.h),
           Divider(
             thickness: 1.5.h,
             color: UsedColor.bg_color,
           ),
+          SizedBox(height: 17.h),
           Text(
             'Novice 등급',
             style: AppTextStyles.PR_M_16.copyWith(
