@@ -173,7 +173,7 @@ class MeetBrowseMain extends StatelessWidget {
                 meetFilterViewModel.clearAllFilters();
                 meetBrowseViewModel.clearSelectedFilters();
               } else {
-                context.goNamed('meetUserInfo');
+                context.goNamed('meetFilterMain');
               }
             },
             content: Row(
