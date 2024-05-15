@@ -94,4 +94,14 @@ class ImagePath {
   static String get scheduleIcon5 => 'assets/images/schedule_icon_5.png';
   static String get scheduleIcon6 => 'assets/images/schedule_icon_6.png';
   static String get downArrow => 'assets/images/down_arrow.png';
+
+  // userinfo
+  static String get infoIcon1 => 'assets/images/info_icon_1.png';
+  static String get infoIcon2 => 'assets/images/info_icon_2.png';
+  static String get infoIcon3 => 'assets/images/info_icon_3.png';
+  static String get infoIcon4 => 'assets/images/info_icon_4.png';
+  static String get infoIcon5 => 'assets/images/info_icon_5.png';
+  static String get infoIcon6 => 'assets/images/info_icon_6.png';
+  static String get infoIcon7 => 'assets/images/info_icon_7.png';
+  static String get infoIcon8 => 'assets/images/info_icon_8.png';
 }

@@ -392,6 +392,13 @@ class AppTextStyles {
         height: 1.0.h,
       );
 
+  static TextStyle get SU_M_12 => TextStyle(
+        fontFamily: 'SUITE-M',
+        fontWeight: FontWeight.normal,
+        fontSize: 12.sp,
+        height: 1.0.h,
+      );
+
   static TextStyle get SU_M_13 => TextStyle(
         fontFamily: 'SUITE-M',
         fontWeight: FontWeight.normal,

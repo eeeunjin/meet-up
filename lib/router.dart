@@ -17,6 +17,7 @@ import 'package:meet_up/view/meet/meet_keyword.dart';
 import 'package:meet_up/view/meet/meet_main.dart';
 import 'package:meet_up/view/meet/meet_detail_room.dart';
 import 'package:meet_up/view/meet/meet_search_main.dart';
+import 'package:meet_up/view/meet/meet_user_info.dart';
 import 'package:meet_up/view/profile/profile_edit.dart';
 import 'package:meet_up/view/profile/profile_main.dart';
 import 'package:meet_up/view/profile/profile_notification.dart';
@@ -212,6 +213,13 @@ final router = GoRouter(
           },
           routes: [
             GoRoute(
+              path: 'meetUserInfo',
+              name: 'meetUSerInfo',
+              builder: (context, state) {
+                return const Scaffold(body: MeetUserInfo());
+              },
+            ),
+            GoRoute(
               path: 'meetDetailRoom_browse',
               name: 'meetDetailRoom_browse',
               builder: (context, state) {
@@ -236,6 +244,7 @@ final router = GoRouter(
             ),
           ],
         ),
+
         GoRoute(
           path: 'coinMain',
           name: 'coinMainFromMeetMain',

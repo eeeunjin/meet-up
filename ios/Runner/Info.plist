@@ -64,6 +64,6 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>FLTEnableImpeller</key>
-	<false/>
+<true/>
 </dict>
 </plist>

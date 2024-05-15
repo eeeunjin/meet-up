@@ -207,7 +207,7 @@ class MeetDetailRoom extends StatelessWidget {
                             ],
                           ),
                         );
-                      }).toList(),
+                      }),
                     ],
                   ),
                 ),
@@ -298,6 +298,7 @@ class MeetDetailRoom extends StatelessWidget {
                                   return GestureDetector(
                                     onTap: () {
                                       // 눌렀을 때 프로필 상세 정보로 넘어가기
+                                      context.goNamed('meetUserInfo');
                                       logger.d(
                                         "nickname: ${userModels[index].nickname}\nbirthday: ${userModels[index].birthday}\ngender: ${userModels[index].gender}\njob: ${userModels[index].job}",
                                       );
