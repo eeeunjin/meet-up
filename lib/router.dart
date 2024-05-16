@@ -193,6 +193,15 @@ final router = GoRouter(
               builder: (context, state) {
                 return const MeetDetailRoom();
               },
+              routes: [
+                GoRoute(
+                  path: 'meetUserInfo_manage',
+                  name: 'meetUserInfo_manage',
+                  builder: (context, state) {
+                    return const Scaffold(body: MeetUserInfo());
+                  },
+                ),
+              ],
             ),
           ],
         ),
@@ -213,18 +222,20 @@ final router = GoRouter(
           },
           routes: [
             GoRoute(
-              path: 'meetUserInfo',
-              name: 'meetUSerInfo',
-              builder: (context, state) {
-                return const Scaffold(body: MeetUserInfo());
-              },
-            ),
-            GoRoute(
               path: 'meetDetailRoom_browse',
               name: 'meetDetailRoom_browse',
               builder: (context, state) {
                 return const Scaffold(body: MeetDetailRoom());
               },
+              routes: [
+                GoRoute(
+                  path: 'meetUserInfo_browse',
+                  name: 'meetUserInfo_browse',
+                  builder: (context, state) {
+                    return const Scaffold(body: MeetUserInfo());
+                  },
+                ),
+              ],
             ),
             GoRoute(
               path: 'meetFilterMain',

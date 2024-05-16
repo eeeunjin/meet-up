@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_one_contents.dart';
-import 'package:meet_up/view/widget/header_widget.dart';
+import 'package:meet_up/view_model/meet/header_widget.dart';
 
 class SignUpDetailOne extends StatelessWidget {
   const SignUpDetailOne({super.key});

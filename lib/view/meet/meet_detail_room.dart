@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/main.dart';
@@ -9,7 +7,7 @@ import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
-import 'package:meet_up/view/widget/header_widget.dart';
+import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/meet/meet_manage_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_detail_room_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
@@ -298,7 +296,11 @@ class MeetDetailRoom extends StatelessWidget {
                                   return GestureDetector(
                                     onTap: () {
                                       // 눌렀을 때 프로필 상세 정보로 넘어가기
-                                      context.goNamed('meetUserInfo');
+                                      if (meetDetailRoomViewModel.isMyRoom!) {
+                                        context.goNamed('meetUserInfo_manage');
+                                      } else {
+                                        context.goNamed('meetUserInfo_browse');
+                                      }
                                       logger.d(
                                         "nickname: ${userModels[index].nickname}\nbirthday: ${userModels[index].birthday}\ngender: ${userModels[index].gender}\njob: ${userModels[index].job}",
                                       );

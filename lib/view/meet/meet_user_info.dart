@@ -1,11 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
-import 'package:meet_up/view/widget/header_widget.dart';
+import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -14,20 +17,17 @@ class MeetUserInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => UserViewModel()..loadUserModel(),
-      child: Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: 58.h),
-              child: _header(context),
-            ),
-            _divider(),
-            Expanded(child: _main(context)),
-          ],
-        ),
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 58.h),
+            child: _header(context),
+          ),
+          _divider(),
+          Expanded(child: _main(context)),
+        ],
       ),
     );
   }
@@ -85,7 +85,7 @@ class MeetUserInfo extends StatelessWidget {
             child: Container(
               color: UsedColor.bg_color,
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.symmetric(horizontal: 16.0.w),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -96,6 +96,7 @@ class MeetUserInfo extends StatelessWidget {
                       _userInfo(context, userViewModel),
                       SizedBox(height: 16.h),
                       _userPersonality(context, user),
+                      SizedBox(height: 47.h),
                     ],
                   ),
                 ),
@@ -111,7 +112,6 @@ class MeetUserInfo extends StatelessWidget {
     return Container(
       width: 340.w,
       height: 227.h,
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.r),
@@ -119,17 +119,20 @@ class MeetUserInfo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 27.0.h),
           Row(
             children: [
+              SizedBox(width: 23.0.w),
               Stack(
                 children: [
-                  CircleAvatar(
-                    radius: 120.r,
-                    backgroundImage: NetworkImage(user.profile_icon),
+                  Image.asset(
+                    user.profile_icon,
+                    height: 120.h,
+                    width: 120.w,
                   ),
                   Positioned(
-                    top: 0,
-                    right: 0,
+                    top: 15.0.h,
+                    right: 0.w,
                     child: Container(
                       width: 27.w,
                       height: 27.h,
@@ -180,13 +183,16 @@ class MeetUserInfo extends StatelessWidget {
           SizedBox(height: 25.h),
           Divider(
             thickness: 1.5.h,
+            height: 1.0.h,
             color: UsedColor.bg_color,
           ),
           SizedBox(height: 17.h),
-          Text(
-            'Novice 등급',
-            style: AppTextStyles.PR_M_16.copyWith(
-              color: UsedColor.text_1,
+          Center(
+            child: Text(
+              'Novice 등급',
+              style: AppTextStyles.PR_M_16.copyWith(
+                color: UsedColor.text_1,
+              ),
             ),
           ),
         ],
@@ -199,7 +205,7 @@ class MeetUserInfo extends StatelessWidget {
     return Container(
       width: 337.w,
       height: 188.h,
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.symmetric(horizontal: 28.0.w),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.r),
@@ -207,38 +213,32 @@ class MeetUserInfo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _userInfoDetail(ImagePath.infoIcon2, '성별', user.gender),
-          _userInfoDetail(
-              ImagePath.infoIcon3, '나이', userViewModel.getAgeRange()),
-          _userInfoDetail(ImagePath.infoIcon4, '거주지', user.region['name']),
-          _userInfoDetail(ImagePath.infoIcon5, '소속 분류', user.job),
+          SizedBox(height: 16.0.h),
+          _userInfoDetail(ImagePath.infoIcon2, user.gender),
+          SizedBox(height: 20.0.h),
+          _userInfoDetail(ImagePath.infoIcon3, userViewModel.getAgeRange()),
+          SizedBox(height: 20.0.h),
+          _userInfoDetail(ImagePath.infoIcon4,
+              user.region['province'] + " > " + user.region['district']),
+          SizedBox(height: 20.0.h),
+          _userInfoDetail(ImagePath.infoIcon5, user.job),
         ],
       ),
     );
   }
 
-  Widget _userInfoDetail(String imagePath, String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        children: [
-          Image.asset(imagePath, width: 24.w, height: 24.h),
-          SizedBox(width: 24.w),
-          Text(
-            label,
-            style: AppTextStyles.PR_M_16.copyWith(
-              color: UsedColor.charcoal_black,
-            ),
+  Widget _userInfoDetail(String imagePath, String value) {
+    return Row(
+      children: [
+        Image.asset(imagePath, width: 24.w, height: 24.h),
+        SizedBox(width: 24.w),
+        Text(
+          value,
+          style: AppTextStyles.PR_M_16.copyWith(
+            color: UsedColor.charcoal_black,
           ),
-          SizedBox(width: 16.w),
-          Text(
-            value,
-            style: AppTextStyles.PR_M_13.copyWith(
-              color: UsedColor.charcoal_black,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -246,7 +246,7 @@ class MeetUserInfo extends StatelessWidget {
     return Container(
       width: 337.w,
       height: 303.h,
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.symmetric(horizontal: 28.0.w),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.r),
@@ -254,24 +254,35 @@ class MeetUserInfo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 16.h),
           _personalityImage('성격', ImagePath.infoIcon6),
-          SizedBox(height: 23.h),
-          Wrap(
-            spacing: 8.w,
-            children: user.personality_self
-                .map((trait) => _personalityChip(trait))
-                .toList(),
+          SizedBox(height: 20.h),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (var trait in user.personality_self) ...[
+                _personalityChip(trait),
+                SizedBox(
+                  width: 8.0.w,
+                )
+              ]
+            ],
           ),
-          SizedBox(height: 31.h),
+          SizedBox(height: 30.h),
           _personalityImage('관심사', ImagePath.infoIcon7),
           SizedBox(height: 23.h),
-          Wrap(
-            spacing: 8.w,
-            children: user.interest
-                .map((interest) => _personalityChip(interest))
-                .toList(),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (var interest in user.interest) ...[
+                _personalityChip(interest),
+                SizedBox(
+                  width: 8.0.w,
+                )
+              ]
+            ],
           ),
-          SizedBox(height: 31.h),
+          SizedBox(height: 30.h),
           _personalityImage('만남 목적', ImagePath.infoIcon8),
           SizedBox(height: 23.h),
           Wrap(
@@ -301,16 +312,20 @@ class MeetUserInfo extends StatelessWidget {
   }
 
   Widget _personalityChip(String label) {
-    return Chip(
-      label: Text(
-        label,
-        style: AppTextStyles.SU_R_12.copyWith(
-          color: UsedColor.violet,
-        ),
-      ),
-      backgroundColor: UsedColor.image_card,
-      shape: RoundedRectangleBorder(
+    return Container(
+      height: 24.h,
+      width: 80.w,
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.r),
+        color: UsedColor.image_card,
+      ),
+      child: Center(
+        child: Text(
+          label,
+          style: AppTextStyles.SU_R_12.copyWith(
+            color: UsedColor.violet,
+          ),
+        ),
       ),
     );
   }
