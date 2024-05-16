@@ -424,6 +424,8 @@ class MeetCreateViewModel with ChangeNotifier {
     _selectedSubCategories.clear();
     _selectedProvince = '';
     _selectedDistrict = '';
+    _selectedProvinceInAreaPage = '';
+    _selectedDistrictInAreaPage = '';
     _selectedProvinceNotifier.value = '';
     _selectedDistrictNotifier.value = '';
     notifyListeners();

@@ -137,7 +137,7 @@ class MeetFilterMain extends StatelessWidget {
               ),
               SizedBox(height: 20.64.h),
               Padding(
-                padding: EdgeInsets.only(right: 40.0.w),
+                padding: EdgeInsets.only(right: 40.0.w, left: 7.0.w),
                 child: Wrap(
                   spacing: 8.w,
                   runSpacing: 8.h,
@@ -251,7 +251,7 @@ class MeetFilterMain extends StatelessWidget {
     List<String> subCategories = viewModel.getSubCategories(mainCategory);
 
     return Padding(
-      padding: EdgeInsets.only(top: 19.0.h),
+      padding: EdgeInsets.only(top: 19.0.h, left: 7.0.w),
       child: Column(
         children: [
           Wrap(

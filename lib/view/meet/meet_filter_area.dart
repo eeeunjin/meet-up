@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/model/province_district_model.dart';
@@ -21,15 +20,10 @@ class MeetFilterArea extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            _header(context),
+            _main(context),
             Padding(
-              padding: EdgeInsets.only(
-                top: 25.h,
-              ),
-              child: _header(context),
-            ),
-            Expanded(child: _main(context)),
-            Padding(
-              padding: EdgeInsets.only(left: 33.w, right: 32.w, bottom: 56.h),
+              padding: EdgeInsets.only(top: 32.h, left: 33.w, right: 33.w),
               child: _bottom(context),
             ),
           ],
@@ -43,9 +37,12 @@ class MeetFilterArea extends StatelessWidget {
     return Center(
       child: Column(
         children: [
+          SizedBox(
+            height: 10.h,
+          ),
           header(back: _back(context), title: '지역 선택'),
           SizedBox(
-            height: 22.h,
+            height: 15.h,
           ),
           Divider(
             thickness: 0.3.h,
@@ -90,9 +87,6 @@ class MeetFilterArea extends StatelessWidget {
         children: [
           _selectArea(context),
           _divider(),
-          SizedBox(
-            height: 13.h,
-          ),
         ],
       ),
     );
