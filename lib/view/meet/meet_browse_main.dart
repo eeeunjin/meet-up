@@ -44,7 +44,7 @@ class MeetBrowseMain extends StatelessWidget {
         children: [
           header(
             back: _back(context),
-            title: '만남 방 둘러보기',
+            title: '만남방 둘러보기',
           ),
           SizedBox(
             height: 16.h,

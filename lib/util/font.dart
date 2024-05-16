@@ -291,125 +291,177 @@ class AppTextStyles {
 
   // SUITE
   // SU_SB
-
+  static TextStyle get SU_SB_24 => TextStyle(
+        fontFamily: 'SUITE-SB',
+        fontSize: 24.sp,
+        height: (30 / 24).h,
+      );
   static TextStyle get SU_SB_22 => TextStyle(
         fontFamily: 'SUITE-SB',
         fontSize: 22.sp,
-        height: 1.0.h,
+        height: (27 / 22).h,
       );
 
   static TextStyle get SU_SB_16 => TextStyle(
         fontFamily: 'SUITE-SB',
         fontSize: 16.sp,
-        height: 1.0.h,
+        height: (20 / 16).h,
       );
 
   static TextStyle get SU_SB_13 => TextStyle(
         fontFamily: 'SUITE-SB',
         fontSize: 13.sp,
-        height: 1.0.h,
+        height: (16 / 13).h,
+      );
+
+  static TextStyle get SU_SB_15 => TextStyle(
+        fontFamily: 'SUITE-SB',
+        fontSize: 10.sp,
+        height: (12 / 10).h,
       );
 
   static TextStyle get SU_SB_12 => TextStyle(
         fontFamily: 'SUITE-SB',
         fontSize: 12.sp,
-        height: 1.0.h,
+        height: (15 / 12).h,
       );
 
   static TextStyle get SU_SB_9 => TextStyle(
         fontFamily: 'SUITE-SB',
         fontSize: 9.sp,
-        height: 1.0.h,
+        height: (11 / 9).h,
       );
 
-  static TextStyle get SU_R_20 => TextStyle(
-        fontFamily: 'SUITE',
+  static TextStyle get SU_M_20 => TextStyle(
+        fontFamily: 'SUITE-M',
         fontWeight: FontWeight.normal,
         fontSize: 20.sp,
-        height: 1.0.h,
-      );
-
-  static TextStyle get SU_R_14 => TextStyle(
-        fontFamily: 'SUITE',
-        fontWeight: FontWeight.normal,
-        fontSize: 14.sp,
-        height: (1.1).h,
-      );
-
-  static TextStyle get SU_R_7 => TextStyle(
-        fontFamily: 'SUITE',
-        fontWeight: FontWeight.normal,
-        fontSize: 7.sp,
-        height: 1.0.h,
-      );
-
-  static TextStyle get SU_R_10 => TextStyle(
-        fontFamily: 'SUITE',
-        fontWeight: FontWeight.normal,
-        fontSize: 10.sp,
-        height: 1.0.h,
-      );
-
-  static TextStyle get SU_R_12 => TextStyle(
-        fontFamily: 'SUITE',
-        fontWeight: FontWeight.normal,
-        fontSize: 12.sp,
-        height: 1.0.h,
-      );
-
-  static TextStyle get SU_R_11 => TextStyle(
-        fontFamily: 'SUITE',
-        fontWeight: FontWeight.normal,
-        fontSize: 11.sp,
-        height: 1.0.h,
-      );
-
-  static TextStyle get SU_R_15 => TextStyle(
-        fontFamily: 'SUITE',
-        fontWeight: FontWeight.normal,
-        fontSize: 15.sp,
-        height: 1.0.h,
-      );
-
-  static TextStyle get SU_L_24 => TextStyle(
-        fontFamily: 'SUITE-L',
-        fontWeight: FontWeight.normal,
-        fontSize: 24.sp,
-        height: 1.0.h,
-      );
-
-  static TextStyle get SU_L_12 => TextStyle(
-        fontFamily: 'SUITE-L',
-        fontWeight: FontWeight.normal,
-        fontSize: 12.sp,
-        height: 1.0.h,
-      );
-
-  static TextStyle get SU_M_10 => TextStyle(
-        fontFamily: 'SUITE-M',
-        fontWeight: FontWeight.normal,
-        fontSize: 10.sp,
-        height: 1.0.h,
-      );
-
-  static TextStyle get SU_M_12 => TextStyle(
-        fontFamily: 'SUITE-M',
-        fontWeight: FontWeight.normal,
-        fontSize: 12.sp,
-        height: 1.0.h,
-      );
-
-  static TextStyle get SU_M_13 => TextStyle(
-        fontFamily: 'SUITE-M',
-        fontWeight: FontWeight.normal,
-        fontSize: 13.sp,
-        height: 1.0.h,
+        height: (25 / 20).h,
       );
 
   static TextStyle get SU_M_17 => TextStyle(
         fontFamily: 'SUITE-M',
         fontWeight: FontWeight.normal,
         fontSize: 17.sp,
-        height: 1.0.h,
+        height: (21 / 17).h,
+      );
+
+  static TextStyle get SU_M_14 => TextStyle(
+        fontFamily: 'SUITE-M',
+        fontWeight: FontWeight.normal,
+        fontSize: 14.sp,
+        height: (17 / 14).h,
+      );
+
+  static TextStyle get SU_M_13 => TextStyle(
+        fontFamily: 'SUITE-M',
+        fontWeight: FontWeight.normal,
+        fontSize: 13.sp,
+        height: (16 / 13).h,
+      );
+
+  static TextStyle get SU_M_12 => TextStyle(
+        fontFamily: 'SUITE-M',
+        fontWeight: FontWeight.normal,
+        fontSize: 12.sp,
+        height: (15 / 12).h,
+      );
+
+  static TextStyle get SU_M_11 => TextStyle(
+        fontFamily: 'SUITE-M',
+        fontWeight: FontWeight.normal,
+        fontSize: 11.sp,
+        height: (14 / 11).h,
+      );
+
+  static TextStyle get SU_M_10 => TextStyle(
+        fontFamily: 'SUITE-M',
+        fontWeight: FontWeight.normal,
+        fontSize: 10.sp,
+        height: (12 / 10).h,
+      );
+
+  static TextStyle get SU_R_20 => TextStyle(
+        fontFamily: 'SUITE',
+        fontWeight: FontWeight.normal,
+        fontSize: 20.sp,
+        height: (25 / 20).h,
+      );
+
+  static TextStyle get SU_R_16 => TextStyle(
+        fontFamily: 'SUITE',
+        fontWeight: FontWeight.normal,
+        fontSize: 16.sp,
+        height: (20 / 16).h,
+      );
+
+  static TextStyle get SU_R_15 => TextStyle(
+        fontFamily: 'SUITE',
+        fontWeight: FontWeight.normal,
+        fontSize: 15.sp,
+        height: (19 / 15).h,
+      );
+
+  static TextStyle get SU_R_14 => TextStyle(
+        fontFamily: 'SUITE',
+        fontWeight: FontWeight.normal,
+        fontSize: 14.sp,
+        height: (17 / 14).h,
+      );
+
+  static TextStyle get SU_R_12 => TextStyle(
+        fontFamily: 'SUITE',
+        fontWeight: FontWeight.normal,
+        fontSize: 12.sp,
+        height: (15 / 12).h,
+      );
+
+  static TextStyle get SU_R_11 => TextStyle(
+        fontFamily: 'SUITE',
+        fontWeight: FontWeight.normal,
+        fontSize: 11.sp,
+        height: (14 / 11).h,
+      );
+
+  static TextStyle get SU_R_10 => TextStyle(
+        fontFamily: 'SUITE',
+        fontWeight: FontWeight.normal,
+        fontSize: 10.sp,
+        height: (12 / 10).h,
+      );
+
+  static TextStyle get SU_R_9 => TextStyle(
+        fontFamily: 'SUITE',
+        fontWeight: FontWeight.normal,
+        fontSize: 9.sp,
+        height: (11 / 9).h,
+      );
+
+  static TextStyle get SU_R_8 => TextStyle(
+        fontFamily: 'SUITE',
+        fontWeight: FontWeight.normal,
+        fontSize: 8.sp,
+        height: (10 / 8).h,
+      );
+
+  static TextStyle get SU_R_7 => TextStyle(
+        fontFamily: 'SUITE',
+        fontWeight: FontWeight.normal,
+        fontSize: 7.sp,
+        height: (9 / 7).h,
+      );
+
+  static TextStyle get SU_L_24 => TextStyle(
+        fontFamily: 'SUITE-L',
+        fontWeight: FontWeight.normal,
+        fontSize: 24.sp,
+        height: (30 / 24).h,
+      );
+
+  static TextStyle get SU_L_12 => TextStyle(
+        fontFamily: 'SUITE-L',
+        fontWeight: FontWeight.normal,
+        fontSize: 12.sp,
+        height: (15 / 12).h,
       );
 }
