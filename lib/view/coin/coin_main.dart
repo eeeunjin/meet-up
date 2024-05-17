@@ -14,23 +14,20 @@ class CoinMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color: UsedColor.bg_color,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                top: 58.h,
-              ),
-              child: _header(context),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: 58.h,
             ),
-            SizedBox(height: 45.h),
-            _currentCoin(),
-            SizedBox(height: 52.h),
-            _currentTicket(),
-          ],
-        ),
+            child: _header(context),
+          ),
+          SizedBox(height: 45.h),
+          _currentCoin(),
+          SizedBox(height: 16.h),
+          _currentTicket(),
+        ],
       ),
     );
   }
