@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -23,10 +24,19 @@ class CoinMain extends StatelessWidget {
             ),
             child: _header(context),
           ),
-          SizedBox(height: 45.h),
-          _currentCoin(),
-          SizedBox(height: 16.h),
-          _currentTicket(),
+          Expanded(
+            child: Container(
+              color: UsedColor.bg_color,
+              child: Column(
+                children: [
+                  SizedBox(height: 45.h),
+                  _currentCoin(),
+                  SizedBox(height: 16.h),
+                  _currentTicket(),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
