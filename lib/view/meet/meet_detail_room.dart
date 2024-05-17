@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/main.dart';
@@ -34,11 +35,25 @@ class MeetDetailRoom extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: 58.h,
-            ),
-            child: _header(context),
+          Stack(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                  top: 58.h,
+                ),
+                child: _header(context),
+              ),
+              if (!meetDetailRoomViewModel.isMyRoom!)
+                Positioned(
+                  right: 24.w,
+                  top: 61.h,
+                  child: Image.asset(
+                    ImagePath.reportIcon,
+                    width: 29.w,
+                    height: 29.h,
+                  ),
+                ),
+            ],
           ),
           Expanded(
             child: _main(context, decodedRoomModel, ageString),
@@ -55,21 +70,7 @@ class MeetDetailRoom extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          Stack(
-            children: [
-              header(back: _back(context), title: '세부 정보'),
-              //MARK: - 신고 버튼
-              if (!meetDetailRoomViewModel.isMyRoom!)
-                Positioned(
-                  right: 24.w,
-                  child: Image.asset(
-                    ImagePath.reportIcon,
-                    width: 29.w,
-                    height: 29.h,
-                  ),
-                ),
-            ],
-          ),
+          header(back: _back(context), title: '세부 정보'),
           SizedBox(
             height: 16.h,
           ),

@@ -239,7 +239,7 @@ class CoinMain extends StatelessWidget {
                 ],
               ),
               // TODO : 간격 수정 필요
-              SizedBox(height: 26.h),
+              SizedBox(height: 22.h),
               Container(
                 width: 332.w,
                 height: 51.h,
