@@ -45,7 +45,7 @@ class CoinMain extends StatelessWidget {
             height: 16.h,
           ),
           Divider(
-            thickness: 0.3.h,
+            thickness: 0.3.w,
             height: 0.h,
             color: UsedColor.line,
           )
@@ -78,7 +78,7 @@ class CoinMain extends StatelessWidget {
 
   Widget _currentCoin() {
     return Padding(
-      padding: EdgeInsets.only(left: 19.0.w, right: 28.w),
+      padding: EdgeInsets.only(left: 19.0.w, right: 19.w),
       child: Container(
         width: 355.w,
         height: 187.h,
@@ -159,7 +159,7 @@ class CoinMain extends StatelessWidget {
 
   Widget _currentTicket() {
     return Padding(
-      padding: EdgeInsets.only(left: 19.0.w, right: 28.w),
+      padding: EdgeInsets.only(left: 19.0.w, right: 19.w),
       child: Container(
         width: 355.w,
         height: 187.h,
@@ -189,11 +189,33 @@ class CoinMain extends StatelessWidget {
                                 style: AppTextStyles.SU_R_15
                                     .copyWith(color: UsedColor.text_3),
                               ),
-                              SizedBox(height: 13.h),
-                              Text(
-                                '만남권 *개',
-                                style: AppTextStyles.PR_SB_30
-                                    .copyWith(color: UsedColor.charcoal_black),
+                              SizedBox(height: 14.h),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '만남권 *개',
+                                    style: AppTextStyles.PR_SB_30.copyWith(
+                                        color: UsedColor.charcoal_black),
+                                  ),
+                                  SizedBox(width: 12.w),
+                                  //MARK: - 정기권 혜택 적용 여부 컨테이너
+                                  Container(
+                                    width: 96.w,
+                                    height: 16.h,
+                                    decoration: BoxDecoration(
+                                      color: UsedColor.image_card,
+                                      borderRadius: BorderRadius.circular(25.r),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        '정기권 혜택 적용 중',
+                                        style: AppTextStyles.SU_R_11
+                                            .copyWith(color: UsedColor.violet),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -216,7 +238,8 @@ class CoinMain extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 22.h),
+              // TODO : 간격 수정 필요
+              SizedBox(height: 26.h),
               Container(
                 width: 332.w,
                 height: 51.h,
