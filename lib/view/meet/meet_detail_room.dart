@@ -58,11 +58,10 @@ class MeetDetailRoom extends StatelessWidget {
           Stack(
             children: [
               header(back: _back(context), title: '세부 정보'),
-              // 신고 버튼
+              //MARK: - 신고 버튼
               if (!meetDetailRoomViewModel.isMyRoom!)
                 Positioned(
                   right: 24.w,
-                  top: 3.h,
                   child: Image.asset(
                     ImagePath.reportIcon,
                     width: 29.w,

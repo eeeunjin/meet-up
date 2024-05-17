@@ -195,7 +195,7 @@ class CoinMain extends StatelessWidget {
                                 children: [
                                   Text(
                                     '만남권 *개',
-                                    style: AppTextStyles.PR_SB_30.copyWith(
+                                    style: AppTextStyles.PR_SB_26.copyWith(
                                         color: UsedColor.charcoal_black),
                                   ),
                                   SizedBox(width: 12.w),
@@ -225,14 +225,14 @@ class CoinMain extends StatelessWidget {
                   ),
                   Positioned(
                     right: 17.w,
-                    bottom: 10.h,
+                    top: 53.h,
                     child: SizedBox(
                       width: 31.w,
                       height: 31.h,
                       child: Image.asset(
                         ImagePath.nextArrow,
-                        width: 6.75.w,
-                        height: 13.5.h,
+                        width: 7.75.w,
+                        height: 15.5.h,
                       ),
                     ),
                   ),
