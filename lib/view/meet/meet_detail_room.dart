@@ -147,7 +147,7 @@ class MeetDetailRoom extends StatelessWidget {
                   color: Colors.white,
                 ),
                 child: Padding(
-                  padding: EdgeInsets.only(top: 17.0.h, left: 24.w),
+                  padding: EdgeInsets.only(top: 19.0.h, left: 24.w),
                   child: Column(
                     children: [
                       Row(
@@ -159,7 +159,7 @@ class MeetDetailRoom extends StatelessWidget {
                                 shape: BoxShape.circle, color: UsedColor.main),
                           ),
                           SizedBox(
-                            width: 17.w,
+                            width: 12.w,
                           ),
                           Text(
                             '세부 규칙',
@@ -168,14 +168,17 @@ class MeetDetailRoom extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 12.h),
+                      SizedBox(height: 21.h),
                       // 세부 규칙 리스트
                       ...List.generate(viewModel.rulesDescriptions.length,
                           (index) {
                         String ruleDescription =
                             viewModel.rulesDescriptions[index];
+                        // '가능' 일 때
+                        bool isRulesTrue = decodedRoomModel.room_rules[index];
+
                         return Padding(
-                          padding: EdgeInsets.only(left: 20.0.w, right: 44.w),
+                          padding: EdgeInsets.only(left: 4.0.w, right: 28.w),
                           child: Column(
                             children: [
                               Row(
@@ -184,8 +187,10 @@ class MeetDetailRoom extends StatelessWidget {
                                 children: [
                                   Expanded(
                                     child: Text(ruleDescription, // 질문/규칙 설명 표시
-                                        style: AppTextStyles.PR_R_12
-                                            .copyWith(color: UsedColor.text_5)),
+                                        style: AppTextStyles.PR_M_14.copyWith(
+                                            color: isRulesTrue
+                                                ? Colors.black
+                                                : UsedColor.text_5)),
                                   ),
                                   _responseBox(
                                       context,
@@ -198,10 +203,15 @@ class MeetDetailRoom extends StatelessWidget {
                                       false), // '불가능' 버튼
                                 ],
                               ),
-                              Divider(
-                                color: UsedColor.line,
-                                thickness: 0.3.h,
-                              ),
+                              if (index !=
+                                  viewModel.rulesDescriptions.length - 1)
+                                Padding(
+                                  padding: EdgeInsets.only(right: 17.0.w),
+                                  child: Divider(
+                                    color: UsedColor.line,
+                                    thickness: 0.3.h,
+                                  ),
+                                ),
                             ],
                           ),
                         );
@@ -467,7 +477,7 @@ class MeetDetailRoom extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: 14.h),
             // 지역
             Row(
               children: [
@@ -493,7 +503,7 @@ class MeetDetailRoom extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: 14.h),
             // 나이
             Row(
               children: [
@@ -519,7 +529,7 @@ class MeetDetailRoom extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: 14.h),
             // 성비
             Row(
               children: [
