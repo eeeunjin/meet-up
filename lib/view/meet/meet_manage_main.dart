@@ -258,7 +258,9 @@ class MeetManageMain extends StatelessWidget {
                           SizedBox(height: 10.h),
                           // detail
                           Text(
-                            roomModel.room_description,
+                            roomModel.room_description.split('\n').length > 1
+                                ? "${roomModel.room_description.split('\n').first}..."
+                                : roomModel.room_description,
                             style: AppTextStyles.PR_R_12
                                 .copyWith(color: UsedColor.text_5),
                             overflow: TextOverflow.ellipsis,

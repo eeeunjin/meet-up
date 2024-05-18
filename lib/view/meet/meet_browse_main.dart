@@ -46,9 +46,6 @@ class MeetBrowseMain extends StatelessWidget {
             back: _back(context),
             title: '만남방 둘러보기',
           ),
-          SizedBox(
-            height: 16.h,
-          ),
         ],
       ),
     );
@@ -336,13 +333,31 @@ class MeetBrowseMain extends StatelessWidget {
           );
         }
         return ListView.builder(
-          itemCount: rooms.length,
+          itemCount: rooms.length + 1,
           padding: EdgeInsets.only(
-            top: 20.h,
             bottom: 20.h,
           ),
           itemBuilder: (context, index) {
-            final RoomModel room = rooms[index];
+            if (index - 1 == -1) {
+              return Column(
+                children: [
+                  const SizedBox(
+                    height: 17.0,
+                  ),
+                  Text(
+                    "개설 후 만남 일정 등록이 되지 않은 채로\n7일이 지난 채팅방은 기한이 만료되어 삭제됩니다.",
+                    style: AppTextStyles.SU_R_11.copyWith(
+                      color: UsedColor.text_5,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 9.0,
+                  ),
+                ],
+              );
+            }
+            final RoomModel room = rooms[index - 1];
             return GestureDetector(
               onTap: () {
                 meetDetailRoomViewModel.setCurrentRoomModel(roomModel: room);
@@ -412,7 +427,9 @@ class MeetBrowseMain extends StatelessWidget {
                             height: 8.h,
                           ),
                           Text(
-                            room.room_description, // 방 설명
+                            room.room_description.split('\n').length > 1
+                                ? "${room.room_description.split('\n').first}..."
+                                : room.room_description, // 방 설명
                             style: AppTextStyles.PR_R_12
                                 .copyWith(color: UsedColor.text_3),
                             maxLines: 1,
@@ -440,9 +457,6 @@ class MeetBrowseMain extends StatelessWidget {
                               ),
                             ],
                           ),
-                          // SizedBox(
-                          //   height: 17.h,
-                          // ),
                         ],
                       ),
                     ),

@@ -966,11 +966,10 @@ class MeetCreate extends StatelessWidget {
                     backgroundColor: viewModel.isAllAgreed
                         ? UsedColor.button
                         : UsedColor.button_g,
-                    textStyle: TextStyle(
+                    textStyle: AppTextStyles.PR_SB_20.copyWith(
                       color: viewModel.isAllAgreed
                           ? Colors.white
                           : UsedColor.text_2,
-                      fontSize: 20.sp,
                     ),
                   ),
                 ),

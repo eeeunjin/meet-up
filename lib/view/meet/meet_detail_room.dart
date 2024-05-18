@@ -501,7 +501,9 @@ class MeetDetailRoom extends StatelessWidget {
                 ),
                 SizedBox(width: 10.w),
                 Text(
-                  '${decodedRoomModel.room_region_district} ${decodedRoomModel.room_region_province}',
+                  decodedRoomModel.room_region_district.contains('전체')
+                      ? decodedRoomModel.room_region_province
+                      : '${decodedRoomModel.room_region_province} ${decodedRoomModel.room_region_district}',
                   style:
                       AppTextStyles.PR_R_12.copyWith(color: UsedColor.text_3),
                 ),
