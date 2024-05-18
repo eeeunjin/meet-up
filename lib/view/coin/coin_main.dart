@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,11 +7,11 @@ import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
+import 'package:provider/provider.dart';
 
 class CoinMain extends StatelessWidget {
-  final String? fromRoute;
-
-  const CoinMain({super.key, this.fromRoute});
+  const CoinMain({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +31,9 @@ class CoinMain extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(height: 45.h),
-                  _currentCoin(),
+                  _currentCoin(context),
                   SizedBox(height: 16.h),
-                  _currentTicket(),
+                  _currentTicket(context),
                 ],
               ),
             ),
@@ -64,16 +65,7 @@ class CoinMain extends StatelessWidget {
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // fromRoute에 따라 다른 페이지로 이동하도록 조건 추가
-        if (fromRoute == 'meetMain') {
-          // context.goNamed('meetMain');
-          context.pop();
-        } else if (fromRoute == 'meetManageMain') {
-          // context.goNamed('meetManageMain');
-          context.pop();
-        } else {
-          context.pop();
-        }
+        context.pop();
       },
       child: Image.asset(
         ImagePath.back,
@@ -83,7 +75,8 @@ class CoinMain extends StatelessWidget {
     );
   }
 
-  Widget _currentCoin() {
+  Widget _currentCoin(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context);
     return Padding(
       padding: EdgeInsets.only(left: 19.0.w, right: 19.w),
       child: Container(
@@ -97,50 +90,45 @@ class CoinMain extends StatelessWidget {
           padding: EdgeInsets.only(bottom: 25.0.h),
           child: Column(
             children: [
-              Stack(
-                alignment: Alignment.topLeft,
-                children: [
-                  // Column 정렬 안되는 오류로 row로 한 번 감싸놓음
-                  Padding(
-                    padding: EdgeInsets.only(left: 9.w, top: 21.h),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 12.0.w),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+              Padding(
+                padding: EdgeInsets.only(left: 9.w, top: 21.h),
+                child: Padding(
+                  padding: EdgeInsets.only(left: 12.0.w),
+                  child: Stack(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '코인 보유 현황',
+                            style: AppTextStyles.SU_R_15
+                                .copyWith(color: UsedColor.text_3),
+                          ),
+                          SizedBox(height: 13.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                '코인 보유 현황',
-                                style: AppTextStyles.SU_R_15
-                                    .copyWith(color: UsedColor.text_3),
-                              ),
-                              SizedBox(height: 13.h),
-                              Text(
-                                '600 C',
+                                '${userViewModel.userModel!.coin} C',
                                 style: AppTextStyles.PR_SB_30
                                     .copyWith(color: UsedColor.charcoal_black),
                               ),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    right: 17.w,
-                    bottom: 10.h,
-                    child: SizedBox(
-                      width: 31.w,
-                      height: 31.h,
-                      child: Image.asset(
-                        ImagePath.nextArrow,
-                        width: 6.75.w,
-                        height: 13.5.h,
+                        ],
                       ),
-                    ),
+                      Positioned(
+                        right: 28.63.w,
+                        top: 39.75.h,
+                        child: Image.asset(
+                          ImagePath.nextArrow,
+                          width: 7.75.w,
+                          height: 15.5.h,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
               SizedBox(height: 22.h),
               Container(
@@ -164,7 +152,8 @@ class CoinMain extends StatelessWidget {
     );
   }
 
-  Widget _currentTicket() {
+  Widget _currentTicket(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context);
     return Padding(
       padding: EdgeInsets.only(left: 19.0.w, right: 19.w),
       child: Container(
@@ -178,74 +167,64 @@ class CoinMain extends StatelessWidget {
           padding: EdgeInsets.only(bottom: 25.0.h),
           child: Column(
             children: [
-              Stack(
-                alignment: Alignment.topLeft,
-                children: [
-                  // Column 정렬 안되는 오류로 row로 한 번 감싸놓음
-                  Padding(
-                    padding: EdgeInsets.only(left: 9.w, top: 21.h),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 12.0.w),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+              Padding(
+                padding: EdgeInsets.only(left: 9.w, top: 21.h),
+                child: Padding(
+                  padding: EdgeInsets.only(left: 12.0.w),
+                  child: Stack(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '만남권 보유 현황',
+                            style: AppTextStyles.SU_R_15
+                                .copyWith(color: UsedColor.text_3),
+                          ),
+                          SizedBox(height: 14.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                '만남권 보유 현황',
-                                style: AppTextStyles.SU_R_15
-                                    .copyWith(color: UsedColor.text_3),
+                                '만남권 ${userViewModel.userModel!.ticket}개',
+                                style: AppTextStyles.PR_SB_26
+                                    .copyWith(color: UsedColor.charcoal_black),
                               ),
-                              SizedBox(height: 14.h),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '만남권 *개',
-                                    style: AppTextStyles.PR_SB_26.copyWith(
-                                        color: UsedColor.charcoal_black),
+                              SizedBox(width: 12.w),
+                              //MARK: - 정기권 혜택 적용 여부 컨테이너
+                              if (userViewModel.userModel!.isFixedTicket)
+                                Container(
+                                  width: 96.w,
+                                  height: 16.h,
+                                  decoration: BoxDecoration(
+                                    color: UsedColor.image_card,
+                                    borderRadius: BorderRadius.circular(25.r),
                                   ),
-                                  SizedBox(width: 12.w),
-                                  //MARK: - 정기권 혜택 적용 여부 컨테이너
-                                  Container(
-                                    width: 96.w,
-                                    height: 16.h,
-                                    decoration: BoxDecoration(
-                                      color: UsedColor.image_card,
-                                      borderRadius: BorderRadius.circular(25.r),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        '정기권 혜택 적용 중',
-                                        style: AppTextStyles.SU_R_11
-                                            .copyWith(color: UsedColor.violet),
-                                      ),
+                                  child: Center(
+                                    child: Text(
+                                      '정기권 혜택 적용 중',
+                                      style: AppTextStyles.SU_R_11
+                                          .copyWith(color: UsedColor.violet),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    right: 17.w,
-                    top: 53.h,
-                    child: SizedBox(
-                      width: 31.w,
-                      height: 31.h,
-                      child: Image.asset(
-                        ImagePath.nextArrow,
-                        width: 7.75.w,
-                        height: 15.5.h,
+                        ],
                       ),
-                    ),
+                      Positioned(
+                        right: 28.63.w,
+                        top: 39.75.h,
+                        child: Image.asset(
+                          ImagePath.nextArrow,
+                          width: 7.75.w,
+                          height: 15.5.h,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-              // TODO : 간격 수정 필요
               SizedBox(height: 22.h),
               Container(
                 width: 332.w,

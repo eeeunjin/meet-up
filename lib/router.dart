@@ -184,7 +184,7 @@ final router = GoRouter(
               path: 'meetManageMain/coinMain',
               name: 'coinMainFromMeetManageMain',
               builder: (context, state) {
-                return const CoinMain(fromRoute: 'meetManageMain');
+                return const CoinMain();
               },
             ),
             GoRoute(
@@ -260,7 +260,7 @@ final router = GoRouter(
           path: 'coinMain',
           name: 'coinMainFromMeetMain',
           builder: (context, state) {
-            return const Scaffold(body: CoinMain(fromRoute: 'meetMain'));
+            return const Scaffold(body: CoinMain());
           },
         ),
         GoRoute(
