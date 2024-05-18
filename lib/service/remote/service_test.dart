@@ -71,6 +71,7 @@ Future<void> documentCreateTest() async {
     ticket: 0,
     isFixedTicket: false,
     fixed_ticket_end_date: Timestamp.now(),
+    rank: 'Novice',
   );
 
   // 새로운 유저 정보를 새로운 docRef 주소에 전달하여 생성

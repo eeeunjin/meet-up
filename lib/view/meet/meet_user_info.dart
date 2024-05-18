@@ -206,7 +206,7 @@ class MeetUserInfo extends StatelessWidget {
           SizedBox(height: 17.h),
           Center(
             child: Text(
-              'Novice 등급',
+              '${user.rank} 등급',
               style: AppTextStyles.PR_M_16.copyWith(
                 color: UsedColor.text_1,
               ),
