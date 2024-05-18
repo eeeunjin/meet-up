@@ -29,7 +29,7 @@ class SignUpDetailThree extends StatelessWidget {
           _main(context),
           const Spacer(),
           Padding(
-            padding: EdgeInsets.only(left: 32.w, right: 33.w, bottom: 25.h),
+            padding: EdgeInsets.only(left: 32.w, right: 33.w, bottom: 56.h),
             child: _bottom(context),
           ),
         ],

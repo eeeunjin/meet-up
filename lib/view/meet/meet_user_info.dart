@@ -124,10 +124,19 @@ class MeetUserInfo extends StatelessWidget {
               SizedBox(width: 23.0.w),
               Stack(
                 children: [
-                  Image.asset(
-                    user.profile_icon,
-                    height: 120.h,
-                    width: 120.w,
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: UsedColor.b_line,
+                        width: 1.5.h,
+                      ),
+                      borderRadius: BorderRadius.circular(120.r),
+                    ),
+                    child: Image.asset(
+                      user.profile_icon,
+                      height: 120.h,
+                      width: 120.w,
+                    ),
                   ),
                   Positioned(
                     top: 15.0.h,
@@ -140,7 +149,12 @@ class MeetUserInfo extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: Padding(
-                        padding: EdgeInsets.all(4.0.w),
+                        padding: EdgeInsets.only(
+                          top: 4.0.h,
+                          right: 4.0.w,
+                          left: 5.0.w,
+                          bottom: 5.0.h,
+                        ),
                         child: Image.asset(
                           ImagePath.infoIcon1,
                           height: 18.h,

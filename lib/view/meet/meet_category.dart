@@ -293,12 +293,12 @@ class MeetCategory extends StatelessWidget {
             }
           },
           height: 56.h,
-          text: viewModel.isCategorySelectionComplete ? '저장' : '저장 안됨',
+          text: '저장',
           enable: viewModel.isCategorySelectionComplete,
           backgroundColor: viewModel.isCategorySelectionComplete
               ? UsedColor.button
               : UsedColor.button_g,
-          textStyle: TextStyle(
+          textStyle: AppTextStyles.PR_SB_20.copyWith(
             color: viewModel.isCategorySelectionComplete
                 ? Colors.white
                 : UsedColor.text_2,

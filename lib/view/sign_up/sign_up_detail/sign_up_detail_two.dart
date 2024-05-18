@@ -32,7 +32,7 @@ class SignUpDetailTwo extends StatelessWidget {
           _main(context),
           const Spacer(),
           Padding(
-            padding: EdgeInsets.only(left: 32.w, right: 33.w, bottom: 25.h),
+            padding: EdgeInsets.only(left: 32.w, right: 33.w, bottom: 56.h),
             child: _bottom(context),
           ),
         ],
@@ -236,11 +236,26 @@ Widget _buildProfileImage(BuildContext context, String imagePath) {
       padding: EdgeInsets.only(
         left: 13.0.h,
       ),
-      child: Image.asset(
-        isSelected ? signUpDetailViewModel.getIconPath() : imagePath,
-        width: 100.0.h,
-        height: 100.0.h,
-        fit: BoxFit.contain,
+      child: Container(
+        width: 100.w,
+        height: 100.h,
+        decoration: BoxDecoration(
+          border: isSelected
+              ? Border.all(
+                  color: UsedColor.b_line_2,
+                  width: 2.5.h,
+                )
+              : Border.all(
+                  color: Colors.white,
+                ),
+          borderRadius: BorderRadius.circular(100.r),
+        ),
+        child: Image.asset(
+          isSelected ? signUpDetailViewModel.getIconPath() : imagePath,
+          width: 100.w,
+          height: 100.h,
+          fit: BoxFit.cover,
+        ),
       ),
     ),
   );

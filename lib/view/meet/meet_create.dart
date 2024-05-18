@@ -724,7 +724,7 @@ class MeetCreate extends StatelessWidget {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -776,11 +776,10 @@ class MeetCreate extends StatelessWidget {
           backgroundColor: viewModel.allCheckCompleted
               ? UsedColor.button
               : UsedColor.button_g,
-          textStyle: TextStyle(
-            color:
-                viewModel.allCheckCompleted ? Colors.white : UsedColor.text_2,
-            fontSize: 20.sp,
-          ),
+          textStyle: AppTextStyles.PR_SB_20.copyWith(
+              color: viewModel.allCheckCompleted
+                  ? Colors.white
+                  : UsedColor.text_2),
         );
       },
     );

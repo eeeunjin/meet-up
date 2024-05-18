@@ -366,12 +366,10 @@ class MeetLocation extends StatelessWidget {
           backgroundColor: viewModel.isLocationSelectionComplete
               ? UsedColor.button
               : UsedColor.button_g,
-          textStyle: TextStyle(
-            color: viewModel.isLocationSelectionComplete
-                ? Colors.white
-                : UsedColor.text_2,
-            fontSize: 20.sp,
-          ),
+          textStyle: AppTextStyles.PR_SB_20.copyWith(
+              color: viewModel.isLocationSelectionComplete
+                  ? Colors.white
+                  : UsedColor.text_2),
         );
       },
     );

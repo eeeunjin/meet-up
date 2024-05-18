@@ -19,19 +19,18 @@ class SignUpDetailFive extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-         
-            Padding(
-              padding: EdgeInsets.only(
-                top: 58.h,
-              ),
-              child: _header(context),
+          Padding(
+            padding: EdgeInsets.only(
+              top: 58.h,
             ),
+            child: _header(context),
+          ),
           SizedBox(height: 17.h),
           _progressBar(),
           _main(context),
           const Spacer(),
           Padding(
-            padding: EdgeInsets.only(left: 32.w, right: 33.w, bottom: 25.h),
+            padding: EdgeInsets.only(left: 32.w, right: 33.w, bottom: 56.h),
             child: _bottom(context),
           ),
         ],
@@ -175,9 +174,7 @@ class SignUpDetailFive extends StatelessWidget {
                     color: isSelected ? UsedColor.button : Colors.white,
                     borderRadius: BorderRadius.circular(14.r),
                     border: Border.all(
-                      color: isSelected
-                          ? UsedColor.button
-                          : UsedColor.b_line,
+                      color: isSelected ? UsedColor.button : UsedColor.b_line,
                       width: 2.5.w,
                     ),
                   ),

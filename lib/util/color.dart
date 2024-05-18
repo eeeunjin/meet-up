@@ -21,6 +21,7 @@ class UsedColor {
   static Color red = const Color(0xffff7878);
   static Color slected = const Color(0xffe6e6e6);
   static Color b_line = const Color(0xffd2d8f8);
+  static Color b_line_2 = const Color(0xffcdcdff);
   static Color progress_bar = const Color(0xffa2a3ff);
   static Color progress_bar2 = const Color(0xfff1f3fd);
   static Color charcoal_black = const Color(0xff282828);

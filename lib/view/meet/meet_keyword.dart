@@ -266,16 +266,15 @@ class MeetKeyWord extends StatelessWidget {
             }
           },
           height: 56.h,
-          text: meetKeywordViewModel.keywordCheckComplted ? '저장' : '저장',
+          text: '저장',
           enable: meetKeywordViewModel.keywordCheckComplted,
           backgroundColor: meetKeywordViewModel.keywordCheckComplted
               ? UsedColor.button
               : UsedColor.button_g,
-          textStyle: TextStyle(
-            color: meetKeywordViewModel.keywordCheckComplted
-                ? Colors.white
-                : UsedColor.text_2,
-          ),
+          textStyle: AppTextStyles.PR_SB_20.copyWith(
+              color: meetKeywordViewModel.keywordCheckComplted
+                  ? Colors.white
+                  : UsedColor.text_2),
         );
       }),
     );

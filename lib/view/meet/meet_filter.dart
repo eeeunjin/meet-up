@@ -609,9 +609,8 @@ class MeetFilterMain extends StatelessWidget {
           enable: isAllCompleted,
           backgroundColor:
               isAllCompleted ? UsedColor.button : UsedColor.button_g,
-          textStyle: TextStyle(
+          textStyle: AppTextStyles.PR_SB_20.copyWith(
             color: isAllCompleted ? Colors.white : UsedColor.text_2,
-            fontSize: 20.sp,
           ),
         );
       },

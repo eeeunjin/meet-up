@@ -357,12 +357,10 @@ class MeetFilterArea extends StatelessWidget {
           backgroundColor: viewModel.isAreaSelectionComplete
               ? UsedColor.button
               : UsedColor.button_g,
-          textStyle: TextStyle(
-            color: viewModel.isAreaSelectionComplete
-                ? Colors.white
-                : UsedColor.text_2,
-            fontSize: 20.sp,
-          ),
+          textStyle: AppTextStyles.PR_SB_20.copyWith(
+              color: viewModel.isAreaSelectionComplete
+                  ? Colors.white
+                  : UsedColor.text_2),
         );
       },
     );
