@@ -15,6 +15,7 @@ import 'package:meet_up/view_model/meet/meet_detail_room_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_filter_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_keyword_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_manage_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_user_info_view_model.dart';
 import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
@@ -71,6 +72,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ScheduleMainViewModel()),
         ChangeNotifierProvider(create: (context) => UserViewModel()),
         ChangeNotifierProvider(create: (context) => ChatViewModel()),
+        ChangeNotifierProvider(create: (context) => MeetUserInfoViewModel()),
       ],
       child: const MyApp(),
     ),

@@ -6,7 +6,7 @@ import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
-import 'package:meet_up/view_model/user_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_user_info_view_model.dart';
 import 'package:provider/provider.dart';
 
 class MeetUserInfo extends StatelessWidget {
@@ -31,12 +31,14 @@ class MeetUserInfo extends StatelessWidget {
 
   // header
   Widget _header(BuildContext context) {
+    final meetUserInfoViewModel =
+        Provider.of<MeetUserInfoViewModel>(context, listen: false);
     return Center(
       child: Column(
         children: [
           header(
             back: _back(context),
-            title: '사용자 닉네임',
+            title: meetUserInfoViewModel.userModel!.nickname,
           ),
           SizedBox(
             height: 16.h,
@@ -71,12 +73,12 @@ class MeetUserInfo extends StatelessWidget {
   }
 
   Widget _main(BuildContext context) {
-    return Consumer<UserViewModel>(
-      builder: (context, userViewModel, child) {
-        if (userViewModel.userModel == null) {
+    return Consumer<MeetUserInfoViewModel>(
+      builder: (context, meetUserInfoViewModel, child) {
+        if (meetUserInfoViewModel.userModel == null) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          UserModel user = userViewModel.userModel!;
+          UserModel user = meetUserInfoViewModel.userModel!;
           return Container(
             color: Colors.white,
             child: Container(
@@ -90,7 +92,7 @@ class MeetUserInfo extends StatelessWidget {
                       SizedBox(height: 32.h),
                       _profile(context, user),
                       SizedBox(height: 16.h),
-                      _userInfo(context, userViewModel),
+                      _userInfo(context, meetUserInfoViewModel),
                       SizedBox(height: 16.h),
                       _userPersonality(context, user),
                       SizedBox(height: 47.h),
@@ -160,19 +162,23 @@ class MeetUserInfo extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 10.h),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: UsedColor.image_card,
-                      borderRadius: BorderRadius.circular(9.r),
-                    ),
-                    child: Text(
-                      '정기권 혜택 적용중',
-                      style: AppTextStyles.SU_M_12.copyWith(
-                        color: UsedColor.violet,
+                  if (!user.isFixedTicket)
+                    Container(
+                      height: 20.h,
+                      width: 104.w,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: UsedColor.image_card,
+                        borderRadius: BorderRadius.circular(9.r),
                       ),
-                      textAlign: TextAlign.center,
+                      child: Text(
+                        '정기권 혜택 적용중',
+                        style: AppTextStyles.SU_M_12.copyWith(
+                          color: UsedColor.violet,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ],
@@ -197,8 +203,9 @@ class MeetUserInfo extends StatelessWidget {
     );
   }
 
-  Widget _userInfo(BuildContext context, UserViewModel userViewModel) {
-    UserModel user = userViewModel.userModel!;
+  Widget _userInfo(
+      BuildContext context, MeetUserInfoViewModel meetUserInfoViewModel) {
+    UserModel user = meetUserInfoViewModel.userModel!;
     return Container(
       width: 337.w,
       height: 188.h,
@@ -211,14 +218,17 @@ class MeetUserInfo extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 16.0.h),
-          _userInfoDetail(ImagePath.infoIcon2, user.gender),
+          _userInfoDetail(
+              ImagePath.infoIcon2, meetUserInfoViewModel.convertGenderToKor()),
           SizedBox(height: 20.0.h),
-          _userInfoDetail(ImagePath.infoIcon3, userViewModel.getAgeRange()),
+          _userInfoDetail(
+              ImagePath.infoIcon3, meetUserInfoViewModel.getAgeRange()),
           SizedBox(height: 20.0.h),
           _userInfoDetail(ImagePath.infoIcon4,
               user.region['province'] + " > " + user.region['district']),
           SizedBox(height: 20.0.h),
-          _userInfoDetail(ImagePath.infoIcon5, user.job),
+          _userInfoDetail(ImagePath.infoIcon5,
+              meetUserInfoViewModel.convertAffliationToKor()),
         ],
       ),
     );

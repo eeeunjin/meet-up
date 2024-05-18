@@ -11,6 +11,7 @@ import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/meet/meet_manage_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_detail_room_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_user_info_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -102,6 +103,8 @@ class MeetDetailRoom extends StatelessWidget {
     MeetManageViewModel viewModel = Provider.of<MeetManageViewModel>(context);
     MeetDetailRoomViewModel meetDetailRoomViewModel =
         Provider.of<MeetDetailRoomViewModel>(context, listen: false);
+    MeetUserInfoViewModel meetUserInfoViewModel =
+        Provider.of<MeetUserInfoViewModel>(context, listen: false);
     return Container(
       width: double.infinity,
       height: 131.h,
@@ -307,13 +310,14 @@ class MeetDetailRoom extends StatelessWidget {
                                     onTap: () {
                                       // 눌렀을 때 프로필 상세 정보로 넘어가기
                                       if (meetDetailRoomViewModel.isMyRoom!) {
+                                        meetUserInfoViewModel.userModel =
+                                            userModels[index];
                                         context.goNamed('meetUserInfo_manage');
                                       } else {
+                                        meetUserInfoViewModel.userModel =
+                                            userModels[index];
                                         context.goNamed('meetUserInfo_browse');
                                       }
-                                      logger.d(
-                                        "nickname: ${userModels[index].nickname}\nbirthday: ${userModels[index].birthday}\ngender: ${userModels[index].gender}\njob: ${userModels[index].job}",
-                                      );
                                     },
                                     child: Column(
                                       children: [
