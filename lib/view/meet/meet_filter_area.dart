@@ -16,18 +16,17 @@ class MeetFilterArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            _header(context),
-            _main(context),
-            Padding(
-              padding: EdgeInsets.only(top: 32.h, left: 33.w, right: 33.w),
-              child: _bottom(context),
-            ),
-          ],
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(height: 58.h),
+          _header(context),
+          _main(context),
+          Padding(
+            padding: EdgeInsets.only(top: 32.h, left: 33.w, right: 33.w),
+            child: _bottom(context),
+          ),
+        ],
       ),
     );
   }
@@ -37,12 +36,9 @@ class MeetFilterArea extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          SizedBox(
-            height: 10.h,
-          ),
           header(back: _back(context), title: '지역 선택'),
           SizedBox(
-            height: 15.h,
+            height: 16.h,
           ),
           Divider(
             thickness: 0.3.h,
@@ -56,18 +52,15 @@ class MeetFilterArea extends StatelessWidget {
 
   Widget _back(BuildContext context) {
     final viewModel = Provider.of<MeetFilterViewModel>(context);
-    return Padding(
-      padding: EdgeInsets.only(left: 9.h),
-      child: GestureDetector(
-        onTap: () {
-          viewModel.clearAreaPageSelection();
-          context.pop();
-        },
-        child: Image.asset(
-          ImagePath.back,
-          width: 10.w,
-          height: 20.h,
-        ),
+    return GestureDetector(
+      onTap: () {
+        viewModel.clearAreaPageSelection();
+        context.pop();
+      },
+      child: Image.asset(
+        ImagePath.back,
+        width: 10.w,
+        height: 20.h,
       ),
     );
   }
@@ -125,7 +118,7 @@ class MeetFilterArea extends StatelessWidget {
                       width: 140.w,
                       child: ListView.builder(
                         primary: false,
-                        shrinkWrap: true,
+                        padding: EdgeInsets.only(top: 0.h),
                         itemCount: ProvinceDistrict.entireDistricts.keys.length,
                         itemBuilder: (BuildContext context, int index) {
                           String province = ProvinceDistrict
@@ -202,7 +195,7 @@ class MeetFilterArea extends StatelessWidget {
                               width: 252.w,
                               child: ListView.builder(
                                 primary: false,
-                                shrinkWrap: true,
+                                padding: EdgeInsets.only(top: 0.h),
                                 itemCount: viewModel
                                     .getDistrictsByProvince(selectedProvince)
                                     .length,

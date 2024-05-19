@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/model/province_district_model.dart';
@@ -18,21 +16,22 @@ class MeetLocation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            _header(context),
-            _main(context),
-            Padding(
-                padding: EdgeInsets.only(
-                  top: 32.h,
-                  left: 33.w,
-                  right: 33.w,
-                ),
-                child: _bottom(context)),
-          ],
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 58.h),
+            child: _header(context),
+          ),
+          _main(context),
+          Padding(
+              padding: EdgeInsets.only(
+                top: 32.h,
+                left: 33.w,
+                right: 33.w,
+              ),
+              child: _bottom(context)),
+        ],
       ),
     );
   }
@@ -42,12 +41,9 @@ class MeetLocation extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          SizedBox(
-            height: 10.h,
-          ),
           header(back: _back(context), title: '지역 선택'),
           SizedBox(
-            height: 15.h,
+            height: 16.h,
           ),
           Divider(
             thickness: 0.3.h,
@@ -60,21 +56,18 @@ class MeetLocation extends StatelessWidget {
   }
 
   Widget _back(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 9.h),
-      child: GestureDetector(
-        onTap: () {
-          // 정보 초기화
-          final viewModel =
-              Provider.of<MeetCreateViewModel>(context, listen: false);
-          viewModel.locationClearSelection();
-          context.pop(context);
-        },
-        child: Image.asset(
-          ImagePath.back,
-          width: 10.w,
-          height: 20.h,
-        ),
+    return GestureDetector(
+      onTap: () {
+        // 정보 초기화
+        final viewModel =
+            Provider.of<MeetCreateViewModel>(context, listen: false);
+        viewModel.locationClearSelection();
+        context.pop(context);
+      },
+      child: Image.asset(
+        ImagePath.back,
+        width: 10.w,
+        height: 20.h,
       ),
     );
   }
@@ -132,7 +125,7 @@ class MeetLocation extends StatelessWidget {
                       width: 140.w,
                       child: ListView.builder(
                         primary: false,
-                        shrinkWrap: true,
+                        padding: EdgeInsets.only(top: 0.h),
                         itemCount: ProvinceDistrict.entireDistricts.keys.length,
                         itemBuilder: (BuildContext context, int index) {
                           String province = ProvinceDistrict
@@ -209,7 +202,7 @@ class MeetLocation extends StatelessWidget {
                               width: 252.w,
                               child: ListView.builder(
                                 primary: false,
-                                shrinkWrap: true,
+                                padding: EdgeInsets.only(top: 0.h),
                                 itemCount: viewModel
                                     .getDistrictsByProvince(selectedProvince)
                                     .length,

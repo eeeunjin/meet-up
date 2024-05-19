@@ -66,8 +66,6 @@ class MeetDetailRoom extends StatelessWidget {
 
   // header
   Widget _header(BuildContext context) {
-    final meetDetailRoomViewModel =
-        Provider.of<MeetDetailRoomViewModel>(context, listen: false);
     return Center(
       child: Column(
         children: [

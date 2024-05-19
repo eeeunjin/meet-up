@@ -53,18 +53,15 @@ class MeetFilterMain extends StatelessWidget {
   Widget _back(BuildContext context) {
     final meetFilterViewModel =
         Provider.of<MeetFilterViewModel>(context, listen: false);
-    return Padding(
-      padding: EdgeInsets.only(left: 9.h),
-      child: GestureDetector(
-        onTap: () {
-          meetFilterViewModel.clearAllFilters();
-          context.pop();
-        },
-        child: Image.asset(
-          ImagePath.back,
-          width: 10.w,
-          height: 20.h,
-        ),
+    return GestureDetector(
+      onTap: () {
+        meetFilterViewModel.clearAllFilters();
+        context.pop();
+      },
+      child: Image.asset(
+        ImagePath.back,
+        width: 10.w,
+        height: 20.h,
       ),
     );
   }

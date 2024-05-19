@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
+import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -45,11 +46,7 @@ class ScheduleMain extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          // header(title: '채팅', back: null),
-          Text(
-            '일정',
-            style: AppTextStyles.SU_R_20.copyWith(color: UsedColor.text_3),
-          ),
+          header(title: '일정', back: null),
           SizedBox(
             height: 30.h,
           ),

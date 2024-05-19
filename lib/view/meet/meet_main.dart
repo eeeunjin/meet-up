@@ -5,6 +5,7 @@ import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/coin_widget.dart';
+import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -47,11 +48,7 @@ class MeetMain extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          // header(title: '만남', back: null);
-          Text(
-            '만남',
-            style: AppTextStyles.SU_R_20.copyWith(color: UsedColor.text_3),
-          ),
+          header(title: '만남', back: null),
           SizedBox(
             height: 16.h,
           ),

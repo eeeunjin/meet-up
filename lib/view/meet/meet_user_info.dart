@@ -49,17 +49,14 @@ class MeetUserInfo extends StatelessWidget {
   }
 
   Widget _back(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 9.h),
-      child: GestureDetector(
-        onTap: () {
-          context.pop();
-        },
-        child: Image.asset(
-          ImagePath.back,
-          width: 10.w,
-          height: 20.h,
-        ),
+    return GestureDetector(
+      onTap: () {
+        context.pop();
+      },
+      child: Image.asset(
+        ImagePath.back,
+        width: 10.w,
+        height: 20.h,
       ),
     );
   }
