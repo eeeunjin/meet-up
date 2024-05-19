@@ -129,10 +129,14 @@ class MeetUserInfo extends StatelessWidget {
                       ),
                       borderRadius: BorderRadius.circular(120.r),
                     ),
-                    child: Image.asset(
-                      user.profile_icon,
-                      height: 120.h,
-                      width: 120.w,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(120.r),
+                      child: Image.asset(
+                        user.profile_icon,
+                        height: 120.h,
+                        width: 120.w,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   Positioned(
