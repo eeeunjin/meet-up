@@ -164,12 +164,12 @@ class MeetDetailRoom extends StatelessWidget {
                           ),
                           Text(
                             '세부 규칙',
-                            style: AppTextStyles.PR_SB_12
+                            style: AppTextStyles.PR_SB_16
                                 .copyWith(color: Colors.black),
                           ),
                         ],
                       ),
-                      SizedBox(height: 21.h),
+                      SizedBox(height: 19.h),
                       // 세부 규칙 리스트
                       ...List.generate(viewModel.rulesDescriptions.length,
                           (index) {
