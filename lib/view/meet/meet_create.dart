@@ -165,11 +165,11 @@ class MeetCreate extends StatelessWidget {
               style: AppTextStyles.PR_SB_16,
             ),
           ),
-          SizedBox(width: 23.w),
+          SizedBox(width: 37.w),
           // text field
           Container(
             alignment: Alignment.center,
-            width: 210.w, // 임의 값
+            width: 209.w,
             height: 19.h,
             child: TextField(
               maxLength: 16,
