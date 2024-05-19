@@ -169,13 +169,19 @@ class MeetCreateViewModel with ChangeNotifier {
   }
 
   // 저장 버튼을 누를 수 있는지 판별하는 함수 (카테고리 페이지)
-  bool get isCategorySelectionComplete {
+  bool get isCategorySelectionCompleteInCategoryPage {
     if (_selectedMainCategoriesInCategoryPage.isNotEmpty &&
         _selectedMainCategoriesInCategoryPage.first == '기타') {
       return true;
     }
     return _selectedMainCategoriesInCategoryPage.isNotEmpty &&
         _selectedSubCategoriesInCategoryPage.isNotEmpty;
+  }
+
+  // 저장 버튼을 누를 수 있는지 판별하는 함수 (생성 페이지)
+  bool get isCategorySelectionComplete {
+    return _selectedMainCategories.isNotEmpty &&
+        _selectedSubCategories.isNotEmpty;
   }
 
   // 카테고리 페이지의 정보를 생성 페이지로 넘기는 함수
@@ -243,9 +249,15 @@ class MeetCreateViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  bool get isLocationSelectionComplete {
+  // 저장 버튼을 누를 수 있는지 판별하는 함수 (Area 페이지)
+  bool get isLocationSelectionCompleteInAreaPage {
     return _selectedProvinceInAreaPage.isNotEmpty &&
         _selectedDistrictInAreaPage.isNotEmpty;
+  }
+
+  // 저장 버튼을 누를 수 있는지 판별하는 함수 (생성 페이지)
+  bool get isLocationSelectionComplete {
+    return _selectedProvince.isNotEmpty && _selectedDistrict.isNotEmpty;
   }
 
   // 확인을 누르면 Filter Area 페이지에서 Create View 페이지 변수로 정보 전달
@@ -422,6 +434,8 @@ class MeetCreateViewModel with ChangeNotifier {
     _rulesQuestion.forEach((key, value) => _rulesQuestion[key] = false);
     _selectedMainCategories.clear();
     _selectedSubCategories.clear();
+    _selectedMainCategoriesInCategoryPage.clear();
+    _selectedSubCategoriesInCategoryPage.clear();
     _selectedProvince = '';
     _selectedDistrict = '';
     _selectedProvinceInAreaPage = '';

@@ -284,7 +284,7 @@ class MeetCategory extends StatelessWidget {
           Consumer<MeetCreateViewModel>(builder: (context, viewModel, child) {
         return NextButton(
           onTap: () async {
-            if (viewModel.isCategorySelectionComplete) {
+            if (viewModel.isCategorySelectionCompleteInCategoryPage) {
               viewModel.setSelectedCategories();
               context.pop();
             } else {
@@ -294,12 +294,12 @@ class MeetCategory extends StatelessWidget {
           },
           height: 56.h,
           text: '저장',
-          enable: viewModel.isCategorySelectionComplete,
-          backgroundColor: viewModel.isCategorySelectionComplete
+          enable: viewModel.isCategorySelectionCompleteInCategoryPage,
+          backgroundColor: viewModel.isCategorySelectionCompleteInCategoryPage
               ? UsedColor.button
               : UsedColor.button_g,
           textStyle: AppTextStyles.PR_SB_20.copyWith(
-            color: viewModel.isCategorySelectionComplete
+            color: viewModel.isCategorySelectionCompleteInCategoryPage
                 ? Colors.white
                 : UsedColor.text_2,
           ),

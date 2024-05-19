@@ -361,13 +361,13 @@ class MeetLocation extends StatelessWidget {
             context.pop();
           },
           height: 54.h,
-          text: viewModel.isLocationSelectionComplete ? '확인' : '다음',
-          enable: viewModel.isLocationSelectionComplete,
-          backgroundColor: viewModel.isLocationSelectionComplete
+          text: viewModel.isLocationSelectionCompleteInAreaPage ? '확인' : '다음',
+          enable: viewModel.isLocationSelectionCompleteInAreaPage,
+          backgroundColor: viewModel.isLocationSelectionCompleteInAreaPage
               ? UsedColor.button
               : UsedColor.button_g,
           textStyle: AppTextStyles.PR_SB_20.copyWith(
-              color: viewModel.isLocationSelectionComplete
+              color: viewModel.isLocationSelectionCompleteInAreaPage
                   ? Colors.white
                   : UsedColor.text_2),
         );
