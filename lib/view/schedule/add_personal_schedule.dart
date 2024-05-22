@@ -1,12 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
-import 'package:meet_up/view/widget/header_widget.dart';
+import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:provider/provider.dart';
@@ -86,8 +85,8 @@ class AddPersonalSchedule extends StatelessWidget {
   // 구분선
   Widget _divider() {
     return Divider(
-      height: 0.3.h,
-      // thickness: 0.3.h,
+            thickness: 0.3.h,
+            height: 0.h,
       color: UsedColor.line,
     );
   }

@@ -15,7 +15,9 @@ import 'package:meet_up/view/meet/meet_filter.dart';
 import 'package:meet_up/view/meet/meet_filter_area.dart';
 import 'package:meet_up/view/meet/meet_keyword.dart';
 import 'package:meet_up/view/meet/meet_main.dart';
+import 'package:meet_up/view/meet/meet_detail_room.dart';
 import 'package:meet_up/view/meet/meet_search_main.dart';
+import 'package:meet_up/view/meet/meet_user_info.dart';
 import 'package:meet_up/view/profile/profile_edit.dart';
 import 'package:meet_up/view/profile/profile_main.dart';
 import 'package:meet_up/view/profile/profile_notification.dart';
@@ -89,7 +91,7 @@ final router = GoRouter(
         }
       },
       routes: [
-        // Login
+        //MARK: - Login
         GoRoute(
           path: 'loginPhoneNum',
           name: 'loginPhoneNum',
@@ -107,7 +109,7 @@ final router = GoRouter(
           ],
         ),
 
-        // SignUp
+        //MARK: - SignUp
         GoRoute(
           path: 'signUpPhoneNum',
           name: 'signUpPhoneNum',
@@ -170,7 +172,7 @@ final router = GoRouter(
           ],
         ),
 
-        // Meet
+        //MARK: - Meet
         GoRoute(
           path: 'meetManageMain',
           name: 'meetManageMain',
@@ -182,8 +184,24 @@ final router = GoRouter(
               path: 'meetManageMain/coinMain',
               name: 'coinMainFromMeetManageMain',
               builder: (context, state) {
-                return const CoinMain(fromRoute: 'meetManageMain');
+                return const CoinMain();
               },
+            ),
+            GoRoute(
+              path: 'meetDetailRoom_manage',
+              name: 'meetDetailRoom_manage',
+              builder: (context, state) {
+                return const MeetDetailRoom();
+              },
+              routes: [
+                GoRoute(
+                  path: 'meetUserInfo_manage',
+                  name: 'meetUserInfo_manage',
+                  builder: (context, state) {
+                    return const Scaffold(body: MeetUserInfo());
+                  },
+                ),
+              ],
             ),
           ],
         ),
@@ -198,30 +216,51 @@ final router = GoRouter(
           path: 'meetBrowseMain',
           name: 'meetBrowseMain',
           builder: (context, state) {
-            return const Scaffold(body: MeetBrowseMain());
-          },
-        ),
-        GoRoute(
-          path: 'meetFilterMain',
-          name: 'meetFilterMain',
-          builder: (context, state) {
-            return const Scaffold(body: MeetFilterMain());
+            return const Scaffold(
+              body: MeetBrowseMain(),
+            );
           },
           routes: [
             GoRoute(
-              path: 'meetFilterArea',
-              name: 'meetFilterArea',
+              path: 'meetDetailRoom_browse',
+              name: 'meetDetailRoom_browse',
               builder: (context, state) {
-                return const Scaffold(body: MeetFilterArea());
+                return const Scaffold(body: MeetDetailRoom());
               },
+              routes: [
+                GoRoute(
+                  path: 'meetUserInfo_browse',
+                  name: 'meetUserInfo_browse',
+                  builder: (context, state) {
+                    return const Scaffold(body: MeetUserInfo());
+                  },
+                ),
+              ],
+            ),
+            GoRoute(
+              path: 'meetFilterMain',
+              name: 'meetFilterMain',
+              builder: (context, state) {
+                return const Scaffold(body: MeetFilterMain());
+              },
+              routes: [
+                GoRoute(
+                  path: 'meetFilterArea',
+                  name: 'meetFilterArea',
+                  builder: (context, state) {
+                    return const Scaffold(body: MeetFilterArea());
+                  },
+                ),
+              ],
             ),
           ],
         ),
+
         GoRoute(
           path: 'coinMain',
           name: 'coinMainFromMeetMain',
           builder: (context, state) {
-            return const Scaffold(body: CoinMain(fromRoute: 'meetMain'));
+            return const Scaffold(body: CoinMain());
           },
         ),
         GoRoute(
@@ -255,7 +294,7 @@ final router = GoRouter(
           ],
         ),
 
-        // Schedule
+        //MARK: - Schedule
         GoRoute(
           path: 'addPersonalSchedule',
           builder: (context, state) {
@@ -263,7 +302,7 @@ final router = GoRouter(
           },
         ),
 
-        // Profile
+        //MARK: - Profile
         GoRoute(
           path: 'profileEdit',
           builder: (context, state) {

@@ -10,7 +10,7 @@ import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:provider/provider.dart';
 
 class SignUpDetailOneContents extends StatelessWidget {
-  const SignUpDetailOneContents({Key? key}) : super(key: key);
+  const SignUpDetailOneContents({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,7 @@ class SignUpDetailOneContents extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 25.h,
+          height: 56.h,
         )
       ],
     );

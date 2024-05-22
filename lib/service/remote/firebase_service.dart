@@ -37,14 +37,13 @@ class FirebaseCRUD {
         if (T == RoomModel) {
           if (filterInfo == null) {
             querySnapshot = await colRef
-                .orderBy("room_creation_date", descending: true)
                 .get();
           } else {
             // 최신 순으로 정렬해서 가져오기
             querySnapshot = await createFilterQuery(
               filterInfo: filterInfo,
               colRef: colRef,
-            ).orderBy("room_creation_date", descending: true).get();
+            ).get();
           }
         } else {
           querySnapshot = await colRef.get();
@@ -53,7 +52,6 @@ class FirebaseCRUD {
         if (T == RoomModel) {
           if (filterInfo == null) {
             querySnapshot = await colRef
-                .orderBy("room_creation_date", descending: true)
                 .limit(limit)
                 .get();
           } else {
@@ -62,7 +60,6 @@ class FirebaseCRUD {
               colRef: colRef,
               filterInfo: filterInfo,
             )
-                .orderBy("room_creation_date", descending: true)
                 .limit(limit)
                 .get();
           }
@@ -101,21 +98,29 @@ class FirebaseCRUD {
   Stream<QuerySnapshot<Object?>> readCollectionStream<T>({
     int? limit,
     FilterInfo? filterInfo,
+    String? myUID,
     required CollectionReference colRef,
   }) {
     // 콜렉션 스냅샷 스트림 정보를 반환
     // 실시간으로 스트림 정보를 Read 할 수 있음
+    final firebaseRefs = FirebaseRefs();
     if (limit == null) {
       if (T == RoomModel) {
         if (filterInfo == null) {
           return colRef
-              .orderBy("room_creation_date", descending: true)
+              .where("room_owner_reference",
+                  isNotEqualTo: firebaseRefs.colRefUser.doc(myUID!))
+              .orderBy("room_owner_reference")
               .snapshots();
         } else {
           return createFilterQuery(
             filterInfo: filterInfo,
             colRef: colRef,
-          ).orderBy("room_creation_date", descending: true).snapshots();
+          )
+              .where("room_owner_reference",
+                  isNotEqualTo: firebaseRefs.colRefUser.doc(myUID!))
+              .orderBy("room_owner_reference")
+              .snapshots();
         }
       } else {
         return colRef.snapshots();
@@ -124,7 +129,9 @@ class FirebaseCRUD {
       if (T == RoomModel) {
         if (filterInfo == null) {
           return colRef
-              .orderBy("room_creation_date", descending: true)
+              .where("room_owner_reference",
+                  isNotEqualTo: firebaseRefs.colRefUser.doc(myUID!))
+              .orderBy("room_owner_reference")
               .limit(limit)
               .snapshots();
         } else {
@@ -132,13 +139,30 @@ class FirebaseCRUD {
             colRef: colRef,
             filterInfo: filterInfo,
           )
-              .orderBy("room_creation_date", descending: true)
+              .where("room_owner_reference",
+                  isNotEqualTo: firebaseRefs.colRefUser.doc(myUID!))
+              .orderBy("room_owner_reference")
               .limit(limit)
               .snapshots();
         }
       } else {
         return colRef.limit(limit).snapshots();
       }
+    }
+  }
+
+  /// 쿼리로 stream snapshots을 불러오는 함수
+  Stream<QuerySnapshot<Object?>> readCollectionStreamByQuery<T>(
+      {required String uid}) {
+    final firebaseRefs = FirebaseRefs();
+
+    if (T == MyRoomModel) {
+      return firebaseRefs.colRefRoom
+          .where('room_owner_reference',
+              isEqualTo: firebaseRefs.colRefUser.doc(uid))
+          .snapshots();
+    } else {
+      return const Stream.empty();
     }
   }
 
@@ -236,7 +260,7 @@ class FirebaseCRUD {
 
       // snapshot의 정보를 json 형태로 불러오기
       Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
-      
+
       // 데이터가 존재하는 경우
       if (data != null) {
         if (T == UserModel) {

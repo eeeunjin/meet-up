@@ -14,20 +14,25 @@ class ImagePath {
   static String get signUpProgressBar_5 =>
       'assets/images/signupprogressbar5.png';
 
-  static String get image1 => 'assets/images/image1.jpg';
-  static String get image2 => 'assets/images/image2.jpg';
-  static String get image3 => 'assets/images/image3.jpg';
-  static String get image4 => 'assets/images/image4.jpg';
-  static String get image5 => 'assets/images/image5.jpg';
+  static String get cogySelect => 'assets/images/cogy_select.png';
+  static String get piggySelect => 'assets/images/piggy_select.png';
+  static String get aengmuSelect => 'assets/images/aengmu_select.png';
+  static String get hamSelect => 'assets/images/ham_select.png';
+  static String get fedroSelect => 'assets/images/fedro_select.png';
+  static String get cogyDeselect => 'assets/images/cogy_deselect.png';
+  static String get piggyDeselect => 'assets/images/piggy_deselect.png';
+  static String get aengmuDeselect => 'assets/images/aengmu_deselect.png';
+  static String get hamDeselect => 'assets/images/ham_deselect.png';
+  static String get fedroDeselect => 'assets/images/fedro_deselect.png';
 
   // meet
-  static String get meetIcon1 => 'assets/images/meeticon1.png';
-  static String get meetIcon2 => 'assets/images/meeticon2.png';
-  static String get meetIcon3 => 'assets/images/meeticon3.png';
+  static String get meetIcon1 => 'assets/images/meet_icon_1.png';
+  static String get meetIcon2 => 'assets/images/meet_icon_2.png';
 
-  static String get meetImage1 => 'assets/images/meetimage1.png';
-  static String get meetImage2 => 'assets/images/meetimage2.png';
-  static String get meetImage3 => 'assets/images/meetimage3.png';
+  static String get meetImage1 => 'assets/images/meet_image_1.png';
+  static String get meetImage2 => 'assets/images/meet_image_2.png';
+
+  static String get eventImage1 => 'assets/images/event_image_1.png';
 
   static String get nextArrow => 'assets/images/nextarrow.png';
 
@@ -37,6 +42,7 @@ class ImagePath {
   static String get grW4 => 'assets/images/grw4.png';
   static String get grM4 => 'assets/images/grm4.png';
   static String get grW2M2 => 'assets/images/grw2m2.png';
+  static String get grW4Blur => 'assets/images/grw4_blur.png';
 
   static String get closeIcon => 'assets/images/closeicon.png';
   static String get search => 'assets/images/search.png';
@@ -51,6 +57,9 @@ class ImagePath {
   static String get checkBoxOff => 'assets/images/checkboxoff.png';
   static String get checkBoxOn => 'assets/images/checkboxon.png';
 
+  static String get crownIcon => 'assets/images/crown_icon.png';
+  static String get reportIcon => 'assets/images/report_icon.png';
+
   // bot_nav
   static String get meetOn => 'assets/images/bot_nav_meet_on.png';
   static String get meetOff => 'assets/images/bot_nav_meet_off.png';
@@ -61,6 +70,7 @@ class ImagePath {
   static String get refOn => 'assets/images/bot_nav_ref_on.png';
   static String get refOff => 'assets/images/bot_nav_ref_off.png';
   static String get profileOff => 'assets/images/bot_nav_profile_off.png';
+  static String get profileOn => 'assets/images/bot_nav_profile_on.png';
 
   // setting
   static String get setIcon1 => 'assets/images/set_icon_1.png';
@@ -84,4 +94,14 @@ class ImagePath {
   static String get scheduleIcon5 => 'assets/images/schedule_icon_5.png';
   static String get scheduleIcon6 => 'assets/images/schedule_icon_6.png';
   static String get downArrow => 'assets/images/down_arrow.png';
+
+  // userinfo
+  static String get infoIcon1 => 'assets/images/info_icon_1.png';
+  static String get infoIcon2 => 'assets/images/info_icon_2.png';
+  static String get infoIcon3 => 'assets/images/info_icon_3.png';
+  static String get infoIcon4 => 'assets/images/info_icon_4.png';
+  static String get infoIcon5 => 'assets/images/info_icon_5.png';
+  static String get infoIcon6 => 'assets/images/info_icon_6.png';
+  static String get infoIcon7 => 'assets/images/info_icon_7.png';
+  static String get infoIcon8 => 'assets/images/info_icon_8.png';
 }

@@ -1,0 +1,100 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
+import 'package:meet_up/main.dart';
+import 'package:meet_up/model/room_model.dart';
+import 'package:meet_up/model/user_model.dart';
+import 'package:meet_up/repository/room_repository.dart';
+import 'package:meet_up/repository/user_repository.dart';
+
+class MeetDetailRoomViewModel with ChangeNotifier {
+  final UserRepository _userRepository = UserRepository();
+  final RoomRepository _roomRepository = RoomRepository();
+  RoomModel? currentRoomModel; // 현재 방 모델
+  bool? isMyRoom;
+
+  void setCurrentRoomModel({required RoomModel roomModel}) {
+    currentRoomModel = roomModel.clone();
+  }
+
+  void setIsMyRoom({required bool isMyRoom}) {
+    this.isMyRoom = isMyRoom;
+    notifyListeners();
+  }
+
+  void clearCurrentRoomModel() {
+    currentRoomModel = null;
+    notifyListeners();
+  }
+
+  Future<void> deleteRoom({required String myUid}) async {
+    logger.d("채팅 방 만들어지고, 채팅 방 삭제되는 로직도 들어와야 함");
+
+    // Room Collection 에서 해당 정보 삭제
+    try {
+      await _roomRepository.deleteRoomData(roomId: currentRoomModel!.roomId);
+
+      // 해당 유저의 myRoom Collection 에서 해당 정보 삭제
+      await _userRepository.deleteMyRoomData(
+          uid: myUid, roomId: currentRoomModel!.roomId);
+
+      logger.d("안전하게 방 정보가 삭제되었습니다.");
+    } catch (e) {
+      logger.e("방 삭제 중 에러가 발생하였습니다. $e");
+    }
+
+    return;
+  }
+
+  List<bool> get roomRules => currentRoomModel?.room_rules.cast<bool>() ?? [];
+
+  // MARK: - 상세정보 불러오면서 참여자 정보 가져오는 함수
+  Future<List<UserModel>> getParticipantInfo() async {
+    List<DocumentReference> docRefs = List.empty(growable: true);
+    // 방장 추가
+    docRefs.add(currentRoomModel!.room_owner_reference);
+
+    // 입장한 사람 추가
+    for (DocumentReference docRef
+        in currentRoomModel!.room_participant_reference) {
+      docRefs.add(docRef);
+    }
+
+    // 유저 정보 불러오기
+    List<UserModel> userModels = List.empty(growable: true);
+    for (DocumentReference docRef in docRefs) {
+      userModels
+          .add(await _userRepository.readUserDocumentByDocRef(docRef: docRef));
+    }
+
+    for (UserModel userModel in userModels) {
+      logger.d(
+          "userModel.nickname: ${userModel.nickname} / userModel.gender: ${userModel.gender}");
+    }
+
+    return userModels;
+  }
+
+  String calRestParticipantNum({required List<UserModel> userModels}) {
+    int manCount = 0;
+    int womanCount = 0;
+
+    for (UserModel userModel in userModels) {
+      if (userModel.gender == 'male') {
+        manCount += 1;
+      } else {
+        womanCount += 1;
+      }
+    }
+
+    logger.d("성비: ${currentRoomModel!.room_gender_ratio}");
+
+    switch (currentRoomModel!.room_gender_ratio) {
+      case "남성 4명":
+        return "(남성 ${4 - manCount}자리 남음)";
+      case "여성 4명":
+        return "(여성 ${4 - womanCount}자리 남음)";
+      default:
+        return "(여성 ${2 - womanCount}자리, 남성 ${2 - manCount}자리 남음)";
+    }
+  }
+}

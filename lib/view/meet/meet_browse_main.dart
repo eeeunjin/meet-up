@@ -1,12 +1,18 @@
-import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:meet_up/main.dart';
+import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
-import 'package:meet_up/view/widget/header_widget.dart';
+import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/meet/meet_browse_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_detail_room_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_filter_view_model.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
 class MeetBrowseMain extends StatelessWidget {
@@ -15,23 +21,18 @@ class MeetBrowseMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            if (Platform.isIOS)
-              _header(context)
-            else if (Platform.isAndroid)
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 15.h,
-                ),
-                child: _header(context),
-              ),
-            Expanded(child: _main(context)),
-            // _main(context),
-          ],
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: 58.h,
+            ),
+            child: _header(context),
+          ),
+          Expanded(child: _main(context)),
+          // _main(context),
+        ],
       ),
     );
   }
@@ -41,31 +42,32 @@ class MeetBrowseMain extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          header(back: _back(context), title: '만남방 둘러보기'),
+          header(
+            back: _back(context),
+            title: '만남방 둘러보기',
+          ),
         ],
       ),
     );
   }
 
   Widget _back(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 9.h),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.pop(context);
-        },
-        child: Image.asset(
-          ImagePath.back,
-          width: 40.w,
-          height: 40.h,
-        ),
+    return GestureDetector(
+      onTap: () {
+        context.pop();
+      },
+      child: Image.asset(
+        ImagePath.back,
+        width: 10.w,
+        height: 20.h,
       ),
     );
   }
 
   Widget _divider() {
     return Divider(
-      height: 0.91.h,
+      thickness: 0.3.h,
+      height: 0.h,
       color: const Color(0xffd9d9d9),
     );
   }
@@ -73,61 +75,81 @@ class MeetBrowseMain extends StatelessWidget {
   Widget _main(BuildContext context) {
     return Container(
       color: Colors.white,
-      child: Column(children: [
-        SizedBox(height: 29.h),
-        _search(context),
-        SizedBox(height: 22.h),
-        _filter(context),
-        SizedBox(height: 22.h),
-        _divider(),
-        SizedBox(height: 28.h),
-        // _meetingRoom(context),
-      ]),
+      child: Column(
+        children: [
+          SizedBox(height: 29.h),
+          _search(context),
+          SizedBox(height: 22.h),
+          _filter(context),
+          SizedBox(height: 22.h),
+          _divider(),
+          Expanded(
+            child: Container(
+              color: UsedColor.bg_color, // 원하는 배경색으로 변경
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 19.w),
+                child: _meetingRoom(context),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _search(BuildContext context) {
-    TextEditingController controller = TextEditingController();
-
-    return SizedBox(
+    final meetBrowseViewModel = Provider.of<MeetBrowseViewModel>(context);
+    return Container(
       width: 352.w,
       height: 37.h,
-      child: Container(
-        decoration: BoxDecoration(
-          color: UsedColor.bg_color, // 배경색 설정
-          borderRadius: BorderRadius.circular(20.0), // 테두리를 둥글게 만듦
-        ),
-        child: TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 10.0.h),
-            hintText: '만남방의 이름을 검색해 보세요.',
-            prefixIcon: Image.asset(
-              ImagePath.search,
-              width: 10.w,
-              height: 10.h,
-            ),
-            suffixIcon: GestureDetector(
-              onTap: () {
-                controller.clear();
+      decoration: BoxDecoration(
+        color: UsedColor.bg_color,
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: Row(
+        children: [
+          SizedBox(width: 20.w),
+          Image.asset(
+            ImagePath.search,
+            width: 19.w,
+            height: 19.h,
+          ),
+          SizedBox(width: 14.w),
+          Expanded(
+            child: TextField(
+              style: AppTextStyles.SU_R_14.copyWith(color: UsedColor.text_3),
+              controller: meetBrowseViewModel.searchTextEditingControlller,
+              onSubmitted: (String text) {
+                meetBrowseViewModel.submitSearchTextEditingControlller();
               },
-              child: Image.asset(
-                ImagePath.close,
-                width: 23.w,
-                height: 23.h,
+              decoration: InputDecoration(
+                hintText: '만남방의 이름을 검색해 보세요.',
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                hintStyle:
+                    AppTextStyles.SU_R_14.copyWith(color: UsedColor.text_3),
+                isDense: true,
               ),
             ),
-            // Remove border
-            border: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            errorBorder: InputBorder.none,
-            disabledBorder: InputBorder.none,
-
-            hintStyle: AppTextStyles.SU_R_14.copyWith(color: UsedColor.text_3),
           ),
-          onChanged: (value) {},
-        ),
+          GestureDetector(
+            onTap: () {
+              if (meetBrowseViewModel.searchTextEditingControlller.text != "") {
+                meetBrowseViewModel.searchTextEditingControlller.clear();
+                meetBrowseViewModel.submitSearchTextEditingControlller();
+              }
+            },
+            child: Image.asset(
+              ImagePath.close,
+              width: 20.w,
+              height: 20.h,
+            ),
+          ),
+          SizedBox(width: 15.w),
+        ],
       ),
     );
   }
@@ -135,65 +157,73 @@ class MeetBrowseMain extends StatelessWidget {
   Widget _filter(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 24.0.w),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Consumer<MeetBrowseViewModel>(builder: (context, viewModel, child) {
-              return _filterButton(
-                context,
-                onTap: () {
-                  if (viewModel.isAnyFilterSelected) {
-                    viewModel.clearAllFilters();
-                  } else {
-                    context.goNamed('meetFilterMain');
-                  }
-                },
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      viewModel.isAnyFilterSelected ? '초기화' : '필터 설정',
-                      style: AppTextStyles.PR_M_12
-                          .copyWith(color: UsedColor.text_2),
-                    ),
-                    SizedBox(width: 5.w),
-                    Image.asset(
-                      viewModel.isAnyFilterSelected
-                          ? ImagePath.resetIcon
-                          : ImagePath.filterIcon,
-                      width: 14.w,
-                      height: 11.h,
-                    ),
-                  ],
+      child: Consumer2<MeetBrowseViewModel, MeetFilterViewModel>(
+          builder: (context, meetBrowseViewModel, meetFilterViewModel, child) {
+        List<Widget> filterWidgets = [
+          _filterButton(
+            context,
+            onTap: () {
+              if (meetBrowseViewModel.selectedFilters.isNotEmpty) {
+                meetFilterViewModel.clearAllFilters();
+                meetBrowseViewModel.clearSelectedFilters();
+              } else {
+                context.goNamed('meetFilterMain');
+              }
+            },
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  meetBrowseViewModel.selectedFilters.isNotEmpty
+                      ? '초기화'
+                      : '필터 설정',
+                  style:
+                      AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_2),
                 ),
-                borderColor: UsedColor.button_g,
-                backgroundColor: Colors.white,
-              );
-            }),
-            SizedBox(width: 4.w),
-            _filterContainer(context, _selectedMainCategory(context),
-                UsedColor.b_line, UsedColor.image_card),
-            SizedBox(width: 4.w),
-            _filterContainer(context, _selectedSubCategory(context),
-                UsedColor.b_line, UsedColor.image_card),
-            SizedBox(width: 4.w),
-            _filterContainer(context, _selectedLocation(context),
-                UsedColor.b_line, UsedColor.image_card),
-            SizedBox(width: 4.w),
-            _filterContainer(context, _selectedAge(context), UsedColor.b_line,
-                UsedColor.image_card),
-            SizedBox(width: 4.w),
-            _filterContainer(context, _selectedGender(context),
-                UsedColor.b_line, UsedColor.image_card),
-            SizedBox(width: 4.w),
-            _filterContainer(context, _selectedRules(context), UsedColor.b_line,
-                UsedColor.image_card),
-          ],
-        ),
-      ),
+                SizedBox(width: 5.w),
+                Image.asset(
+                  meetBrowseViewModel.selectedFilters.isNotEmpty
+                      ? ImagePath.resetIcon
+                      : ImagePath.filterIcon,
+                  width: 14.w,
+                  height: 11.h,
+                ),
+              ],
+            ),
+            borderColor: UsedColor.button_g,
+            backgroundColor: Colors.white,
+          ),
+        ];
+
+        for (var filter in meetBrowseViewModel.selectedFilters) {
+          filterWidgets.add(SizedBox(width: 4.0.w));
+          filterWidgets.add(
+            _filterContainer(
+              context,
+              filter,
+              UsedColor.b_line,
+              UsedColor.image_card,
+            ),
+          );
+        }
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: <Widget>[
+              SizedBox(
+                width: (MediaQuery.of(context).size.width) *
+                    1.5.w, // 지정안하면 스크롤 오버플로우 오류남
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: filterWidgets,
+                ),
+              ),
+            ],
+          ),
+        );
+      }),
     );
   }
 
@@ -205,10 +235,10 @@ class MeetBrowseMain extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 92.w,
         height: 34.h,
+        padding: EdgeInsets.symmetric(horizontal: 13.w),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(19.r),
+          borderRadius: BorderRadius.circular(18.r),
           border: Border.all(width: 1.5.w, color: borderColor),
           color: backgroundColor,
         ),
@@ -217,125 +247,223 @@ class MeetBrowseMain extends StatelessWidget {
     );
   }
 
-  Widget _filterContainer(BuildContext context, Widget content,
+  Widget _filterContainer(BuildContext context, String filterText,
       Color borderColor, Color backgroundColor) {
     return Container(
       height: 34.h,
-      width: 90.w,
-      // padding: EdgeInsets.symmetric(horizontal: 13.w),
+      padding: EdgeInsets.symmetric(horizontal: 13.w),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(19.r),
+        borderRadius: BorderRadius.circular(18.r),
         border: Border.all(width: 1.5.w, color: borderColor),
         color: backgroundColor,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [content],
+        children: [
+          Text(
+            filterText,
+            style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _selectedMainCategory(BuildContext context) {
-    return Consumer<MeetBrowseViewModel>(
-      builder: (context, viewModel, child) {
-        if (viewModel.selectedMainCategory.isNotEmpty) {
-          return Text(
-            viewModel.selectedMainCategory,
-            style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
+  Widget _meetingRoom(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final meetFilterViewModel =
+        Provider.of<MeetFilterViewModel>(context, listen: false);
+    final meetBrowseViewModel = Provider.of<MeetBrowseViewModel>(context);
+    final meetDetailRoomViewModel =
+        Provider.of<MeetDetailRoomViewModel>(context);
+    return StreamBuilder<QuerySnapshot<Object?>>(
+      stream: !meetBrowseViewModel.isFilterApplied
+          ? meetBrowseViewModel.getOthersRoomModel(myUid: userViewModel.uid!)
+          : meetBrowseViewModel.getOthersRoomModelByFilter(
+              myUid: userViewModel.uid!,
+              filterInfo: meetFilterViewModel.getFilterInfo(),
+            ),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(
+              child: Text('Error loading rooms: ${snapshot.error.toString()}'));
+        }
+        List<RoomModel> rooms = snapshot.data?.docs.map((doc) {
+              Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+              RoomModel room = RoomModel.fromJson(data);
+              room.roomId = doc.id;
+              return room;
+            }).toList() ??
+            [];
+
+        rooms.sort(
+          (a, b) {
+            return b.room_creation_date.compareTo(a.room_creation_date);
+          },
+        );
+
+        if (meetBrowseViewModel.searchTextEditingControlller.text != "") {
+          rooms.removeWhere((element) => !element.room_name
+              .contains(meetBrowseViewModel.searchTextEditingControlller.text));
+        }
+
+        if (rooms.isEmpty && !meetBrowseViewModel.isFilterApplied) {
+          return Center(
+            child: Text(
+              "생성된 만남 방이 없습니다.",
+              style: AppTextStyles.PR_R_16.copyWith(
+                color: UsedColor.text_2,
+              ),
+            ),
           );
-        } else {
-          return const SizedBox.shrink();
-        }
-      },
-    );
-  }
-
-  Widget _selectedSubCategory(BuildContext context) {
-    return Consumer<MeetBrowseViewModel>(
-      builder: (context, viewModel, child) {
-        if (viewModel.selectedMainCategory.isNotEmpty &&
-            viewModel.selectedSubCategory.isNotEmpty) {
-          return Text(
-            viewModel.selectedSubCategory,
-            style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
+        } else if (rooms.isEmpty && meetBrowseViewModel.isFilterApplied) {
+          return Center(
+            child: Text(
+              "조건에 맞는 만남 방이 없습니다.",
+              style: AppTextStyles.PR_R_16.copyWith(
+                color: UsedColor.text_2,
+              ),
+            ),
           );
-        } else {
-          return const SizedBox.shrink();
         }
-      },
-    );
-  }
-
-  Widget _selectedLocation(BuildContext context) {
-    return Consumer<MeetBrowseViewModel>(
-      builder: (context, viewModel, child) {
-        if (viewModel.selectedProvince.isEmpty) {
-          return const SizedBox.shrink();
-        }
-        String locationText = viewModel.selectedProvince.isEmpty
-            ? viewModel.selectedMainCategory
-            : '${viewModel.selectedProvince} > ${viewModel.selectedDistrict}';
-
-        return Text(
-          locationText,
-          style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
+        return ListView.builder(
+          itemCount: rooms.length + 1,
+          padding: EdgeInsets.only(
+            bottom: 20.h,
+          ),
+          itemBuilder: (context, index) {
+            if (index - 1 == -1) {
+              return Column(
+                children: [
+                  const SizedBox(
+                    height: 17.0,
+                  ),
+                  Text(
+                    "개설 후 만남 일정 등록이 되지 않은 채로\n7일이 지난 채팅방은 기한이 만료되어 삭제됩니다.",
+                    style: AppTextStyles.SU_R_11.copyWith(
+                      color: UsedColor.text_5,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 9.0,
+                  ),
+                ],
+              );
+            }
+            final RoomModel room = rooms[index - 1];
+            return GestureDetector(
+              onTap: () {
+                meetDetailRoomViewModel.setCurrentRoomModel(roomModel: room);
+                meetDetailRoomViewModel.setIsMyRoom(isMyRoom: false);
+                logger.d(
+                    "room category: ${room.room_category} && room sub Category : ${room.room_category_detail}");
+                context.goNamed('meetDetailRoom_browse');
+              },
+              child: Container(
+                height: 124.h,
+                width: 355.w,
+                color: Colors.transparent,
+                child: Center(
+                  child: Container(
+                    width: 355.w,
+                    height: 108.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.r),
+                      color: Colors.white,
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 20.w, right: 20.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 17.h,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      room.room_name, // 방 명
+                                      style: AppTextStyles.PR_SB_17.copyWith(
+                                          color: UsedColor.charcoal_black),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(width: 11.w),
+                                    Text.rich(
+                                      TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text:
+                                                '${room.room_participant_reference.length + 1}',
+                                            style: AppTextStyles.PR_B_12
+                                                .copyWith(
+                                                    color: UsedColor.violet),
+                                          ),
+                                          TextSpan(
+                                            text: '/4명',
+                                            style: AppTextStyles.PR_M_12
+                                                .copyWith(
+                                                    color: UsedColor.text_3),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 8.h,
+                          ),
+                          Text(
+                            room.room_description.split('\n').length > 1
+                                ? "${room.room_description.split('\n').first}..."
+                                : room.room_description, // 방 설명
+                            style: AppTextStyles.PR_R_12
+                                .copyWith(color: UsedColor.text_3),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(
+                            height: 16.h,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: 235.w,
+                                child: Text(
+                                  '#${room.room_keyword.join(' #')}', // 키워드
+                                  style: AppTextStyles.SU_L_12
+                                      .copyWith(color: UsedColor.main),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              Text(
+                                '${DateFormat('yyyy.MM.dd').format(room.room_creation_date.toDate().add(const Duration(days: 7)))} 만료',
+                                style: AppTextStyles.SU_R_10
+                                    .copyWith(color: UsedColor.text_5),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
         );
       },
     );
   }
-
-  Widget _selectedAge(BuildContext context) {
-    return Consumer<MeetBrowseViewModel>(
-      builder: (context, viewModel, child) {
-        if (viewModel.selectedAge.isEmpty) {
-          return const SizedBox.shrink();
-        }
-        return Text(
-          viewModel.selectedAge,
-          style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
-        );
-      },
-    );
-  }
-
-  Widget _selectedGender(BuildContext context) {
-    return Consumer<MeetBrowseViewModel>(
-      builder: (context, viewModel, child) {
-        String genderText = "";
-        if (viewModel.isWomen4Selected) {
-          genderText = "여성 4";
-        } else if (viewModel.isWomen2Men2Selected) {
-          genderText = "남성 2 / 여성 2";
-        } else if (viewModel.isMen4Selected) {
-          genderText = "남성 4";
-        }
-
-        if (genderText.isNotEmpty) {
-          return Text(
-            genderText,
-            style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
-          );
-        } else {
-          return const SizedBox.shrink();
-        }
-      },
-    );
-  }
-
-  Widget _selectedRules(BuildContext context) {
-    return Consumer<MeetBrowseViewModel>(
-      builder: (context, viewModel, child) {
-        if (viewModel.numberOfSelectedRules == 0) {
-          return const SizedBox.shrink();
-        }
-        return Text(
-          '세부규칙 ${viewModel.numberOfSelectedRules}',
-          style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
-        );
-      },
-    );
-  }
-
-// Widget _meetingRoom(BuildContext context) {}
 }

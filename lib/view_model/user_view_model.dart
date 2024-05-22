@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meet_up/loginFunc.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/repository/user_repository.dart';
 
@@ -7,13 +8,53 @@ class UserViewModel with ChangeNotifier {
   // 유저 데이터 관리 레포지토리
   final UserRepository _userRepository = UserRepository();
 
-  // 유저 정보
+  // 유저 정보 (사용자)
   UserModel? userModel;
   String? uid;
 
   void setUserModel({required UserModel userModel}) {
     this.userModel = userModel;
     notifyListeners();
+  }
+
+  // 나이대 구하는 함수
+  String getAgeRange() {
+    DateTime birthDate = userModel!.birthday; // 생년월일 설정
+    DateTime currentDate = DateTime.now(); // 현재 날짜 가져오기
+
+    // 생일이 지났는지 확인
+    bool isBirthdayPassed = birthDate.isBefore(
+      DateTime(
+        birthDate.year,
+        currentDate.month,
+        currentDate.day,
+      ),
+    );
+
+    // 만 나이 계산
+    int age = currentDate.year - birthDate.year;
+    if (!isBirthdayPassed) {
+      age--; // 아직 생일이 지나지 않은 경우 한 살 빼기
+    }
+
+    // 나이 계산
+    switch (age ~/ 10) {
+      case 1:
+        logger.d("만 19살(생일 안지난 20살)");
+        logger.d("만 나이: $age // 생일 지났는가: $isBirthdayPassed");
+        return '20대';
+      case 2:
+        return '20대';
+      case 3:
+        return '30대';
+      case 4:
+        return '40대';
+      case 5:
+        return '50대';
+      default:
+        logger.e("나이대 변환 실패");
+        return 'Error';
+    }
   }
 
   // 로그인이 된 경우, 유저 정보를 불러오는 함수
@@ -40,6 +81,7 @@ class UserViewModel with ChangeNotifier {
         key: "uid",
         value: uid,
       );
+      LoginFunc.uid = uid;
       this.uid = uid;
       // login 함수 호출 후, loadUserModel 함수를 호출 하기 때문에 notify는 하지 않음
     } catch (e) {

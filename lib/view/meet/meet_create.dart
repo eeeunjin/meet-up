@@ -1,12 +1,12 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/repository/room_repository.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
-import 'package:meet_up/view/widget/header_widget.dart';
+import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
@@ -17,35 +17,38 @@ class MeetCreate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            if (Platform.isIOS)
-              _header(context)
-            else if (Platform.isAndroid)
+    return PopScope(
+      canPop: false,
+      child: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: Scaffold(
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
               Padding(
                 padding: EdgeInsets.only(
-                  top: 15.h,
+                  top: 58.h,
                 ),
                 child: _header(context),
               ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _main(context),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          left: 33.w, right: 32.w, bottom: 56.h),
-                      child: _bottom(context),
-                    ),
-                  ],
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      _main(context),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: 33.w, right: 32.w, bottom: 56.h),
+                        child: _bottom(context),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -56,11 +59,18 @@ class MeetCreate extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          header(back: _back(context), title: '만남방 개설하기'),
-          SizedBox(
-            height: 11.h,
+          header(
+            back: _back(context),
+            title: '만남방 개설하기',
           ),
-          _divider(),
+          SizedBox(
+            height: 16.h,
+          ),
+          Divider(
+            thickness: 0.3.h,
+            height: 0.h,
+            color: UsedColor.line,
+          ),
         ],
       ),
     );
@@ -77,8 +87,8 @@ class MeetCreate extends StatelessWidget {
       },
       child: Image.asset(
         ImagePath.back,
-        width: 40.w,
-        height: 40.h,
+        width: 10.w,
+        height: 20.h,
       ),
     );
   }
@@ -93,15 +103,15 @@ class MeetCreate extends StatelessWidget {
         _divider(),
         SizedBox(height: 33.h),
         _category(context),
-        SizedBox(height: 31.h),
+        SizedBox(height: 33.h),
         _divider(),
         SizedBox(height: 33.h),
         _location(context),
-        SizedBox(height: 31.h),
+        SizedBox(height: 33.h),
         _divider(),
-        SizedBox(height: 32.91.h),
+        SizedBox(height: 33.h),
         _keyword(context),
-        SizedBox(height: 31.h),
+        SizedBox(height: 33.h),
         _divider(),
         SizedBox(height: 32.31.h),
         _detail(context),
@@ -123,7 +133,8 @@ class MeetCreate extends StatelessWidget {
   // 구분선
   Widget _divider() {
     return Divider(
-      height: 0.91.h,
+      thickness: 0.91.h,
+      height: 0.h,
       color: const Color(0xffd9d9d9),
     );
   }
@@ -154,43 +165,36 @@ class MeetCreate extends StatelessWidget {
               style: AppTextStyles.PR_SB_16,
             ),
           ),
-          SizedBox(width: 23.w),
+          SizedBox(width: 37.w),
           // text field
-          Expanded(
-            child: Stack(
-              children: [
-                Transform.translate(
-                  offset: Offset(0, -4.0.h), // text와 높이를 맞추기 위한 임의 값
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: 210.w, // 임의 값
-                    height: 19.h,
-                    child: TextField(
-                      onChanged: (text) {
-                        viewModel.namingContents(text);
-                      },
-                      decoration: const InputDecoration(
-                        isDense: true,
-                        contentPadding: EdgeInsets.zero,
-                        border: InputBorder.none,
-                        hintText: '방 명을 입력해주세요',
-                        hintStyle: TextStyle(color: UsedColor.text_5),
-                      ),
-                      style: AppTextStyles.PR_R_15
-                          .copyWith(color: UsedColor.text_5),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 26.0.w,
-                  bottom: 0.0.h,
-                  child: Text(
-                    viewModel.namingCount,
-                    style: AppTextStyles.PR_SB_11
-                        .copyWith(color: UsedColor.text_3), // 임의 색상
-                  ),
-                ),
-              ],
+          Container(
+            alignment: Alignment.center,
+            width: 209.w,
+            height: 19.h,
+            child: TextField(
+              maxLength: 16,
+              controller: viewModel.roomNamingTextController,
+              onChanged: (_) {
+                viewModel.setNamingCount();
+              },
+              decoration: const InputDecoration(
+                counterText: '',
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
+                border: InputBorder.none,
+                hintText: '방 명을 입력해주세요',
+                hintStyle: TextStyle(color: UsedColor.text_5),
+              ),
+              style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
+            ),
+          ),
+          const Spacer(),
+          Padding(
+            padding: EdgeInsets.only(right: 26.w),
+            child: Text(
+              viewModel.namingCount,
+              style: AppTextStyles.PR_SB_11
+                  .copyWith(color: UsedColor.text_3), // 임의 색상
             ),
           ),
         ],
@@ -209,8 +213,10 @@ class MeetCreate extends StatelessWidget {
           Container(
             width: 8.w,
             height: 8.w,
-            decoration:
-                BoxDecoration(shape: BoxShape.circle, color: UsedColor.main),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: UsedColor.main,
+            ),
           ),
           SizedBox(
             width: 23.w,
@@ -229,14 +235,14 @@ class MeetCreate extends StatelessWidget {
           _selectedCategory(context),
           const Spacer(),
           Padding(
-            padding: EdgeInsets.only(right: 7.0.w),
+            padding: EdgeInsets.only(right: 26.0.w),
             child: GestureDetector(
               onTap: () {
                 context.goNamed('meetCategory');
               },
               child: SizedBox(
-                  width: 48.w,
-                  height: 48.w,
+                  width: 9.w,
+                  height: 17.h,
                   child: Image.asset(ImagePath.nextArrow)),
             ),
           ),
@@ -294,10 +300,15 @@ class MeetCreate extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(right: 26.0.w),
             child: GestureDetector(
-                onTap: () {
-                  context.goNamed('meetLocation');
-                },
-                child: Image.asset(ImagePath.nextArrow)),
+              onTap: () {
+                context.goNamed('meetLocation');
+              },
+              child: Image.asset(
+                ImagePath.nextArrow,
+                width: 9.w,
+                height: 17.h,
+              ),
+            ),
           ),
         ],
       ),
@@ -311,7 +322,7 @@ class MeetCreate extends StatelessWidget {
           return const SizedBox.shrink();
         }
         String locationText = viewModel.selectedProvince.isEmpty
-            ? viewModel.selectedMainCategory
+            ? viewModel.selectedProvince
             : '${viewModel.selectedProvince} > ${viewModel.selectedDistrict}';
 
         return Text(
@@ -322,7 +333,7 @@ class MeetCreate extends StatelessWidget {
     );
   }
 
-// MARK - 키워드
+// MARK: - 키워드
   Widget _keyword(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w),
@@ -352,14 +363,14 @@ class MeetCreate extends StatelessWidget {
           _selectedKeywords(context),
           const Spacer(),
           Padding(
-            padding: EdgeInsets.only(right: 7.0.w),
+            padding: EdgeInsets.only(right: 26.0.w),
             child: GestureDetector(
               onTap: () {
                 context.goNamed('meetKeyWord');
               },
               child: SizedBox(
-                  width: 48.w,
-                  height: 48.w,
+                  width: 9.w,
+                  height: 17.w,
                   child: Image.asset(ImagePath.nextArrow)),
             ),
           ),
@@ -371,17 +382,19 @@ class MeetCreate extends StatelessWidget {
   Widget _selectedKeywords(BuildContext context) {
     return Consumer<MeetCreateViewModel>(
       builder: (context, viewModel, child) {
-        List<Widget> keywordWidgets = viewModel.keywords
-            .map((keyword) => Text(
-                  '#$keyword ',
-                  style:
-                      AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
-                ))
-            .toList();
-        return Wrap(
-          spacing: 0,
-          runSpacing: 0.h,
-          children: keywordWidgets,
+        logger.d("${viewModel.selectedKeywords}");
+        List<String> keywords = viewModel.selectedKeywords;
+        String resultString = '';
+        for (String keyword in keywords) {
+          resultString += '#$keyword ';
+        }
+        return SizedBox(
+          width: 200.w,
+          child: Text(
+            resultString,
+            style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
+            overflow: TextOverflow.ellipsis,
+          ),
         );
       },
     );
@@ -431,16 +444,25 @@ class MeetCreate extends StatelessWidget {
               border: Border.all(color: UsedColor.b_line, width: 2.h),
             ),
             child: Padding(
-              padding: EdgeInsets.only(left: 28.0.w, top: 15.h),
+              padding: EdgeInsets.only(
+                left: 28.0.w,
+                top: 15.h,
+                right: 28.0.h,
+                bottom: 15.h,
+              ),
               child: TextField(
+                maxLines: 10,
+                controller: viewModel.descriptionTextController,
+                maxLength: 50,
                 decoration: const InputDecoration(
+                    counterText: '',
                     isDense: true,
                     contentPadding: EdgeInsets.zero,
                     border: InputBorder.none,
                     hintText: '만남 목표를 간단히 입력해 주세요. (50자 제한)',
                     hintStyle: TextStyle(color: UsedColor.text_5)),
                 onChanged: (text) {
-                  viewModel.setDescription(text);
+                  viewModel.setTextCount();
                 },
                 style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
               ),
@@ -464,6 +486,11 @@ class MeetCreate extends StatelessWidget {
 // MARK: - age
   Widget _age(BuildContext context) {
     final viewModel = Provider.of<MeetCreateViewModel>(context, listen: true);
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    if (!viewModel.selectedAges.contains(userViewModel.getAgeRange())) {
+      viewModel.selectAge(userViewModel.getAgeRange(), false);
+    }
+
     List<String> options = [
       "20대",
       "30대",
@@ -509,7 +536,9 @@ class MeetCreate extends StatelessWidget {
               bool isSelected = viewModel.selectedAges.contains(option);
               return GestureDetector(
                 onTap: () {
-                  viewModel.selectAge(option);
+                  // 나의 나이대는 선택으로 고정
+                  if (userViewModel.getAgeRange() == option) return;
+                  viewModel.selectAge(option, true);
                 },
                 child: Container(
                   width: 74.38.w,
@@ -543,8 +572,8 @@ class MeetCreate extends StatelessWidget {
 
 // MARK: - gender ratio
   Widget _genderRatio(BuildContext context) {
-    MeetCreateViewModel viewModel =
-        Provider.of<MeetCreateViewModel>(context, listen: true);
+    MeetCreateViewModel viewModel = Provider.of<MeetCreateViewModel>(context);
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
 
     return Padding(
       padding: EdgeInsets.only(left: 27.0.w),
@@ -583,11 +612,15 @@ class MeetCreate extends StatelessWidget {
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: () => viewModel.selectWomen4(),
+                  onTap: () => userViewModel.userModel!.gender == 'male'
+                      ? null
+                      : viewModel.selectWomen4(),
                   child: Image.asset(
-                    viewModel.roomGenderRatio == RoomGenderRatio.womanOnly
-                        ? ImagePath.grW4
-                        : ImagePath.grW4Empty,
+                    userViewModel.userModel!.gender == 'male'
+                        ? ImagePath.grW4Blur
+                        : viewModel.roomGenderRatio == RoomGenderRatio.womanOnly
+                            ? ImagePath.grW4
+                            : ImagePath.grW4Empty,
                     width: 76.w,
                     height: 76.h,
                   ),
@@ -605,11 +638,15 @@ class MeetCreate extends StatelessWidget {
                 ),
                 SizedBox(width: 24.w),
                 GestureDetector(
-                  onTap: () => viewModel.selectMen4(),
+                  onTap: () => userViewModel.userModel!.gender == 'female'
+                      ? null
+                      : viewModel.selectMen4(),
                   child: Image.asset(
-                    viewModel.roomGenderRatio == RoomGenderRatio.manOnly
-                        ? ImagePath.grM4
-                        : ImagePath.grM4Empty,
+                    userViewModel.userModel!.gender == 'female'
+                        ? ImagePath.grW4Blur
+                        : viewModel.roomGenderRatio == RoomGenderRatio.manOnly
+                            ? ImagePath.grM4
+                            : ImagePath.grM4Empty,
                     width: 76.w,
                     height: 76.h,
                   ),
@@ -660,7 +697,7 @@ class MeetCreate extends StatelessWidget {
           SizedBox(height: 27.1.h),
           // contents
           ...viewModel.rules.entries.map((entry) {
-            bool isSelected = entry.value ?? false;
+            bool isSelected = entry.value;
             return Padding(
               padding: EdgeInsets.only(left: 28.46.w, right: 39.12.w),
               child: Column(
@@ -687,7 +724,7 @@ class MeetCreate extends StatelessWidget {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -739,11 +776,10 @@ class MeetCreate extends StatelessWidget {
           backgroundColor: viewModel.allCheckCompleted
               ? UsedColor.button
               : UsedColor.button_g,
-          textStyle: TextStyle(
-            color:
-                viewModel.allCheckCompleted ? Colors.white : UsedColor.text_2,
-            fontSize: 20.sp,
-          ),
+          textStyle: AppTextStyles.PR_SB_20.copyWith(
+              color: viewModel.allCheckCompleted
+                  ? Colors.white
+                  : UsedColor.text_2),
         );
       },
     );
@@ -755,8 +791,7 @@ class MeetCreate extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        final userViewModel =
-            Provider.of<UserViewModel>(context, listen: false);
+        final userViewModel = Provider.of<UserViewModel>(context);
         return Consumer<MeetCreateViewModel>(
             builder: (context, viewModel, child) {
           return Container(
@@ -833,7 +868,7 @@ class MeetCreate extends StatelessWidget {
                           width: 17.w,
                         ),
                         Text(
-                          '만남방 개설 시, 모든 입장을 24시간\n안에 처리해야 합니다.\n\n그렇지 않은 경우 만남방은 파기되며,\n만남권은 환불되지 않습니다.',
+                          '방장이 만남방 이탈 혹은 삭제시 만남방과 \n채팅방은 완전히 삭제됩니다.',
                           style: AppTextStyles.PR_R_17.copyWith(
                               color: viewModel.individualAgreement1
                                   ? Colors.black
@@ -843,7 +878,7 @@ class MeetCreate extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 33.h),
+                SizedBox(height: 12.h),
                 Padding(
                   padding: EdgeInsets.only(left: 38.w),
                   child: GestureDetector(
@@ -868,9 +903,44 @@ class MeetCreate extends StatelessWidget {
                           width: 17.w,
                         ),
                         Text(
-                          '만남방 개설 시, 방장이 이탈 혹은\n방 삭제 시 만남권은 환불되지 않습니다.',
+                          '만남방 개설 후, 7일 이내에 일정 등록이\n되지 않으면 만남방이 삭제되고, 만남권은\n환불됩니다.',
                           style: AppTextStyles.PR_R_17.copyWith(
                               color: viewModel.individualAgreement2
+                                  ? Colors.black
+                                  : UsedColor.text_4),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                Padding(
+                  padding: EdgeInsets.only(left: 38.w),
+                  child: GestureDetector(
+                    onTap: () {
+                      viewModel.setIndividualAgreement3(
+                          !viewModel.individualAgreement3);
+                    },
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 5.h),
+                          child: Icon(
+                            Icons.check,
+                            color: viewModel.individualAgreement3
+                                ? UsedColor.violet
+                                : UsedColor.text_5,
+                            size: 20.w,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 17.w,
+                        ),
+                        Text(
+                          '만남방 개설 시, 방장이 이탈 혹은\n방 삭제 시 만남권은 환불되지 않습니다.',
+                          style: AppTextStyles.PR_R_17.copyWith(
+                              color: viewModel.individualAgreement3
                                   ? Colors.black
                                   : UsedColor.text_4),
                         ),
@@ -883,10 +953,11 @@ class MeetCreate extends StatelessWidget {
                       left: 33.w, right: 51.w, top: 57.h, bottom: 10.h),
                   child: NextButton(
                     onTap: () async {
-                      debugPrint("완료");
                       await viewModel.createRoom(uid: userViewModel.uid!);
                       while (context.canPop()) {
                         context.pop();
+                        viewModel.backClearSelection(); // 내용 초기화
+                        debugPrint("완료");
                       }
                     },
                     height: 56.h,
@@ -895,11 +966,10 @@ class MeetCreate extends StatelessWidget {
                     backgroundColor: viewModel.isAllAgreed
                         ? UsedColor.button
                         : UsedColor.button_g,
-                    textStyle: TextStyle(
+                    textStyle: AppTextStyles.PR_SB_20.copyWith(
                       color: viewModel.isAllAgreed
                           ? Colors.white
                           : UsedColor.text_2,
-                      fontSize: 20.sp,
                     ),
                   ),
                 ),

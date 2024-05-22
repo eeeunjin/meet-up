@@ -3,7 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
-  List<dynamic> accepted_policies;
+  // 프로필 정보
   String nickname;
   String profile_icon;
   DateTime birthday;
@@ -14,11 +14,21 @@ class UserModel {
   List<dynamic> personality_self;
   List<dynamic> interest;
   List<dynamic> purpose;
-  String phone_number;
+
+  // 재화 정보
   int coin;
   int ticket;
   bool isFixedTicket;
   Timestamp fixed_ticket_end_date;
+
+  // 등급 정보
+  String rank;
+
+  // 가입 전화번호
+  String phone_number;
+
+  // 마케팅 및 개인정보 수집 선택 동의 항목 (5번, 6번)
+  List<dynamic> accepted_policies;
 
   UserModel({
     required this.nickname,
@@ -37,6 +47,7 @@ class UserModel {
     required this.ticket,
     required this.isFixedTicket,
     required this.fixed_ticket_end_date,
+    required this.rank,
   });
 
   UserModel.fromJson(Map<String, Object?> json)
@@ -59,6 +70,7 @@ class UserModel {
           ticket: json["ticket"]! as int,
           isFixedTicket: json["isFixedTicket"]! as bool,
           fixed_ticket_end_date: json["fixed_ticket_end_date"]! as Timestamp,
+          rank: json["rank"]! as String,
         );
 
   Map<String, Object?> toJson() {
@@ -79,6 +91,7 @@ class UserModel {
       'ticket': ticket,
       'isFixedTicket': isFixedTicket,
       'fixed_ticket_end_date': fixed_ticket_end_date,
+      'rank': rank,
     };
   }
 }
@@ -108,23 +121,23 @@ class MyRoomModel {
 
 class MyEnterRequestModel {
   bool isAccepted;
-  DocumentReference room_reference;
+  String room_id;
 
   MyEnterRequestModel({
     required this.isAccepted,
-    required this.room_reference,
+    required this.room_id,
   });
 
   MyEnterRequestModel.fromJson(Map<String, Object?> json)
       : this(
           isAccepted: json["isAccepted"]! as bool,
-          room_reference: json["room_reference"]! as DocumentReference,
+          room_id: json["room_id"]! as String,
         );
 
   Map<String, dynamic> toJson() {
     return {
       'isAccepted': isAccepted,
-      'room_reference': room_reference,
+      'room_id': room_id,
     };
   }
 }

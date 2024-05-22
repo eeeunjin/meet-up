@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,10 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/loginFunc.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
-import 'package:meet_up/util/image.dart';
-import 'package:meet_up/view/widget/header_widget.dart';
+import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_phone_num_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_verification_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
@@ -27,19 +26,17 @@ class SignUpVerification extends StatelessWidget {
     final double bottomPadding = keyboardOpen > 0 ? 30.0 : 80.0.h;
 
     return Scaffold(
-      body: SafeArea(
+      body: PopScope(
+        canPop: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (Platform.isIOS)
-              _header(context)
-            else if (Platform.isAndroid)
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 15.h,
-                ),
-                child: _header(context),
+            Padding(
+              padding: EdgeInsets.only(
+                top: 58.h,
               ),
+              child: _header(context),
+            ),
             SizedBox(
               height: 73.h,
             ),
@@ -57,26 +54,9 @@ class SignUpVerification extends StatelessWidget {
     );
   }
 
-  // header
-  Widget _back(BuildContext context) {
-    final viewModel =
-        Provider.of<SignUpVerificationViewModel>(context, listen: false);
-    return GestureDetector(
-      onTap: () {
-        context.pop();
-        viewModel.resetState();
-      }, // 뒤로가기
-      child: Image.asset(
-        ImagePath.back,
-        width: 40.w,
-        height: 40.h,
-      ),
-    );
-  }
-
   Widget _header(BuildContext context) {
     return header(
-      back: _back(context),
+      back: null,
       title: "회원가입",
     );
   }
@@ -93,6 +73,12 @@ class SignUpVerification extends StatelessWidget {
             if (viewModel.isTextFieldFocused != shouldFieldBeFocused) {
               viewModel.setIsTextFieldFocusd(
                   isTextFieldFocused: shouldFieldBeFocused);
+            }
+            // 6자가 되면 유효성 bool 변수 true로 만들기
+            if (value.length == 6) {
+              viewModel.setTextFieldHasSixWord(textFieldHasSixWord: true);
+            } else {
+              viewModel.setTextFieldHasSixWord(textFieldHasSixWord: false);
             }
           },
           onTap: () {
@@ -238,7 +224,10 @@ class SignUpVerification extends StatelessWidget {
                 color: Colors.black.withOpacity(0.46),
               ),
               CupertinoAlertDialog(
-                title: Text(message, style: AppTextStyles.PR_R_12),
+                title: Text(
+                  title,
+                  style: AppTextStyles.PR_R_12,
+                ),
                 content: Padding(
                   padding: const EdgeInsets.only(top: 5),
                   child: Text(
@@ -336,6 +325,10 @@ class SignUpVerification extends StatelessWidget {
         Provider.of<SignUpVerificationViewModel>(context);
     return GestureDetector(
       onTap: () async {
+        if (!verificationViewModel.textFieldHasSixWord) {
+          return;
+        }
+
         // 시간이 만료된 경우
         if (verificationViewModel.remainingTime == 0) {
           // 인증 만료 alert 띄우기
@@ -373,7 +366,7 @@ class SignUpVerification extends StatelessWidget {
               // uid 저장
               phoneNumViewModel.getUID(credential.user!.uid);
 
-              // 기존 정보 DB에서 불러오기
+              // 기존 유저의 정보 불러오기
               await phoneNumViewModel.readUserDocument(
                   uid: phoneNumViewModel.uid);
 
@@ -386,23 +379,21 @@ class SignUpVerification extends StatelessWidget {
                       // 메인 홈 화면으로 이동 (로그인)
                       // Firebase secure storage에 uid 값 저장
                       await userViewModel.login(uid: phoneNumViewModel.uid);
-
+                      // 유저 모델 불러오기
                       if (LoginFunc.isLogined) {
                         while (context.canPop()) {
                           context.pop();
                         }
-                        // 유저 모델 불러오기
-                        await userViewModel.loadUserModel();
                       }
+                      await userViewModel.loadUserModel();
                     },
                     context: context,
                     title: "가입된 계정이 있습니다.",
                     message: "로그인 하시겠습니까?",
                   );
                 }
-              }
-              // 기본 프로필 정보 중 전화 번호만 있는 경우
-              else {
+              } else {
+                // 기본 프로필 정보 중 전화 번호만 있는 경우
                 debugPrint("기존 프로필 정보가 없기 때문에 프로필 설정부터.");
                 // 프로필 설정 페이지로 이동
                 if (context.mounted) {
@@ -415,13 +406,34 @@ class SignUpVerification extends StatelessWidget {
           }
         } catch (e) {
           // smsCode가 동일하지 않은 경우 alert 출력
-          if (context.mounted) {
-            showAlert(
-              null,
-              context: context,
-              title: "인증번호가 일치하지 않습니다.",
-              message: "인증번호를 다시 입력해 주십시오.",
-            );
+          logger.e("Error message : $e \n Error type: ${e.runtimeType}");
+          if (e.runtimeType == FirebaseAuthException) {
+            if (context.mounted) {
+              showAlert(
+                null,
+                context: context,
+                title: "인증번호가 일치하지 않습니다.",
+                message: "인증번호를 다시 입력해 주십시오.",
+              );
+            }
+          } else {
+            if (context.mounted) {
+              UserCredential credential = await phoneNumViewModel
+                  .signInWithSmsCode(verificationViewModel.controller.text);
+              showAlert(
+                () async {
+                  // 유저 정보 생성
+                  await phoneNumViewModel.createUserDocument(
+                      uid: credential.user!.uid);
+                  if (context.mounted) {
+                    context.goNamed('signUpDetailOne');
+                  }
+                },
+                context: context,
+                title: "가입된 회원 정보가 없습니다.",
+                message: "회원가입 하시겠습니까?",
+              );
+            }
           }
         }
       },
@@ -430,18 +442,19 @@ class SignUpVerification extends StatelessWidget {
         height: 60.h,
         alignment: Alignment.center,
         decoration: ShapeDecoration(
-          color: UsedColor.grey1,
+          color: verificationViewModel.textFieldHasSixWord
+              ? UsedColor.button
+              : UsedColor.grey1,
           shape: RoundedRectangleBorder(
-              side: BorderSide(
-                width: 1.r,
-                color: UsedColor.grey1,
-              ),
-              borderRadius: BorderRadius.circular(19.r)),
+            borderRadius: BorderRadius.circular(19.r),
+          ),
         ),
         child: Text(
           "인증번호 확인",
           style: AppTextStyles.PR_SB_20.copyWith(
-            color: UsedColor.text_2,
+            color: verificationViewModel.textFieldHasSixWord
+                ? Colors.white
+                : UsedColor.text_2,
           ),
         ),
       ),

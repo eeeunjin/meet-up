@@ -34,7 +34,7 @@ Widget SignUpDetailSix(BuildContext context) {
         ),
         color: Colors.white),
     height: 495.h,
-    width: MediaQuery.of(context).size.width.w,
+    width: MediaQuery.of(context).size.width,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -95,7 +95,7 @@ Widget SignUpDetailSix(BuildContext context) {
           height: 17.12.h,
         ),
         SizedBox(
-          height: 228.63,
+          height: 228.63.h,
           child: ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             padding: EdgeInsets.only(
@@ -127,8 +127,8 @@ Widget SignUpDetailSix(BuildContext context) {
                                 : UsedColor.text_5,
                             size: 20.w,
                           ),
-                          const SizedBox(
-                            width: 17.47,
+                          SizedBox(
+                            width: 17.47.w,
                           ),
                           Text(PolicyModel.policy[index + 1]!,
                               style: AppTextStyles.PR_R_16.copyWith(
@@ -159,7 +159,7 @@ Widget SignUpDetailSix(BuildContext context) {
           ),
         ),
         SizedBox(
-          height: 35.87.h,
+          height: 34.12.h,
         ),
         Center(
           child: GestureDetector(
@@ -167,7 +167,6 @@ Widget SignUpDetailSix(BuildContext context) {
               if (signUpDetailViewModel.isAcceptionValid) {
                 // DB에 User 정보 전달하고 User data 넘기기
                 debugPrint("동의하고 시작하기");
-                signUpDetailViewModel.printAllInfo();
 
                 // 회원가입으로 넘어온 경우
                 if (signUpPhoneNumViewModel.uid != "") {
@@ -204,7 +203,7 @@ Widget SignUpDetailSix(BuildContext context) {
               }
             },
             child: Container(
-              width: 328.w,
+              width: 327.w,
               height: 56.h,
               alignment: Alignment.center,
               decoration: BoxDecoration(

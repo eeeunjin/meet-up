@@ -1,9 +1,9 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
+import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -13,22 +13,17 @@ class ScheduleMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            if (Platform.isIOS)
-              _header(context)
-            else if (Platform.isAndroid)
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 58.h,
-                ),
-                child: _header(context),
-              ),
-            Expanded(child: _main(context)),
-          ],
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: 58.h,
+            ),
+            child: _header(context),
+          ),
+          Expanded(child: _main(context)),
+        ],
       ),
       // 개인 일정 추가 플로팅액션 버튼
       floatingActionButton: FloatingActionButton(
@@ -51,11 +46,7 @@ class ScheduleMain extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          // header(title: '채팅', back: null),
-          Text(
-            '일정',
-            style: AppTextStyles.SU_R_20.copyWith(color: UsedColor.text_3),
-          ),
+          header(title: '일정', back: null),
           SizedBox(
             height: 30.h,
           ),

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,10 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/loginFunc.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
-import 'package:meet_up/util/image.dart';
-import 'package:meet_up/view/widget/header_widget.dart';
+import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
 import 'package:meet_up/view_model/login/login_verification_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
@@ -26,20 +25,18 @@ class LoginVerification extends StatelessWidget {
     // 키보드 올라왔으면 패딩 30, 내려갔으면 80
     final double bottomPadding = keyboardOpen > 0 ? 30.0 : 80.0.h;
 
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (Platform.isIOS)
-              _header(context)
-            else if (Platform.isAndroid)
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 15.h,
-                ),
-                child: _header(context),
+            Padding(
+              padding: EdgeInsets.only(
+                top: 58.h,
               ),
+              child: _header(context),
+            ),
             SizedBox(
               height: 73.h,
             ),
@@ -55,26 +52,9 @@ class LoginVerification extends StatelessWidget {
     );
   }
 
-  // header
-  Widget _back(BuildContext context) {
-    final viewModel =
-        Provider.of<LoginVerificationViewModel>(context, listen: false);
-    return GestureDetector(
-      onTap: () {
-        context.pop();
-        viewModel.resetState();
-      }, // 뒤로가기
-      child: Image.asset(
-        ImagePath.back,
-        width: 40.w,
-        height: 40.h,
-      ),
-    );
-  }
-
   Widget _header(BuildContext context) {
     return header(
-      back: _back(context),
+      back: null,
       title: "로그인",
     );
   }
@@ -92,6 +72,12 @@ class LoginVerification extends StatelessWidget {
             if (viewModel.isTextFieldFocused != shouldFieldBeFocused) {
               viewModel.setIsTextFieldFocusd(
                   isTextFieldFocused: shouldFieldBeFocused);
+            }
+            // 6자가 되면 유효성 bool 변수 true로 만들기
+            if (value.length == 6) {
+              viewModel.setTextFieldHasSixWord(textFieldHasSixWord: true);
+            } else {
+              viewModel.setTextFieldHasSixWord(textFieldHasSixWord: false);
             }
           },
           onTap: () {
@@ -325,6 +311,10 @@ class LoginVerification extends StatelessWidget {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     return GestureDetector(
       onTap: () async {
+        if (!verificationViewModel.textFieldHasSixWord) {
+          return;
+        }
+
         // 시간이 만료된 경우
         if (verificationViewModel.remainingTime == 0) {
           // 인증 만료 alert 띄우기
@@ -341,7 +331,6 @@ class LoginVerification extends StatelessWidget {
           // smsCode가 동일한 경우 다음 화면으로 넘어감
           UserCredential credential = await phoneNumViewModel
               .signInWithSmsCode(verificationViewModel.controller.text);
-
           // DB에 유저 정보를 저장 (UID + 휴대전화 번호)
           if (credential.user != null) {
             if (credential.additionalUserInfo!.isNewUser) {
@@ -380,9 +369,10 @@ class LoginVerification extends StatelessWidget {
                   }
                   // 유저 모델 불러오기
                   await userViewModel.loadUserModel();
+                  FocusManager.instance.primaryFocus?.unfocus();
                 }
               }
-              // 기본 프로필 정보 중 전화 번호만 있는 경우
+              // 전화 번호만 있는 경우
               else {
                 if (context.mounted) {
                   showAlert(
@@ -406,14 +396,34 @@ class LoginVerification extends StatelessWidget {
           }
         } catch (e) {
           // smsCode가 동일하지 않은 경우 alert 출력
-          debugPrint(e.toString());
-          if (context.mounted) {
-            showAlert(
-              null,
-              context: context,
-              title: "인증번호가 일치하지 않습니다.",
-              message: "인증번호를 다시 입력해 주십시오.",
-            );
+          logger.e("Error message : $e \n Error type: ${e.runtimeType}");
+          if (e.runtimeType == FirebaseAuthException) {
+            if (context.mounted) {
+              showAlert(
+                null,
+                context: context,
+                title: "인증번호가 일치하지 않습니다.",
+                message: "인증번호를 다시 입력해 주십시오.",
+              );
+            }
+          } else {
+            if (context.mounted) {
+              UserCredential credential = await phoneNumViewModel
+                  .signInWithSmsCode(verificationViewModel.controller.text);
+              showAlert(
+                () async {
+                  // 유저 정보 생성
+                  await phoneNumViewModel.createUserDocument(
+                      uid: credential.user!.uid);
+                  if (context.mounted) {
+                    context.goNamed('signUpDetailOne');
+                  }
+                },
+                context: context,
+                title: "가입된 회원 정보가 없습니다.",
+                message: "회원가입 하시겠습니까?",
+              );
+            }
           }
         }
       },
@@ -422,18 +432,19 @@ class LoginVerification extends StatelessWidget {
         height: 60.h,
         alignment: Alignment.center,
         decoration: ShapeDecoration(
-          color: UsedColor.grey1,
+          color: verificationViewModel.textFieldHasSixWord
+              ? UsedColor.button
+              : UsedColor.grey1,
           shape: RoundedRectangleBorder(
-              side: BorderSide(
-                width: 1.r,
-                color: UsedColor.grey1,
-              ),
-              borderRadius: BorderRadius.circular(19.r)),
+            borderRadius: BorderRadius.circular(19.r),
+          ),
         ),
         child: Text(
           "인증번호 확인",
           style: AppTextStyles.PR_SB_20.copyWith(
-            color: UsedColor.text_2,
+            color: verificationViewModel.textFieldHasSixWord
+                ? Colors.white
+                : UsedColor.text_2,
           ),
         ),
       ),

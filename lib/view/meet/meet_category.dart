@@ -1,11 +1,11 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
-import 'package:meet_up/view/widget/header_widget.dart';
+import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
 import 'package:provider/provider.dart';
@@ -16,27 +16,23 @@ class MeetCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-          child: Stack(
+      body: Stack(
         children: [
           Column(
             children: [
-              if (Platform.isIOS)
-                _header(context)
-              else if (Platform.isAndroid)
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 15.h,
-                  ),
-                  child: _header(context),
+              Padding(
+                padding: EdgeInsets.only(
+                  top: 58.h,
                 ),
+                child: _header(context),
+              ),
               SizedBox(height: 33.h),
               Expanded(child: _mainCategory(context)),
               Align(alignment: Alignment.bottomCenter, child: _bottom(context)),
             ],
           ),
         ],
-      )),
+      ),
     );
   }
 
@@ -47,7 +43,7 @@ class MeetCategory extends StatelessWidget {
         children: [
           header(back: _back(context), title: '카테고리 선택'),
           SizedBox(
-            height: 11.h,
+            height: 16.h,
           ),
           _divider(),
         ],
@@ -59,15 +55,19 @@ class MeetCategory extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // 정보 초기화
-        final viewModel =
-            Provider.of<MeetCreateViewModel>(context, listen: false);
-        viewModel.categoryClearSelection();
+        final viewModel = Provider.of<MeetCreateViewModel>(
+          context,
+          listen: false,
+        );
+        if (viewModel.selectedMainCategoriesInCategoryPage.isNotEmpty) {
+          viewModel.categoryClearSelection();
+        }
         context.pop();
       },
       child: Image.asset(
         ImagePath.back,
-        width: 40.w,
-        height: 40.h,
+        width: 10.w,
+        height: 20.h,
       ),
     );
   }
@@ -75,7 +75,8 @@ class MeetCategory extends StatelessWidget {
   // 구분선
   Widget _divider() {
     return Divider(
-      height: 0.3.h,
+      thickness: 0.3.h,
+      height: 0.h,
       color: UsedColor.line,
     );
   }
@@ -115,10 +116,16 @@ class MeetCategory extends StatelessWidget {
                   spacing: 8.w,
                   runSpacing: 8.h,
                   children: options.map((option) {
-                    bool isSelected =
-                        viewModel.selectedMainCategories.contains(option);
+                    bool isSelected = viewModel
+                        .selectedMainCategoriesInCategoryPage
+                        .contains(option);
                     return GestureDetector(
                       onTap: () {
+                        logger.d("option: $option");
+                        logger.d(
+                            "mainCategories: ${viewModel.selectedMainCategories}}");
+                        logger.d(
+                            "mainCategoriesInCP: ${viewModel.selectedMainCategoriesInCategoryPage}}");
                         viewModel.selectMainCategory(option);
                       },
                       child: Container(
@@ -175,7 +182,7 @@ class MeetCategory extends StatelessWidget {
                   ),
                 ],
               ),
-              if (viewModel.selectedMainCategories.isEmpty)
+              if (viewModel.selectedMainCategoriesInCategoryPage.isEmpty)
                 Padding(
                   padding: EdgeInsets.only(top: 7.0.h, left: 14.76.w),
                   child: Text(
@@ -183,10 +190,26 @@ class MeetCategory extends StatelessWidget {
                     style:
                         AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_5),
                   ),
-                )
-              else
+                ),
+              if (viewModel.selectedMainCategoriesInCategoryPage.isNotEmpty &&
+                  viewModel.selectedMainCategoriesInCategoryPage.first == '기타')
+                Padding(
+                  padding: EdgeInsets.only(top: 7.0.h, left: 14.76.w),
+                  child: Text(
+                    '기타 선택 시 상세 카테고리가 나타나지 않습니다.',
+                    style:
+                        AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_5),
+                  ),
+                ),
+              if (viewModel.selectedMainCategoriesInCategoryPage.isNotEmpty &&
+                  viewModel.selectedMainCategoriesInCategoryPage.first != '기타')
+                SizedBox(
+                  height: 12.h,
+                ),
+              if (viewModel.selectedMainCategoriesInCategoryPage.isNotEmpty &&
+                  viewModel.selectedMainCategoriesInCategoryPage.first != '기타')
                 // 선택된 각 메인 카테고리에 대해 상세 카테고리 리스트를 표시
-                ...viewModel.selectedMainCategories.map(
+                ...viewModel.selectedMainCategoriesInCategoryPage.map(
                   (mainCategory) => Padding(
                     padding: EdgeInsets.only(top: 8.0.h),
                     child: _subCategoryList(context, mainCategory),
@@ -261,20 +284,22 @@ class MeetCategory extends StatelessWidget {
           Consumer<MeetCreateViewModel>(builder: (context, viewModel, child) {
         return NextButton(
           onTap: () async {
-            if (viewModel.isCategorySelectionComplete) {
-              Navigator.of(context).pop();
+            if (viewModel.isCategorySelectionCompleteInCategoryPage) {
+              viewModel.setSelectedCategories();
+              context.pop();
             } else {
+              logger.d("message");
               return;
             }
           },
           height: 56.h,
-          text: viewModel.isCategorySelectionComplete ? '저장' : '저장 안됨',
-          enable: viewModel.isCategorySelectionComplete,
-          backgroundColor: viewModel.isCategorySelectionComplete
+          text: '저장',
+          enable: viewModel.isCategorySelectionCompleteInCategoryPage,
+          backgroundColor: viewModel.isCategorySelectionCompleteInCategoryPage
               ? UsedColor.button
               : UsedColor.button_g,
-          textStyle: TextStyle(
-            color: viewModel.isCategorySelectionComplete
+          textStyle: AppTextStyles.PR_SB_20.copyWith(
+            color: viewModel.isCategorySelectionCompleteInCategoryPage
                 ? Colors.white
                 : UsedColor.text_2,
           ),

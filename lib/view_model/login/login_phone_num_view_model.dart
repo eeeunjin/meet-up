@@ -94,7 +94,6 @@ class LoginPhoneNumViewModel with ChangeNotifier {
           _verificationId = verificationId;
           _codeSent = true;
           context.goNamed('loginVerification');
-          resetState();
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           debugPrint("handling code auto retrieval timeout");
@@ -147,6 +146,7 @@ class LoginPhoneNumViewModel with ChangeNotifier {
       ticket: 0,
       isFixedTicket: false,
       fixed_ticket_end_date: Timestamp.now(),
+      rank: 'Novice'
     );
 
     // Cloud Firestore에 유저 정보 저장
@@ -165,6 +165,7 @@ class LoginPhoneNumViewModel with ChangeNotifier {
   }
 
   void resetState() {
+    controller.clear();
     _isTextFieldFocused = false;
     _isPhoneNumberValid = false;
     _codeSent = false;

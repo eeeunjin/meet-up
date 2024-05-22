@@ -1,14 +1,15 @@
-import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
-import 'package:meet_up/view/widget/header_widget.dart';
+import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
+import 'package:meet_up/view_model/meet/meet_keyword_view_model.dart';
 import 'package:provider/provider.dart';
 
 class MeetKeyWord extends StatelessWidget {
@@ -16,28 +17,23 @@ class MeetKeyWord extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<MeetCreateViewModel>(context);
+    final viewModel = Provider.of<MeetKeywordViewModel>(context);
 
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            if (Platform.isIOS)
-              _header(context)
-            else if (Platform.isAndroid)
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 15.h,
-                ),
-                child: _header(context),
-              ),
-            SizedBox(height: 63.h),
-            _main(context, viewModel),
-            const Spacer(),
-            _bottom(context),
-          ],
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: 58.h,
+            ),
+            child: _header(context),
+          ),
+          SizedBox(height: 63.h),
+          _main(context, viewModel),
+          const Spacer(),
+          _bottom(context),
+        ],
       ),
     );
   }
@@ -49,10 +45,11 @@ class MeetKeyWord extends StatelessWidget {
         children: [
           header(back: _back(context), title: '키워드 입력'),
           SizedBox(
-            height: 11.h,
+            height: 16.h,
           ),
           Divider(
-            height: 0.3.h,
+            thickness: 0.3.h,
+            height: 0.h,
             color: UsedColor.line,
           )
         ],
@@ -65,19 +62,19 @@ class MeetKeyWord extends StatelessWidget {
       onTap: () {
         // 정보 초기화
         final viewModel =
-            Provider.of<MeetCreateViewModel>(context, listen: false);
-        viewModel.backClearSelection();
+            Provider.of<MeetKeywordViewModel>(context, listen: false);
+        viewModel.keywordClearSelection();
         context.pop();
       },
       child: Image.asset(
         ImagePath.back,
-        width: 40.w,
-        height: 40.h,
+        width: 10.w,
+        height: 20.h,
       ),
     );
   }
 
-  Widget _main(BuildContext context, MeetCreateViewModel viewModel) {
+  Widget _main(BuildContext context, MeetKeywordViewModel viewModel) {
     return Padding(
       padding: EdgeInsets.only(left: 29.w, right: 26.w),
       child: Column(
@@ -99,7 +96,6 @@ class MeetKeyWord extends StatelessWidget {
                 controller: viewModel.textController,
                 cursorColor: Colors.black, // 커서 색상 변경
                 decoration: InputDecoration(
-                  // border: InputBorder.none,
                   hintText: '관련 키워드를 입력해주세요. (최대 3개)',
                   hintStyle:
                       AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_5),
@@ -110,21 +106,37 @@ class MeetKeyWord extends StatelessWidget {
                   ),
                 ),
                 onChanged: (text) {
+                  viewModel.setKeywordCount();
+                  logger.d(text);
                   // 3개 입력하면 더 입력 못하도록 막음
                   if (viewModel.keywords.length >= 3) {
                     viewModel.textController.clear();
                     return;
                   }
-                  // 스페이스와 엔터로 저장
-                  if (text.isNotEmpty && text.characters.last == ' ') {
-                    final keyword = text.trim();
-                    if (keyword.isNotEmpty) {
+                  if (text.length > 8) {
+                    // 스페이스바로 저장
+                    if (text.characters.last == ' ') {
+                      final keyword = text.trim();
+                      viewModel.addKeyword(keyword);
+                      viewModel.textController.clear();
+                    }
+                    // 스페이스바가 아닌 경우 입력 막기
+                    else {
+                      viewModel.textController.text =
+                          viewModel.textController.text.substring(0, 8);
+                      viewModel.setKeywordCount();
+                    }
+                  } else {
+                    // 스페이스바로 저장
+                    if (text.characters.last == ' ') {
+                      final keyword = text.trim();
                       viewModel.addKeyword(keyword);
                       viewModel.textController.clear();
                     }
                   }
                 },
                 onSubmitted: (text) {
+                  // 엔터로 저장
                   final keyword = text.trim();
                   if (keyword.isNotEmpty) {
                     viewModel.addKeyword(keyword);
@@ -137,7 +149,7 @@ class MeetKeyWord extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  viewModel.subTextCount,
+                  viewModel.keywordCount,
                   style:
                       AppTextStyles.PR_SB_11.copyWith(color: UsedColor.text_4),
                 ),
@@ -176,7 +188,7 @@ class MeetKeyWord extends StatelessWidget {
     );
   }
 
-  Widget _keywordList(BuildContext context, MeetCreateViewModel viewModel) {
+  Widget _keywordList(BuildContext context, MeetKeywordViewModel viewModel) {
     return Wrap(
       // 자동 줄바꿈
       spacing: 4.0, // 좌우 간격
@@ -209,9 +221,9 @@ class MeetKeyWord extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Expanded(
-            child: Align(
-              alignment: Alignment.center,
+          Padding(
+            padding: EdgeInsets.only(left: 16.0.w, right: 11.w),
+            child: Center(
               child: Text(
                 '#$keyword',
                 style: AppTextStyles.SU_SB_12.copyWith(color: UsedColor.violet),
@@ -220,11 +232,11 @@ class MeetKeyWord extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              Provider.of<MeetCreateViewModel>(context, listen: false)
+              Provider.of<MeetKeywordViewModel>(context, listen: false)
                   .removeKeyword(keyword);
             },
             child: Padding(
-              padding: EdgeInsets.only(right: 6.0.w),
+              padding: EdgeInsets.only(right: 11.0.w),
               child: Image.asset(
                 ImagePath.closeIcon,
                 width: 7.w,
@@ -240,28 +252,29 @@ class MeetKeyWord extends StatelessWidget {
   Widget _bottom(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w, right: 33.w, bottom: 56.h),
-      child:
-          Consumer<MeetCreateViewModel>(builder: (context, viewModel, child) {
+      child: Consumer2<MeetKeywordViewModel, MeetCreateViewModel>(
+          builder: (context, meetKeywordViewModel, meetCreateViewModel, child) {
         return NextButton(
           onTap: () async {
-            if (viewModel.keywordCheckComplted) {
-              // viewModel.saveKeywords();
-              Navigator.of(context).pop();
+            if (meetKeywordViewModel.keywordCheckComplted) {
+              meetCreateViewModel.selectedKeywords =
+                  List.from(meetKeywordViewModel.keywords);
+              meetKeywordViewModel.keywordClearSelection();
+              context.pop();
             } else {
               return;
             }
           },
           height: 56.h,
-          text: viewModel.keywordCheckComplted ? '저장' : '저장 안됨',
-          enable: viewModel.keywordCheckComplted,
-          backgroundColor: viewModel.keywordCheckComplted
+          text: '저장',
+          enable: meetKeywordViewModel.keywordCheckComplted,
+          backgroundColor: meetKeywordViewModel.keywordCheckComplted
               ? UsedColor.button
               : UsedColor.button_g,
-          textStyle: TextStyle(
-            color: viewModel.keywordCheckComplted
-                ? Colors.white
-                : UsedColor.text_2,
-          ),
+          textStyle: AppTextStyles.PR_SB_20.copyWith(
+              color: meetKeywordViewModel.keywordCheckComplted
+                  ? Colors.white
+                  : UsedColor.text_2),
         );
       }),
     );

@@ -1,39 +1,44 @@
-import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
-import 'package:meet_up/view/widget/header_widget.dart';
+import 'package:meet_up/view_model/meet/header_widget.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
+import 'package:provider/provider.dart';
 
 class CoinMain extends StatelessWidget {
-  final String? fromRoute;
-
-  const CoinMain({super.key, this.fromRoute});
+  const CoinMain({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            if (Platform.isIOS)
-              _header(context)
-            else if (Platform.isAndroid)
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 15.h,
-                ),
-                child: _header(context),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: 58.h,
+            ),
+            child: _header(context),
+          ),
+          Expanded(
+            child: Container(
+              color: UsedColor.bg_color,
+              child: Column(
+                children: [
+                  SizedBox(height: 45.h),
+                  _currentCoin(context),
+                  SizedBox(height: 16.h),
+                  _currentTicket(context),
+                ],
               ),
-            SizedBox(height: 45.h),
-            _currentCoin(),
-            SizedBox(height: 52.h),
-            _currentTicket(),
-          ],
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -45,10 +50,11 @@ class CoinMain extends StatelessWidget {
         children: [
           header(back: _back(context), title: '코인/만남권'),
           SizedBox(
-            height: 11.h,
+            height: 16.h,
           ),
           Divider(
-            height: 0.3.h,
+            thickness: 0.3.w,
+            height: 0.h,
             color: UsedColor.line,
           )
         ],
@@ -59,149 +65,184 @@ class CoinMain extends StatelessWidget {
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // fromRoute에 따라 다른 페이지로 이동하도록 조건 추가
-        if (fromRoute == 'meetMain') {
-          // context.goNamed('meetMain');
-          context.pop();
-        } else if (fromRoute == 'meetManageMain') {
-          // context.goNamed('meetManageMain');
-          context.pop();
-        } else {
-          context.pop();
-        }
+        context.pop();
       },
       child: Image.asset(
         ImagePath.back,
-        width: 40.w,
-        height: 40.h,
+        width: 10.w,
+        height: 20.h,
       ),
     );
   }
 
-  Widget _currentCoin() {
+  Widget _currentCoin(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context);
     return Padding(
-      padding: EdgeInsets.only(left: 32.0.w, right: 28.w),
-      child: Column(
-        children: [
-          Stack(
-            alignment: Alignment.topLeft,
+      padding: EdgeInsets.only(left: 19.0.w, right: 19.w),
+      child: Container(
+        width: 355.w,
+        height: 187.h,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(19.r),
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 25.0.h),
+          child: Column(
             children: [
-              // Column 정렬 안되는 오류로 row로 한 번 감싸놓음
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              Padding(
+                padding: EdgeInsets.only(left: 9.w, top: 21.h),
+                child: Padding(
+                  padding: EdgeInsets.only(left: 12.0.w),
+                  child: Stack(
                     children: [
-                      Text(
-                        '코인 보유 현황',
-                        style: AppTextStyles.SU_R_12
-                            .copyWith(color: UsedColor.text_3),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '코인 보유 현황',
+                            style: AppTextStyles.SU_R_15
+                                .copyWith(color: UsedColor.text_3),
+                          ),
+                          SizedBox(height: 13.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${userViewModel.userModel!.coin} C',
+                                style: AppTextStyles.PR_SB_30
+                                    .copyWith(color: UsedColor.charcoal_black),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        '600 C',
-                        style: AppTextStyles.PR_SB_24
-                            .copyWith(color: UsedColor.charcoal_black),
+                      Positioned(
+                        right: 28.63.w,
+                        top: 39.75.h,
+                        child: Image.asset(
+                          ImagePath.nextArrow,
+                          width: 7.75.w,
+                          height: 15.5.h,
+                        ),
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
-              Positioned(
-                right: 0.w,
-                bottom: 10.h,
-                child: SizedBox(
-                  width: 27.w,
-                  height: 27.h,
-                  child: Image.asset(
-                    ImagePath.nextArrow,
-                    width: 6.75.w,
-                    height: 13.5.h,
+              SizedBox(height: 22.h),
+              Container(
+                width: 332.w,
+                height: 51.h,
+                decoration: BoxDecoration(
+                  color: UsedColor.button,
+                  borderRadius: BorderRadius.circular(19.r),
+                ),
+                child: Center(
+                  child: Text(
+                    '코인 구매',
+                    style: AppTextStyles.PR_SB_18.copyWith(color: Colors.white),
                   ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 16.h),
-          Container(
-            width: 337.w,
-            height: 51.h,
-            decoration: BoxDecoration(
-              color: UsedColor.button,
-              borderRadius: BorderRadius.circular(19.r),
-            ),
-            child: Center(
-              child: Text(
-                '코인 구매',
-                style: AppTextStyles.PR_SB_17.copyWith(color: Colors.white),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _currentTicket() {
+  Widget _currentTicket(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context);
     return Padding(
-      padding: EdgeInsets.only(left: 32.0.w, right: 28.w),
-      child: Column(
-        children: [
-          Stack(
-            alignment: Alignment.topLeft,
+      padding: EdgeInsets.only(left: 19.0.w, right: 19.w),
+      child: Container(
+        width: 355.w,
+        height: 187.h,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(19.r),
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 25.0.h),
+          child: Column(
             children: [
-              // Column 정렬 안되는 오류로 row로 한 번 감싸놓음
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              Padding(
+                padding: EdgeInsets.only(left: 9.w, top: 21.h),
+                child: Padding(
+                  padding: EdgeInsets.only(left: 12.0.w),
+                  child: Stack(
                     children: [
-                      Text(
-                        '만남권 보유 현황',
-                        style: AppTextStyles.SU_R_12
-                            .copyWith(color: UsedColor.text_3),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '만남권 보유 현황',
+                            style: AppTextStyles.SU_R_15
+                                .copyWith(color: UsedColor.text_3),
+                          ),
+                          SizedBox(height: 14.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                '만남권 ${userViewModel.userModel!.ticket}개',
+                                style: AppTextStyles.PR_SB_26
+                                    .copyWith(color: UsedColor.charcoal_black),
+                              ),
+                              SizedBox(width: 12.w),
+                              //MARK: - 정기권 혜택 적용 여부 컨테이너
+                              if (userViewModel.userModel!.isFixedTicket)
+                                Container(
+                                  width: 96.w,
+                                  height: 16.h,
+                                  decoration: BoxDecoration(
+                                    color: UsedColor.image_card,
+                                    borderRadius: BorderRadius.circular(25.r),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      '정기권 혜택 적용 중',
+                                      style: AppTextStyles.SU_R_11
+                                          .copyWith(color: UsedColor.violet),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        '만남권 1개',
-                        style: AppTextStyles.PR_SB_24
-                            .copyWith(color: UsedColor.charcoal_black),
+                      Positioned(
+                        right: 28.63.w,
+                        top: 39.75.h,
+                        child: Image.asset(
+                          ImagePath.nextArrow,
+                          width: 7.75.w,
+                          height: 15.5.h,
+                        ),
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
-              Positioned(
-                right: 0.w,
-                bottom: 10.h,
-                child: SizedBox(
-                  width: 27.w,
-                  height: 27.h,
-                  child: Image.asset(
-                    ImagePath.nextArrow,
-                    width: 6.75.w,
-                    height: 13.5.h,
+              SizedBox(height: 22.h),
+              Container(
+                width: 332.w,
+                height: 51.h,
+                decoration: BoxDecoration(
+                  color: UsedColor.button,
+                  borderRadius: BorderRadius.circular(19.r),
+                ),
+                child: Center(
+                  child: Text(
+                    '만남권 구매',
+                    style: AppTextStyles.PR_SB_18.copyWith(color: Colors.white),
                   ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 16.h),
-          Container(
-            width: 337.w,
-            height: 51.h,
-            decoration: BoxDecoration(
-              color: UsedColor.button,
-              borderRadius: BorderRadius.circular(19.r),
-            ),
-            child: Center(
-              child: Text(
-                '만남권 구매',
-                style: AppTextStyles.PR_SB_17.copyWith(color: Colors.white),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
