@@ -221,9 +221,9 @@ class MeetKeyWord extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Expanded(
-            child: Align(
-              alignment: Alignment.center,
+          Padding(
+            padding: EdgeInsets.only(left: 16.0.w, right: 11.w),
+            child: Center(
               child: Text(
                 '#$keyword',
                 style: AppTextStyles.SU_SB_12.copyWith(color: UsedColor.violet),
@@ -236,7 +236,7 @@ class MeetKeyWord extends StatelessWidget {
                   .removeKeyword(keyword);
             },
             child: Padding(
-              padding: EdgeInsets.only(right: 6.0.w),
+              padding: EdgeInsets.only(right: 11.0.w),
               child: Image.asset(
                 ImagePath.closeIcon,
                 width: 7.w,

@@ -164,12 +164,12 @@ class MeetDetailRoom extends StatelessWidget {
                           ),
                           Text(
                             '세부 규칙',
-                            style: AppTextStyles.PR_SB_12
+                            style: AppTextStyles.PR_SB_16
                                 .copyWith(color: Colors.black),
                           ),
                         ],
                       ),
-                      SizedBox(height: 21.h),
+                      SizedBox(height: 19.h),
                       // 세부 규칙 리스트
                       ...List.generate(viewModel.rulesDescriptions.length,
                           (index) {
@@ -188,10 +188,11 @@ class MeetDetailRoom extends StatelessWidget {
                                 children: [
                                   Expanded(
                                     child: Text(ruleDescription, // 질문/규칙 설명 표시
-                                        style: AppTextStyles.PR_M_14.copyWith(
-                                            color: isRulesTrue
-                                                ? Colors.black
-                                                : UsedColor.text_5)),
+                                        style: isRulesTrue
+                                            ? AppTextStyles.PR_M_14
+                                                .copyWith(color: Colors.black)
+                                            : AppTextStyles.PR_R_13.copyWith(
+                                                color: UsedColor.text_5)),
                                   ),
                                   _responseBox(
                                       context,
