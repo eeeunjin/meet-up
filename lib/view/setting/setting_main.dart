@@ -88,22 +88,27 @@ class SettingMain extends StatelessWidget {
           style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
         ),
         SizedBox(height: 8.0.h),
-        SizedBox(
-          height: 48.h,
-          child: Row(
-            children: [
-              Image.asset(
-                ImagePath.setIcon1,
-                width: 24.w,
-                height: 24.h,
-              ),
-              SizedBox(width: 16.w),
-              Text(
-                '회원 정보',
-                style: AppTextStyles.PR_R_16
-                    .copyWith(color: UsedColor.charcoal_black),
-              )
-            ],
+        GestureDetector(
+          onTap: () {
+            context.goNamed('userInfo');
+          },
+          child: SizedBox(
+            height: 48.h,
+            child: Row(
+              children: [
+                Image.asset(
+                  ImagePath.setIcon1,
+                  width: 24.w,
+                  height: 24.h,
+                ),
+                SizedBox(width: 16.w),
+                Text(
+                  '회원 정보',
+                  style: AppTextStyles.PR_R_16
+                      .copyWith(color: UsedColor.charcoal_black),
+                )
+              ],
+            ),
           ),
         ),
         SizedBox(height: 4.h),
