@@ -92,6 +92,30 @@ class ProfileMain extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          // 임시 로그아웃 버튼
+          GestureDetector(
+            onTap: () async {
+              await userViewModel.logout();
+              while (context.canPop()) {
+                context.pop();
+              }
+              // context.push('/settingMain');
+            },
+            child: Container(
+              width: 51.w,
+              height: 22.h,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(11.r),
+                  color: Colors.white),
+              child: Center(
+                child: Text(
+                  '로그아웃',
+                  style:
+                      AppTextStyles.PR_M_12.copyWith(color: UsedColor.violet),
+                ),
+              ),
+            ),
+          ),
           // 알림 버튼
           GestureDetector(
             onTap: () {
@@ -116,11 +140,7 @@ class ProfileMain extends StatelessWidget {
           // 설정 버튼
           GestureDetector(
             onTap: () async {
-              await userViewModel.logout();
-              while (context.canPop()) {
-                context.pop();
-              }
-              // context.push('/settingMain');
+              context.push('/settingMain');
             },
             child: Container(
               width: 41.w,
