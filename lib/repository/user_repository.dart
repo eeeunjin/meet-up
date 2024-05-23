@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/service/remote/firebase_service.dart';
 
@@ -52,8 +53,16 @@ class UserRepository {
 
   // Delete
   Future<bool> deleteUserData({required String uid}) async {
-    return _firebaseService.deleteDocument(
-        docRef: _firebaseRefs.colRefUser.doc(uid));
+    try {
+      _firebaseService.deleteDocument(
+          docRef: _firebaseRefs.colRefUser.doc(uid));
+      _firebaseService.deleteCollection(
+          colRef: _firebaseRefs.colRefUser.doc(uid).collection("myRooms"));
+      return true;
+    } catch (e) {
+      logger.d("deleteUserData Error: $e");
+      return false;
+    }
   }
 
   // MARK:- MyRoomModel CRUD
@@ -118,6 +127,12 @@ class UserRepository {
     return _firebaseService.deleteDocument(docRef: myRoomDocumentReference);
   }
 
+  Future<bool> deleteAllMyRoomData({required String uid}) async {
+    CollectionReference myRoomCollectionReference =
+        _firebaseRefs.colRefUser.doc(uid).collection("myRooms");
+    return _firebaseService.deleteCollection(colRef: myRoomCollectionReference);
+  }
+
   // MARK: - Auth Functions
 
   /// 전화번호 인증을 위한 메서드
@@ -147,4 +162,23 @@ class UserRepository {
       PhoneAuthCredential credential) async {
     return _firebaseAUTH.signInWithCredential(credential);
   }
+
+  /// 탈퇴하는 메서드
+  Future<bool> deleteUser({required String uid}) async {
+    try {
+      // FirebaseAuth 정보 삭제
+      await _firebaseAUTH.deleteUser();
+      // 유저 방 정보 삭제 (유저 정보 내부 collection)
+      await deleteAllMyRoomData(uid: uid);
+      // 유저 정보 삭제
+      await deleteUserData(uid: uid);
+      
+      return true;
+    } catch (e) {
+      logger.d("deleteUser Error: $e");
+      return false;
+    }
+  }
+
+  
 }
