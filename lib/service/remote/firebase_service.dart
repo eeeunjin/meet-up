@@ -74,9 +74,6 @@ class FirebaseCRUD {
           return UserModel.fromJson(doc.data() as Map<String, Object?>) as T;
         } else if (T == MyRoomModel) {
           return MyRoomModel.fromJson(doc.data() as Map<String, Object?>) as T;
-        } else if (T == MyEnterRequestModel) {
-          return MyEnterRequestModel.fromJson(
-              doc.data() as Map<String, Object?>) as T;
         } else if (T == RoomModel) {
           return RoomModel.fromJson(doc.data() as Map<String, Object?>) as T;
         } else if (T == EnterRequestModel) {
@@ -225,10 +222,6 @@ class FirebaseCRUD {
           MyRoomModel myRoom = data as MyRoomModel;
           await docRef.set(myRoom.toJson());
           return true;
-        } else if (T == MyEnterRequestModel) {
-          MyEnterRequestModel myEnterRequest = data as MyEnterRequestModel;
-          await docRef.set(myEnterRequest.toJson());
-          return true;
         } else if (T == RoomModel) {
           RoomModel myEnterRequest = data as RoomModel;
           await docRef.set(myEnterRequest.toJson());
@@ -267,8 +260,6 @@ class FirebaseCRUD {
           return UserModel.fromJson(data) as T;
         } else if (T == MyRoomModel) {
           return MyRoomModel.fromJson(data) as T;
-        } else if (T == MyEnterRequestModel) {
-          return MyEnterRequestModel.fromJson(data) as T;
         } else if (T == RoomModel) {
           return RoomModel.fromJson(data) as T;
         } else if (T == EnterRequestModel) {

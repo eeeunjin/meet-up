@@ -119,29 +119,6 @@ class MyRoomModel {
   }
 }
 
-class MyEnterRequestModel {
-  bool isAccepted;
-  String room_id;
-
-  MyEnterRequestModel({
-    required this.isAccepted,
-    required this.room_id,
-  });
-
-  MyEnterRequestModel.fromJson(Map<String, Object?> json)
-      : this(
-          isAccepted: json["isAccepted"]! as bool,
-          room_id: json["room_id"]! as String,
-        );
-
-  Map<String, dynamic> toJson() {
-    return {
-      'isAccepted': isAccepted,
-      'room_id': room_id,
-    };
-  }
-}
-
 class MyGoodsHistoryModel {
   DocumentReference gh_reference;
   Timestamp gh_change_date;
