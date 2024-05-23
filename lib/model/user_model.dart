@@ -30,6 +30,9 @@ class UserModel {
   // 마케팅 및 개인정보 수집 선택 동의 항목 (5번, 6번)
   List<dynamic> accepted_policies;
 
+  // 알림 설정 정보
+  List<dynamic> notification_settings;
+
   UserModel({
     required this.nickname,
     required this.profile_icon,
@@ -48,6 +51,7 @@ class UserModel {
     required this.isFixedTicket,
     required this.fixed_ticket_end_date,
     required this.rank,
+    required this.notification_settings,
   });
 
   UserModel.fromJson(Map<String, Object?> json)
@@ -71,6 +75,7 @@ class UserModel {
           isFixedTicket: json["isFixedTicket"]! as bool,
           fixed_ticket_end_date: json["fixed_ticket_end_date"]! as Timestamp,
           rank: json["rank"]! as String,
+          notification_settings: json["notification_settings"]! as List<dynamic>,
         );
 
   Map<String, Object?> toJson() {
@@ -92,6 +97,7 @@ class UserModel {
       'isFixedTicket': isFixedTicket,
       'fixed_ticket_end_date': fixed_ticket_end_date,
       'rank': rank,
+      'notification_settings': notification_settings,
     };
   }
 }
