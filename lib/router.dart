@@ -25,6 +25,7 @@ import 'package:meet_up/view/reflect/reflect_main.dart';
 import 'package:meet_up/view/schedule/add_personal_schedule.dart';
 import 'package:meet_up/view/schedule/schedule_main.dart';
 import 'package:meet_up/view/setting/noticed.dart';
+import 'package:meet_up/view/setting/open_source_license.dart';
 import 'package:meet_up/view/setting/privacy_policy.dart';
 import 'package:meet_up/view/setting/question.dart';
 import 'package:meet_up/view/setting/service_usage_details.dart';
@@ -384,6 +385,14 @@ final router = GoRouter(
               name: 'accessTerms',
               builder: (context, state) {
                 return const AccessTerms();
+              },
+            ),
+            // 오픈소스라이센스
+            GoRoute(
+              path: 'openSourceLicense',
+              name: 'openSourceLicense',
+              builder: (context, state) {
+                return const OpenSourceLicense();
               },
             ),
           ],

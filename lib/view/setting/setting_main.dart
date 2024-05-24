@@ -254,22 +254,28 @@ class SettingMain extends StatelessWidget {
           ),
         ),
         SizedBox(height: 4.h),
-        SizedBox(
-          height: 48.h,
-          child: Row(
-            children: [
-              Image.asset(
-                ImagePath.setIcon7,
-                width: 24.w,
-                height: 24.h,
-              ),
-              SizedBox(width: 16.w),
-              Text(
-                '오픈소스라이센스',
-                style: AppTextStyles.PR_R_16
-                    .copyWith(color: UsedColor.charcoal_black),
-              )
-            ],
+        //MARK: - 오픈소스라이센스
+        GestureDetector(
+          onTap: () {
+            context.goNamed('openSourceLicense');
+          },
+          child: SizedBox(
+            height: 48.h,
+            child: Row(
+              children: [
+                Image.asset(
+                  ImagePath.setIcon7,
+                  width: 24.w,
+                  height: 24.h,
+                ),
+                SizedBox(width: 16.w),
+                Text(
+                  '오픈소스라이센스',
+                  style: AppTextStyles.PR_R_16
+                      .copyWith(color: UsedColor.charcoal_black),
+                )
+              ],
+            ),
           ),
         ),
         SizedBox(height: 4.h),
