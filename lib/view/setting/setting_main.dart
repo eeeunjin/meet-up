@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -73,7 +75,7 @@ class SettingMain extends StatelessWidget {
             color: UsedColor.grey1,
           ),
           SizedBox(height: 12.h),
-          _help(),
+          _help(context),
         ],
       ),
     );
@@ -88,6 +90,7 @@ class SettingMain extends StatelessWidget {
           style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
         ),
         SizedBox(height: 8.0.h),
+        //MARK: - 회원 정보
         GestureDetector(
           onTap: () {
             context.goNamed('userInfo');
@@ -112,6 +115,7 @@ class SettingMain extends StatelessWidget {
           ),
         ),
         SizedBox(height: 4.h),
+        // MARK: - 알림 설정
         GestureDetector(
           onTap: () {
             // context.push('/settingMain/settingNotification');
@@ -141,7 +145,7 @@ class SettingMain extends StatelessWidget {
     );
   }
 
-  Widget _help() {
+  Widget _help(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -150,79 +154,103 @@ class SettingMain extends StatelessWidget {
           style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
         ),
         SizedBox(height: 8.0.h),
-        SizedBox(
-          height: 48.h,
-          child: Row(
-            children: [
-              Image.asset(
-                ImagePath.setIcon3,
-                width: 24.w,
-                height: 24.h,
-              ),
-              SizedBox(width: 16.w),
-              Text(
-                '자주 묻는 질문',
-                style: AppTextStyles.PR_R_16
-                    .copyWith(color: UsedColor.charcoal_black),
-              )
-            ],
+        // MARK: - 자주 묻는 질문
+        GestureDetector(
+          onTap: () {
+            context.goNamed('question');
+          },
+          child: SizedBox(
+            height: 48.h,
+            child: Row(
+              children: [
+                Image.asset(
+                  ImagePath.setIcon3,
+                  width: 24.w,
+                  height: 24.h,
+                ),
+                SizedBox(width: 16.w),
+                Text(
+                  '자주 묻는 질문',
+                  style: AppTextStyles.PR_R_16
+                      .copyWith(color: UsedColor.charcoal_black),
+                )
+              ],
+            ),
           ),
         ),
         SizedBox(height: 4.h),
-        SizedBox(
-          height: 48.h,
-          child: Row(
-            children: [
-              Image.asset(
-                ImagePath.setIcon4,
-                width: 24.w,
-                height: 24.h,
-              ),
-              SizedBox(width: 16.w),
-              Text(
-                '공지사항',
-                style: AppTextStyles.PR_R_16
-                    .copyWith(color: UsedColor.charcoal_black),
-              )
-            ],
+        // MARK: - 공지사항
+        GestureDetector(
+          onTap: () {
+            context.goNamed('noticed');
+          },
+          child: SizedBox(
+            height: 48.h,
+            child: Row(
+              children: [
+                Image.asset(
+                  ImagePath.setIcon4,
+                  width: 24.w,
+                  height: 24.h,
+                ),
+                SizedBox(width: 16.w),
+                Text(
+                  '공지사항',
+                  style: AppTextStyles.PR_R_16
+                      .copyWith(color: UsedColor.charcoal_black),
+                )
+              ],
+            ),
           ),
         ),
         SizedBox(height: 4.h),
-        SizedBox(
-          height: 48.h,
-          child: Row(
-            children: [
-              Image.asset(
-                ImagePath.setIcon5,
-                width: 24.w,
-                height: 24.h,
-              ),
-              SizedBox(width: 16.w),
-              Text(
-                '개인정보처리방침',
-                style: AppTextStyles.PR_R_16
-                    .copyWith(color: UsedColor.charcoal_black),
-              )
-            ],
+        // MARK: - 개인정보처리방침
+        GestureDetector(
+          onTap: () {
+            context.goNamed('privacyPolicy');
+          },
+          child: SizedBox(
+            height: 48.h,
+            child: Row(
+              children: [
+                Image.asset(
+                  ImagePath.setIcon5,
+                  width: 24.w,
+                  height: 24.h,
+                ),
+                SizedBox(width: 16.w),
+                Text(
+                  '개인정보처리방침',
+                  style: AppTextStyles.PR_R_16
+                      .copyWith(color: UsedColor.charcoal_black),
+                )
+              ],
+            ),
           ),
         ),
         SizedBox(height: 4.h),
-        SizedBox(
-          height: 48.h,
-          child: Row(
-            children: [
-              Image.asset(
-                ImagePath.setIcon6,
-                width: 24.w,
-                height: 24.h,
-              ),
-              SizedBox(width: 16.w),
-              Text(
-                '서비스이용사항',
-                style: AppTextStyles.PR_R_16
-                    .copyWith(color: UsedColor.charcoal_black),
-              )
-            ],
+//MARK: - 서비스 이용약관
+        GestureDetector(
+          onTap: () {
+            context.goNamed('termsOfService');
+          },
+          child: SizedBox(
+            height: 48.h,
+            child: Row(
+              children: [
+                Image.asset(
+                  ImagePath.setIcon6,
+                  width: 24.w,
+                  height: 24.h,
+                ),
+                SizedBox(width: 16.w),
+                Text(
+                  '서비스 이용약관',
+                  style: AppTextStyles.PR_R_16
+                      .copyWith(color: UsedColor.charcoal_black),
+                )
+              ],
+            ),
           ),
         ),
         SizedBox(height: 4.h),

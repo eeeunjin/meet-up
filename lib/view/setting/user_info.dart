@@ -89,8 +89,8 @@ class UserInfo extends StatelessWidget {
           padding: EdgeInsets.only(left: 33.w),
           child: Text(
             formattedPhoneNumber,
-            style: AppTextStyles.PR_M_20
-                .copyWith(color: UsedColor.charcoal_black), // 원하는 스타일로 변경
+            style:
+                AppTextStyles.PR_M_20.copyWith(color: UsedColor.charcoal_black),
           ),
         ),
         SizedBox(height: 8.h),
@@ -112,11 +112,8 @@ class UserInfo extends StatelessWidget {
           child: Row(
             children: [
               GestureDetector(
-                onTap: () async {
-                  await userViewModel.logout();
-                  while (context.canPop()) {
-                    context.pop();
-                  }
+                onTap: () {
+                  logoutDialog(context, userViewModel);
                 },
                 child: SizedBox(
                   width: 52.w,
@@ -129,19 +126,68 @@ class UserInfo extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 54.w),
-              SizedBox(
-                width: 52.w,
-                height: 24.h,
-                child: Text(
-                  '회원탈퇴',
-                  style:
-                      AppTextStyles.PR_R_12.copyWith(color: UsedColor.text_3),
+              GestureDetector(
+                onTap: () {
+                  context.goNamed('withdrawal');
+                },
+                child: SizedBox(
+                  width: 52.w,
+                  height: 24.h,
+                  child: Text(
+                    '회원탈퇴',
+                    style:
+                        AppTextStyles.PR_R_12.copyWith(color: UsedColor.text_3),
+                  ),
                 ),
               ),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  // MARK: - 로그아웃 다이얼로그
+  void logoutDialog(BuildContext context, UserViewModel userViewModel) {
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Padding(
+            padding: EdgeInsets.only(top: 6.h, bottom: 6.h),
+            child: Text(
+              '로그아웃 하시겠습니까?',
+              style: AppTextStyles.PR_M_13
+                  .copyWith(color: UsedColor.charcoal_black),
+            ),
+          ),
+          actions: [
+            CupertinoDialogAction(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                '취소',
+                style: AppTextStyles.PR_M_14
+                    .copyWith(color: UsedColor.charcoal_black),
+              ),
+            ),
+            CupertinoDialogAction(
+              onPressed: () async {
+                await userViewModel.logout();
+                while (Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Text(
+                '로그아웃',
+                style: AppTextStyles.PR_M_14
+                    .copyWith(color: UsedColor.charcoal_black),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
