@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -212,12 +213,17 @@ class ProfileMain extends StatelessWidget {
                     ),
                   ),
                   // Novice 혜택 보러가기
-                  Padding(
-                    padding: EdgeInsets.only(top: 24.0.h, left: 24.h),
-                    child: Text(
-                      'Novice 혜택 보러가기 >',
-                      style: AppTextStyles.PR_R_12
-                          .copyWith(color: UsedColor.text_5),
+                  GestureDetector(
+                    onTap: () {
+                      context.push('/rankMain');
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 24.0.h, left: 24.h),
+                      child: Text(
+                        'Novice 혜택 보러가기 >',
+                        style: AppTextStyles.PR_R_12
+                            .copyWith(color: UsedColor.text_5),
+                      ),
                     ),
                   ),
                 ],

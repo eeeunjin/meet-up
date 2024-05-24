@@ -21,6 +21,7 @@ import 'package:meet_up/view/meet/meet_user_info.dart';
 import 'package:meet_up/view/profile/profile_edit.dart';
 import 'package:meet_up/view/profile/profile_main.dart';
 import 'package:meet_up/view/profile/profile_notification.dart';
+import 'package:meet_up/view/profile/rank_main.dart';
 import 'package:meet_up/view/reflect/reflect_main.dart';
 import 'package:meet_up/view/schedule/add_personal_schedule.dart';
 import 'package:meet_up/view/schedule/schedule_main.dart';
@@ -396,6 +397,13 @@ final router = GoRouter(
               },
             ),
           ],
+        ),
+        // 등급
+        GoRoute(
+          path: 'rankMain',
+          builder: (context, state) {
+            return const RankMain();
+          },
         ),
       ],
     ),
