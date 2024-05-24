@@ -232,7 +232,7 @@ class SettingMain extends StatelessWidget {
 //MARK: - 서비스 이용약관
         GestureDetector(
           onTap: () {
-            context.goNamed('termsOfService');
+            context.goNamed('accessTerms');
           },
           child: SizedBox(
             height: 48.h,

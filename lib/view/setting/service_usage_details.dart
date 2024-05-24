@@ -5,8 +5,8 @@ import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 
-class TermsOfService extends StatelessWidget {
-  const TermsOfService({super.key});
+class AccessTerms extends StatelessWidget {
+  const AccessTerms({super.key});
 
   @override
   Widget build(BuildContext context) {

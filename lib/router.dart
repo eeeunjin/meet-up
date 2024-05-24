@@ -380,10 +380,10 @@ final router = GoRouter(
             ),
             // 서비스 이용약관
             GoRoute(
-              path: 'termsOfService',
-              name: 'termsOfService',
+              path: 'accessTerms',
+              name: 'accessTerms',
               builder: (context, state) {
-                return const TermsOfService();
+                return const AccessTerms();
               },
             ),
           ],
