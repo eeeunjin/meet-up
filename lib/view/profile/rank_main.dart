@@ -5,6 +5,8 @@ import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
+import 'package:provider/provider.dart';
 
 class RankMain extends StatelessWidget {
   const RankMain({super.key});
@@ -69,7 +71,7 @@ class RankMain extends StatelessWidget {
             SizedBox(height: 12.h),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 28.0.w),
-              child: _profileRankBox(),
+              child: _profileRankBox(context),
             ),
             SizedBox(height: 36.h),
             Padding(
@@ -83,7 +85,24 @@ class RankMain extends StatelessWidget {
   }
 
   //MARK: - 프로필 랭크 박스
-  Widget _profileRankBox() {
+  Widget _profileRankBox(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final profileIcon = userViewModel.userModel!.profile_icon;
+    final profileIconName = profileIcon.split('/').last.split('_').first;
+    String path = '';
+    switch (profileIconName) {
+      case "fedro":
+        path = ImagePath.fedroSelect;
+      case "cogy":
+        path = ImagePath.cogySelect;
+      case "piggy":
+        path = ImagePath.piggySelect;
+      case "ham":
+        path = ImagePath.hamSelect;
+      case "aengmu":
+        path = ImagePath.aengmuSelect;
+    }
+
     return Container(
       width: 337.w,
       height: 216.h,
@@ -107,6 +126,7 @@ class RankMain extends StatelessWidget {
                     shape: BoxShape.circle,
                     border: Border.all(width: 0.5.w, color: UsedColor.b_line),
                   ),
+                  child: Image.asset(path),
                 ),
               ),
               SizedBox(width: 16.w),
@@ -118,9 +138,9 @@ class RankMain extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text.rich(
-                      // 사용자 닉네임
                       TextSpan(
-                        text: '사용자 닉네임 님의\n이번 달 등급은 ',
+                        text:
+                            '${userViewModel.userModel!.nickname} 님의\n이번 달 등급은 ',
                         style: AppTextStyles.PR_R_14
                             .copyWith(color: UsedColor.charcoal_black),
                         children: <TextSpan>[
@@ -205,6 +225,59 @@ class RankMain extends StatelessWidget {
           ),
         ),
         // 등급 이미지
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            // Master
+            Column(
+              children: [
+                Container(
+                  width: 48.w,
+                  height: 236.h,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(8.r),
+                      topRight: Radius.circular(8.r),
+                    ),
+                    border: Border.all(
+                      color: UsedColor.b_line,
+                      width: 1.w,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        top: 12.h, left: 9.w, right: 9.w, bottom: 194.h),
+                    child: Container(
+                      width: 30.w,
+                      height: 30.h,
+                      decoration: BoxDecoration(
+                        color: UsedColor.image_card,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'M',
+                          style: AppTextStyles.SU_SB_24
+                              .copyWith(color: UsedColor.text_3),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 4.0.h, left: 4.w, right: 4.w),
+                  child: Text(
+                    'Master',
+                    style:
+                        AppTextStyles.PR_R_10.copyWith(color: UsedColor.text_3),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
         // MARK: -혜택 내용
         //
         // Novice 등급
