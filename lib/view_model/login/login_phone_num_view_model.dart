@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/repository/user_repository.dart';
 
@@ -76,7 +78,7 @@ class LoginPhoneNumViewModel with ChangeNotifier {
   Future<bool> signInWithPhoneNumber(BuildContext context) async {
     try {
       // 전화 번호 인증 관련 메소드 호출
-      return _userRepository.verifyPhoneNumber(
+      return await _userRepository.verifyPhoneNumber(
         // 전화 번호 전달
         phoneNumber: "+82 ${controller.text}",
         // 사용자가 이미 이전에 인증을 완료한 적이 있는 경우 실행
@@ -86,17 +88,18 @@ class LoginPhoneNumViewModel with ChangeNotifier {
         // 인증 문자 전송 실패
         verificationFailed: (FirebaseAuthException e) {
           if (e.code == 'invalid-phone-number') {
-            debugPrint("The provided phone number is not valid.");
+            logger.e("The provided phone number is not valid.");
           }
         },
         // 코드 인증 시, verificationID를 저장하여 넘겨주는 역할을 함
-        codeSent: (String verificationId, int? forceResendingToken) {
+        codeSent: (String verificationId, int? forceResendingToken) async {
+          logger.d("test2");
           _verificationId = verificationId;
           _codeSent = true;
           context.goNamed('loginVerification');
         },
         codeAutoRetrievalTimeout: (String verificationId) {
-          debugPrint("handling code auto retrieval timeout");
+          logger.e("handling code auto retrieval timeout");
         },
       );
     } catch (e) {
@@ -130,24 +133,23 @@ class LoginPhoneNumViewModel with ChangeNotifier {
 
     // 새로운 유저 모델
     UserModel newUser = UserModel(
-      nickname: "",
-      profile_icon: "",
-      birthday: DateTime.now(),
-      gender: "",
-      region: {"-1": "-1"},
-      job: "",
-      personality_relationship: [],
-      personality_self: [],
-      interest: [],
-      purpose: [],
-      phone_number: controller.text,
-      accepted_policies: [false, false],
-      coin: 0,
-      ticket: 0,
-      isFixedTicket: false,
-      fixed_ticket_end_date: Timestamp.now(),
-      rank: 'Novice'
-    );
+        nickname: "",
+        profile_icon: "",
+        birthday: DateTime.now(),
+        gender: "",
+        region: {"-1": "-1"},
+        job: "",
+        personality_relationship: [],
+        personality_self: [],
+        interest: [],
+        purpose: [],
+        phone_number: controller.text,
+        accepted_policies: [false, false],
+        coin: 0,
+        ticket: 0,
+        isFixedTicket: false,
+        fixed_ticket_end_date: Timestamp.now(),
+        rank: 'Novice');
 
     // Cloud Firestore에 유저 정보 저장
     return await _userRepository.createUserDocument(

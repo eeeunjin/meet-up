@@ -153,6 +153,7 @@ class UserRepository {
       );
       return true;
     } catch (e) {
+      logger.e("verifyPhoneNumber Error: $e");
       return false;
     }
   }
@@ -172,13 +173,11 @@ class UserRepository {
       await deleteAllMyRoomData(uid: uid);
       // 유저 정보 삭제
       await deleteUserData(uid: uid);
-      
+
       return true;
     } catch (e) {
       logger.d("deleteUser Error: $e");
       return false;
     }
   }
-
-  
 }

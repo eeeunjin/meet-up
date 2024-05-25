@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
@@ -166,20 +167,29 @@ class LoginPhoneNum extends StatelessWidget {
   Widget _bottom(BuildContext context) {
     final loginVerificationViewModel =
         Provider.of<LoginVerificationViewModel>(context, listen: false);
+    bool isTapped = false;
     return Consumer<LoginPhoneNumViewModel>(
       builder: (context, viewModel, child) => Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
         child: NextButton(
           onTap: () async {
+            // 중복 탭 방지
+            if (isTapped) return;
+            isTapped = true;
+
+            // 입력 키패드 내리기
+            FocusManager.instance.primaryFocus?.unfocus();
+
             // phoneNum 유효성 검사 실패 시, return
             if (!viewModel.isPhoneNumberValid) return;
 
             // Auth 관련 동작 - viewModel에서 진행
             final isSigned = await viewModel.signInWithPhoneNumber(context);
 
+            logger.e("test1");
             // 다양한 이유로 코드가 전달되지 않은 경우
             if (!isSigned) {
-              debugPrint("코드 전달 실패.");
+              logger.e("코드 전달 실패");
             } else {
               loginVerificationViewModel.startTimer();
             }
@@ -187,7 +197,7 @@ class LoginPhoneNum extends StatelessWidget {
           text: '다음',
           height: 60.h,
           fontSize: 18.sp,
-          enable: viewModel.isPhoneNumberValid,
+          enable: viewModel.isPhoneNumberValid && !isTapped,
           backgroundColor:
               viewModel.isPhoneNumberValid ? UsedColor.button : UsedColor.grey1,
           textStyle: AppTextStyles.PR_SB_20.copyWith(
