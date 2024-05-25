@@ -326,6 +326,12 @@ class AppTextStyles {
         height: (15 / 12).h,
       );
 
+  static TextStyle get SU_SB_10 => TextStyle(
+        fontFamily: 'SUITE-SB',
+        fontSize: 10.sp,
+        height: (12 / 10).h,
+      );
+
   static TextStyle get SU_SB_9 => TextStyle(
         fontFamily: 'SUITE-SB',
         fontSize: 9.sp,

@@ -84,6 +84,10 @@ class ImagePath {
 
   // profile
   static String get profileEditIcon => 'assets/images/profile_edit_icon.png';
+  static String get profileCoinIcon => 'assets/images/coin_profile.png';
+  static String get profileTicketIcon => 'assets/images/ticket_profile.png';
+  static String get profileReviewIcon =>
+      'assets/images/profile_review_icon.png';
 
   // schedule
   static String get backCross => 'assets/images/backcross.png';

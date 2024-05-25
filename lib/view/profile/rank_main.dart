@@ -292,14 +292,72 @@ class RankMain extends StatelessWidget {
             padding: EdgeInsets.only(left: 40.0.w, top: 32.h),
             child: Column(
               children: [
+                // 혜택
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       '혜택',
                       style:
                           AppTextStyles.PR_M_16.copyWith(color: UsedColor.main),
+                    ),
+                    SizedBox(width: 24.w),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          '추가 할인 2%',
+                          style: AppTextStyles.PR_R_12
+                              .copyWith(color: UsedColor.text_3),
+                        ),
+                        SizedBox(height: 12.h),
+                        Text(
+                          '최초 달성 시, 만남권 1개 지급',
+                          style: AppTextStyles.PR_R_12
+                              .copyWith(color: UsedColor.text_3),
+                        ),
+                      ],
                     )
                   ],
+                ),
+                SizedBox(height: 48.h),
+                // 기준
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '기준',
+                      style:
+                          AppTextStyles.PR_M_16.copyWith(color: UsedColor.main),
+                    ),
+                    SizedBox(width: 24.w),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Beginner',
+                              style: AppTextStyles.PR_SB_12
+                                  .copyWith(color: UsedColor.text_3),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 12.h),
+                        Text(
+                          '최초 달성 시, 만남권 1개 지급',
+                          style: AppTextStyles.PR_R_12
+                              .copyWith(color: UsedColor.text_3),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+                SizedBox(height: 17.h),
+                const Column(
+                  children: [Text('')],
                 )
               ],
             ),
