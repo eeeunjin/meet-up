@@ -15,21 +15,6 @@ class ProfileMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-    final profileIcon = userViewModel.userModel!.profile_icon;
-    final profileIconName = profileIcon.split('/').last.split('_').first;
-    String path = '';
-    switch (profileIconName) {
-      case "fedro":
-        path = ImagePath.fedroSelect;
-      case "cogy":
-        path = ImagePath.cogySelect;
-      case "piggy":
-        path = ImagePath.piggySelect;
-      case "ham":
-        path = ImagePath.hamSelect;
-      case "aengmu":
-        path = ImagePath.aengmuSelect;
-    }
     // logger.d(path);
     return Scaffold(
       body: Column(
@@ -140,6 +125,22 @@ class ProfileMain extends StatelessWidget {
   }
 
   Widget _profileBox(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final profileIcon = userViewModel.userModel!.profile_icon;
+    final profileIconName = profileIcon.split('/').last.split('_').first;
+    String path = '';
+    switch (profileIconName) {
+      case "fedro":
+        path = ImagePath.fedroSelect;
+      case "cogy":
+        path = ImagePath.cogySelect;
+      case "piggy":
+        path = ImagePath.piggySelect;
+      case "ham":
+        path = ImagePath.hamSelect;
+      case "aengmu":
+        path = ImagePath.aengmuSelect;
+    }
     return Container(
       width: 340.w,
       height: 176.h,
@@ -163,6 +164,7 @@ class ProfileMain extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(width: 1.5.w, color: UsedColor.b_line),
               ),
+              child: Image.asset(path),
             ),
             Padding(
               padding: EdgeInsets.only(top: 16.0.h),
@@ -189,7 +191,7 @@ class ProfileMain extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 24.0.w, bottom: 3.h),
                     child: Text(
-                      '사용자 닉네임',
+                      userViewModel.userModel!.nickname,
                       style: AppTextStyles.PR_SB_18
                           .copyWith(color: UsedColor.charcoal_black),
                     ),
