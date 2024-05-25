@@ -84,6 +84,8 @@ class ImagePath {
 
   // profile
   static String get profileEditIcon => 'assets/images/profile_edit_icon.png';
+  static String get profileImageEditIcon =>
+      'assets/images/profile_image_edit_icon.png';
   static String get profileCoinIcon => 'assets/images/coin_profile.png';
   static String get profileTicketIcon => 'assets/images/ticket_profile.png';
   static String get profileReviewIcon =>
