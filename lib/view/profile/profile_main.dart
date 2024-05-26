@@ -237,6 +237,7 @@ class ProfileMain extends StatelessWidget {
     );
   }
 
+  //MARK: - 코인,티켓 박스
   Widget _coinAndTicketBox(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context);
     return Row(

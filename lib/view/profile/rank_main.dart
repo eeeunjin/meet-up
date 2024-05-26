@@ -5,6 +5,7 @@ import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
+import 'package:meet_up/view_model/profile/profile_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -76,7 +77,7 @@ class RankMain extends StatelessWidget {
             SizedBox(height: 36.h),
             Padding(
               padding: EdgeInsets.only(left: 25.0.w),
-              child: _rankInfo(),
+              child: _rankInfo(context),
             ),
           ],
         ),
@@ -202,7 +203,7 @@ class RankMain extends StatelessWidget {
   }
 
   // MARK: - 등급 안내
-  Widget _rankInfo() {
+  Widget _rankInfo(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -224,60 +225,67 @@ class RankMain extends StatelessWidget {
             ],
           ),
         ),
-        // 등급 이미지
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            // Master
-            Column(
+        // MARK: - 등급 이미지
+        Consumer<ProfileViewModel>(
+          builder: (context, viewModel, child) {
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Container(
+                _rankTier(
+                  context: context,
+                  viewModel: viewModel,
+                  rank: 'Master',
+                  imagePathOn: ImagePath.rankMasterOn,
+                  imagePathOff: ImagePath.rankMasterOff,
                   width: 48.w,
                   height: 236.h,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(8.r),
-                      topRight: Radius.circular(8.r),
-                    ),
-                    border: Border.all(
-                      color: UsedColor.b_line,
-                      width: 1.w,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        top: 12.h, left: 9.w, right: 9.w, bottom: 194.h),
-                    child: Container(
-                      width: 30.w,
-                      height: 30.h,
-                      decoration: BoxDecoration(
-                        color: UsedColor.image_card,
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'M',
-                          style: AppTextStyles.SU_SB_24
-                              .copyWith(color: UsedColor.text_3),
-                        ),
-                      ),
-                    ),
-                  ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 4.0.h, left: 4.w, right: 4.w),
-                  child: Text(
-                    'Master',
-                    style:
-                        AppTextStyles.PR_R_10.copyWith(color: UsedColor.text_3),
-                  ),
+                SizedBox(width: 20.w),
+                _rankTier(
+                  context: context,
+                  viewModel: viewModel,
+                  rank: 'Advanced',
+                  imagePathOn: ImagePath.rankAdvancedOn,
+                  imagePathOff: ImagePath.rankAdvancedOff,
+                  width: 48.w,
+                  height: 190.h,
+                ),
+                SizedBox(width: 20.w),
+                _rankTier(
+                  context: context,
+                  viewModel: viewModel,
+                  rank: 'Intermediate',
+                  imagePathOn: ImagePath.rankIntermediateOn,
+                  imagePathOff: ImagePath.rankIntermediateOff,
+                  width: 48.w,
+                  height: 135.h,
+                ),
+                SizedBox(width: 20.w),
+                _rankTier(
+                  context: context,
+                  viewModel: viewModel,
+                  rank: 'Novice',
+                  imagePathOn: ImagePath.rankNoviceOn,
+                  imagePathOff: ImagePath.rankNoviceOff,
+                  width: 48.w,
+                  height: 74.h,
+                ),
+                SizedBox(width: 20.w),
+                _rankTier(
+                  context: context,
+                  viewModel: viewModel,
+                  rank: 'Beginner',
+                  imagePathOn: ImagePath.rankBeginnerOn,
+                  imagePathOff: ImagePath.rankBeginnerOff,
+                  width: 48.w,
+                  height: 45.h,
                 ),
               ],
-            ),
-          ],
+            );
+          },
         ),
+        SizedBox(height: 22.h),
         // MARK: -혜택 내용
         //
         // Novice 등급
@@ -343,27 +351,169 @@ class RankMain extends StatelessWidget {
                               style: AppTextStyles.PR_SB_12
                                   .copyWith(color: UsedColor.text_3),
                             ),
+                            SizedBox(width: 37.w),
+                            Text(
+                              '10점 미만',
+                              style: AppTextStyles.PR_R_13
+                                  .copyWith(color: UsedColor.text_3),
+                            )
                           ],
                         ),
-                        SizedBox(height: 12.h),
-                        Text(
-                          '최초 달성 시, 만남권 1개 지급',
-                          style: AppTextStyles.PR_R_12
-                              .copyWith(color: UsedColor.text_3),
+                        SizedBox(height: 4.h),
+                        Row(
+                          children: [
+                            Text(
+                              'Novice',
+                              style: AppTextStyles.PR_SB_12
+                                  .copyWith(color: UsedColor.text_3),
+                            ),
+                            SizedBox(width: 49.w),
+                            Text(
+                              '10점 이상, 30점 미만',
+                              style: AppTextStyles.PR_R_13
+                                  .copyWith(color: UsedColor.text_3),
+                            )
+                          ],
                         ),
+                        SizedBox(height: 4.h),
+                        Row(
+                          children: [
+                            Text(
+                              'Intermediate',
+                              style: AppTextStyles.PR_SB_12
+                                  .copyWith(color: UsedColor.text_3),
+                            ),
+                            SizedBox(width: 14.w),
+                            Text(
+                              '30점 이상, 60점 미만',
+                              style: AppTextStyles.PR_R_13
+                                  .copyWith(color: UsedColor.text_3),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 4.h),
+                        Row(
+                          children: [
+                            Text(
+                              'Advanced',
+                              style: AppTextStyles.PR_SB_12
+                                  .copyWith(color: UsedColor.text_3),
+                            ),
+                            SizedBox(width: 30.w),
+                            Text(
+                              '60점 이상, 100점 미만',
+                              style: AppTextStyles.PR_R_13
+                                  .copyWith(color: UsedColor.text_3),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 4.h),
+                        Row(
+                          children: [
+                            Text(
+                              'Master',
+                              style: AppTextStyles.PR_SB_12
+                                  .copyWith(color: UsedColor.text_3),
+                            ),
+                            SizedBox(width: 48.w),
+                            Text(
+                              '100점 이상',
+                              style: AppTextStyles.PR_R_13
+                                  .copyWith(color: UsedColor.text_3),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 16.h),
+                        Row(
+                          children: [
+                            Container(
+                              width: 4.w,
+                              height: 4.w,
+                              decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: UsedColor.text_4),
+                            ),
+                            SizedBox(width: 10.w),
+                            Text(
+                              '상호평가 1명당 2점 획득',
+                              style: AppTextStyles.PR_R_13
+                                  .copyWith(color: UsedColor.text_4),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              width: 4.w,
+                              height: 4.w,
+                              decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: UsedColor.text_4),
+                            ),
+                            SizedBox(width: 10.w),
+                            Text(
+                              '성찰 하루 최소 1회 작성 시 2점 획득',
+                              style: AppTextStyles.PR_R_13
+                                  .copyWith(color: UsedColor.text_4),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 35.h),
                       ],
                     )
                   ],
                 ),
-                SizedBox(height: 17.h),
-                const Column(
-                  children: [Text('')],
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '주의',
+                      style:
+                          AppTextStyles.PR_M_16.copyWith(color: UsedColor.main),
+                    ),
+                    SizedBox(width: 24.w),
+                    Text(
+                      '한달 동안 1번 이상의 만남을 가지면\n등급이 유지되며, 그렇지 않은 경우\n1단계씩 등급 하락',
+                      style: AppTextStyles.PR_R_13
+                          .copyWith(color: UsedColor.text_4),
+                    )
+                  ],
                 )
               ],
             ),
           ),
         ),
+        SizedBox(height: 29.h)
       ],
+    );
+  }
+
+  Widget _rankTier({
+    required BuildContext context,
+    required ProfileViewModel viewModel,
+    required String rank,
+    required String imagePathOn,
+    required String imagePathOff,
+    required double width,
+    required double height,
+  }) {
+    final isSelected = viewModel.selectedRank == rank;
+    final imagePath = isSelected ? imagePathOn : imagePathOff;
+
+    return GestureDetector(
+      onTap: () => viewModel.selectRank(rank),
+      child: Column(
+        children: [
+          Image.asset(imagePath, width: width, height: height),
+          Padding(
+            padding: EdgeInsets.only(top: 4.0.h, left: 4.w, right: 4.w),
+            child: Text(
+              rank,
+              style: AppTextStyles.PR_R_10.copyWith(color: UsedColor.text_3),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
