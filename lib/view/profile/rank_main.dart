@@ -204,31 +204,34 @@ class RankMain extends StatelessWidget {
 
   // MARK: - 등급 안내
   Widget _rankInfo(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '등급 안내',
-          style:
-              AppTextStyles.PR_R_16.copyWith(color: UsedColor.charcoal_black),
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 4.0.w, top: 12.h, bottom: 20.h),
-          child: Row(
-            children: [
-              Container(width: 12.w, height: 12.w, color: UsedColor.main),
-              SizedBox(width: 4.w),
-              Text(
-                '각 등급을 눌러 등급별 상세 혜택을 확인해보세요',
-                style: AppTextStyles.PR_R_10.copyWith(color: UsedColor.text_2),
+    return Consumer<ProfileViewModel>(
+      builder: (context, viewModel, child) {
+        final benefits = viewModel.rankBenefits[viewModel.selectedRank] ?? [];
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '등급 안내',
+              style: AppTextStyles.PR_R_16
+                  .copyWith(color: UsedColor.charcoal_black),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 4.0.w, top: 12.h, bottom: 20.h),
+              child: Row(
+                children: [
+                  Container(width: 12.w, height: 12.w, color: UsedColor.main),
+                  SizedBox(width: 4.w),
+                  Text(
+                    '각 등급을 눌러 등급별 상세 혜택을 확인해보세요',
+                    style:
+                        AppTextStyles.PR_R_10.copyWith(color: UsedColor.text_2),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-        // MARK: - 등급 이미지
-        Consumer<ProfileViewModel>(
-          builder: (context, viewModel, child) {
-            return Row(
+            ),
+            // MARK: - 등급 이미지
+            Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -282,209 +285,206 @@ class RankMain extends StatelessWidget {
                   height: 45.h,
                 ),
               ],
-            );
-          },
-        ),
-        SizedBox(height: 22.h),
-        // MARK: -혜택 내용
-        //
-        // Novice 등급
-        Container(
-          width: 344.w,
-          height: 388.h,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(29.r),
-            color: Colors.white,
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(left: 40.0.w, top: 32.h),
-            child: Column(
-              children: [
-                // 혜택
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '혜택',
-                      style:
-                          AppTextStyles.PR_M_16.copyWith(color: UsedColor.main),
-                    ),
-                    SizedBox(width: 24.w),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          '추가 할인 2%',
-                          style: AppTextStyles.PR_R_12
-                              .copyWith(color: UsedColor.text_3),
-                        ),
-                        SizedBox(height: 12.h),
-                        Text(
-                          '최초 달성 시, 만남권 1개 지급',
-                          style: AppTextStyles.PR_R_12
-                              .copyWith(color: UsedColor.text_3),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-                SizedBox(height: 48.h),
-                // 기준
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '기준',
-                      style:
-                          AppTextStyles.PR_M_16.copyWith(color: UsedColor.main),
-                    ),
-                    SizedBox(width: 24.w),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              'Beginner',
-                              style: AppTextStyles.PR_SB_12
-                                  .copyWith(color: UsedColor.text_3),
-                            ),
-                            SizedBox(width: 37.w),
-                            Text(
-                              '10점 미만',
-                              style: AppTextStyles.PR_R_13
-                                  .copyWith(color: UsedColor.text_3),
-                            )
-                          ],
-                        ),
-                        SizedBox(height: 4.h),
-                        Row(
-                          children: [
-                            Text(
-                              'Novice',
-                              style: AppTextStyles.PR_SB_12
-                                  .copyWith(color: UsedColor.text_3),
-                            ),
-                            SizedBox(width: 49.w),
-                            Text(
-                              '10점 이상, 30점 미만',
-                              style: AppTextStyles.PR_R_13
-                                  .copyWith(color: UsedColor.text_3),
-                            )
-                          ],
-                        ),
-                        SizedBox(height: 4.h),
-                        Row(
-                          children: [
-                            Text(
-                              'Intermediate',
-                              style: AppTextStyles.PR_SB_12
-                                  .copyWith(color: UsedColor.text_3),
-                            ),
-                            SizedBox(width: 14.w),
-                            Text(
-                              '30점 이상, 60점 미만',
-                              style: AppTextStyles.PR_R_13
-                                  .copyWith(color: UsedColor.text_3),
-                            )
-                          ],
-                        ),
-                        SizedBox(height: 4.h),
-                        Row(
-                          children: [
-                            Text(
-                              'Advanced',
-                              style: AppTextStyles.PR_SB_12
-                                  .copyWith(color: UsedColor.text_3),
-                            ),
-                            SizedBox(width: 30.w),
-                            Text(
-                              '60점 이상, 100점 미만',
-                              style: AppTextStyles.PR_R_13
-                                  .copyWith(color: UsedColor.text_3),
-                            )
-                          ],
-                        ),
-                        SizedBox(height: 4.h),
-                        Row(
-                          children: [
-                            Text(
-                              'Master',
-                              style: AppTextStyles.PR_SB_12
-                                  .copyWith(color: UsedColor.text_3),
-                            ),
-                            SizedBox(width: 48.w),
-                            Text(
-                              '100점 이상',
-                              style: AppTextStyles.PR_R_13
-                                  .copyWith(color: UsedColor.text_3),
-                            )
-                          ],
-                        ),
-                        SizedBox(height: 16.h),
-                        Row(
-                          children: [
-                            Container(
-                              width: 4.w,
-                              height: 4.w,
-                              decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: UsedColor.text_4),
-                            ),
-                            SizedBox(width: 10.w),
-                            Text(
-                              '상호평가 1명당 2점 획득',
-                              style: AppTextStyles.PR_R_13
-                                  .copyWith(color: UsedColor.text_4),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              width: 4.w,
-                              height: 4.w,
-                              decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: UsedColor.text_4),
-                            ),
-                            SizedBox(width: 10.w),
-                            Text(
-                              '성찰 하루 최소 1회 작성 시 2점 획득',
-                              style: AppTextStyles.PR_R_13
-                                  .copyWith(color: UsedColor.text_4),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 35.h),
-                      ],
-                    )
-                  ],
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '주의',
-                      style:
-                          AppTextStyles.PR_M_16.copyWith(color: UsedColor.main),
-                    ),
-                    SizedBox(width: 24.w),
-                    Text(
-                      '한달 동안 1번 이상의 만남을 가지면\n등급이 유지되며, 그렇지 않은 경우\n1단계씩 등급 하락',
-                      style: AppTextStyles.PR_R_13
-                          .copyWith(color: UsedColor.text_4),
-                    )
-                  ],
-                )
-              ],
             ),
-          ),
-        ),
-        SizedBox(height: 29.h)
-      ],
+            SizedBox(height: 22.h),
+            // MARK: -혜택 내용
+            //
+            // Novice 등급
+            Container(
+              width: 344.w,
+              height: 388.h,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(29.r),
+                color: Colors.white,
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(left: 40.0.w, top: 32.h),
+                child: Column(
+                  children: [
+                    // 혜택
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '혜택',
+                          style: AppTextStyles.PR_M_16
+                              .copyWith(color: UsedColor.main),
+                        ),
+                        SizedBox(width: 24.w),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: benefits
+                              .map((benefit) => Padding(
+                                    padding: EdgeInsets.only(bottom: 12.h),
+                                    child: Text(
+                                      benefit,
+                                      style: AppTextStyles.PR_R_12
+                                          .copyWith(color: UsedColor.text_3),
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 44.h),
+                    // 기준
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '기준',
+                          style: AppTextStyles.PR_M_16
+                              .copyWith(color: UsedColor.main),
+                        ),
+                        SizedBox(width: 24.w),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  'Beginner',
+                                  style: AppTextStyles.PR_SB_12
+                                      .copyWith(color: UsedColor.text_3),
+                                ),
+                                SizedBox(width: 37.w),
+                                Text(
+                                  '10점 미만',
+                                  style: AppTextStyles.PR_R_13
+                                      .copyWith(color: UsedColor.text_3),
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 4.h),
+                            Row(
+                              children: [
+                                Text(
+                                  'Novice',
+                                  style: AppTextStyles.PR_SB_12
+                                      .copyWith(color: UsedColor.text_3),
+                                ),
+                                SizedBox(width: 49.w),
+                                Text(
+                                  '10점 이상, 30점 미만',
+                                  style: AppTextStyles.PR_R_13
+                                      .copyWith(color: UsedColor.text_3),
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 4.h),
+                            Row(
+                              children: [
+                                Text(
+                                  'Intermediate',
+                                  style: AppTextStyles.PR_SB_12
+                                      .copyWith(color: UsedColor.text_3),
+                                ),
+                                SizedBox(width: 14.w),
+                                Text(
+                                  '30점 이상, 60점 미만',
+                                  style: AppTextStyles.PR_R_13
+                                      .copyWith(color: UsedColor.text_3),
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 4.h),
+                            Row(
+                              children: [
+                                Text(
+                                  'Advanced',
+                                  style: AppTextStyles.PR_SB_12
+                                      .copyWith(color: UsedColor.text_3),
+                                ),
+                                SizedBox(width: 30.w),
+                                Text(
+                                  '60점 이상, 100점 미만',
+                                  style: AppTextStyles.PR_R_13
+                                      .copyWith(color: UsedColor.text_3),
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 4.h),
+                            Row(
+                              children: [
+                                Text(
+                                  'Master',
+                                  style: AppTextStyles.PR_SB_12
+                                      .copyWith(color: UsedColor.text_3),
+                                ),
+                                SizedBox(width: 48.w),
+                                Text(
+                                  '100점 이상',
+                                  style: AppTextStyles.PR_R_13
+                                      .copyWith(color: UsedColor.text_3),
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 16.h),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 4.w,
+                                  height: 4.w,
+                                  decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: UsedColor.text_4),
+                                ),
+                                SizedBox(width: 10.w),
+                                Text(
+                                  '상호평가 1명당 2점 획득',
+                                  style: AppTextStyles.PR_R_13
+                                      .copyWith(color: UsedColor.text_4),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 4.w,
+                                  height: 4.w,
+                                  decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: UsedColor.text_4),
+                                ),
+                                SizedBox(width: 10.w),
+                                Text(
+                                  '성찰 하루 최소 1회 작성 시 2점 획득',
+                                  style: AppTextStyles.PR_R_13
+                                      .copyWith(color: UsedColor.text_4),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 35.h),
+                          ],
+                        )
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '주의',
+                          style: AppTextStyles.PR_M_16
+                              .copyWith(color: UsedColor.main),
+                        ),
+                        SizedBox(width: 24.w),
+                        Text(
+                          '한달 동안 1번 이상의 만남을 가지면\n등급이 유지되며, 그렇지 않은 경우\n1단계씩 등급 하락',
+                          style: AppTextStyles.PR_R_13
+                              .copyWith(color: UsedColor.text_4),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 29.h)
+          ],
+        );
+      },
     );
   }
 
