@@ -225,7 +225,7 @@ class RankMain extends StatelessWidget {
                   Text(
                     '각 등급을 눌러 등급별 상세 혜택을 확인해보세요',
                     style:
-                        AppTextStyles.PR_R_10.copyWith(color: UsedColor.text_2),
+                        AppTextStyles.PR_R_12.copyWith(color: UsedColor.text_2),
                   ),
                 ],
               ),
@@ -288,8 +288,7 @@ class RankMain extends StatelessWidget {
             ),
             SizedBox(height: 22.h),
             // MARK: -혜택 내용
-            //
-            // Novice 등급
+
             Container(
               width: 344.w,
               height: 388.h,
