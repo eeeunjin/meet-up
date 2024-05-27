@@ -19,4 +19,20 @@ class ProfileViewModel with ChangeNotifier {
       'Master': ['추가 할인 8%', '최초 달성 시, 만남권 2개 지급'],
     };
   }
+
+  // 회원 탈퇴
+  final List<String> _selectedReasons = [];
+  List<String> get selectedReasons => _selectedReasons;
+
+  // 한 개 이상 체크 되었는지 확인
+  bool get hasSelectedReasons => _selectedReasons.isNotEmpty;
+
+  void toggleReason(String reason) {
+    if (_selectedReasons.contains(reason)) {
+      _selectedReasons.remove(reason);
+    } else {
+      _selectedReasons.add(reason);
+    }
+    notifyListeners();
+  }
 }

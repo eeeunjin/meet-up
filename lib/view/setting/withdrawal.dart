@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +6,8 @@ import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
+import 'package:meet_up/view_model/profile/profile_view_model.dart';
+import 'package:provider/provider.dart';
 
 class Withdrawal extends StatelessWidget {
   const Withdrawal({super.key});
@@ -84,23 +85,76 @@ class Withdrawal extends StatelessWidget {
             style: AppTextStyles.PR_R_12.copyWith(color: UsedColor.text_3),
           ),
         ),
+        SizedBox(height: 16.h),
+        _withdrawalCheckList(context),
         // 선택 리스트
         const Spacer(),
         Padding(
           padding: EdgeInsets.only(left: 33.0.w, right: 32.w, bottom: 56.h),
-          child: _nextbutton(),
+          child: _nextbutton(context),
         ),
       ],
     );
   }
 
-  Widget _nextbutton() {
+  Widget _nextbutton(BuildContext context) {
+    final viewModel = Provider.of<ProfileViewModel>(context);
+    final bool isAnyChecked = viewModel.selectedReasons.isNotEmpty;
+
     return NextButton(
       onTap: () {},
       height: 56.h,
       text: '다음',
       // enable: ,
       textStyle: AppTextStyles.PR_SB_20.copyWith(color: Colors.white),
+      backgroundColor: isAnyChecked ? UsedColor.button : UsedColor.text_5,
+    );
+  }
+
+  //MARK: - 체크 리스트
+  Widget _withdrawalCheckList(BuildContext context) {
+    final viewModel = context.watch<ProfileViewModel>();
+    final options = [
+      '이용자 수가 적어 만남 인원이 모이지 않음',
+      '불친절하고 이상한 유저들이 존재함',
+      '만남 프로세스가 복잡함',
+      '성찰 서비스가 불편함',
+      '만남이 성찰에 크게 도움이 되지 않음',
+      '기타',
+    ];
+
+    return Padding(
+      padding: EdgeInsets.only(left: 32.w),
+      child: Column(
+        children: options.map((option) {
+          bool isSelected = viewModel.selectedReasons.contains(option);
+          return Padding(
+            padding: EdgeInsets.only(bottom: 11.0.h),
+            child: GestureDetector(
+              onTap: () {
+                viewModel.toggleReason(option);
+              },
+              child: Row(
+                children: [
+                  Image.asset(
+                    isSelected ? ImagePath.checkBoxOn : ImagePath.checkBoxOff,
+                    width: 24.w,
+                    height: 24.h,
+                  ),
+                  SizedBox(width: 8.w),
+                  Text(
+                    option,
+                    style: AppTextStyles.PR_M_14.copyWith(
+                        color: isSelected
+                            ? UsedColor.charcoal_black
+                            : UsedColor.text_3),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 }
