@@ -7,6 +7,7 @@ import 'package:meet_up/router.dart';
 import 'package:meet_up/service/remote/firebase_options.dart';
 import 'package:meet_up/view_model/bot_nav_view_model.dart';
 import 'package:meet_up/view_model/chat/chat_view_model.dart';
+import 'package:meet_up/view_model/coin/coin_buy_view_model.dart';
 import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
 import 'package:meet_up/view_model/login/login_verification_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_browse_view_model.dart';
@@ -73,6 +74,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => UserViewModel()),
         ChangeNotifierProvider(create: (context) => ChatViewModel()),
         ChangeNotifierProvider(create: (context) => MeetUserInfoViewModel()),
+        ChangeNotifierProvider(create: (context) => CoinBuyViewModel()),
       ],
       child: const MyApp(),
     ),

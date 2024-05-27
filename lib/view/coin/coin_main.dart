@@ -131,17 +131,23 @@ class CoinMain extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 22.h),
-              Container(
-                width: 332.w,
-                height: 51.h,
-                decoration: BoxDecoration(
-                  color: UsedColor.button,
-                  borderRadius: BorderRadius.circular(19.r),
-                ),
-                child: Center(
-                  child: Text(
-                    '코인 구매',
-                    style: AppTextStyles.PR_SB_18.copyWith(color: Colors.white),
+              GestureDetector(
+                onTap: () {
+                  context.goNamed('coinBuy');
+                },
+                child: Container(
+                  width: 332.w,
+                  height: 51.h,
+                  decoration: BoxDecoration(
+                    color: UsedColor.button,
+                    borderRadius: BorderRadius.circular(19.r),
+                  ),
+                  child: Center(
+                    child: Text(
+                      '코인 구매',
+                      style:
+                          AppTextStyles.PR_SB_18.copyWith(color: Colors.white),
+                    ),
                   ),
                 ),
               ),

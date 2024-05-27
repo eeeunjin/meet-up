@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/loginFunc.dart';
 import 'package:meet_up/view/chat/chat_main.dart';
+import 'package:meet_up/view/coin/coin_buy.dart';
 import 'package:meet_up/view/coin/coin_main.dart';
 import 'package:meet_up/view/login/login_main.dart';
 import 'package:meet_up/view/login/login_phone_num.dart';
@@ -181,12 +182,19 @@ final router = GoRouter(
           ),
           routes: [
             GoRoute(
-              path: 'meetManageMain/coinMain',
-              name: 'coinMainFromMeetManageMain',
-              builder: (context, state) {
-                return const CoinMain();
-              },
-            ),
+                path: 'meetManageMain/coinMain',
+                name: 'coinMainFromMeetManageMain',
+                builder: (context, state) {
+                  return const CoinMain();
+                },
+                routes: [
+                  GoRoute(
+                      path: 'meetManageMain/coinMain/coinBuy',
+                      name: 'coinBuy',
+                      builder: (context, state) {
+                        return const CoinBuy();
+                      }),
+                ]),
             GoRoute(
               path: 'meetDetailRoom_manage',
               name: 'meetDetailRoom_manage',

@@ -2,7 +2,7 @@ class ImagePath {
   static String get back => 'assets/images/back.png';
   static String get close => 'assets/images/close.png';
 
-  // login & sign up
+  // MARK: - login & sign up
   static String get signUpProgressBar_1 =>
       'assets/images/signupprogressbar1.png';
   static String get signUpProgressBar_2 =>
@@ -25,7 +25,7 @@ class ImagePath {
   static String get hamDeselect => 'assets/images/ham_deselect.png';
   static String get fedroDeselect => 'assets/images/fedro_deselect.png';
 
-  // meet
+  // MARK: - meet
   static String get meetIcon1 => 'assets/images/meet_icon_1.png';
   static String get meetIcon2 => 'assets/images/meet_icon_2.png';
 
@@ -60,7 +60,7 @@ class ImagePath {
   static String get crownIcon => 'assets/images/crown_icon.png';
   static String get reportIcon => 'assets/images/report_icon.png';
 
-  // bot_nav
+  // MARK: - bot_nav
   static String get meetOn => 'assets/images/bot_nav_meet_on.png';
   static String get meetOff => 'assets/images/bot_nav_meet_off.png';
   static String get chatOn => 'assets/images/bot_nav_chat_on.png';
@@ -72,7 +72,7 @@ class ImagePath {
   static String get profileOff => 'assets/images/bot_nav_profile_off.png';
   static String get profileOn => 'assets/images/bot_nav_profile_on.png';
 
-  // setting
+  // MARK: - setting
   static String get setIcon1 => 'assets/images/set_icon_1.png';
   static String get setIcon2 => 'assets/images/set_icon_2.png';
   static String get setIcon3 => 'assets/images/set_icon_3.png';
@@ -82,10 +82,10 @@ class ImagePath {
   static String get setIcon7 => 'assets/images/set_icon_7.png';
   static String get setIcon8 => 'assets/images/set_icon_8.png';
 
-  // profile
+  // MARK: - profile
   static String get profileEditIcon => 'assets/images/profile_edit_icon.png';
 
-  // schedule
+  // MARK: - schedule
   static String get backCross => 'assets/images/backcross.png';
   static String get scheduleIcon1 => 'assets/images/schedule_icon_1.png';
   static String get scheduleIcon2 => 'assets/images/schedule_icon_2.png';
@@ -95,7 +95,7 @@ class ImagePath {
   static String get scheduleIcon6 => 'assets/images/schedule_icon_6.png';
   static String get downArrow => 'assets/images/down_arrow.png';
 
-  // userinfo
+  // MARK: - userinfo
   static String get infoIcon1 => 'assets/images/info_icon_1.png';
   static String get infoIcon2 => 'assets/images/info_icon_2.png';
   static String get infoIcon3 => 'assets/images/info_icon_3.png';
@@ -104,4 +104,8 @@ class ImagePath {
   static String get infoIcon6 => 'assets/images/info_icon_6.png';
   static String get infoIcon7 => 'assets/images/info_icon_7.png';
   static String get infoIcon8 => 'assets/images/info_icon_8.png';
+
+  // MARK: - coin
+  static String get plusButton => 'assets/images/plus_button.png';
+  static String get minusButton => 'assets/images/minus_button.png';
 }
