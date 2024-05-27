@@ -133,23 +133,25 @@ class LoginPhoneNumViewModel with ChangeNotifier {
 
     // 새로운 유저 모델
     UserModel newUser = UserModel(
-        nickname: "",
-        profile_icon: "",
-        birthday: DateTime.now(),
-        gender: "",
-        region: {"-1": "-1"},
-        job: "",
-        personality_relationship: [],
-        personality_self: [],
-        interest: [],
-        purpose: [],
-        phone_number: controller.text,
-        accepted_policies: [false, false],
-        coin: 0,
-        ticket: 0,
-        isFixedTicket: false,
-        fixed_ticket_end_date: Timestamp.now(),
-        rank: 'Novice');
+      nickname: "",
+      profile_icon: "",
+      birthday: DateTime.now(),
+      gender: "",
+      region: {"-1": "-1"},
+      job: "",
+      personality_relationship: [],
+      personality_self: [],
+      interest: [],
+      purpose: [],
+      phone_number: controller.text,
+      accepted_policies: [false, false],
+      coin: 0,
+      ticket: 0,
+      isFixedTicket: false,
+      fixed_ticket_end_date: Timestamp.now(),
+      rank: 'Novice',
+      notification_settings: [true, true, true, true, true],
+    );
 
     // Cloud Firestore에 유저 정보 저장
     return await _userRepository.createUserDocument(
