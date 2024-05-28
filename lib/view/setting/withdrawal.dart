@@ -105,7 +105,7 @@ class Withdrawal extends StatelessWidget {
       onTap: () {},
       height: 56.h,
       text: '다음',
-      // enable: ,
+      enable: isAnyChecked,
       textStyle: AppTextStyles.PR_SB_20.copyWith(color: Colors.white),
       backgroundColor: isAnyChecked ? UsedColor.button : UsedColor.text_5,
     );

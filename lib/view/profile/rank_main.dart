@@ -422,15 +422,20 @@ class RankMain extends StatelessWidget {
                             ),
                             SizedBox(height: 16.h),
                             Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  width: 4.w,
-                                  height: 4.w,
-                                  decoration: const BoxDecoration(
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(top: 4.0.h, right: 8.w),
+                                  child: Container(
+                                    width: 8.w,
+                                    height: 8.h,
+                                    decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: UsedColor.text_4),
+                                      color: UsedColor.main,
+                                    ),
+                                  ),
                                 ),
-                                SizedBox(width: 10.w),
                                 Text(
                                   '상호평가 1명당 2점 획득',
                                   style: AppTextStyles.PR_R_13
@@ -439,15 +444,20 @@ class RankMain extends StatelessWidget {
                               ],
                             ),
                             Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  width: 4.w,
-                                  height: 4.w,
-                                  decoration: const BoxDecoration(
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(top: 4.0.h, right: 8.w),
+                                  child: Container(
+                                    width: 8.w,
+                                    height: 8.h,
+                                    decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: UsedColor.text_4),
+                                      color: UsedColor.main,
+                                    ),
+                                  ),
                                 ),
-                                SizedBox(width: 10.w),
                                 Text(
                                   '성찰 하루 최소 1회 작성 시 2점 획득',
                                   style: AppTextStyles.PR_R_13
