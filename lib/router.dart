@@ -34,6 +34,7 @@ import 'package:meet_up/view/setting/setting_main.dart';
 import 'package:meet_up/view/setting/setting_notification.dart';
 import 'package:meet_up/view/setting/user_info.dart';
 import 'package:meet_up/view/setting/withdrawal.dart';
+import 'package:meet_up/view/setting/withdrawal_next.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_one.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_five.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_four.dart';
@@ -340,12 +341,20 @@ final router = GoRouter(
               routes: [
                 // 회원 탈퇴
                 GoRoute(
-                  path: 'withdrawal',
-                  name: 'withdrawal',
-                  builder: (context, state) {
-                    return const Withdrawal();
-                  },
-                ),
+                    path: 'withdrawal',
+                    name: 'withdrawal',
+                    builder: (context, state) {
+                      return const Withdrawal();
+                    },
+                    routes: [
+                      GoRoute(
+                        path: 'withdrawalNext',
+                        name: 'withdrawalNext',
+                        builder: (context, state) {
+                          return const WithdrawalNext();
+                        },
+                      )
+                    ]),
               ],
             ),
             // 알림 설정

@@ -35,4 +35,13 @@ class ProfileViewModel with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  // 탈퇴 확인 버튼
+  bool _isConfirmButtonPressed = false;
+  bool get isConfirmButtonPressed => _isConfirmButtonPressed;
+
+  void pressConfirmButton() {
+    _isConfirmButtonPressed = !_isConfirmButtonPressed;
+    notifyListeners();
+  }
 }

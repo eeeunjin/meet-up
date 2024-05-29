@@ -97,12 +97,15 @@ class Withdrawal extends StatelessWidget {
     );
   }
 
+  // MARK: - 다음
   Widget _nextbutton(BuildContext context) {
     final viewModel = Provider.of<ProfileViewModel>(context);
     final bool isAnyChecked = viewModel.selectedReasons.isNotEmpty;
 
     return NextButton(
-      onTap: () {},
+      onTap: () {
+        context.goNamed('withdrawalNext');
+      },
       height: 56.h,
       text: '다음',
       enable: isAnyChecked,
