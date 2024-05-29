@@ -76,6 +76,59 @@ class ProfileEdit extends StatelessWidget {
           '닉네임',
           style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
         ),
+        SizedBox(height: 8.h),
+        _nickname(context),
+        SizedBox(height: 32.h),
+        Text(
+          '성별',
+          style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+        ),
+        SizedBox(height: 8.h),
+        // _gender(context),
+        // SizedBox(height: 32.h),
+        // Text(
+        //   '나이',
+        //   style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+        // ),
+        // SizedBox(height: 8.h),
+        // _age(context),
+        // SizedBox(height: 32.h),
+        // Text(
+        //   '거주지',
+        //   style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+        // ),
+        // SizedBox(height: 8.h),
+        // _area(context),
+
+        // SizedBox(height: 32.h),
+        // Text(
+        //   '소속 분류',
+        //   style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+        // ),
+        // SizedBox(height: 8.h),
+        // _classification(context),
+        // SizedBox(height: 32.h),
+        // Text(
+        //   '성격',
+        //   style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+        // ),
+        // SizedBox(height: 8.h),
+        // _personality(context),
+        // SizedBox(height: 32.h),
+        // Text(
+        //   '관심사',
+        //   style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+        // ),
+        // SizedBox(height: 8.h),
+        // _interests(context),
+        // SizedBox(height: 32.h),
+        // Text(
+        //   '만남 목적',
+        //   style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+        // ),
+        // SizedBox(height: 8.h),
+        // _meetingPurpose(context),
+        // SizedBox(height: 42.h),
       ],
     );
   }
@@ -123,4 +176,38 @@ class ProfileEdit extends StatelessWidget {
       ),
     );
   }
+
+  Widget _nickname(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    return TextField(
+      controller:
+          TextEditingController(text: userViewModel.userModel?.nickname ?? ''),
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(vertical: 8.h),
+        isDense: true,
+        border: UnderlineInputBorder(
+          borderSide: BorderSide(color: UsedColor.line),
+        ),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: UsedColor.line),
+        ),
+      ),
+      style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.charcoal_black),
+      onChanged: (value) {},
+    );
+  }
+
+  // Widget _gender(BuildContext context) {}
+
+  // Widget _age(BuildContext context) {}
+
+  // Widget _area(BuildContext context) {}
+
+  // Widget _classification(BuildContext context) {}
+
+  // Widget _personality(BuildContext context) {}
+
+  // Widget _interests(BuildContext context) {}
+
+  // Widget _meetingPurpose(BuildContext context) {}
 }
