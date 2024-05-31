@@ -5,14 +5,15 @@ import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 
-class ProfileNotification extends StatelessWidget {
-  const ProfileNotification({super.key});
+class Question extends StatelessWidget {
+  const Question({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: EdgeInsets.only(
@@ -20,7 +21,7 @@ class ProfileNotification extends StatelessWidget {
             ),
             child: _header(context),
           ),
-          Expanded(child: _main(context)),
+          // Expanded(child: _main(context)),
         ],
       ),
     );
@@ -31,15 +32,15 @@ class ProfileNotification extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          header(back: _back(context), title: '알림'),
+          header(back: _back(context), title: '자주 묻는 질문'),
           SizedBox(
-            height: 17.h,
+            height: 16.h,
           ),
           Divider(
             thickness: 0.3.h,
             height: 0.h,
             color: UsedColor.line,
-          )
+          ),
         ],
       ),
     );
@@ -57,19 +58,4 @@ class ProfileNotification extends StatelessWidget {
       ),
     );
   }
-
-  Widget _main(BuildContext context) {
-    return Container(
-      color: UsedColor.bg_color,
-      child: const Column(
-        children: [
-          // _event(context),
-        ],
-      ),
-    );
-  }
-
-  // Widget _event(BuildContext context) {
-
-  // }
 }

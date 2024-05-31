@@ -22,11 +22,20 @@ import 'package:meet_up/view/meet/meet_user_info.dart';
 import 'package:meet_up/view/profile/profile_edit.dart';
 import 'package:meet_up/view/profile/profile_main.dart';
 import 'package:meet_up/view/profile/profile_notification.dart';
+import 'package:meet_up/view/profile/rank_main.dart';
 import 'package:meet_up/view/reflect/reflect_main.dart';
 import 'package:meet_up/view/schedule/add_personal_schedule.dart';
 import 'package:meet_up/view/schedule/schedule_main.dart';
+import 'package:meet_up/view/setting/noticed.dart';
+import 'package:meet_up/view/setting/open_source_license.dart';
+import 'package:meet_up/view/setting/privacy_policy.dart';
+import 'package:meet_up/view/setting/question.dart';
+import 'package:meet_up/view/setting/service_usage_details.dart';
 import 'package:meet_up/view/setting/setting_main.dart';
 import 'package:meet_up/view/setting/setting_notification.dart';
+import 'package:meet_up/view/setting/user_info.dart';
+import 'package:meet_up/view/setting/withdrawal.dart';
+import 'package:meet_up/view/setting/withdrawal_next.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_one.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_five.dart';
 import 'package:meet_up/view/sign_up/sign_up_detail/sign_up_detail_four.dart';
@@ -330,6 +339,33 @@ final router = GoRouter(
             return const SettingMain();
           },
           routes: [
+            // 회원 정보
+            GoRoute(
+              path: 'userInfo',
+              name: 'userInfo',
+              builder: (context, state) {
+                return const UserInfo();
+              },
+              routes: [
+                // 회원 탈퇴
+                GoRoute(
+                    path: 'withdrawal',
+                    name: 'withdrawal',
+                    builder: (context, state) {
+                      return const Withdrawal();
+                    },
+                    routes: [
+                      GoRoute(
+                        path: 'withdrawalNext',
+                        name: 'withdrawalNext',
+                        builder: (context, state) {
+                          return const WithdrawalNext();
+                        },
+                      )
+                    ]),
+              ],
+            ),
+            // 알림 설정
             GoRoute(
               path: 'settingNotification',
               name: 'settingNotification',
@@ -337,7 +373,54 @@ final router = GoRouter(
                 return const SettingNotification();
               },
             ),
+            // 자주 묻는 질문
+            GoRoute(
+              path: 'question',
+              name: 'question',
+              builder: (context, state) {
+                return const Question();
+              },
+            ),
+            // 공지사항
+            GoRoute(
+              path: 'noticed',
+              name: 'noticed',
+              builder: (context, state) {
+                return const Noticed();
+              },
+            ),
+            // 개인정보처리방침
+            GoRoute(
+              path: 'privacyPolicy',
+              name: 'privacyPolicy',
+              builder: (context, state) {
+                return const PrivacyPolicy();
+              },
+            ),
+            // 서비스 이용약관
+            GoRoute(
+              path: 'accessTerms',
+              name: 'accessTerms',
+              builder: (context, state) {
+                return const AccessTerms();
+              },
+            ),
+            // 오픈소스라이센스
+            GoRoute(
+              path: 'openSourceLicense',
+              name: 'openSourceLicense',
+              builder: (context, state) {
+                return const OpenSourceLicense();
+              },
+            ),
           ],
+        ),
+        // 등급
+        GoRoute(
+          path: 'rankMain',
+          builder: (context, state) {
+            return const RankMain();
+          },
         ),
       ],
     ),
