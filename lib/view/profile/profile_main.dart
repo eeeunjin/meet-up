@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -14,21 +15,6 @@ class ProfileMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-    final profileIcon = userViewModel.userModel!.profile_icon;
-    final profileIconName = profileIcon.split('/').last.split('_').first;
-    String path = '';
-    switch (profileIconName) {
-      case "fedro":
-        path = ImagePath.fedroSelect;
-      case "cogy":
-        path = ImagePath.cogySelect;
-      case "piggy":
-        path = ImagePath.piggySelect;
-      case "ham":
-        path = ImagePath.hamSelect;
-      case "aengmu":
-        path = ImagePath.aengmuSelect;
-    }
     // logger.d(path);
     return Scaffold(
       body: Column(
@@ -116,11 +102,7 @@ class ProfileMain extends StatelessWidget {
           // 설정 버튼
           GestureDetector(
             onTap: () async {
-              await userViewModel.logout();
-              while (context.canPop()) {
-                context.pop();
-              }
-              // context.push('/settingMain');
+              context.push('/settingMain');
             },
             child: Container(
               width: 41.w,
@@ -143,6 +125,22 @@ class ProfileMain extends StatelessWidget {
   }
 
   Widget _profileBox(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final profileIcon = userViewModel.userModel!.profile_icon;
+    final profileIconName = profileIcon.split('/').last.split('_').first;
+    String path = '';
+    switch (profileIconName) {
+      case "fedro":
+        path = ImagePath.fedroSelect;
+      case "cogy":
+        path = ImagePath.cogySelect;
+      case "piggy":
+        path = ImagePath.piggySelect;
+      case "ham":
+        path = ImagePath.hamSelect;
+      case "aengmu":
+        path = ImagePath.aengmuSelect;
+    }
     return Container(
       width: 340.w,
       height: 176.h,
@@ -166,6 +164,7 @@ class ProfileMain extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(width: 1.5.w, color: UsedColor.b_line),
               ),
+              child: Image.asset(path),
             ),
             Padding(
               padding: EdgeInsets.only(top: 16.0.h),
@@ -192,7 +191,7 @@ class ProfileMain extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 24.0.w, bottom: 3.h),
                     child: Text(
-                      '사용자 닉네임',
+                      userViewModel.userModel!.nickname,
                       style: AppTextStyles.PR_SB_18
                           .copyWith(color: UsedColor.charcoal_black),
                     ),
@@ -216,12 +215,17 @@ class ProfileMain extends StatelessWidget {
                     ),
                   ),
                   // Novice 혜택 보러가기
-                  Padding(
-                    padding: EdgeInsets.only(top: 24.0.h, left: 24.h),
-                    child: Text(
-                      'Novice 혜택 보러가기 >',
-                      style: AppTextStyles.PR_R_12
-                          .copyWith(color: UsedColor.text_5),
+                  GestureDetector(
+                    onTap: () {
+                      context.push('/rankMain');
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 24.0.h, left: 24.h),
+                      child: Text(
+                        'Novice 혜택 보러가기 >',
+                        style: AppTextStyles.PR_R_12
+                            .copyWith(color: UsedColor.text_5),
+                      ),
                     ),
                   ),
                 ],
@@ -233,7 +237,9 @@ class ProfileMain extends StatelessWidget {
     );
   }
 
+  //MARK: - 코인,티켓 박스
   Widget _coinAndTicketBox(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -255,6 +261,26 @@ class ProfileMain extends StatelessWidget {
                   '코인',
                   style: AppTextStyles.PR_SB_18
                       .copyWith(color: UsedColor.charcoal_black),
+                ),
+                SizedBox(height: 9.h),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      ImagePath.profileCoinIcon,
+                      width: 32.w,
+                      height: 32.h,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 7.0.h, left: 7.w),
+                      child: Text(
+                        '${userViewModel.userModel!.coin} C',
+                        style: AppTextStyles.PR_R_14
+                            .copyWith(color: UsedColor.charcoal_black),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -280,6 +306,26 @@ class ProfileMain extends StatelessWidget {
                   style: AppTextStyles.PR_SB_18
                       .copyWith(color: UsedColor.charcoal_black),
                 ),
+                SizedBox(height: 9.h),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      ImagePath.profileTicketIcon,
+                      width: 32.w,
+                      height: 32.h,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 7.0.h, left: 7.w),
+                      child: Text(
+                        '${userViewModel.userModel!.ticket}장',
+                        style: AppTextStyles.PR_R_14
+                            .copyWith(color: UsedColor.charcoal_black),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -288,6 +334,7 @@ class ProfileMain extends StatelessWidget {
     );
   }
 
+//MARK: - 만남 후기
   Widget _review(BuildContext context) {
     return Container(
       width: 340.w,
@@ -295,6 +342,56 @@ class ProfileMain extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22.r),
+      ),
+      child: Padding(
+        padding: EdgeInsets.only(left: 24.w, top: 20.h),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      '만남 후기',
+                      style: AppTextStyles.PR_SB_18
+                          .copyWith(color: UsedColor.charcoal_black),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 2.0.h, left: 7.w),
+                      child: Container(
+                        width: 16.w,
+                        height: 16.h,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: UsedColor.main),
+                        // 후기 알림 수
+                        child: Center(
+                            child: Text(
+                          '3',
+                          style: AppTextStyles.SU_SB_10
+                              .copyWith(color: Colors.white),
+                        )),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  '상대방에게 받은 만남 후기를 확인해보세요',
+                  style:
+                      AppTextStyles.PR_R_12.copyWith(color: UsedColor.text_5),
+                )
+              ],
+            ),
+            SizedBox(width: 35.w),
+            Image.asset(
+              ImagePath.profileReviewIcon,
+              width: 56.w,
+              height: 56.h,
+            )
+          ],
+        ),
       ),
     );
   }

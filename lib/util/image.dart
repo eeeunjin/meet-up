@@ -84,6 +84,12 @@ class ImagePath {
 
   // profile
   static String get profileEditIcon => 'assets/images/profile_edit_icon.png';
+  static String get profileImageEditIcon =>
+      'assets/images/profile_image_edit_icon.png';
+  static String get profileCoinIcon => 'assets/images/coin_profile.png';
+  static String get profileTicketIcon => 'assets/images/ticket_profile.png';
+  static String get profileReviewIcon =>
+      'assets/images/profile_review_icon.png';
 
   // schedule
   static String get backCross => 'assets/images/backcross.png';
@@ -104,4 +110,18 @@ class ImagePath {
   static String get infoIcon6 => 'assets/images/info_icon_6.png';
   static String get infoIcon7 => 'assets/images/info_icon_7.png';
   static String get infoIcon8 => 'assets/images/info_icon_8.png';
+
+  // rank
+  static String get rankMasterOn => 'assets/images/rank_master_on.png';
+  static String get rankAdvancedOn => 'assets/images/rank_advanced_on.png';
+  static String get rankIntermediateOn =>
+      'assets/images/rank_intermediate_on.png';
+  static String get rankNoviceOn => 'assets/images/rank_novice_on.png';
+  static String get rankBeginnerOn => 'assets/images/rank_beginner_on.png';
+  static String get rankMasterOff => 'assets/images/rank_master_off.png';
+  static String get rankAdvancedOff => 'assets/images/rank_advanced_off.png';
+  static String get rankIntermediateOff =>
+      'assets/images/rank_intermediate_off.png';
+  static String get rankNoviceOff => 'assets/images/rank_novice_off.png';
+  static String get rankBeginnerOff => 'assets/images/rank_beginner_off.png';
 }
