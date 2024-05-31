@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/loginFunc.dart';
-import 'package:meet_up/main.dart';
 import 'package:meet_up/view/chat/chat_main.dart';
 import 'package:meet_up/view/coin/coin_buy.dart';
 import 'package:meet_up/view/coin/coin_main.dart';
@@ -95,11 +94,12 @@ final router = GoRouter(
     GoRoute(
       path: '/',
       pageBuilder: (context, state) {
+        // logger.d("GoRoute Path Location: ${state.fullPath}");
         if (LoginFunc.isLogined) {
-          logger.d("로그인 상태 확인: 로그인 상태입니다.");
+          // logger.d("로그인 상태 확인: 로그인 상태입니다.");
           return const NoTransitionPage(child: BotNavBar());
         } else {
-          logger.d("로그인 상태 확인: 로그인 상태가 아닙니다.");
+          // logger.d("로그인 상태 확인: 로그인 상태가 아닙니다.");
           return const NoTransitionPage(child: LoginMain());
         }
       },
