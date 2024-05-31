@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
@@ -164,9 +165,14 @@ class WithdrawalNext extends StatelessWidget {
   // MARK: - 탈퇴하기
   Widget _nextbutton(BuildContext context) {
     final viewModel = Provider.of<ProfileViewModel>(context);
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     return NextButton(
-      onTap: () {
+      onTap: () async {
+        // 탈퇴 로직
+        await userViewModel.deleteUser();
+
         // 탈퇴 로직 & withdrawalDialog 띄우기
+        withdrawalDialog(context, userViewModel);
       },
       height: 56.h,
       text: '탈퇴하기',
@@ -252,8 +258,12 @@ class WithdrawalNext extends StatelessWidget {
                       style: const ButtonStyle(
                           overlayColor:
                               MaterialStatePropertyAll(Colors.transparent)),
-                      onPressed: () async {
-                        // 확인 누르면 홈으로?
+                      onPressed: () {
+                        // 로그인 페이지로 이동
+                        while (context.canPop()) {
+                          context.pop();
+                        }
+                        userViewModel.logout();
                       },
                       child: Text(
                         '확인',

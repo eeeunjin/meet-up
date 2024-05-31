@@ -100,10 +100,11 @@ class UserViewModel with ChangeNotifier {
       await LoginFunc.storage.delete(key: "uid");
       userModel = null;
       uid = null;
-      notifyListeners();
+      // notifyListeners();
     } catch (e) {
-      Exception("Error: $e");
       LoginFunc.isLogined = true;
+      logger.e("[logout] Error: $e");
+      throw Exception("Error: $e");
     }
   }
 
@@ -114,10 +115,9 @@ class UserViewModel with ChangeNotifier {
       await _userRepository.deleteUser(uid: uid!);
       // 방 정보 삭제 (유저가 만든 방)
       await _roomRepository.deleteRoomDataByUserDelete(uid: uid!);
-      // 로그아웃
-      await logout();
     } catch (e) {
-      Exception("Error: $e");
+      logger.e("[deleteUser] Error: $e");
+      throw Exception("Error: $e");
     }
   }
 }

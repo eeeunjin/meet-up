@@ -374,6 +374,8 @@ class FirebaseAUTH {
   /// 탈퇴하는 메서드
   Future<bool> deleteUser() async {
     try {
+      logger.d("Deleting user...");
+      logger.d("Current user: ${_auth.currentUser}");
       await _auth.currentUser!.delete();
       return true;
     } catch (e) {

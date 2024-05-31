@@ -54,10 +54,12 @@ class UserRepository {
   // Delete
   Future<bool> deleteUserData({required String uid}) async {
     try {
-      _firebaseService.deleteDocument(
-          docRef: _firebaseRefs.colRefUser.doc(uid));
-      _firebaseService.deleteCollection(
+      // 나의 방 정보 삭제
+      await _firebaseService.deleteCollection(
           colRef: _firebaseRefs.colRefUser.doc(uid).collection("myRooms"));
+      // 유저 정보 삭제
+      await _firebaseService.deleteDocument(
+          docRef: _firebaseRefs.colRefUser.doc(uid));
       return true;
     } catch (e) {
       logger.d("deleteUserData Error: $e");
@@ -127,12 +129,6 @@ class UserRepository {
     return _firebaseService.deleteDocument(docRef: myRoomDocumentReference);
   }
 
-  Future<bool> deleteAllMyRoomData({required String uid}) async {
-    CollectionReference myRoomCollectionReference =
-        _firebaseRefs.colRefUser.doc(uid).collection("myRooms");
-    return _firebaseService.deleteCollection(colRef: myRoomCollectionReference);
-  }
-
   // MARK: - Auth Functions
 
   /// 전화번호 인증을 위한 메서드
@@ -169,8 +165,6 @@ class UserRepository {
     try {
       // FirebaseAuth 정보 삭제
       await _firebaseAUTH.deleteUser();
-      // 유저 방 정보 삭제 (유저 정보 내부 collection)
-      await deleteAllMyRoomData(uid: uid);
       // 유저 정보 삭제
       await deleteUserData(uid: uid);
 

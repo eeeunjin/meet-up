@@ -186,7 +186,6 @@ class LoginPhoneNum extends StatelessWidget {
             // Auth 관련 동작 - viewModel에서 진행
             final isSigned = await viewModel.signInWithPhoneNumber(context);
 
-            logger.e("test1");
             // 다양한 이유로 코드가 전달되지 않은 경우
             if (!isSigned) {
               logger.e("코드 전달 실패");
