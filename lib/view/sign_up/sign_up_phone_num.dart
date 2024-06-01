@@ -162,11 +162,19 @@ class SignUpPhoneNum extends StatelessWidget {
   Widget _bottom(BuildContext context) {
     final signUpVerificationViewModel =
         Provider.of<SignUpVerificationViewModel>(context, listen: false);
+    bool isTapped = false;
     return Consumer<SignUpPhoneNumViewModel>(
       builder: (context, viewModel, child) => Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
         child: NextButton(
             onTap: () async {
+              // 중복 탭 방지
+              if (isTapped) return;
+              isTapped = true;
+
+              // 입력 키패드 내리기
+              FocusManager.instance.primaryFocus?.unfocus();
+
               // phoneNum 유효성 검사 실패 시, return
               if (!viewModel.isPhoneNumberValid) return;
 

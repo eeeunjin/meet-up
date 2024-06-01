@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:meet_up/loginFunc.dart';
 import 'package:meet_up/main.dart';
 import 'package:meet_up/model/user_model.dart';
+import 'package:meet_up/repository/room_repository.dart';
 import 'package:meet_up/repository/user_repository.dart';
 
 class UserViewModel with ChangeNotifier {
   // 유저 데이터 관리 레포지토리
   final UserRepository _userRepository = UserRepository();
+  final RoomRepository _roomRepository = RoomRepository();
 
   // 유저 정보 (사용자)
   UserModel? userModel;
@@ -98,10 +100,24 @@ class UserViewModel with ChangeNotifier {
       await LoginFunc.storage.delete(key: "uid");
       userModel = null;
       uid = null;
-      notifyListeners();
+      // notifyListeners();
     } catch (e) {
-      Exception("Error: $e");
       LoginFunc.isLogined = true;
+      logger.e("[logout] Error: $e");
+      throw Exception("Error: $e");
+    }
+  }
+
+  // 탈퇴 시, 유저 정보 삭제
+  Future<void> deleteUser() async {
+    try {
+      // 유저 정보 삭제 (유저 기본 정보, 나의 방 정보)
+      await _userRepository.deleteUser(uid: uid!);
+      // 방 정보 삭제 (유저가 만든 방)
+      await _roomRepository.deleteRoomDataByUserDelete(uid: uid!);
+    } catch (e) {
+      logger.e("[deleteUser] Error: $e");
+      throw Exception("Error: $e");
     }
   }
 }

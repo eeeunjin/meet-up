@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
 
@@ -36,8 +37,7 @@ class FirebaseCRUD {
       if (limit == null) {
         if (T == RoomModel) {
           if (filterInfo == null) {
-            querySnapshot = await colRef
-                .get();
+            querySnapshot = await colRef.get();
           } else {
             // 최신 순으로 정렬해서 가져오기
             querySnapshot = await createFilterQuery(
@@ -51,17 +51,13 @@ class FirebaseCRUD {
       } else {
         if (T == RoomModel) {
           if (filterInfo == null) {
-            querySnapshot = await colRef
-                .limit(limit)
-                .get();
+            querySnapshot = await colRef.limit(limit).get();
           } else {
             // 최신 순으로 정렬해서 가져오기
             querySnapshot = await createFilterQuery(
               colRef: colRef,
               filterInfo: filterInfo,
-            )
-                .limit(limit)
-                .get();
+            ).limit(limit).get();
           }
         } else {
           querySnapshot = await colRef.limit(limit).get();
@@ -74,9 +70,6 @@ class FirebaseCRUD {
           return UserModel.fromJson(doc.data() as Map<String, Object?>) as T;
         } else if (T == MyRoomModel) {
           return MyRoomModel.fromJson(doc.data() as Map<String, Object?>) as T;
-        } else if (T == MyEnterRequestModel) {
-          return MyEnterRequestModel.fromJson(
-              doc.data() as Map<String, Object?>) as T;
         } else if (T == RoomModel) {
           return RoomModel.fromJson(doc.data() as Map<String, Object?>) as T;
         } else if (T == EnterRequestModel) {
@@ -166,6 +159,20 @@ class FirebaseCRUD {
     }
   }
 
+  /// 콜렉션 정보를 삭제하는 함수 (하위에 더이상 collection이 존재하면 안됨)
+  Future<bool> deleteCollection({required CollectionReference colRef}) async {
+    try {
+      QuerySnapshot querySnapshot = await colRef.get();
+      for (DocumentSnapshot doc in querySnapshot.docs) {
+        await doc.reference.delete();
+      }
+      return true;
+    } catch (err) {
+      logger.d("지울 collection이 없습니다: $err");
+      return false;
+    }
+  }
+
   // Room Model의 필터 정보에 맞게 쿼리를 반환해주는 함수
   Query<Object?> createFilterQuery({
     required FilterInfo filterInfo,
@@ -225,10 +232,6 @@ class FirebaseCRUD {
           MyRoomModel myRoom = data as MyRoomModel;
           await docRef.set(myRoom.toJson());
           return true;
-        } else if (T == MyEnterRequestModel) {
-          MyEnterRequestModel myEnterRequest = data as MyEnterRequestModel;
-          await docRef.set(myEnterRequest.toJson());
-          return true;
         } else if (T == RoomModel) {
           RoomModel myEnterRequest = data as RoomModel;
           await docRef.set(myEnterRequest.toJson());
@@ -267,8 +270,6 @@ class FirebaseCRUD {
           return UserModel.fromJson(data) as T;
         } else if (T == MyRoomModel) {
           return MyRoomModel.fromJson(data) as T;
-        } else if (T == MyEnterRequestModel) {
-          return MyEnterRequestModel.fromJson(data) as T;
         } else if (T == RoomModel) {
           return RoomModel.fromJson(data) as T;
         } else if (T == EnterRequestModel) {
@@ -314,6 +315,26 @@ class FirebaseCRUD {
       return false;
     }
   }
+
+  /// 필드에 해당하는 도큐먼트 정보를 지우는 함수
+  Future<bool> deleteDocumentByField({
+    required CollectionReference colRef,
+    required String fieldName,
+    required DocumentReference fieldValue,
+  }) async {
+    try {
+      QuerySnapshot querySnapshot =
+          await colRef.where(fieldName, isEqualTo: fieldValue).get();
+      for (DocumentSnapshot doc in querySnapshot.docs) {
+        logger.d("Deleted by userDelete (docs name: ${doc.reference.id})");
+        await doc.reference.delete();
+      }
+      return true;
+    } catch (err) {
+      logger.d("Error deleting document by field: $err");
+      return false;
+    }
+  }
 }
 
 ///
@@ -348,5 +369,18 @@ class FirebaseAUTH {
   Future<UserCredential> signInWithCredential(
       PhoneAuthCredential credential) async {
     return await _auth.signInWithCredential(credential);
+  }
+
+  /// 탈퇴하는 메서드
+  Future<bool> deleteUser() async {
+    try {
+      logger.d("Deleting user...");
+      logger.d("Current user: ${_auth.currentUser}");
+      await _auth.currentUser!.delete();
+      return true;
+    } catch (e) {
+      logger.d("Error deleting user: $e");
+      return false;
+    }
   }
 }

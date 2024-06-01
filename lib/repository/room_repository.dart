@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/service/remote/firebase_service.dart';
 
@@ -101,6 +102,15 @@ class RoomRepository {
   Future<bool> deleteRoomData({required String roomId}) async {
     return _firebaseService.deleteDocument(
         docRef: _firebaseRefs.colRefRoom.doc(roomId));
+  }
+
+  Future<bool> deleteRoomDataByUserDelete({required String uid}) async {
+    // 특정 collection에서 document 필드 중 room_owner_reference 가 "/users/$uid"인 document를 찾아 삭제
+    return await _firebaseService.deleteDocumentByField(
+      colRef: _firebaseRefs.colRefRoom,
+      fieldName: "room_owner_reference",
+      fieldValue: _firebaseRefs.colRefUser.doc(uid),
+    );
   }
 
   // < ---------- EnterRequestModel CRUD ---------- >

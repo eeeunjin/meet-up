@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/service/remote/firebase_service.dart';
 
@@ -8,8 +9,17 @@ class UserRepository {
   final FirebaseRefs _firebaseRefs = FirebaseRefs();
   final FirebaseAUTH _firebaseAUTH = FirebaseAUTH();
 
-  // < ---------- UserModel CRUD ---------- >
+  // MARK: - UserModel CRUD
+  // Create
+  Future<bool> createUserDocument(
+      {required UserModel data, required String uid}) async {
+    return await _firebaseService.createDocument<UserModel>(
+      docRef: _firebaseRefs.colRefUser.doc(uid),
+      data: data,
+    );
+  }
 
+  // Read
   Future<List<UserModel>> readUserCollection() async {
     return await _firebaseService.readCollection<UserModel>(
         colRef: _firebaseRefs.colRefUser);
@@ -18,14 +28,6 @@ class UserRepository {
   Stream<QuerySnapshot<Object?>> readUserCollectionStream() {
     return _firebaseService.readCollectionStream<UserModel>(
         colRef: _firebaseRefs.colRefUser);
-  }
-
-  Future<bool> createUserDocument(
-      {required UserModel data, required String uid}) async {
-    return await _firebaseService.createDocument<UserModel>(
-      docRef: _firebaseRefs.colRefUser.doc(uid),
-      data: data,
-    );
   }
 
   Future<UserModel> readUserDocument({required String uid}) async {
@@ -38,6 +40,7 @@ class UserRepository {
     return await _firebaseService.readDocument<UserModel>(docRef: docRef);
   }
 
+  // Update
   Future<bool> updateUserDocument({
     required String uid,
     required Map<String, dynamic> data,
@@ -48,25 +51,24 @@ class UserRepository {
     );
   }
 
+  // Delete
   Future<bool> deleteUserData({required String uid}) async {
-    return _firebaseService.deleteDocument(
-        docRef: _firebaseRefs.colRefUser.doc(uid));
+    try {
+      // 나의 방 정보 삭제
+      await _firebaseService.deleteCollection(
+          colRef: _firebaseRefs.colRefUser.doc(uid).collection("myRooms"));
+      // 유저 정보 삭제
+      await _firebaseService.deleteDocument(
+          docRef: _firebaseRefs.colRefUser.doc(uid));
+      return true;
+    } catch (e) {
+      logger.d("deleteUserData Error: $e");
+      return false;
+    }
   }
 
-  // < ---------- MyRoomModel CRUD ---------- >
-
-  Future<List<MyRoomModel>> readMyRoomCollection({required String uid}) async {
-    CollectionReference myRoomCollectionReference =
-        _firebaseRefs.colRefUser.doc(uid).collection("myRooms");
-    return await _firebaseService.readCollection<MyRoomModel>(
-        colRef: myRoomCollectionReference);
-  }
-
-  Stream<QuerySnapshot<Object?>> readMyRoomCollectionStream(
-      {required String uid}) {
-    return _firebaseService.readCollectionStreamByQuery<MyRoomModel>(uid: uid);
-  }
-
+  // MARK:- MyRoomModel CRUD
+  // Create
   Future<bool> createMyRoomDocument({
     required MyRoomModel data,
     required String uid,
@@ -80,6 +82,19 @@ class UserRepository {
     );
   }
 
+  // Read
+  Future<List<MyRoomModel>> readMyRoomCollection({required String uid}) async {
+    CollectionReference myRoomCollectionReference =
+        _firebaseRefs.colRefUser.doc(uid).collection("myRooms");
+    return await _firebaseService.readCollection<MyRoomModel>(
+        colRef: myRoomCollectionReference);
+  }
+
+  Stream<QuerySnapshot<Object?>> readMyRoomCollectionStream(
+      {required String uid}) {
+    return _firebaseService.readCollectionStreamByQuery<MyRoomModel>(uid: uid);
+  }
+
   Future<MyRoomModel> readMyRoomDocument({
     required String uid,
     required roomId,
@@ -90,6 +105,7 @@ class UserRepository {
         docRef: myRoomDocumentReference);
   }
 
+  // Update
   Future<bool> updateMyRoomDocument({
     required String uid,
     required Map<String, dynamic> data,
@@ -103,6 +119,7 @@ class UserRepository {
     );
   }
 
+  // Delete
   Future<bool> deleteMyRoomData({
     required String uid,
     required String roomId,
@@ -112,78 +129,7 @@ class UserRepository {
     return _firebaseService.deleteDocument(docRef: myRoomDocumentReference);
   }
 
-  // < ---------- MyEnterRequestModel CRUD ---------- >
-
-  Future<List<MyEnterRequestModel>> readMyEnterRequestCollection(
-      {required String uid}) async {
-    CollectionReference myEnterRequestCollectionReference =
-        _firebaseRefs.colRefUser.doc(uid).collection("myEnterRequests");
-    return await _firebaseService.readCollection<MyEnterRequestModel>(
-        colRef: myEnterRequestCollectionReference);
-  }
-
-  Stream<QuerySnapshot<Object?>> readMyEnterRequestCollectionStream(
-      {required String uid}) {
-    CollectionReference myEnterRequestCollectionReference =
-        _firebaseRefs.colRefUser.doc(uid).collection("myEnterRequests");
-    return _firebaseService.readCollectionStream<MyEnterRequestModel>(
-        colRef: myEnterRequestCollectionReference);
-  }
-
-  Future<bool> createMyEnterRequestDocument({
-    required MyEnterRequestModel data,
-    required String uid,
-    required String myEnterRequestId,
-  }) async {
-    DocumentReference myEnterRequestDocumentReference = _firebaseRefs.colRefUser
-        .doc(uid)
-        .collection("myEnterRequests")
-        .doc(myEnterRequestId);
-    return await _firebaseService.createDocument<MyEnterRequestModel>(
-      docRef: myEnterRequestDocumentReference,
-      data: data,
-    );
-  }
-
-  Future<MyEnterRequestModel> readMyEnterRequestDocument({
-    required String uid,
-    required myEnterRequestId,
-  }) async {
-    DocumentReference myRoomDocumentReference = _firebaseRefs.colRefUser
-        .doc(uid)
-        .collection("myEnterRequests")
-        .doc(myEnterRequestId);
-    return await _firebaseService.readDocument<MyEnterRequestModel>(
-        docRef: myRoomDocumentReference);
-  }
-
-  Future<bool> updateMyEnterRequestDocument({
-    required String uid,
-    required Map<String, dynamic> data,
-    required String myEnterRequestId,
-  }) async {
-    DocumentReference myRoomDocumentReference = _firebaseRefs.colRefUser
-        .doc(uid)
-        .collection("myEnterRequests")
-        .doc(myEnterRequestId);
-    return await _firebaseService.updateDocument(
-      docRef: myRoomDocumentReference,
-      data: data,
-    );
-  }
-
-  Future<bool> deleteMyEnterRequestData({
-    required String uid,
-    required String myEnterRequestId,
-  }) async {
-    DocumentReference myRoomDocumentReference = _firebaseRefs.colRefUser
-        .doc(uid)
-        .collection("myEnterRequests")
-        .doc(myEnterRequestId);
-    return _firebaseService.deleteDocument(docRef: myRoomDocumentReference);
-  }
-
-  // < ---------- Auth ---------- >
+  // MARK: - Auth Functions
 
   /// 전화번호 인증을 위한 메서드
   Future<bool> verifyPhoneNumber({
@@ -203,6 +149,7 @@ class UserRepository {
       );
       return true;
     } catch (e) {
+      logger.e("verifyPhoneNumber Error: $e");
       return false;
     }
   }
@@ -211,5 +158,20 @@ class UserRepository {
   Future<UserCredential> signInWithCredential(
       PhoneAuthCredential credential) async {
     return _firebaseAUTH.signInWithCredential(credential);
+  }
+
+  /// 탈퇴하는 메서드
+  Future<bool> deleteUser({required String uid}) async {
+    try {
+      // FirebaseAuth 정보 삭제
+      await _firebaseAUTH.deleteUser();
+      // 유저 정보 삭제
+      await deleteUserData(uid: uid);
+
+      return true;
+    } catch (e) {
+      logger.d("deleteUser Error: $e");
+      return false;
+    }
   }
 }
