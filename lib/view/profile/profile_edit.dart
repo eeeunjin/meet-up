@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
+import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
@@ -80,21 +81,12 @@ class ProfileEdit extends StatelessWidget {
           _classification(context),
           SizedBox(height: 32.h),
           _personality(context),
-          // SizedBox(height: 32.h),
-          // Text(
-          //   '관심사',
-          //   style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
-          // ),
-          // SizedBox(height: 8.h),
-          // _interests(context),
-          // SizedBox(height: 32.h),
-          // Text(
-          //   '만남 목적',
-          //   style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
-          // ),
-          // SizedBox(height: 8.h),
-          // _meetingPurpose(context),
-          // SizedBox(height: 42.h),
+          SizedBox(height: 32.h),
+          _interests(context),
+          SizedBox(height: 32.h),
+          _meetingPurpose(context),
+          SizedBox(height: 42.h),
+          _saveButton(),
         ],
       ),
     );
@@ -344,8 +336,8 @@ class ProfileEdit extends StatelessWidget {
                   child: Center(
                     child: Text(
                       personality,
-                      style: AppTextStyles.PR_R_14
-                          .copyWith(color: UsedColor.text_3),
+                      style: AppTextStyles.PR_R_12
+                          .copyWith(color: UsedColor.charcoal_black),
                     ),
                   ),
                 ),
@@ -359,6 +351,119 @@ class ProfileEdit extends StatelessWidget {
             color: UsedColor.line,
           ),
         ],
+      ),
+    );
+  }
+
+  //MARK: - 관심사
+  Widget _interests(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final List<dynamic> interestListDynamic =
+        userViewModel.userModel?.interest ?? [];
+    final List<String> interestList = interestListDynamic.cast<String>();
+
+    return Padding(
+      padding: EdgeInsets.only(left: 33.0.w, right: 32.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '성격',
+            style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+          ),
+          SizedBox(height: 12.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: interestList.map((personality) {
+              return Padding(
+                padding: EdgeInsets.only(left: 8.0.w),
+                child: Container(
+                  width: 80.w,
+                  height: 24.h,
+                  decoration: BoxDecoration(
+                    color: UsedColor.image_card,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Center(
+                    child: Text(
+                      personality,
+                      style: AppTextStyles.PR_R_12
+                          .copyWith(color: UsedColor.charcoal_black),
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+          SizedBox(height: 8.h),
+          Divider(
+            thickness: 0.5.h,
+            height: 0.h,
+            color: UsedColor.line,
+          ),
+        ],
+      ),
+    );
+  }
+
+  //MARK: - 만남 목적
+  Widget _meetingPurpose(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final List<dynamic> purposeListDynamic =
+        userViewModel.userModel?.purpose ?? [];
+    final List<String> purposeList = purposeListDynamic.cast<String>();
+
+    return Padding(
+      padding: EdgeInsets.only(left: 33.0.w, right: 32.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '만남 목적',
+            style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+          ),
+          SizedBox(height: 12.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: purposeList.map((personality) {
+              return Padding(
+                padding: EdgeInsets.only(left: 8.0.w),
+                child: Container(
+                  width: 80.w,
+                  height: 24.h,
+                  decoration: BoxDecoration(
+                    color: UsedColor.image_card,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Center(
+                    child: Text(
+                      personality,
+                      style: AppTextStyles.PR_R_12
+                          .copyWith(color: UsedColor.charcoal_black),
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+          SizedBox(height: 8.h),
+          Divider(
+            thickness: 0.5.h,
+            height: 0.h,
+            color: UsedColor.line,
+          ),
+        ],
+      ),
+    );
+  }
+
+  //MARK: - 저장 버튼
+  Widget _saveButton() {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 56.0.h, left: 33.w, right: 32.w),
+      child: NextButton(
+        onTap: () {},
+        height: 56.h,
       ),
     );
   }
