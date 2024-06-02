@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -92,7 +93,7 @@ class ProfileEdit extends StatelessWidget {
     );
   }
 
-  //MAKR: - 프로필 사진
+  //MARK: - 프로필 사진
   Widget _profileImage(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     final profileIcon = userViewModel.userModel!.profile_icon;
@@ -122,13 +123,19 @@ class ProfileEdit extends StatelessWidget {
             ),
             child: Image.asset(path),
           ),
-          Positioned(
-            bottom: 0.h,
-            right: 2.w,
-            child: Image.asset(
-              ImagePath.profileImageEditIcon,
-              width: 32.w,
-              height: 32.h,
+          //MARK: - 프로필 수정 버튼
+          GestureDetector(
+            onTap: () {
+              _showProfileEditDialog(context, userViewModel);
+            },
+            child: Positioned(
+              bottom: 0,
+              right: 2.w,
+              child: Image.asset(
+                ImagePath.profileImageEditIcon,
+                width: 32.w,
+                height: 32.h,
+              ),
             ),
           ),
         ],
@@ -468,7 +475,22 @@ class ProfileEdit extends StatelessWidget {
     );
   }
 
-  // Widget _interests(BuildContext context) {}
-
-  // Widget _meetingPurpose(BuildContext context) {}
+  void _showProfileEditDialog(
+      BuildContext context, UserViewModel userViewModel) {
+    showGeneralDialog(
+        context: context,
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              width: 328.w,
+              height: 312.h,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.0.r),
+              ),
+            ),
+          );
+        });
+  }
 }
