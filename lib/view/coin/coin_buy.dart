@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:meet_up/main.dart';
+import 'package:meet_up/purchase.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
@@ -297,20 +299,26 @@ class CoinBuy extends StatelessWidget {
           ),
           SizedBox(height: 36.h),
           GestureDetector(
-            onTap: () {
-              // 인앱 결제 로직 구현
-              // 총 수량, 총 금액(총 수량 * 금액), 총 코인 수량(총 수량 * 코인 개수)을 로깅
-              final int totalNum = coinBuyViewModel.selectedNum;
-              final int totalPrice = coinBuyViewModel.selectedNum *
-                  (coinBuyViewModel.coinAmount == CoinAmount.oneThousand
-                      ? 600
-                      : 2400);
-              final int totalCoin = coinBuyViewModel.selectedNum *
-                  (coinBuyViewModel.coinAmount == CoinAmount.oneThousand
-                      ? 1000
-                      : 4000);
-              logger.d(
-                  "총 수량: $totalNum 개, 결제 금액: $totalPrice 원, Coin 개수: $totalCoin C");
+            onTap: () async {
+              // // 총 수량, 총 금액(총 수량 * 금액), 총 코인 수량(총 수량 * 코인 개수)을 로깅
+              // final int totalNum = coinBuyViewModel.selectedNum;
+              // final int totalPrice = coinBuyViewModel.selectedNum *
+              //     (coinBuyViewModel.coinAmount == CoinAmount.oneThousand
+              //         ? 600
+              //         : 2400);
+              // final int totalCoin = coinBuyViewModel.selectedNum *
+              //     (coinBuyViewModel.coinAmount == CoinAmount.oneThousand
+              //         ? 1000
+              //         : 4000);
+              // logger.d(
+              //     "총 수량: $totalNum 개, 결제 금액: $totalPrice 원, Coin 개수: $totalCoin C");
+
+              // MARK: - 인앱 결제 로직 구현
+              // 코인 정보 가져오기
+              final response = await getProductsInfo();
+
+              // 결제 시도
+              initiatePurchase(response);
             },
             child: Container(
                 width: 329.w,
