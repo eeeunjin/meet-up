@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -63,76 +62,45 @@ class ProfileEdit extends StatelessWidget {
   }
 
   Widget _main(BuildContext context) {
-    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 12.h),
-        _profileImage(context),
-        SizedBox(height: 32.h),
-        // MARK: - 닉네임
-        Text(
-          '닉네임',
-          style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
-        ),
-        SizedBox(height: 8.h),
-        _nickname(context),
-        SizedBox(height: 32.h),
-        Text(
-          '성별',
-          style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
-        ),
-        SizedBox(height: 8.h),
-        // _gender(context),
-        // SizedBox(height: 32.h),
-        // Text(
-        //   '나이',
-        //   style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
-        // ),
-        // SizedBox(height: 8.h),
-        // _age(context),
-        // SizedBox(height: 32.h),
-        // Text(
-        //   '거주지',
-        //   style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
-        // ),
-        // SizedBox(height: 8.h),
-        // _area(context),
-
-        // SizedBox(height: 32.h),
-        // Text(
-        //   '소속 분류',
-        //   style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
-        // ),
-        // SizedBox(height: 8.h),
-        // _classification(context),
-        // SizedBox(height: 32.h),
-        // Text(
-        //   '성격',
-        //   style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
-        // ),
-        // SizedBox(height: 8.h),
-        // _personality(context),
-        // SizedBox(height: 32.h),
-        // Text(
-        //   '관심사',
-        //   style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
-        // ),
-        // SizedBox(height: 8.h),
-        // _interests(context),
-        // SizedBox(height: 32.h),
-        // Text(
-        //   '만남 목적',
-        //   style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
-        // ),
-        // SizedBox(height: 8.h),
-        // _meetingPurpose(context),
-        // SizedBox(height: 42.h),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 12.h),
+          _profileImage(context),
+          SizedBox(height: 32.h),
+          _nickname(context),
+          SizedBox(height: 32.h),
+          _gender(context),
+          SizedBox(height: 32.h),
+          _age(context),
+          SizedBox(height: 32.h),
+          _address(context),
+          SizedBox(height: 32.h),
+          _classification(context),
+          SizedBox(height: 32.h),
+          _personality(context),
+          // SizedBox(height: 32.h),
+          // Text(
+          //   '관심사',
+          //   style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+          // ),
+          // SizedBox(height: 8.h),
+          // _interests(context),
+          // SizedBox(height: 32.h),
+          // Text(
+          //   '만남 목적',
+          //   style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+          // ),
+          // SizedBox(height: 8.h),
+          // _meetingPurpose(context),
+          // SizedBox(height: 42.h),
+        ],
+      ),
     );
   }
 
+  //MAKR: - 프로필 사진
   Widget _profileImage(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     final profileIcon = userViewModel.userModel!.profile_icon;
@@ -150,8 +118,7 @@ class ProfileEdit extends StatelessWidget {
       case "aengmu":
         path = ImagePath.aengmuSelect;
     }
-    return //MARK: - 프로필 사진
-        Center(
+    return Center(
       child: Stack(
         children: [
           Container(
@@ -177,35 +144,224 @@ class ProfileEdit extends StatelessWidget {
     );
   }
 
+  // MARK: - 닉네임
   Widget _nickname(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-    return TextField(
-      controller:
-          TextEditingController(text: userViewModel.userModel?.nickname ?? ''),
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.symmetric(vertical: 8.h),
-        isDense: true,
-        border: UnderlineInputBorder(
-          borderSide: BorderSide(color: UsedColor.line),
-        ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: UsedColor.line),
-        ),
+    return Padding(
+      padding: EdgeInsets.only(left: 33.0.w, right: 32.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '닉네임',
+            style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+          ),
+          SizedBox(height: 8.h),
+          TextField(
+            controller: TextEditingController(
+                text: userViewModel.userModel?.nickname ?? ''),
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(vertical: 8.h),
+              isDense: true,
+              border: UnderlineInputBorder(
+                borderSide: BorderSide(color: UsedColor.line, width: 0.5.h),
+              ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: UsedColor.line, width: 0.5.h),
+              ),
+            ),
+            style:
+                AppTextStyles.PR_R_16.copyWith(color: UsedColor.charcoal_black),
+            onChanged: (value) {},
+          ),
+        ],
       ),
-      style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.charcoal_black),
-      onChanged: (value) {},
     );
   }
 
-  // Widget _gender(BuildContext context) {}
+  //MARK: - 성별
+  Widget _gender(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    return Padding(
+      padding: EdgeInsets.only(left: 33.0.w, right: 32.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '성별',
+            style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+          ),
+          SizedBox(height: 16.h),
+          Text(
+            userViewModel.userModel!.gender == 'male' ? '남성' : '여성',
+            style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_3),
+          ),
+          SizedBox(height: 8.h),
+          Divider(
+            thickness: 0.5.h,
+            height: 0.h,
+            color: UsedColor.line,
+          )
+        ],
+      ),
+    );
+  }
 
-  // Widget _age(BuildContext context) {}
+  // MARK: - 나이
+  Widget _age(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    // 나이 계산
+    final DateTime? birthDate = userViewModel.userModel?.birthday;
 
-  // Widget _area(BuildContext context) {}
+    int calculateAge(DateTime? birthDate) {
+      if (birthDate == null) {
+        return 0;
+      }
+      final today = DateTime.now();
+      int age = today.year - birthDate.year;
+      if (today.month < birthDate.month ||
+          (today.month == birthDate.month && today.day < birthDate.day)) {
+        age--;
+      }
+      return age;
+    }
 
-  // Widget _classification(BuildContext context) {}
+    final int age = calculateAge(birthDate) + 2;
 
-  // Widget _personality(BuildContext context) {}
+    return Padding(
+      padding: EdgeInsets.only(left: 33.0.w, right: 32.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '나이',
+            style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+          ),
+          SizedBox(height: 16.h),
+          Text(
+            // TODO : 나이 변경 로직 으로 나이 계산해서 표시하기
+            '$age',
+            style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_3),
+          ),
+          SizedBox(height: 8.h),
+          Divider(
+            thickness: 0.5.h,
+            height: 0.h,
+            color: UsedColor.line,
+          )
+        ],
+      ),
+    );
+  }
+
+  // MARK: - 주소
+  Widget _address(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    return Padding(
+      padding: EdgeInsets.only(left: 33.0.w, right: 32.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '주소',
+            style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+          ),
+          SizedBox(height: 16.h),
+          Text(
+            '거주지',
+            style:
+                AppTextStyles.PR_R_16.copyWith(color: UsedColor.charcoal_black),
+          ),
+          SizedBox(height: 8.h),
+          Divider(
+            thickness: 0.5.h,
+            height: 0.h,
+            color: UsedColor.line,
+          ),
+        ],
+      ),
+    );
+  }
+
+  //MARK: - 소속 분류
+  Widget _classification(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    return Padding(
+      padding: EdgeInsets.only(left: 33.0.w, right: 32.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '소속 분류',
+            style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+          ),
+          SizedBox(height: 16.h),
+          Text(
+            '소속 분류',
+            style:
+                AppTextStyles.PR_R_16.copyWith(color: UsedColor.charcoal_black),
+          ),
+          SizedBox(height: 8.h),
+          Divider(
+            thickness: 0.5.h,
+            height: 0.h,
+            color: UsedColor.line,
+          ),
+        ],
+      ),
+    );
+  }
+
+  //MARK: - 성격
+  Widget _personality(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final List<dynamic> personalityListDynamic =
+        userViewModel.userModel?.personality_self ?? [];
+    final List<String> personalityList = personalityListDynamic.cast<String>();
+
+    return Padding(
+      padding: EdgeInsets.only(left: 33.0.w, right: 32.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '성격',
+            style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+          ),
+          SizedBox(height: 12.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: personalityList.map((personality) {
+              return Padding(
+                padding: EdgeInsets.only(left: 8.0.w),
+                child: Container(
+                  width: 80.w,
+                  height: 24.h,
+                  decoration: BoxDecoration(
+                    color: UsedColor.image_card,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Center(
+                    child: Text(
+                      personality,
+                      style: AppTextStyles.PR_R_14
+                          .copyWith(color: UsedColor.text_3),
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+          SizedBox(height: 8.h),
+          Divider(
+            thickness: 0.5.h,
+            height: 0.h,
+            color: UsedColor.line,
+          ),
+        ],
+      ),
+    );
+  }
 
   // Widget _interests(BuildContext context) {}
 
