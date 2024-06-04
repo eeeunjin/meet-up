@@ -112,23 +112,23 @@ class ProfileEdit extends StatelessWidget {
         path = ImagePath.aengmuSelect;
     }
     return Center(
-      child: Stack(
-        children: [
-          Container(
-            width: 120.w,
-            height: 120.h,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(width: 1.5.w, color: UsedColor.b_line),
+      child: GestureDetector(
+        onTap: () {
+          _showProfileEditDialog(context, userViewModel);
+        },
+        child: Stack(
+          children: [
+            Container(
+              width: 120.w,
+              height: 120.h,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(width: 1.5.w, color: UsedColor.b_line),
+              ),
+              child: Image.asset(path),
             ),
-            child: Image.asset(path),
-          ),
-          //MARK: - 프로필 수정 버튼
-          GestureDetector(
-            onTap: () {
-              _showProfileEditDialog(context, userViewModel);
-            },
-            child: Positioned(
+            //MARK: - 프로필 수정 버튼
+            Positioned(
               bottom: 0,
               right: 2.w,
               child: Image.asset(
@@ -137,8 +137,8 @@ class ProfileEdit extends StatelessWidget {
                 height: 32.h,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -285,6 +285,23 @@ class ProfileEdit extends StatelessWidget {
   //MARK: - 소속 분류
   Widget _classification(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final String job = userViewModel.userModel!.job;
+
+    String translationJob(String job) {
+      switch (job) {
+        case 'student':
+          return '학생';
+        case 'free':
+          return '프리랜서';
+        case 'none':
+          return '무직';
+        case 'employee':
+          return '회사원';
+        default:
+          return '알 수 없음';
+      }
+    }
+
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w, right: 32.w),
       child: Column(
@@ -296,7 +313,7 @@ class ProfileEdit extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
           Text(
-            '소속 분류',
+            translationJob(job),
             style:
                 AppTextStyles.PR_R_16.copyWith(color: UsedColor.charcoal_black),
           ),
@@ -475,10 +492,17 @@ class ProfileEdit extends StatelessWidget {
     );
   }
 
+  //MARK: - 프로필 수정 오버레이
   void _showProfileEditDialog(
       BuildContext context, UserViewModel userViewModel) {
     showGeneralDialog(
         context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black.withOpacity(0.5), // 외부 색상
+        transitionDuration:
+            const Duration(milliseconds: 200), // 사라질 때 애니메이션 지속 시간
         pageBuilder: (BuildContext buildContext, Animation animation,
             Animation secondaryAnimation) {
           return Center(
@@ -488,6 +512,132 @@ class ProfileEdit extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20.0.r),
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 24..h, left: 28.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '변경할 프로필을 선택해주세요.',
+                          style: AppTextStyles.PR_SB_16.copyWith(
+                              color: UsedColor.charcoal_black,
+                              decoration: TextDecoration.none),
+                        ),
+                        SizedBox(height: 32.h),
+                        Padding(
+                          padding: EdgeInsets.only(left: 16.w),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 72.w,
+                                height: 72.h,
+                                decoration:
+                                    const BoxDecoration(shape: BoxShape.circle),
+                                child: Image.asset(ImagePath.cogyDeselect),
+                              ),
+                              SizedBox(width: 12.w),
+                              Container(
+                                width: 72.w,
+                                height: 72.h,
+                                decoration:
+                                    const BoxDecoration(shape: BoxShape.circle),
+                                child: Image.asset(ImagePath.piggyDeselect),
+                              ),
+                              SizedBox(width: 12.w),
+                              Container(
+                                width: 72.w,
+                                height: 72.h,
+                                decoration:
+                                    const BoxDecoration(shape: BoxShape.circle),
+                                child: Image.asset(ImagePath.aengmuDeselect),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                        Padding(
+                          padding: EdgeInsets.only(left: 59.0.w),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 72.w,
+                                height: 72.h,
+                                decoration:
+                                    const BoxDecoration(shape: BoxShape.circle),
+                                child: Image.asset(ImagePath.hamDeselect),
+                              ),
+                              SizedBox(width: 12.w),
+                              Container(
+                                width: 72.w,
+                                height: 72.h,
+                                decoration:
+                                    const BoxDecoration(shape: BoxShape.circle),
+                                child: Image.asset(ImagePath.fedroDeselect),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 27.h),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: 328.w,
+                    height: 0.3.h,
+                    color: UsedColor.b_line,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 53.h,
+                          child: TextButton(
+                            // !: -잉크 효과 이상해서 없애둠
+                            style: const ButtonStyle(
+                                overlayColor: MaterialStatePropertyAll(
+                                    Colors.transparent)),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              '취소',
+                              style: AppTextStyles.PR_M_14
+                                  .copyWith(color: UsedColor.charcoal_black),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 53.h,
+                        width: 0.3.w,
+                        color: UsedColor.b_line,
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          height: 53.h,
+                          child: TextButton(
+                            style: const ButtonStyle(
+                                overlayColor: MaterialStatePropertyAll(
+                                    Colors.transparent)),
+                            onPressed: () async {
+                              // 저장 로직
+                            },
+                            child: Text(
+                              '저장',
+                              style: AppTextStyles.PR_M_14
+                                  .copyWith(color: UsedColor.charcoal_black),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           );
