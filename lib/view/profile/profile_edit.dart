@@ -422,28 +422,36 @@ class ProfileEdit extends StatelessWidget {
             style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
           ),
           SizedBox(height: 12.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: interestList.map((personality) {
-              return Padding(
-                padding: EdgeInsets.only(left: 8.0.w),
-                child: Container(
-                  width: 80.w,
-                  height: 24.h,
-                  decoration: BoxDecoration(
-                    color: UsedColor.image_card,
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Center(
-                    child: Text(
-                      personality,
-                      style: AppTextStyles.PR_R_12
-                          .copyWith(color: UsedColor.charcoal_black),
+          GestureDetector(
+            onTap: () {
+              _showInterestsEditDialog(context, userViewModel);
+            },
+            child: SizedBox(
+              width: 328.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: interestList.map((personality) {
+                  return Padding(
+                    padding: EdgeInsets.only(left: 8.0.w),
+                    child: Container(
+                      width: 80.w,
+                      height: 24.h,
+                      decoration: BoxDecoration(
+                        color: UsedColor.image_card,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Center(
+                        child: Text(
+                          personality,
+                          style: AppTextStyles.PR_R_12
+                              .copyWith(color: UsedColor.charcoal_black),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
-            }).toList(),
+                  );
+                }).toList(),
+              ),
+            ),
           ),
           SizedBox(height: 8.h),
           Divider(
@@ -473,28 +481,36 @@ class ProfileEdit extends StatelessWidget {
             style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
           ),
           SizedBox(height: 12.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: purposeList.map((personality) {
-              return Padding(
-                padding: EdgeInsets.only(left: 8.0.w),
-                child: Container(
-                  width: 80.w,
-                  height: 24.h,
-                  decoration: BoxDecoration(
-                    color: UsedColor.image_card,
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Center(
-                    child: Text(
-                      personality,
-                      style: AppTextStyles.PR_R_12
-                          .copyWith(color: UsedColor.charcoal_black),
+          GestureDetector(
+            onTap: () {
+              _showMeetingPurposeEditDialog(context, userViewModel);
+            },
+            child: SizedBox(
+              width: 328.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: purposeList.map((personality) {
+                  return Padding(
+                    padding: EdgeInsets.only(left: 8.0.w),
+                    child: Container(
+                      width: 80.w,
+                      height: 24.h,
+                      decoration: BoxDecoration(
+                        color: UsedColor.image_card,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Center(
+                        child: Text(
+                          personality,
+                          style: AppTextStyles.PR_R_12
+                              .copyWith(color: UsedColor.charcoal_black),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
-            }).toList(),
+                  );
+                }).toList(),
+              ),
+            ),
           ),
           SizedBox(height: 8.h),
           Divider(
@@ -954,7 +970,7 @@ class ProfileEdit extends StatelessWidget {
         });
   }
 
-  //MARK: - 소속 수정 오버레이
+  //MARK: - 성격 수정 오버레이
   void _showPersonalityEditDialog(
       BuildContext context, UserViewModel userViewModel) {
     List<String> options = [
@@ -1013,6 +1029,321 @@ class ProfileEdit extends StatelessWidget {
                         ),
                         SizedBox(height: 26.h),
                         // TODO : 성격 컨테이너들
+                        Wrap(
+                          spacing: 12.w,
+                          runSpacing: 12.h,
+                          children: options.map((option) {
+                            // bool isSelected =
+                            //     viewModel.selectedRelationshipKeywords.contains(option);
+                            return GestureDetector(
+                              onTap: () {
+                                // viewModel.selectRelationshipKeyword(option);
+                              },
+                              child: Container(
+                                width: 80.w,
+                                height: 24.h,
+                                decoration: BoxDecoration(
+                                  // color: isSelected ? UsedColor.button : Colors.white,
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.r),
+                                  border: Border.all(
+                                    // color: isSelected ? UsedColor.button : UsedColor.b_line,
+                                    color: UsedColor.b_line,
+                                    width: 1.5.w,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    option,
+                                    style: AppTextStyles.PR_M_12.copyWith(
+                                        // color: isSelected ? Colors.white : Colors.black,
+                                        color: UsedColor.charcoal_black,
+                                        decoration: TextDecoration.none),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                  Container(
+                    width: 328.w,
+                    height: 0.3.h,
+                    color: UsedColor.b_line,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 53.h,
+                          child: TextButton(
+                            // !: -잉크 효과 이상해서 없애둠
+                            style: const ButtonStyle(
+                                overlayColor: MaterialStatePropertyAll(
+                                    Colors.transparent)),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              '취소',
+                              style: AppTextStyles.PR_M_14
+                                  .copyWith(color: UsedColor.charcoal_black),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 53.h,
+                        width: 0.3.w,
+                        color: UsedColor.b_line,
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          height: 53.h,
+                          child: TextButton(
+                            style: const ButtonStyle(
+                                overlayColor: MaterialStatePropertyAll(
+                                    Colors.transparent)),
+                            onPressed: () async {
+                              // 저장 로직
+                            },
+                            child: Text(
+                              '저장',
+                              style: AppTextStyles.PR_M_14
+                                  .copyWith(color: UsedColor.charcoal_black),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  //MARK: - 관심사 수정 오버레이
+  void _showInterestsEditDialog(
+      BuildContext context, UserViewModel userViewModel) {
+    List<String> options = [
+      "운동",
+      "음악",
+      "영화",
+      "독서",
+      "대학",
+      "취업",
+      "친구",
+      "맛집",
+      "여행",
+      "주식",
+      "게임",
+      "연예인"
+    ];
+    showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black.withOpacity(0.5), // 외부 색상
+        transitionDuration:
+            const Duration(milliseconds: 200), // 사라질 때 애니메이션 지속 시간
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              width: 328.w,
+              height: 312.h,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.0.r),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 24..h, left: 28.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '관심사를 선택해주세요.',
+                          style: AppTextStyles.PR_SB_16.copyWith(
+                              color: UsedColor.charcoal_black,
+                              decoration: TextDecoration.none),
+                        ),
+                        SizedBox(height: 12.h),
+                        Text(
+                          '가장 관심있는 분야 3가지를 선택해주세요.',
+                          style: AppTextStyles.PR_SB_12.copyWith(
+                              color: UsedColor.text_3,
+                              decoration: TextDecoration.none),
+                        ),
+                        SizedBox(height: 26.h),
+                        // TODO : 관심사 컨테이너들
+                        Wrap(
+                          spacing: 12.w,
+                          runSpacing: 12.h,
+                          children: options.map((option) {
+                            // bool isSelected =
+                            //     viewModel.selectedRelationshipKeywords.contains(option);
+                            return GestureDetector(
+                              onTap: () {
+                                // viewModel.selectRelationshipKeyword(option);
+                              },
+                              child: Container(
+                                width: 80.w,
+                                height: 24.h,
+                                decoration: BoxDecoration(
+                                  // color: isSelected ? UsedColor.button : Colors.white,
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.r),
+                                  border: Border.all(
+                                    // color: isSelected ? UsedColor.button : UsedColor.b_line,
+                                    color: UsedColor.b_line,
+                                    width: 1.5.w,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    option,
+                                    style: AppTextStyles.PR_M_12.copyWith(
+                                        // color: isSelected ? Colors.white : Colors.black,
+                                        color: UsedColor.charcoal_black,
+                                        decoration: TextDecoration.none),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                  Container(
+                    width: 328.w,
+                    height: 0.3.h,
+                    color: UsedColor.b_line,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 53.h,
+                          child: TextButton(
+                            // !: -잉크 효과 이상해서 없애둠
+                            style: const ButtonStyle(
+                                overlayColor: MaterialStatePropertyAll(
+                                    Colors.transparent)),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              '취소',
+                              style: AppTextStyles.PR_M_14
+                                  .copyWith(color: UsedColor.charcoal_black),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 53.h,
+                        width: 0.3.w,
+                        color: UsedColor.b_line,
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          height: 53.h,
+                          child: TextButton(
+                            style: const ButtonStyle(
+                                overlayColor: MaterialStatePropertyAll(
+                                    Colors.transparent)),
+                            onPressed: () async {
+                              // 저장 로직
+                            },
+                            child: Text(
+                              '저장',
+                              style: AppTextStyles.PR_M_14
+                                  .copyWith(color: UsedColor.charcoal_black),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  //MARK: - 만남 목적 수정 오버레이
+  void _showMeetingPurposeEditDialog(
+      BuildContext context, UserViewModel userViewModel) {
+    List<String> options = [
+      "친목",
+      "자기성찰",
+      "기록",
+      "취미 공유",
+      "자기계발",
+      "새로운 경험",
+      "독서 모임",
+      "여럿이 운동",
+      "취업 스터디",
+      "맛집 탐방",
+      "기타",
+    ];
+    showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black.withOpacity(0.5), // 외부 색상
+        transitionDuration:
+            const Duration(milliseconds: 200), // 사라질 때 애니메이션 지속 시간
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              width: 328.w,
+              height: 312.h,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.0.r),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 24..h, left: 28.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '만남 목적을 선택해주세요.',
+                          style: AppTextStyles.PR_SB_16.copyWith(
+                              color: UsedColor.charcoal_black,
+                              decoration: TextDecoration.none),
+                        ),
+                        SizedBox(height: 12.h),
+                        Text(
+                          '만남을 가지는 목적을 1~3개 선택해주세요.',
+                          style: AppTextStyles.PR_SB_12.copyWith(
+                              color: UsedColor.text_3,
+                              decoration: TextDecoration.none),
+                        ),
+                        SizedBox(height: 26.h),
+                        // TODO : 관심사 컨테이너들
                         Wrap(
                           spacing: 12.w,
                           runSpacing: 12.h,
