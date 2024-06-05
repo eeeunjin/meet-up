@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -266,10 +267,18 @@ class ProfileEdit extends StatelessWidget {
             style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
           ),
           SizedBox(height: 16.h),
-          Text(
-            '거주지',
-            style:
-                AppTextStyles.PR_R_16.copyWith(color: UsedColor.charcoal_black),
+          GestureDetector(
+            onTap: () {
+              _showAddressEditDialog(context, userViewModel);
+            },
+            child: SizedBox(
+              width: 328.w,
+              child: Text(
+                '거주지',
+                style: AppTextStyles.PR_R_16
+                    .copyWith(color: UsedColor.charcoal_black),
+              ),
+            ),
           ),
           SizedBox(height: 8.h),
           Divider(
@@ -304,26 +313,35 @@ class ProfileEdit extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w, right: 32.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '소속 분류',
-            style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            translationJob(job),
-            style:
-                AppTextStyles.PR_R_16.copyWith(color: UsedColor.charcoal_black),
-          ),
-          SizedBox(height: 8.h),
-          Divider(
-            thickness: 0.5.h,
-            height: 0.h,
-            color: UsedColor.line,
-          ),
-        ],
+      child: GestureDetector(
+        onTap: () {
+          // 소속 분류 선택 창
+          _showClassificationEditDialog(context, userViewModel);
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '소속 분류',
+              style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+            ),
+            SizedBox(height: 16.h),
+            SizedBox(
+              width: 328.w,
+              child: Text(
+                translationJob(job),
+                style: AppTextStyles.PR_R_16
+                    .copyWith(color: UsedColor.charcoal_black),
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Divider(
+              thickness: 0.5.h,
+              height: 0.h,
+              color: UsedColor.line,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -345,28 +363,36 @@ class ProfileEdit extends StatelessWidget {
             style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
           ),
           SizedBox(height: 12.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: personalityList.map((personality) {
-              return Padding(
-                padding: EdgeInsets.only(left: 8.0.w),
-                child: Container(
-                  width: 80.w,
-                  height: 24.h,
-                  decoration: BoxDecoration(
-                    color: UsedColor.image_card,
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Center(
-                    child: Text(
-                      personality,
-                      style: AppTextStyles.PR_R_12
-                          .copyWith(color: UsedColor.charcoal_black),
+          GestureDetector(
+            onTap: () {
+              _showPersonalityEditDialog(context, userViewModel);
+            },
+            child: SizedBox(
+              width: 328.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: personalityList.map((personality) {
+                  return Padding(
+                    padding: EdgeInsets.only(left: 8.0.w),
+                    child: Container(
+                      width: 80.w,
+                      height: 24.h,
+                      decoration: BoxDecoration(
+                        color: UsedColor.image_card,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Center(
+                        child: Text(
+                          personality,
+                          style: AppTextStyles.PR_R_12
+                              .copyWith(color: UsedColor.charcoal_black),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
-            }).toList(),
+                  );
+                }).toList(),
+              ),
+            ),
           ),
           SizedBox(height: 8.h),
           Divider(
@@ -392,7 +418,7 @@ class ProfileEdit extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '성격',
+            '관심사',
             style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
           ),
           SizedBox(height: 12.h),
@@ -585,6 +611,448 @@ class ProfileEdit extends StatelessWidget {
                       ],
                     ),
                   ),
+                  Container(
+                    width: 328.w,
+                    height: 0.3.h,
+                    color: UsedColor.b_line,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 53.h,
+                          child: TextButton(
+                            // !: -잉크 효과 이상해서 없애둠
+                            style: const ButtonStyle(
+                                overlayColor: MaterialStatePropertyAll(
+                                    Colors.transparent)),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              '취소',
+                              style: AppTextStyles.PR_M_14
+                                  .copyWith(color: UsedColor.charcoal_black),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 53.h,
+                        width: 0.3.w,
+                        color: UsedColor.b_line,
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          height: 53.h,
+                          child: TextButton(
+                            style: const ButtonStyle(
+                                overlayColor: MaterialStatePropertyAll(
+                                    Colors.transparent)),
+                            onPressed: () async {
+                              // 저장 로직
+                            },
+                            child: Text(
+                              '저장',
+                              style: AppTextStyles.PR_M_14
+                                  .copyWith(color: UsedColor.charcoal_black),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  //MARK: - 소속 수정 오버레이
+  void _showClassificationEditDialog(
+      BuildContext context, UserViewModel userViewModel) {
+    showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black.withOpacity(0.5), // 외부 색상
+        transitionDuration:
+            const Duration(milliseconds: 200), // 사라질 때 애니메이션 지속 시간
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              width: 328.w,
+              height: 312.h,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.0.r),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 24..h, left: 28.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '소속을 선택해주세요.',
+                          style: AppTextStyles.PR_SB_16.copyWith(
+                              color: UsedColor.charcoal_black,
+                              decoration: TextDecoration.none),
+                        ),
+                        SizedBox(height: 12.h),
+                        Text(
+                          '본인의 소속을 1개 선택해주세요.',
+                          style: AppTextStyles.PR_SB_12.copyWith(
+                              color: UsedColor.text_3,
+                              decoration: TextDecoration.none),
+                        ),
+                        SizedBox(height: 26.h),
+                        // TODO : 소속 선택 컨테이너 박스
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 80.w,
+                              height: 24.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.r),
+                                border: Border.all(
+                                    width: 1.5.w, color: UsedColor.b_line),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '대학생',
+                                  style: AppTextStyles.PR_M_12.copyWith(
+                                      color: UsedColor.charcoal_black,
+                                      decoration: TextDecoration.none),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Container(
+                              width: 80.w,
+                              height: 24.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.r),
+                                border: Border.all(
+                                    width: 1.5.w, color: UsedColor.b_line),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '직장인',
+                                  style: AppTextStyles.PR_M_12.copyWith(
+                                      color: UsedColor.charcoal_black,
+                                      decoration: TextDecoration.none),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Container(
+                              width: 80.w,
+                              height: 24.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.r),
+                                border: Border.all(
+                                    width: 1.5.w, color: UsedColor.b_line),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '프리랜서',
+                                  style: AppTextStyles.PR_M_12.copyWith(
+                                      color: UsedColor.charcoal_black,
+                                      decoration: TextDecoration.none),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 12.w),
+                        Container(
+                          width: 80.w,
+                          height: 24.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.r),
+                            border: Border.all(
+                                width: 1.5.w, color: UsedColor.b_line),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '무직',
+                              style: AppTextStyles.PR_M_12.copyWith(
+                                  color: UsedColor.charcoal_black,
+                                  decoration: TextDecoration.none),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // SizedBox(height: 105.h),
+                  const Spacer(),
+                  Container(
+                    width: 328.w,
+                    height: 0.3.h,
+                    color: UsedColor.b_line,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 53.h,
+                          child: TextButton(
+                            // !: -잉크 효과 이상해서 없애둠
+                            style: const ButtonStyle(
+                                overlayColor: MaterialStatePropertyAll(
+                                    Colors.transparent)),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              '취소',
+                              style: AppTextStyles.PR_M_14
+                                  .copyWith(color: UsedColor.charcoal_black),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 53.h,
+                        width: 0.3.w,
+                        color: UsedColor.b_line,
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          height: 53.h,
+                          child: TextButton(
+                            style: const ButtonStyle(
+                                overlayColor: MaterialStatePropertyAll(
+                                    Colors.transparent)),
+                            onPressed: () async {
+                              // 저장 로직
+                            },
+                            child: Text(
+                              '저장',
+                              style: AppTextStyles.PR_M_14
+                                  .copyWith(color: UsedColor.charcoal_black),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  //MARK: - 주소 수정 오버레이
+  void _showAddressEditDialog(
+      BuildContext context, UserViewModel userViewModel) {
+    showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black.withOpacity(0.5), // 외부 색상
+        transitionDuration:
+            const Duration(milliseconds: 200), // 사라질 때 애니메이션 지속 시간
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              width: 328.w,
+              height: 256.h,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.0.r),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 24..h, left: 28.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '거주지를 선택해주세요.',
+                          style: AppTextStyles.PR_SB_16.copyWith(
+                              color: UsedColor.charcoal_black,
+                              decoration: TextDecoration.none),
+                        ),
+                        SizedBox(height: 12.h),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: 328.w,
+                    height: 0.3.h,
+                    color: UsedColor.b_line,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 53.h,
+                          child: TextButton(
+                            // !: -잉크 효과 이상해서 없애둠
+                            style: const ButtonStyle(
+                                overlayColor: MaterialStatePropertyAll(
+                                    Colors.transparent)),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              '취소',
+                              style: AppTextStyles.PR_M_14
+                                  .copyWith(color: UsedColor.charcoal_black),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 53.h,
+                        width: 0.3.w,
+                        color: UsedColor.b_line,
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          height: 53.h,
+                          child: TextButton(
+                            style: const ButtonStyle(
+                                overlayColor: MaterialStatePropertyAll(
+                                    Colors.transparent)),
+                            onPressed: () async {
+                              // 저장 로직
+                            },
+                            child: Text(
+                              '저장',
+                              style: AppTextStyles.PR_M_14
+                                  .copyWith(color: UsedColor.charcoal_black),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  //MARK: - 소속 수정 오버레이
+  void _showPersonalityEditDialog(
+      BuildContext context, UserViewModel userViewModel) {
+    List<String> options = [
+      "사교적인",
+      "소극적인",
+      "유머러스한",
+      "조용한",
+      "친절한",
+      "자신감 있는",
+      "계획적인",
+      "즉흥적인",
+      "창의적인",
+      "안정적인",
+      "낙관적인",
+      "열정적인"
+    ];
+    showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black.withOpacity(0.5), // 외부 색상
+        transitionDuration:
+            const Duration(milliseconds: 200), // 사라질 때 애니메이션 지속 시간
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              width: 328.w,
+              height: 312.h,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.0.r),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 24..h, left: 28.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '성격을 선택해주세요.',
+                          style: AppTextStyles.PR_SB_16.copyWith(
+                              color: UsedColor.charcoal_black,
+                              decoration: TextDecoration.none),
+                        ),
+                        SizedBox(height: 12.h),
+                        Text(
+                          '나를 가장 잘 표현하는 키워드 3가지를 선택해주세요.',
+                          style: AppTextStyles.PR_SB_12.copyWith(
+                              color: UsedColor.text_3,
+                              decoration: TextDecoration.none),
+                        ),
+                        SizedBox(height: 26.h),
+                        // TODO : 성격 컨테이너들
+                        Wrap(
+                          spacing: 12.w,
+                          runSpacing: 12.h,
+                          children: options.map((option) {
+                            // bool isSelected =
+                            //     viewModel.selectedRelationshipKeywords.contains(option);
+                            return GestureDetector(
+                              onTap: () {
+                                // viewModel.selectRelationshipKeyword(option);
+                              },
+                              child: Container(
+                                width: 80.w,
+                                height: 24.h,
+                                decoration: BoxDecoration(
+                                  // color: isSelected ? UsedColor.button : Colors.white,
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.r),
+                                  border: Border.all(
+                                    // color: isSelected ? UsedColor.button : UsedColor.b_line,
+                                    color: UsedColor.b_line,
+                                    width: 1.5.w,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    option,
+                                    style: AppTextStyles.PR_M_12.copyWith(
+                                        // color: isSelected ? Colors.white : Colors.black,
+                                        color: UsedColor.charcoal_black,
+                                        decoration: TextDecoration.none),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
                   Container(
                     width: 328.w,
                     height: 0.3.h,
