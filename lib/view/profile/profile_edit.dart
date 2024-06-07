@@ -725,7 +725,7 @@ class ProfileEdit extends StatelessWidget {
                         SizedBox(height: 12.h),
                         Text(
                           '본인의 소속을 1개 선택해주세요.',
-                          style: AppTextStyles.PR_SB_12.copyWith(
+                          style: AppTextStyles.SU_R_12.copyWith(
                               color: UsedColor.text_3,
                               decoration: TextDecoration.none),
                         ),
@@ -1023,7 +1023,7 @@ class ProfileEdit extends StatelessWidget {
                         SizedBox(height: 12.h),
                         Text(
                           '나를 가장 잘 표현하는 키워드 3가지를 선택해주세요.',
-                          style: AppTextStyles.PR_SB_12.copyWith(
+                          style: AppTextStyles.SU_R_12.copyWith(
                               color: UsedColor.text_3,
                               decoration: TextDecoration.none),
                         ),
@@ -1174,7 +1174,7 @@ class ProfileEdit extends StatelessWidget {
                       children: [
                         Text(
                           '관심사를 선택해주세요.',
-                          style: AppTextStyles.PR_SB_16.copyWith(
+                          style: AppTextStyles.SU_R_12.copyWith(
                               color: UsedColor.charcoal_black,
                               decoration: TextDecoration.none),
                         ),
