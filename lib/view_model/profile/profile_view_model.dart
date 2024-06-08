@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meet_up/util/image.dart';
 
 class ProfileViewModel with ChangeNotifier {
   String _selectedRank = 'Novice';
@@ -43,5 +44,36 @@ class ProfileViewModel with ChangeNotifier {
   void pressConfirmButton() {
     _isConfirmButtonPressed = !_isConfirmButtonPressed;
     notifyListeners();
+  }
+
+  // 프로필 수정
+  String _selectedIconPath = '';
+
+  String get selectedIconPath => _selectedIconPath;
+
+  void setSelectedIconPath(String path) {
+    _selectedIconPath = path;
+    notifyListeners();
+  }
+
+  void initializeSelectedIconPath(String profileIcon) {
+    final profileIconName = profileIcon.split('/').last.split('_').first;
+    switch (profileIconName) {
+      case "fedro":
+        setSelectedIconPath(ImagePath.fedroSelect);
+        break;
+      case "cogy":
+        setSelectedIconPath(ImagePath.cogySelect);
+        break;
+      case "piggy":
+        setSelectedIconPath(ImagePath.piggySelect);
+        break;
+      case "ham":
+        setSelectedIconPath(ImagePath.hamSelect);
+        break;
+      case "aengmu":
+        setSelectedIconPath(ImagePath.aengmuSelect);
+        break;
+    }
   }
 }

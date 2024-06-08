@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -8,6 +6,7 @@ import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
+import 'package:meet_up/view_model/profile/profile_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -97,6 +96,8 @@ class ProfileEdit extends StatelessWidget {
   //MARK: - 프로필 사진
   Widget _profileImage(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final profileViewModel =
+        Provider.of<ProfileViewModel>(context, listen: false);
     final profileIcon = userViewModel.userModel!.profile_icon;
     final profileIconName = profileIcon.split('/').last.split('_').first;
     String path = '';
@@ -115,7 +116,7 @@ class ProfileEdit extends StatelessWidget {
     return Center(
       child: GestureDetector(
         onTap: () {
-          _showProfileEditDialog(context, userViewModel);
+          _showProfileEditDialog(context, userViewModel, profileViewModel);
         },
         child: Stack(
           children: [
@@ -535,8 +536,11 @@ class ProfileEdit extends StatelessWidget {
   }
 
   //MARK: - 프로필 수정 오버레이
-  void _showProfileEditDialog(
-      BuildContext context, UserViewModel userViewModel) {
+  void _showProfileEditDialog(BuildContext context, UserViewModel userViewModel,
+      ProfileViewModel profileViewModel) {
+    profileViewModel
+        .initializeSelectedIconPath(userViewModel.userModel!.profile_icon);
+
     showGeneralDialog(
         context: context,
         barrierDismissible: true,
@@ -548,139 +552,234 @@ class ProfileEdit extends StatelessWidget {
         pageBuilder: (BuildContext buildContext, Animation animation,
             Animation secondaryAnimation) {
           return Center(
-            child: Container(
-              width: 328.w,
-              height: 312.h,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20.0.r),
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 24..h, left: 28.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '변경할 프로필을 선택해주세요.',
-                          style: AppTextStyles.PR_SB_16.copyWith(
-                              color: UsedColor.charcoal_black,
-                              decoration: TextDecoration.none),
-                        ),
-                        SizedBox(height: 32.h),
-                        Padding(
-                          padding: EdgeInsets.only(left: 16.w),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 72.w,
-                                height: 72.h,
-                                decoration:
-                                    const BoxDecoration(shape: BoxShape.circle),
-                                child: Image.asset(ImagePath.cogyDeselect),
-                              ),
-                              SizedBox(width: 12.w),
-                              Container(
-                                width: 72.w,
-                                height: 72.h,
-                                decoration:
-                                    const BoxDecoration(shape: BoxShape.circle),
-                                child: Image.asset(ImagePath.piggyDeselect),
-                              ),
-                              SizedBox(width: 12.w),
-                              Container(
-                                width: 72.w,
-                                height: 72.h,
-                                decoration:
-                                    const BoxDecoration(shape: BoxShape.circle),
-                                child: Image.asset(ImagePath.aengmuDeselect),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 12.h),
-                        Padding(
-                          padding: EdgeInsets.only(left: 59.0.w),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 72.w,
-                                height: 72.h,
-                                decoration:
-                                    const BoxDecoration(shape: BoxShape.circle),
-                                child: Image.asset(ImagePath.hamDeselect),
-                              ),
-                              SizedBox(width: 12.w),
-                              Container(
-                                width: 72.w,
-                                height: 72.h,
-                                decoration:
-                                    const BoxDecoration(shape: BoxShape.circle),
-                                child: Image.asset(ImagePath.fedroDeselect),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 27.h),
-                      ],
-                    ),
+            child: ChangeNotifierProvider.value(
+              value: profileViewModel,
+              child: Consumer<ProfileViewModel>(
+                  builder: (context, profileViewModel, child) {
+                return Container(
+                  width: 328.w,
+                  height: 312.h,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20.0.r),
                   ),
-                  Container(
-                    width: 328.w,
-                    height: 0.3.h,
-                    color: UsedColor.b_line,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Column(
                     children: [
-                      Expanded(
-                        child: SizedBox(
-                          height: 53.h,
-                          child: TextButton(
-                            // !: -잉크 효과 이상해서 없애둠
-                            style: const ButtonStyle(
-                                overlayColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(
-                              '취소',
-                              style: AppTextStyles.PR_M_14
-                                  .copyWith(color: UsedColor.charcoal_black),
+                      Padding(
+                        padding: EdgeInsets.only(top: 24..h, left: 28.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '변경할 프로필을 선택해주세요.',
+                              style: AppTextStyles.PR_SB_16.copyWith(
+                                  color: UsedColor.charcoal_black,
+                                  decoration: TextDecoration.none),
                             ),
-                          ),
+                            SizedBox(height: 32.h),
+                            Padding(
+                              padding: EdgeInsets.only(left: 16.w),
+                              child: Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () =>
+                                        profileViewModel.setSelectedIconPath(
+                                            ImagePath.cogySelect),
+                                    child: Container(
+                                      width: 72.w,
+                                      height: 72.h,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border:
+                                            profileViewModel.selectedIconPath ==
+                                                    ImagePath.cogySelect
+                                                ? Border.all(
+                                                    color: UsedColor.b_line,
+                                                    width: 2.5.w)
+                                                : null,
+                                      ),
+                                      child: Image.asset(
+                                          profileViewModel.selectedIconPath ==
+                                                  ImagePath.cogySelect
+                                              ? ImagePath.cogySelect
+                                              : ImagePath.cogyDeselect),
+                                    ),
+                                  ),
+                                  SizedBox(width: 12.w),
+                                  GestureDetector(
+                                    onTap: () =>
+                                        profileViewModel.setSelectedIconPath(
+                                            ImagePath.piggySelect),
+                                    child: Container(
+                                      width: 72.w,
+                                      height: 72.h,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border:
+                                            profileViewModel.selectedIconPath ==
+                                                    ImagePath.piggySelect
+                                                ? Border.all(
+                                                    color: UsedColor.b_line,
+                                                    width: 2.5.w)
+                                                : null,
+                                      ),
+                                      child: Image.asset(
+                                        profileViewModel.selectedIconPath ==
+                                                ImagePath.piggySelect
+                                            ? ImagePath.piggySelect
+                                            : ImagePath.piggyDeselect,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 12.w),
+                                  GestureDetector(
+                                    onTap: () =>
+                                        profileViewModel.setSelectedIconPath(
+                                            ImagePath.aengmuSelect),
+                                    child: Container(
+                                      width: 72.w,
+                                      height: 72.h,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border:
+                                            profileViewModel.selectedIconPath ==
+                                                    ImagePath.aengmuSelect
+                                                ? Border.all(
+                                                    color: UsedColor.b_line,
+                                                    width: 2.5.w)
+                                                : null,
+                                      ),
+                                      child: Image.asset(
+                                        profileViewModel.selectedIconPath ==
+                                                ImagePath.aengmuSelect
+                                            ? ImagePath.aengmuSelect
+                                            : ImagePath.aengmuDeselect,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            Padding(
+                              padding: EdgeInsets.only(left: 59.0.w),
+                              child: Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () =>
+                                        profileViewModel.setSelectedIconPath(
+                                            ImagePath.hamSelect),
+                                    child: Container(
+                                      width: 72.w,
+                                      height: 72.h,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border:
+                                            profileViewModel.selectedIconPath ==
+                                                    ImagePath.hamSelect
+                                                ? Border.all(
+                                                    color: UsedColor.b_line,
+                                                    width: 2.5.w)
+                                                : null,
+                                      ),
+                                      child: Image.asset(
+                                        profileViewModel.selectedIconPath ==
+                                                ImagePath.hamSelect
+                                            ? ImagePath.hamSelect
+                                            : ImagePath.hamDeselect,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 12.w),
+                                  GestureDetector(
+                                    onTap: () =>
+                                        profileViewModel.setSelectedIconPath(
+                                            ImagePath.fedroSelect),
+                                    child: Container(
+                                      width: 72.w,
+                                      height: 72.h,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border:
+                                            profileViewModel.selectedIconPath ==
+                                                    ImagePath.fedroSelect
+                                                ? Border.all(
+                                                    color: UsedColor.b_line,
+                                                    width: 2.5.w)
+                                                : null,
+                                      ),
+                                      child: Image.asset(
+                                        profileViewModel.selectedIconPath ==
+                                                ImagePath.fedroSelect
+                                            ? ImagePath.fedroSelect
+                                            : ImagePath.fedroDeselect,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 27.h),
+                          ],
                         ),
                       ),
                       Container(
-                        height: 53.h,
-                        width: 0.3.w,
+                        width: 328.w,
+                        height: 0.3.h,
                         color: UsedColor.b_line,
                       ),
-                      Expanded(
-                        child: SizedBox(
-                          height: 53.h,
-                          child: TextButton(
-                            style: const ButtonStyle(
-                                overlayColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
-                            onPressed: () async {
-                              // 저장 로직
-                            },
-                            child: Text(
-                              '저장',
-                              style: AppTextStyles.PR_M_14
-                                  .copyWith(color: UsedColor.charcoal_black),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: SizedBox(
+                              height: 53.h,
+                              child: TextButton(
+                                // !: -잉크 효과 이상해서 없애둠
+                                style: const ButtonStyle(
+                                    overlayColor: MaterialStatePropertyAll(
+                                        Colors.transparent)),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  '취소',
+                                  style: AppTextStyles.PR_M_14.copyWith(
+                                      color: UsedColor.charcoal_black),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          Container(
+                            height: 53.h,
+                            width: 0.3.w,
+                            color: UsedColor.b_line,
+                          ),
+                          Expanded(
+                            child: SizedBox(
+                              height: 53.h,
+                              child: TextButton(
+                                style: const ButtonStyle(
+                                    overlayColor: MaterialStatePropertyAll(
+                                        Colors.transparent)),
+                                onPressed: () async {
+                                  // 저장 로직
+                                },
+                                child: Text(
+                                  '저장',
+                                  style: AppTextStyles.PR_M_14.copyWith(
+                                      color: UsedColor.charcoal_black),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                );
+              }),
             ),
           );
         });
@@ -725,7 +824,7 @@ class ProfileEdit extends StatelessWidget {
                         SizedBox(height: 12.h),
                         Text(
                           '본인의 소속을 1개 선택해주세요.',
-                          style: AppTextStyles.PR_SB_12.copyWith(
+                          style: AppTextStyles.SU_R_12.copyWith(
                               color: UsedColor.text_3,
                               decoration: TextDecoration.none),
                         ),
@@ -1023,7 +1122,7 @@ class ProfileEdit extends StatelessWidget {
                         SizedBox(height: 12.h),
                         Text(
                           '나를 가장 잘 표현하는 키워드 3가지를 선택해주세요.',
-                          style: AppTextStyles.PR_SB_12.copyWith(
+                          style: AppTextStyles.SU_R_12.copyWith(
                               color: UsedColor.text_3,
                               decoration: TextDecoration.none),
                         ),
@@ -1181,7 +1280,7 @@ class ProfileEdit extends StatelessWidget {
                         SizedBox(height: 12.h),
                         Text(
                           '가장 관심있는 분야 3가지를 선택해주세요.',
-                          style: AppTextStyles.PR_SB_12.copyWith(
+                          style: AppTextStyles.SU_R_12.copyWith(
                               color: UsedColor.text_3,
                               decoration: TextDecoration.none),
                         ),
@@ -1338,7 +1437,7 @@ class ProfileEdit extends StatelessWidget {
                         SizedBox(height: 12.h),
                         Text(
                           '만남을 가지는 목적을 1~3개 선택해주세요.',
-                          style: AppTextStyles.PR_SB_12.copyWith(
+                          style: AppTextStyles.SU_R_12.copyWith(
                               color: UsedColor.text_3,
                               decoration: TextDecoration.none),
                         ),
