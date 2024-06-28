@@ -271,7 +271,7 @@ class MeetBrowseMain extends StatelessWidget {
   }
 
   Widget _meetingRoom(BuildContext context) {
-    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final userViewModel = Provider.of<UserViewModel>(context);
     final meetFilterViewModel =
         Provider.of<MeetFilterViewModel>(context, listen: false);
     final meetBrowseViewModel = Provider.of<MeetBrowseViewModel>(context);

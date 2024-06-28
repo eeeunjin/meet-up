@@ -258,7 +258,7 @@ class MeetMain extends StatelessWidget {
       padding: EdgeInsets.only(right: 3.0.h),
       child: GestureDetector(
         onTap: () {
-          context.push('/coinMain');
+          context.goNamed('coinMain');
         },
         child: Align(
           alignment: Alignment.centerRight,

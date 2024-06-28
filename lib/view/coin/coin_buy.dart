@@ -1,8 +1,4 @@
-import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -16,7 +12,9 @@ import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:provider/provider.dart';
 
 class CoinBuy extends StatelessWidget {
-  const CoinBuy({super.key});
+  final String from;
+
+  const CoinBuy({super.key, required this.from});
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +35,13 @@ class CoinBuy extends StatelessWidget {
           SizedBox(height: 24.h),
           _coinPriceContainer(
               context: context, coinAmount: CoinAmount.fourThousand),
+          SizedBox(height: 28.h),
+          Text(
+            "하나의 상품은 최대 3개까지 구매 가능합니다.",
+            style: AppTextStyles.PR_B_12.copyWith(
+              color: UsedColor.text_5,
+            ),
+          ),
         ],
       ),
     );
@@ -83,7 +88,6 @@ class CoinBuy extends StatelessWidget {
     final coinBuyViewModel = Provider.of<CoinBuyViewModel>(context);
     return GestureDetector(
       onTap: () {
-        logger.d("coinAmount: $coinAmount, coinPrice: $coinAmount");
         coinBuyViewModel.setCoinAmount(coinAmount);
         showModalBottomSheet(
           context: context,
@@ -230,7 +234,7 @@ class CoinBuy extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    if (coinBuyViewModel.selectedNum < 99) {
+                    if (coinBuyViewModel.selectedNum < 3) {
                       coinBuyViewModel
                           .setSelectedNum(coinBuyViewModel.selectedNum + 1);
                     }
@@ -302,53 +306,31 @@ class CoinBuy extends StatelessWidget {
           SizedBox(height: 36.h),
           GestureDetector(
             onTap: () async {
-              // // 총 수량, 총 금액(총 수량 * 금액), 총 코인 수량(총 수량 * 코인 개수)을 로깅
-              // final int totalNum = coinBuyViewModel.selectedNum;
-              // final int totalPrice = coinBuyViewModel.selectedNum *
-              //     (coinBuyViewModel.coinAmount == CoinAmount.oneThousand
-              //         ? 600
-              //         : 2400);
-              // final int totalCoin = coinBuyViewModel.selectedNum *
-              //     (coinBuyViewModel.coinAmount == CoinAmount.oneThousand
-              //         ? 1000
-              //         : 4000);
-              // logger.d(
-              //     "총 수량: $totalNum 개, 결제 금액: $totalPrice 원, Coin 개수: $totalCoin C");
+              logger.d("결제 버튼 클릭");
+
+              InAppPurchase.instance.purchaseStream.listen(
+                (purchaseDetailsList) {
+                  for (PurchaseDetails purchaseDetails in purchaseDetailsList) {
+                    InAppPurchase.instance.completePurchase(purchaseDetails);
+                  }
+                },
+              );
+
+              final int totalCoin = coinBuyViewModel.selectedNum *
+                  (coinBuyViewModel.coinAmount == CoinAmount.oneThousand
+                      ? 1000
+                      : 4000);
 
               // MARK: - 인앱 결제 로직 구현
               // 코인 정보 가져오기
-              final response = await getProductsInfo();
+              final response = await getProductsInfo(totalCoin);
 
               // 결제 시도
-              final purchaseResult = await initiatePurchase(response);
+              await initiatePurchase(response);
 
-              // 결제 성공 시
-              final StreamSubscription<List<PurchaseDetails>> _ = InAppPurchase
-                  .instance.purchaseStream
-                  .listen((purchaseDetailsList) {
-                purchaseDetailsList
-                    .forEach((PurchaseDetails purchaseDetails) async {
-                  if (purchaseDetails.status == PurchaseStatus.pending) {
-                    // 구매가 진행 중입니다.
-                    logger.d("결제 진행 중");
-                  } else {
-                    if (purchaseDetails.status == PurchaseStatus.error) {
-                      // 구매 중 오류가 발생했습니다.
-                      logger.e("결제 오류: ${purchaseDetails.error}");
-                    } else if (purchaseDetails.status ==
-                        PurchaseStatus.purchased) {
-                      // 구매가 성공적으로 완료되었습니다.
-                      // 필요한 경우, 여기에서 구매 확인을 수행할 수 있습니다.
-                      if (purchaseDetails.pendingCompletePurchase) {
-                        await InAppPurchase.instance
-                            .completePurchase(purchaseDetails);
-                        logger.d("결제 성공");
-                        context.goNamed("coinBuySuccess");
-                      }
-                    }
-                  }
-                });
-              });
+              // while (context.canPop()) {
+              //   context.pop();
+              // }
             },
             child: Container(
               width: 329.w,

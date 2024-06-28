@@ -52,7 +52,7 @@ class ChatMain extends StatelessWidget {
   // MARK: - 내가 만든 방 / 다른 사람이 만든 방 테스트
   Widget _main(BuildContext context) {
     final chatViewModel = Provider.of<ChatViewModel>(context);
-    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final userViewModel = Provider.of<UserViewModel>(context);
 
     return StreamBuilder<QuerySnapshot>(
       // 내가 만든 방
@@ -95,7 +95,7 @@ class ChatMain extends StatelessWidget {
   // MARK: - 다른 사람이 만든 방 테스트 필터 테스트
   Widget _filterTest(BuildContext context) {
     final chatViewModel = Provider.of<ChatViewModel>(context);
-    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final userViewModel = Provider.of<UserViewModel>(context);
 
     return StreamBuilder<QuerySnapshot>(
       // 내가 만든 방을 제외한 다른 사람의 방
@@ -137,7 +137,7 @@ class ChatMain extends StatelessWidget {
   // MARK: - 다른 사람이 만든 방 상세 정보 출력 테스트
   Widget _detailInfoTest(BuildContext context) {
     final chatViewModel = Provider.of<ChatViewModel>(context);
-    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final userViewModel = Provider.of<UserViewModel>(context);
 
     return StreamBuilder<QuerySnapshot>(
       // 내가 만든 방을 제외한 다른 사람의 방

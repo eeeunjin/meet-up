@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -11,7 +9,9 @@ import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
 class CoinMain extends StatelessWidget {
-  const CoinMain({super.key});
+  final String from;
+
+  const CoinMain({super.key, required this.from});
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +133,12 @@ class CoinMain extends StatelessWidget {
               SizedBox(height: 22.h),
               GestureDetector(
                 onTap: () {
-                  context.goNamed('coinBuy');
+                  switch (from) {
+                    case 'Main':
+                      context.goNamed('coinBuyFromMain');
+                    case 'MeetManageMain':
+                      context.goNamed('coinBuyFromMeetManageMain');
+                  }
                 },
                 child: Container(
                   width: 332.w,
