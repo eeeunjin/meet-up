@@ -28,20 +28,23 @@ Future<ProductDetails> getProductsInfo() async {
 }
 
 // 결제 시도
-Future<void> initiatePurchase(ProductDetails productDetails) async {
+Future<bool> initiatePurchase(ProductDetails productDetails) async {
   // 결제 정보 설정
   final PurchaseParam purchaseParam = PurchaseParam(
     productDetails: productDetails,
   );
 
   // 결제 시도
-  final purchaseResponse = await InAppPurchase.instance
-      .buyNonConsumable(purchaseParam: purchaseParam);
+  final purchaseResponse = await InAppPurchase.instance.buyConsumable(
+    purchaseParam: purchaseParam,
+  );
 
   // 결제 결과
   if (!purchaseResponse) {
-    logger.e('[인앱결제] 결제 실패}');
+    logger.e('[인앱결제] 결제 요청 실패}');
   } else {
-    logger.d('[인앱결제] 결제 성공');
+    logger.d('[인앱결제] 결제 요청 성공');
   }
+
+  return purchaseResponse;
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -318,24 +320,53 @@ class CoinBuy extends StatelessWidget {
               final response = await getProductsInfo();
 
               // 결제 시도
-              initiatePurchase(response);
+              final purchaseResult = await initiatePurchase(response);
+
+              // 결제 성공 시
+              final StreamSubscription<List<PurchaseDetails>> _ = InAppPurchase
+                  .instance.purchaseStream
+                  .listen((purchaseDetailsList) {
+                purchaseDetailsList
+                    .forEach((PurchaseDetails purchaseDetails) async {
+                  if (purchaseDetails.status == PurchaseStatus.pending) {
+                    // 구매가 진행 중입니다.
+                    logger.d("결제 진행 중");
+                  } else {
+                    if (purchaseDetails.status == PurchaseStatus.error) {
+                      // 구매 중 오류가 발생했습니다.
+                      logger.e("결제 오류: ${purchaseDetails.error}");
+                    } else if (purchaseDetails.status ==
+                        PurchaseStatus.purchased) {
+                      // 구매가 성공적으로 완료되었습니다.
+                      // 필요한 경우, 여기에서 구매 확인을 수행할 수 있습니다.
+                      if (purchaseDetails.pendingCompletePurchase) {
+                        await InAppPurchase.instance
+                            .completePurchase(purchaseDetails);
+                        logger.d("결제 성공");
+                        context.goNamed("coinBuySuccess");
+                      }
+                    }
+                  }
+                });
+              });
             },
             child: Container(
-                width: 329.w,
-                height: 56.h,
-                decoration: BoxDecoration(
-                  color: UsedColor.button,
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
-                child: Center(
-                  child: Text(
-                    "결제",
-                    style: AppTextStyles.PR_SB_20.copyWith(
-                      color: Colors.white,
-                    ),
+              width: 329.w,
+              height: 56.h,
+              decoration: BoxDecoration(
+                color: UsedColor.button,
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              child: Center(
+                child: Text(
+                  "결제",
+                  style: AppTextStyles.PR_SB_20.copyWith(
+                    color: Colors.white,
                   ),
-                )),
-          )
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
