@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_up/main.dart';
+import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
 
@@ -19,6 +20,8 @@ class FirebaseRefs {
   // user collection
   CollectionReference colRefUser = FirebaseInstance.db.collection("users");
   CollectionReference colRefRoom = FirebaseInstance.db.collection("rooms");
+  CollectionReference colRefGoodHistory =
+      FirebaseInstance.db.collection("goodHistories");
 }
 
 ///
@@ -239,6 +242,10 @@ class FirebaseCRUD {
         } else if (T == EnterRequestModel) {
           EnterRequestModel enterRequest = data as EnterRequestModel;
           await docRef.set(enterRequest.toJson());
+          return true;
+        } else if (T == GoodHistoryModel) {
+          GoodHistoryModel goodHistory = data as GoodHistoryModel;
+          await docRef.set(goodHistory.toJson());
           return true;
         } else {
           // 지정하지 않은 모델인 경우 에러 반환

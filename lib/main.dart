@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:logger/logger.dart';
 import 'package:meet_up/loginFunc.dart';
+import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/router.dart';
 import 'package:meet_up/service/remote/firebase_options.dart';
 import 'package:meet_up/view_model/bot_nav_view_model.dart';
@@ -111,14 +114,18 @@ Future<void> initializeFirebase() async {
 Future<void> _listenToPurchaseUpdated(
     List<PurchaseDetails> purchaseDetailsList, BuildContext context) async {
   final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+  final coinBuyViewModel =
+      Provider.of<CoinBuyViewModel>(context, listen: false);
 
   for (PurchaseDetails purchaseDetails in purchaseDetailsList) {
     logger.d("purchaseDetails: ${purchaseDetails.productID}");
     if (purchaseDetails.status == PurchaseStatus.pending) {
       logger.d('Purchase pending');
+      coinBuyViewModel.setPurchaseStatus('pending');
     } else {
       if (purchaseDetails.status == PurchaseStatus.error) {
         logger.e('Purchase error');
+        coinBuyViewModel.setPurchaseStatus('error');
       } else if (purchaseDetails.status == PurchaseStatus.purchased) {
         logger.d('Purchase purchased');
         await InAppPurchase.instance.completePurchase(purchaseDetails);
@@ -132,9 +139,26 @@ Future<void> _listenToPurchaseUpdated(
         await userViewModel.updateUserInfo(data: {
           'coin': resultCoin,
         });
+
+        // 상품 구매 정보(영수증) 데이터베이스에 저장
+        GoodHistoryModel ghm = GoodHistoryModel(
+          gh_type: GoodHistoryType.cp.name,
+          gh_uid: userViewModel.uid!,
+          gh_result_coin: resultCoin,
+          gh_result_ticket: userViewModel.userModel!.ticket,
+          gh_change_coin_amount: purchaseCoin,
+          gh_change_ticket_amount: 0,
+          gh_product_id: purchaseDetails.productID,
+          gh_change_date: Timestamp.now(),
+        );
+
+        await coinBuyViewModel.createGoodHistory(goodHistoryModel: ghm);
+        coinBuyViewModel.setPurchaseStatus('purchased');
       } else if (purchaseDetails.status == PurchaseStatus.canceled) {
         logger.d('Purchase canceld');
+
         await InAppPurchase.instance.completePurchase(purchaseDetails);
+        coinBuyViewModel.setPurchaseStatus('canceled');
       }
     }
   }

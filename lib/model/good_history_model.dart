@@ -9,6 +9,7 @@ class GoodHistoryModel {
   int gh_result_ticket;
   int gh_change_coin_amount;
   int gh_change_ticket_amount;
+  String gh_product_id;
   Timestamp gh_change_date;
 
   GoodHistoryModel({
@@ -18,6 +19,7 @@ class GoodHistoryModel {
     required this.gh_result_ticket,
     required this.gh_change_coin_amount,
     required this.gh_change_ticket_amount,
+    required this.gh_product_id,
     required this.gh_change_date,
   });
 
@@ -29,6 +31,7 @@ class GoodHistoryModel {
           gh_result_ticket: json['gh_result_ticket']! as int,
           gh_change_coin_amount: json['gh_change_coin_amount']! as int,
           gh_change_ticket_amount: json['gh_change_ticket_amount']! as int,
+          gh_product_id: json['product_id']! as String,
           gh_change_date: json["gh_change_date"]! as Timestamp,
         );
 
@@ -40,6 +43,7 @@ class GoodHistoryModel {
       'gh_result_ticket': gh_result_ticket,
       'gh_change_coin_amount': gh_change_coin_amount,
       'gh_change_ticket_amount': gh_change_ticket_amount,
+      'product_id': gh_product_id,
       'gh_change_date': gh_change_date,
     };
   }
@@ -58,11 +62,10 @@ enum GoodHistoryType {
   tr, // 만남권 환불
   tu, // 만남권 사용
   to, // 만남권 획득 (미션 / 이벤트)
-  
+
   // 정기권(fixed)
   tpf, // 만남권 구매
   trf, // 만남권 환불
   tuf, // 만남권 사용
   tof, // 만남권 획득 (미션 / 이벤트)
 }
-

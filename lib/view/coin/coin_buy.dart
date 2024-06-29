@@ -320,9 +320,12 @@ class CoinBuy extends StatelessWidget {
               // 결제 시도
               await initiatePurchase(response);
 
-              // while (context.canPop()) {
-              //   context.pop();
-              // }
+              // 결제 완료 시
+              if (from == 'Main') {
+                context.goNamed('coinBuySuccessFromMain');
+              } else if (from == 'MeetManageMain') {
+                context.goNamed('coinBuySuccessFromMeetManageMain');
+              }
             },
             child: Container(
               width: 329.w,
