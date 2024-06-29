@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
-import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:logger/logger.dart';
 import 'package:meet_up/loginFunc.dart';
 import 'package:meet_up/router.dart';
@@ -137,6 +134,7 @@ Future<void> _listenToPurchaseUpdated(
         });
       } else if (purchaseDetails.status == PurchaseStatus.canceled) {
         logger.d('Purchase canceld');
+        await InAppPurchase.instance.completePurchase(purchaseDetails);
       }
     }
   }

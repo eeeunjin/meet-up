@@ -308,14 +308,6 @@ class CoinBuy extends StatelessWidget {
             onTap: () async {
               logger.d("결제 버튼 클릭");
 
-              InAppPurchase.instance.purchaseStream.listen(
-                (purchaseDetailsList) {
-                  for (PurchaseDetails purchaseDetails in purchaseDetailsList) {
-                    InAppPurchase.instance.completePurchase(purchaseDetails);
-                  }
-                },
-              );
-
               final int totalCoin = coinBuyViewModel.selectedNum *
                   (coinBuyViewModel.coinAmount == CoinAmount.oneThousand
                       ? 1000
