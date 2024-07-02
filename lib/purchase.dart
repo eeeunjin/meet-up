@@ -5,7 +5,7 @@ import 'package:meet_up/main.dart';
 // 상품 정보 가져오기
 Future<ProductDetails> getProductsInfo(int totalCoin) async {
   // 상품 ID
-  final Set<String> ids = {'coin${totalCoin}_saled'};
+  final Set<String> ids = {'coin${totalCoin}_s'};
 
   // 상품 정보 가져오기
   final ProductDetailsResponse response =

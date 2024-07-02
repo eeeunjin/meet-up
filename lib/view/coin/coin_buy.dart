@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:meet_up/main.dart';
 import 'package:meet_up/purchase.dart';
 import 'package:meet_up/util/color.dart';
@@ -103,12 +102,12 @@ class CoinBuy extends StatelessWidget {
       },
       child: Container(
         width: 329.w,
-        height: 56.h,
+        height: 61.h,
         decoration: BoxDecoration(
           color: coinBuyViewModel.coinAmount == coinAmount
               ? UsedColor.button
               : Colors.white,
-          borderRadius: BorderRadius.circular(19.r),
+          borderRadius: BorderRadius.circular(21.r),
           border: Border.all(
             color: coinBuyViewModel.coinAmount == coinAmount
                 ? UsedColor.button
@@ -127,7 +126,7 @@ class CoinBuy extends StatelessWidget {
             children: [
               Text(
                 coinAmount == CoinAmount.oneThousand ? "1,000 C" : "4,000 C",
-                style: AppTextStyles.PR_M_16.copyWith(
+                style: AppTextStyles.PR_M_18.copyWith(
                     color: coinBuyViewModel.coinAmount == coinAmount
                         ? Colors.white
                         : UsedColor.charcoal_black),
@@ -136,8 +135,8 @@ class CoinBuy extends StatelessWidget {
                 width: 12.w,
               ),
               Text(
-                coinAmount == CoinAmount.oneThousand ? "(일회권 1매)" : "(정기권 1매)",
-                style: AppTextStyles.SU_R_11.copyWith(
+                coinAmount == CoinAmount.oneThousand ? "(단일권 1매)" : "(정기권 1매)",
+                style: AppTextStyles.SU_R_12.copyWith(
                     color: coinBuyViewModel.coinAmount == coinAmount
                         ? Colors.white
                         : UsedColor.main),
@@ -145,7 +144,7 @@ class CoinBuy extends StatelessWidget {
               const Spacer(),
               Text(
                 coinAmount == CoinAmount.oneThousand ? "600원" : "2400원",
-                style: AppTextStyles.PR_SB_16.copyWith(
+                style: AppTextStyles.PR_SB_18.copyWith(
                   color: coinBuyViewModel.coinAmount == coinAmount
                       ? Colors.white
                       : UsedColor.violet,

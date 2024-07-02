@@ -5,6 +5,8 @@ import 'package:meet_up/view/chat/chat_main.dart';
 import 'package:meet_up/view/coin/coin_buy.dart';
 import 'package:meet_up/view/coin/coin_buy_success.dart';
 import 'package:meet_up/view/coin/coin_main.dart';
+import 'package:meet_up/view/coin/ticket_buy.dart';
+import 'package:meet_up/view/coin/ticket_buy_success.dart';
 import 'package:meet_up/view/login/login_main.dart';
 import 'package:meet_up/view/login/login_phone_num.dart';
 import 'package:meet_up/view/login/login_verification.dart';
@@ -194,20 +196,37 @@ final router = GoRouter(
           },
           routes: [
             GoRoute(
-                path: 'coinMain/coinBuy',
-                name: 'coinBuyFromMain',
-                builder: (context, state) {
-                  return const CoinBuy(from: 'Main');
-                },
-                routes: [
-                  GoRoute(
-                    path: 'coinMain/coinBuy/coinBuySuccess',
-                    name: 'coinBuySuccessFromMain',
-                    builder: (context, state) {
-                      return const CoinBuySuccess(from: 'Main');
-                    },
-                  )
-                ])
+              path: 'coinMain/coinBuy',
+              name: 'coinBuyFromMain',
+              builder: (context, state) {
+                return const CoinBuy(from: 'Main');
+              },
+              routes: [
+                GoRoute(
+                  path: 'coinMain/coinBuy/coinBuySuccess',
+                  name: 'coinBuySuccessFromMain',
+                  builder: (context, state) {
+                    return const CoinBuySuccess(from: 'Main');
+                  },
+                )
+              ],
+            ),
+            GoRoute(
+              path: 'coinMain/ticketBuy',
+              name: 'ticketBuyFromMain',
+              builder: (context, state) {
+                return const TicketBuy(from: 'Main');
+              },
+              routes: [
+                GoRoute(
+                  path: 'coinMain/ticketBuy/ticketBuySuccess',
+                  name: 'ticketBuySuccessFromMain',
+                  builder: (context, state) {
+                    return const TicketBuySuccess(from: 'Main');
+                  },
+                ),
+              ],
+            ),
           ],
         ),
         GoRoute(
@@ -240,6 +259,22 @@ final router = GoRouter(
                     )
                   ],
                 ),
+                GoRoute(
+                    path: 'meetManageMain/coinMain/ticketBuy',
+                    name: 'ticketBuyFromMeetManageMain',
+                    builder: (context, state) {
+                      return const TicketBuy(from: 'MeetManageMain');
+                    },
+                    routes: [
+                      GoRoute(
+                        path:
+                            'meetManageMain/coinMain/ticketBuy/ticketBuySuccess',
+                        name: 'ticketBuySuccessFromMeetManageMain',
+                        builder: (context, state) {
+                          return const TicketBuySuccess(from: 'MeetManageMain');
+                        },
+                      ),
+                    ]),
               ],
             ),
             GoRoute(
