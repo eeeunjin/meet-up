@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -14,8 +13,6 @@ class ProfileMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-    // logger.d(path);
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -72,7 +69,6 @@ class ProfileMain extends StatelessWidget {
   }
 
   Widget _topButtons(BuildContext context) {
-    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     return Padding(
       padding: EdgeInsets.only(right: 27.0.w),
       child: Row(
@@ -240,97 +236,102 @@ class ProfileMain extends StatelessWidget {
   //MARK: - 코인,티켓 박스
   Widget _coinAndTicketBox(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // 코인 박스
-        Container(
-          width: 162.w,
-          height: 96.h,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(22.r),
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(left: 24.0.w, top: 20.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  '코인',
-                  style: AppTextStyles.PR_SB_18
-                      .copyWith(color: UsedColor.charcoal_black),
-                ),
-                SizedBox(height: 9.h),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      ImagePath.profileCoinIcon,
-                      width: 32.w,
-                      height: 32.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 7.0.h, left: 7.w),
-                      child: Text(
-                        '${userViewModel.userModel!.coin} C',
-                        style: AppTextStyles.PR_R_14
-                            .copyWith(color: UsedColor.charcoal_black),
+    return GestureDetector(
+      onTap: () {
+        context.goNamed('coinMainFromProfileMain');
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // 코인 박스
+          Container(
+            width: 162.w,
+            height: 96.h,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(22.r),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(left: 24.0.w, top: 20.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    '코인',
+                    style: AppTextStyles.PR_SB_18
+                        .copyWith(color: UsedColor.charcoal_black),
+                  ),
+                  SizedBox(height: 9.h),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        ImagePath.profileCoinIcon,
+                        width: 32.w,
+                        height: 32.h,
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      Padding(
+                        padding: EdgeInsets.only(top: 7.0.h, left: 7.w),
+                        child: Text(
+                          '${userViewModel.userModel!.coin} C',
+                          style: AppTextStyles.PR_R_14
+                              .copyWith(color: UsedColor.charcoal_black),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        SizedBox(width: 16.w),
-        // 만남권 박스
-        Container(
-          width: 162.w,
-          height: 96.h,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(22.r),
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(left: 24.0.w, top: 20.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  '만남권',
-                  style: AppTextStyles.PR_SB_18
-                      .copyWith(color: UsedColor.charcoal_black),
-                ),
-                SizedBox(height: 9.h),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      ImagePath.profileTicketIcon,
-                      width: 32.w,
-                      height: 32.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 7.0.h, left: 7.w),
-                      child: Text(
-                        '${userViewModel.userModel!.ticket}장',
-                        style: AppTextStyles.PR_R_14
-                            .copyWith(color: UsedColor.charcoal_black),
+          SizedBox(width: 16.w),
+          // 만남권 박스
+          Container(
+            width: 162.w,
+            height: 96.h,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(22.r),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(left: 24.0.w, top: 20.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    '만남권',
+                    style: AppTextStyles.PR_SB_18
+                        .copyWith(color: UsedColor.charcoal_black),
+                  ),
+                  SizedBox(height: 9.h),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        ImagePath.profileTicketIcon,
+                        width: 32.w,
+                        height: 32.h,
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      Padding(
+                        padding: EdgeInsets.only(top: 7.0.h, left: 7.w),
+                        child: Text(
+                          '${userViewModel.userModel!.ticket}장',
+                          style: AppTextStyles.PR_R_14
+                              .copyWith(color: UsedColor.charcoal_black),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

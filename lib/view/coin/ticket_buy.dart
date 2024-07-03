@@ -394,11 +394,14 @@ class TicketBuy extends StatelessWidget {
 
               // 결제 완료 페이지로 이동
               switch (from) {
-                case 'Main':
-                  context.goNamed('ticketBuySuccessFromMain');
+                case 'MeetMain':
+                  context.goNamed('ticketBuySuccessFromMeetMain');
                   break;
                 case 'MeetManageMain':
                   context.goNamed('ticketBuySuccessFromMeetManageMain');
+                  break;
+                case 'ProfileMain':
+                  context.goNamed('ticketBuySuccessFromProfileMain');
                   break;
               }
             },

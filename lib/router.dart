@@ -54,7 +54,7 @@ final router = GoRouter(
   navigatorKey: rootNavkey,
   initialLocation: '/',
   routes: <RouteBase>[
-    // ShellRoute
+    // botNavBar에 포함되는 화면
     ShellRoute(
       navigatorKey: shellNavkey,
       builder: (context, state, child) => Scaffold(
@@ -72,45 +72,38 @@ final router = GoRouter(
             //MARK: - Meet
             GoRoute(
               path: 'coinMain',
-              name: 'coinMain',
+              name: 'coinMainFromMeetMain',
               parentNavigatorKey: rootNavkey,
-              builder: (context, state) {
-                return const CoinMain(from: 'Main');
-              },
+              builder: (context, state) => const CoinMain(from: 'MeetMain'),
               routes: [
                 GoRoute(
                   path: 'coinBuy',
-                  name: 'coinBuyFromMain',
+                  name: 'coinBuyFromMeetMain',
                   parentNavigatorKey: rootNavkey,
-                  builder: (context, state) {
-                    return const CoinBuy(from: 'Main');
-                  },
+                  builder: (context, state) => const CoinBuy(from: 'MeetMain'),
                   routes: [
                     GoRoute(
                       path: 'coinBuySuccess',
-                      name: 'coinBuySuccessFromMain',
+                      name: 'coinBuySuccessFromMeetMain',
                       parentNavigatorKey: rootNavkey,
-                      builder: (context, state) {
-                        return const CoinBuySuccess(from: 'Main');
-                      },
+                      builder: (context, state) =>
+                          const CoinBuySuccess(from: 'MeetMain'),
                     )
                   ],
                 ),
                 GoRoute(
                   path: 'ticketBuy',
-                  name: 'ticketBuyFromMain',
+                  name: 'ticketBuyFromMeetMain',
                   parentNavigatorKey: rootNavkey,
-                  builder: (context, state) {
-                    return const TicketBuy(from: 'Main');
-                  },
+                  builder: (context, state) =>
+                      const TicketBuy(from: 'MeetMain'),
                   routes: [
                     GoRoute(
                       path: 'ticketBuySuccess',
-                      name: 'ticketBuySuccessFromMain',
+                      name: 'ticketBuySuccessFromMeetMain',
                       parentNavigatorKey: rootNavkey,
-                      builder: (context, state) {
-                        return const TicketBuySuccess(from: 'Main');
-                      },
+                      builder: (context, state) =>
+                          const TicketBuySuccess(from: 'MeetMain'),
                     ),
                   ],
                 ),
@@ -291,9 +284,7 @@ final router = GoRouter(
               path: 'addPersonalSchedule',
               name: 'addPersonalSchedule',
               parentNavigatorKey: rootNavkey,
-              builder: (context, state) {
-                return const AddPersonalSchedule();
-              },
+              builder: (context, state) => const AddPersonalSchedule(),
             ),
           ],
         ),
@@ -313,51 +304,39 @@ final router = GoRouter(
               path: 'profileEdit',
               name: 'profileEdit',
               parentNavigatorKey: rootNavkey,
-              builder: (context, state) {
-                return const ProfileEdit();
-              },
+              builder: (context, state) => const ProfileEdit(),
             ),
             GoRoute(
               path: 'profileNoticationMain',
               name: 'profileNoticationMain',
               parentNavigatorKey: rootNavkey,
-              builder: (context, state) {
-                return const ProfileNotification();
-              },
+              builder: (context, state) => const ProfileNotification(),
             ),
             GoRoute(
               path: 'settingMain',
               name: 'settingMain',
               parentNavigatorKey: rootNavkey,
-              builder: (context, state) {
-                return const SettingMain();
-              },
+              builder: (context, state) => const SettingMain(),
               routes: [
                 // 회원 정보
                 GoRoute(
                   path: 'userInfo',
                   name: 'userInfo',
                   parentNavigatorKey: rootNavkey,
-                  builder: (context, state) {
-                    return const UserInfo();
-                  },
+                  builder: (context, state) => const UserInfo(),
                   routes: [
                     // 회원 탈퇴
                     GoRoute(
                       path: 'withdrawal',
                       name: 'withdrawal',
                       parentNavigatorKey: rootNavkey,
-                      builder: (context, state) {
-                        return const Withdrawal();
-                      },
+                      builder: (context, state) => const Withdrawal(),
                       routes: [
                         GoRoute(
                           path: 'withdrawalNext',
                           name: 'withdrawalNext',
                           parentNavigatorKey: rootNavkey,
-                          builder: (context, state) {
-                            return const WithdrawalNext();
-                          },
+                          builder: (context, state) => const WithdrawalNext(),
                         )
                       ],
                     ),
@@ -368,54 +347,42 @@ final router = GoRouter(
                   path: 'settingNotification',
                   name: 'settingNotification',
                   parentNavigatorKey: rootNavkey,
-                  builder: (context, state) {
-                    return const SettingNotification();
-                  },
+                  builder: (context, state) => const SettingNotification(),
                 ),
                 // 자주 묻는 질문
                 GoRoute(
                   path: 'question',
                   name: 'question',
                   parentNavigatorKey: rootNavkey,
-                  builder: (context, state) {
-                    return const Question();
-                  },
+                  builder: (context, state) => const Question(),
                 ),
                 // 공지사항
                 GoRoute(
                   path: 'noticed',
                   name: 'noticed',
                   parentNavigatorKey: rootNavkey,
-                  builder: (context, state) {
-                    return const Noticed();
-                  },
+                  builder: (context, state) => const Noticed(),
                 ),
                 // 개인정보처리방침
                 GoRoute(
                   path: 'privacyPolicy',
                   name: 'privacyPolicy',
                   parentNavigatorKey: rootNavkey,
-                  builder: (context, state) {
-                    return const PrivacyPolicy();
-                  },
+                  builder: (context, state) => const PrivacyPolicy(),
                 ),
                 // 서비스 이용약관
                 GoRoute(
                   path: 'accessTerms',
                   name: 'accessTerms',
                   parentNavigatorKey: rootNavkey,
-                  builder: (context, state) {
-                    return const AccessTerms();
-                  },
+                  builder: (context, state) => const AccessTerms(),
                 ),
                 // 오픈소스라이센스
                 GoRoute(
                   path: 'openSourceLicense',
                   name: 'openSourceLicense',
                   parentNavigatorKey: rootNavkey,
-                  builder: (context, state) {
-                    return const OpenSourceLicense();
-                  },
+                  builder: (context, state) => const OpenSourceLicense(),
                 ),
               ],
             ),
@@ -423,10 +390,48 @@ final router = GoRouter(
               path: 'rankMain',
               name: 'rankMain',
               parentNavigatorKey: rootNavkey,
-              builder: (context, state) {
-                return const RankMain();
-              },
+              builder: (context, state) => const RankMain(),
             ),
+            GoRoute(
+              path: 'coinMain',
+              name: 'coinMainFromProfileMain',
+              builder: (context, state) => const CoinMain(from: "ProfileMain"),
+              parentNavigatorKey: rootNavkey,
+              routes: [
+                GoRoute(
+                  path: 'coinBuy',
+                  name: 'coinBuyFromProfileMain',
+                  builder: (context, state) =>
+                      const CoinBuy(from: "ProfileMain"),
+                  parentNavigatorKey: rootNavkey,
+                  routes: [
+                    GoRoute(
+                      path: 'coinBuySuccess',
+                      name: 'coinBuySuccessFromProfileMain',
+                      builder: (context, state) =>
+                          const CoinBuySuccess(from: 'ProfileMain'),
+                      parentNavigatorKey: rootNavkey,
+                    )
+                  ],
+                ),
+                GoRoute(
+                  path: 'ticketBuy',
+                  name: 'ticketBuyFromProfileMain',
+                  builder: (context, state) =>
+                      const TicketBuy(from: 'ProfileMain'),
+                  parentNavigatorKey: rootNavkey,
+                  routes: [
+                    GoRoute(
+                      path: 'ticketBuySuccess',
+                      name: 'ticketBuySuccessFromProfileMain',
+                      builder: (context, state) =>
+                          const TicketBuySuccess(from: 'ProfileMain'),
+                      parentNavigatorKey: rootNavkey,
+                    )
+                  ],
+                ),
+              ],
+            )
           ],
         ),
       ],
@@ -450,16 +455,12 @@ final router = GoRouter(
         GoRoute(
           path: 'loginPhoneNum',
           name: 'loginPhoneNum',
-          builder: (context, state) {
-            return const LoginPhoneNum();
-          },
+          builder: (context, state) => const LoginPhoneNum(),
           routes: [
             GoRoute(
               path: 'loginVerification',
               name: 'loginVerification',
-              builder: (context, state) {
-                return const LoginVerification();
-              },
+              builder: (context, state) => const LoginVerification(),
             ),
           ],
         ),
@@ -468,51 +469,40 @@ final router = GoRouter(
         GoRoute(
           path: 'signUpPhoneNum',
           name: 'signUpPhoneNum',
-          builder: (context, state) {
-            return const SignUpPhoneNum();
-          },
+          builder: (context, state) => const SignUpPhoneNum(),
           routes: [
             GoRoute(
               path: 'signUpVerification',
               name: 'signUpVerification',
-              builder: (context, state) {
-                return const SignUpVerification();
-              },
+              builder: (context, state) => const SignUpVerification(),
               routes: [
                 GoRoute(
                   path: 'signUpDetailOne',
                   name: 'signUpDetailOne',
-                  builder: (context, state) {
-                    return const SignUpDetailOne();
-                  },
+                  builder: (context, state) => const SignUpDetailOne(),
                   routes: [
                     GoRoute(
                       path: 'signUpDetailTwo',
                       name: 'signUpDetailTwo',
-                      builder: (context, state) {
-                        return const SignUpDetailTwo();
-                      },
+                      builder: (context, state) => const SignUpDetailTwo(),
                       routes: [
                         GoRoute(
                           path: 'signUpDetailThree',
                           name: 'signUpDetailThree',
-                          builder: (context, state) {
-                            return const SignUpDetailThree();
-                          },
+                          builder: (context, state) =>
+                              const SignUpDetailThree(),
                           routes: [
                             GoRoute(
                               path: 'signUpDetailFour',
                               name: 'signUpDetailFour',
-                              builder: (context, state) {
-                                return const SignUpDetailFour();
-                              },
+                              builder: (context, state) =>
+                                  const SignUpDetailFour(),
                               routes: [
                                 GoRoute(
                                   path: 'signUpDetailFive',
                                   name: 'signUpDetailFive',
-                                  builder: (context, state) {
-                                    return const SignUpDetailFive();
-                                  },
+                                  builder: (context, state) =>
+                                      const SignUpDetailFive(),
                                 ),
                               ],
                             ),

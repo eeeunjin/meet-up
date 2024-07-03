@@ -126,10 +126,15 @@ class CoinMain extends StatelessWidget {
           GestureDetector(
             onTap: () {
               switch (from) {
-                case 'Main':
-                  context.goNamed('coinBuyFromMain');
+                case 'MeetMain':
+                  context.goNamed('coinBuyFromMeetMain');
+                  break;
                 case 'MeetManageMain':
                   context.goNamed('coinBuyFromMeetManageMain');
+                  break;
+                case 'ProfileMain':
+                  context.goNamed('coinBuyFromProfileMain');
+                  break;
               }
             },
             child: Container(
@@ -220,10 +225,15 @@ class CoinMain extends StatelessWidget {
           GestureDetector(
             onTap: () {
               switch (from) {
-                case 'Main':
-                  context.goNamed('ticketBuyFromMain');
+                case 'MeetMain':
+                  context.goNamed('ticketBuyFromMeetMain');
+                  break;
                 case 'MeetManageMain':
                   context.goNamed('ticketBuyFromMeetManageMain');
+                  break;
+                case 'ProfileMain':
+                  context.goNamed('ticketBuyFromProfileMain');
+                  break;
               }
             },
             child: Container(
