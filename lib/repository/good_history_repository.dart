@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:meet_up/main.dart';
 import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/service/remote/firebase_service.dart';
@@ -21,8 +20,13 @@ class GoodHistoryRepository {
   Future<List<GoodHistoryModel>> readAllGoodHistories(
       String uid, String type) async {
     CollectionReference colRef = _firebaseRefs.colRefGoodHistory;
+    FilterInfo filterInfo;
 
-    FilterInfo filterInfo = FilterInfo(uid: uid);
+    if (type == "coin") {
+      filterInfo = FilterInfo(uid: uid);
+    } else {
+      filterInfo = FilterInfo(uid: uid, type: type);
+    }
 
     return await _firebaseCRUD.readCollection<GoodHistoryModel>(
       colRef: colRef,

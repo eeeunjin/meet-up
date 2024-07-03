@@ -12,7 +12,7 @@ import 'package:meet_up/service/remote/firebase_options.dart';
 import 'package:meet_up/view_model/bot_nav_view_model.dart';
 import 'package:meet_up/view_model/chat/chat_view_model.dart';
 import 'package:meet_up/view_model/coin/coin_buy_view_model.dart';
-import 'package:meet_up/view_model/coin/coin_purchase_history_view_model.dart';
+import 'package:meet_up/view_model/coin/coin_ticket_purchase_history_view_model.dart';
 import 'package:meet_up/view_model/coin/ticket_buy_view_model.dart';
 import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
 import 'package:meet_up/view_model/login/login_verification_view_model.dart';
@@ -86,7 +86,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => CoinBuyViewModel()),
         ChangeNotifierProvider(create: (context) => TicketBuyViewModel()),
         ChangeNotifierProvider(
-            create: (context) => CoinPurchaseHistoryViewModel()),
+            create: (context) => CoinTicketPurchaseHistoryViewModel()),
         ChangeNotifierProvider(create: (context) => SettingViewModel()),
         ChangeNotifierProvider(create: (context) => ProfileViewModel()),
       ],

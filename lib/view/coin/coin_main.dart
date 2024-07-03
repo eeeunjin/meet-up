@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -115,7 +116,10 @@ class CoinMain extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              '${userViewModel.userModel!.coin} C',
+                              '${userViewModel.userModel!.coin} C'
+                                  .replaceAllMapped(
+                                      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                      (Match m) => '${m[1]},'),
                               style: AppTextStyles.PR_SB_30
                                   .copyWith(color: UsedColor.charcoal_black),
                             ),
@@ -182,57 +186,73 @@ class CoinMain extends StatelessWidget {
             padding: EdgeInsets.only(left: 9.w),
             child: Padding(
               padding: EdgeInsets.only(left: 12.0.w),
-              child: Stack(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '만남권 보유 현황',
-                        style: AppTextStyles.SU_R_15
-                            .copyWith(color: UsedColor.text_3),
-                      ),
-                      SizedBox(height: 14.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            '만남권 ${userViewModel.userModel!.ticket}개',
-                            style: AppTextStyles.PR_SB_26
-                                .copyWith(color: UsedColor.charcoal_black),
-                          ),
-                          SizedBox(width: 12.w),
-                          //MARK: - 정기권 혜택 적용 여부 컨테이너
-                          if (userViewModel.userModel!.isFixedTicket)
-                            Container(
-                              width: 96.w,
-                              height: 16.h,
-                              decoration: BoxDecoration(
-                                color: UsedColor.image_card,
-                                borderRadius: BorderRadius.circular(25.r),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '정기권 혜택 적용 중',
-                                  style: AppTextStyles.SU_R_11
-                                      .copyWith(color: UsedColor.violet),
+              child: GestureDetector(
+                onTap: () {
+                  switch (from) {
+                    case 'MeetMain':
+                      context.goNamed('ticketPurchaseHistoryFromMeetMain');
+                      break;
+                    case 'MeetManageMain':
+                      context
+                          .goNamed('ticketPurchaseHistoryFromMeetManageMain');
+                      break;
+                    case 'ProfileMain':
+                      context.goNamed('ticketPurchaseHistoryFromProfileMain');
+                      break;
+                  }
+                },
+                child: Stack(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '만남권 보유 현황',
+                          style: AppTextStyles.SU_R_15
+                              .copyWith(color: UsedColor.text_3),
+                        ),
+                        SizedBox(height: 14.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              '만남권 ${userViewModel.userModel!.ticket}개',
+                              style: AppTextStyles.PR_SB_26
+                                  .copyWith(color: UsedColor.charcoal_black),
+                            ),
+                            SizedBox(width: 12.w),
+                            //MARK: - 정기권 혜택 적용 여부 컨테이너
+                            if (userViewModel.userModel!.isFixedTicket)
+                              Container(
+                                width: 96.w,
+                                height: 16.h,
+                                decoration: BoxDecoration(
+                                  color: UsedColor.image_card,
+                                  borderRadius: BorderRadius.circular(25.r),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '정기권 혜택 적용 중',
+                                    style: AppTextStyles.SU_R_11
+                                        .copyWith(color: UsedColor.violet),
+                                  ),
                                 ),
                               ),
-                            ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Positioned(
-                    right: 28.63.w,
-                    top: 39.75.h,
-                    child: Image.asset(
-                      ImagePath.nextArrow,
-                      width: 7.75.w,
-                      height: 15.5.h,
+                          ],
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                    Positioned(
+                      right: 28.63.w,
+                      top: 39.75.h,
+                      child: Image.asset(
+                        ImagePath.nextArrow,
+                        width: 7.75.w,
+                        height: 15.5.h,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

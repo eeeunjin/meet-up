@@ -12,8 +12,8 @@ import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
-class CoinPurchaseHistory extends StatelessWidget {
-  const CoinPurchaseHistory({super.key});
+class TicketPurchaseHistory extends StatelessWidget {
+  const TicketPurchaseHistory({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +80,7 @@ class CoinPurchaseHistory extends StatelessWidget {
             height: 58.0.h,
           ),
           Text(
-            '코인 보유 현황',
+            '만남권 보유 현황',
             style: AppTextStyles.SU_R_12.copyWith(
               color: UsedColor.text_3,
             ),
@@ -89,9 +89,7 @@ class CoinPurchaseHistory extends StatelessWidget {
             height: 14.h,
           ),
           Text(
-            "${userViewModel.userModel!.coin} C".replaceAllMapped(
-                RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                (Match m) => '${m[1]},'),
+            "만남권 ${userViewModel.userModel!.ticket}개",
             style: AppTextStyles.PR_SB_36.copyWith(
               color: UsedColor.charcoal_black,
             ),
@@ -110,7 +108,7 @@ class CoinPurchaseHistory extends StatelessWidget {
           Expanded(
             child: FutureBuilder(
               future: coinPurchaseHistoryViewModel.getAllGoodHistory(
-                  uid: userViewModel.uid!, type: GoodHistoryType.coin.name),
+                  uid: userViewModel.uid!, type: GoodHistoryType.ticket.name),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
@@ -154,38 +152,29 @@ class CoinPurchaseHistory extends StatelessWidget {
                                 (goodHistoryModel) {
                                   String transactionTitle = "";
                                   bool changingAmountLessThanZero =
-                                      goodHistoryModel.gh_change_coin_amount <
+                                      goodHistoryModel.gh_change_ticket_amount <
                                           0;
                                   String changeContent = changingAmountLessThanZero
-                                      ? '${goodHistoryModel.gh_change_coin_amount} C'
-                                      : '+${goodHistoryModel.gh_change_coin_amount} C';
+                                      ? '${goodHistoryModel.gh_change_ticket_amount} 개'
+                                      : '+${goodHistoryModel.gh_change_ticket_amount} 개';
 
-                                  if (goodHistoryModel.gh_type == 'coin') {
+                                  if (goodHistoryModel.gh_type == 'ticket') {
                                     switch (
                                         goodHistoryModel.gh_type_transaction) {
                                       case 'purchase':
-                                        transactionTitle = '코인 충전';
+                                        transactionTitle = '단일권 구매';
                                       case 'obtain':
-                                        transactionTitle = '코인 획득';
+                                        transactionTitle = '단일권 획득';
                                       case 'refund':
-                                        transactionTitle = '코인 환불';
+                                        transactionTitle = '단일권 환불';
+                                      case 'use':
+                                        transactionTitle = '단일권 사용';
                                       case 'default':
                                         logger.e("[코인 내역] 오류");
                                         transactionTitle = '오류';
                                     }
                                   } else {
-                                    switch (
-                                        goodHistoryModel.gh_type_transaction) {
-                                      case 'purchase':
-                                        transactionTitle =
-                                            '단일권 ${goodHistoryModel.gh_change_ticket_amount}개 구매';
-                                      case 'refund':
-                                        transactionTitle =
-                                            '단일권 ${goodHistoryModel.gh_change_ticket_amount}개 환불';
-                                      default:
-                                        logger.e("[코인 내역] 오류");
-                                        transactionTitle = '오류';
-                                    }
+                                    transactionTitle = '오류';
                                   }
 
                                   return Container(

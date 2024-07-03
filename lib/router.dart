@@ -8,6 +8,7 @@ import 'package:meet_up/view/coin/coin_main.dart';
 import 'package:meet_up/view/coin/coin_purchase_history.dart';
 import 'package:meet_up/view/coin/ticket_buy.dart';
 import 'package:meet_up/view/coin/ticket_buy_success.dart';
+import 'package:meet_up/view/coin/ticket_purchase_history.dart';
 import 'package:meet_up/view/login/login_main.dart';
 import 'package:meet_up/view/login/login_phone_num.dart';
 import 'package:meet_up/view/login/login_verification.dart';
@@ -114,6 +115,12 @@ final router = GoRouter(
                   parentNavigatorKey: rootNavkey,
                   builder: (context, state) => const CoinPurchaseHistory(),
                 ),
+                GoRoute(
+                  path: 'ticketPurchaseHistory',
+                  name: 'ticketPurchaseHistoryFromMeetMain',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) => const TicketPurchaseHistory(),
+                ),
               ],
             ),
             GoRoute(
@@ -174,6 +181,13 @@ final router = GoRouter(
                       name: 'coinPurchaseHistoryFromMeetManageMain',
                       parentNavigatorKey: rootNavkey,
                       builder: (context, state) => const CoinPurchaseHistory(),
+                    ),
+                    GoRoute(
+                      path: 'ticketPurchaseHistory',
+                      name: 'ticketPurchaseHistoryFromMeetManageMain',
+                      parentNavigatorKey: rootNavkey,
+                      builder: (context, state) =>
+                          const TicketPurchaseHistory(),
                     ),
                   ],
                 ),
@@ -448,6 +462,12 @@ final router = GoRouter(
                   name: 'coinPurchaseHistoryFromProfileMain',
                   parentNavigatorKey: rootNavkey,
                   builder: (context, state) => const CoinPurchaseHistory(),
+                ),
+                GoRoute(
+                  path: 'ticketPurchaseHistory',
+                  name: 'ticketPurchaseHistoryFromProfileMain',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) => const TicketPurchaseHistory(),
                 ),
               ],
             )

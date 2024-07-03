@@ -3,7 +3,7 @@ import 'package:meet_up/main.dart';
 import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/repository/good_history_repository.dart';
 
-class CoinPurchaseHistoryViewModel with ChangeNotifier {
+class CoinTicketPurchaseHistoryViewModel with ChangeNotifier {
   final GoodHistoryRepository _goodHistoryRepository = GoodHistoryRepository();
 
   Future<List<GoodHistoryModel>> getAllGoodHistory(
