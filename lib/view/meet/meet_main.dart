@@ -32,7 +32,7 @@ class MeetMain extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         heroTag: null, // 고유 태그 지정 - hero오류
         onPressed: () {
-          context.push('/meetCreate');
+          context.goNamed('meetCreate');
         },
         backgroundColor: Colors.black,
         shape: const CircleBorder(),
@@ -90,7 +90,7 @@ class MeetMain extends StatelessWidget {
   Widget _manageMeetList(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.push('/meetManageMain');
+        context.goNamed('meetManageMain');
       },
       child: Column(
         children: [
@@ -169,7 +169,7 @@ class MeetMain extends StatelessWidget {
   Widget _searchMeetList(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.push('/meetBrowseMain');
+        context.goNamed('meetBrowseMain');
       },
       child: Column(
         children: [

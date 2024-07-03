@@ -66,33 +66,373 @@ final router = GoRouter(
         GoRoute(
           // path: '.', // ShellRoute에서 현재 경로 나타낼 때 . 을 사용
           path: '/meetMain',
-          name: 'meetMain',
+          parentNavigatorKey: shellNavkey,
           builder: (context, state) => const MeetMain(),
+          routes: [
+            //MARK: - Meet
+            GoRoute(
+              path: 'coinMain',
+              name: 'coinMain',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) {
+                return const CoinMain(from: 'Main');
+              },
+              routes: [
+                GoRoute(
+                  path: 'coinBuy',
+                  name: 'coinBuyFromMain',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) {
+                    return const CoinBuy(from: 'Main');
+                  },
+                  routes: [
+                    GoRoute(
+                      path: 'coinBuySuccess',
+                      name: 'coinBuySuccessFromMain',
+                      parentNavigatorKey: rootNavkey,
+                      builder: (context, state) {
+                        return const CoinBuySuccess(from: 'Main');
+                      },
+                    )
+                  ],
+                ),
+                GoRoute(
+                  path: 'ticketBuy',
+                  name: 'ticketBuyFromMain',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) {
+                    return const TicketBuy(from: 'Main');
+                  },
+                  routes: [
+                    GoRoute(
+                      path: 'ticketBuySuccess',
+                      name: 'ticketBuySuccessFromMain',
+                      parentNavigatorKey: rootNavkey,
+                      builder: (context, state) {
+                        return const TicketBuySuccess(from: 'Main');
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            GoRoute(
+              path: 'meetManageMain',
+              name: 'meetManageMain',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) => const Scaffold(
+                body: MeetManageMain(), // meetMain에서만 바텀 네비게이션 표시
+              ),
+              routes: [
+                GoRoute(
+                  path: 'coinMain',
+                  name: 'coinMainFromMeetManageMain',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) {
+                    return const CoinMain(from: "MeetManageMain");
+                  },
+                  routes: [
+                    GoRoute(
+                      path: 'coinBuy',
+                      name: 'coinBuyFromMeetManageMain',
+                      parentNavigatorKey: rootNavkey,
+                      builder: (context, state) {
+                        return const CoinBuy(from: "MeetManageMain");
+                      },
+                      routes: [
+                        GoRoute(
+                          path: 'coinBuySuccess',
+                          name: 'coinBuySuccessFromMeetManageMain',
+                          parentNavigatorKey: rootNavkey,
+                          builder: (context, state) {
+                            return const CoinBuySuccess(from: 'MeetManageMain');
+                          },
+                        )
+                      ],
+                    ),
+                    GoRoute(
+                      path: 'ticketBuy',
+                      name: 'ticketBuyFromMeetManageMain',
+                      parentNavigatorKey: rootNavkey,
+                      builder: (context, state) {
+                        return const TicketBuy(from: 'MeetManageMain');
+                      },
+                      routes: [
+                        GoRoute(
+                          path: 'ticketBuySuccess',
+                          name: 'ticketBuySuccessFromMeetManageMain',
+                          parentNavigatorKey: rootNavkey,
+                          builder: (context, state) {
+                            return const TicketBuySuccess(
+                                from: 'MeetManageMain');
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                GoRoute(
+                  path: 'meetDetailRoom_manage',
+                  name: 'meetDetailRoom_manage',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) {
+                    return const MeetDetailRoom();
+                  },
+                  routes: [
+                    GoRoute(
+                      path: 'meetUserInfo_manage',
+                      name: 'meetUserInfo_manage',
+                      parentNavigatorKey: rootNavkey,
+                      builder: (context, state) {
+                        return const Scaffold(body: MeetUserInfo());
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            GoRoute(
+              path: 'meetBrowseMain',
+              name: 'meetBrowseMain',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) {
+                return const Scaffold(
+                  body: MeetBrowseMain(),
+                );
+              },
+              routes: [
+                GoRoute(
+                  path: 'meetDetailRoom_browse',
+                  name: 'meetDetailRoom_browse',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) {
+                    return const Scaffold(body: MeetDetailRoom());
+                  },
+                  routes: [
+                    GoRoute(
+                      path: 'meetUserInfo_browse',
+                      name: 'meetUserInfo_browse',
+                      parentNavigatorKey: rootNavkey,
+                      builder: (context, state) {
+                        return const Scaffold(body: MeetUserInfo());
+                      },
+                    ),
+                  ],
+                ),
+                GoRoute(
+                  path: 'meetFilterMain',
+                  name: 'meetFilterMain',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) {
+                    return const Scaffold(body: MeetFilterMain());
+                  },
+                  routes: [
+                    GoRoute(
+                      path: 'meetFilterArea',
+                      name: 'meetFilterArea',
+                      parentNavigatorKey: rootNavkey,
+                      builder: (context, state) {
+                        return const Scaffold(body: MeetFilterArea());
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            GoRoute(
+              path: 'meetCreate',
+              name: 'meetCreate',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) {
+                return const Scaffold(body: MeetCreate());
+              },
+              routes: [
+                GoRoute(
+                  path: 'meetKeyWord',
+                  name: 'meetKeyWord',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) {
+                    return const MeetKeyWord();
+                  },
+                ),
+                GoRoute(
+                  path: 'meetCategory',
+                  name: 'meetCategory',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) {
+                    return const MeetCategory();
+                  },
+                ),
+                GoRoute(
+                  path: 'meetLocation',
+                  name: 'meetLocation',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) {
+                    return const MeetLocation();
+                  },
+                ),
+              ],
+            ),
+          ],
         ),
         // Chat
         GoRoute(
           path: '/chatMain',
           builder: (context, state) => const ChatMain(),
+          parentNavigatorKey: shellNavkey,
         ),
         // Schedule
         GoRoute(
           path: '/scheduleMain',
           builder: (context, state) => const ScheduleMain(),
+          parentNavigatorKey: shellNavkey,
+          routes: [
+            GoRoute(
+              path: 'addPersonalSchedule',
+              name: 'addPersonalSchedule',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) {
+                return const AddPersonalSchedule();
+              },
+            ),
+          ],
         ),
         // Reflect
         GoRoute(
           path: '/ReflectMain',
           builder: (context, state) => const ReflectMain(),
+          parentNavigatorKey: shellNavkey,
         ),
         // Profile
         GoRoute(
           path: '/profileMain',
           builder: (context, state) => const ProfileMain(),
+          parentNavigatorKey: shellNavkey,
+          routes: [
+            GoRoute(
+              path: 'profileEdit',
+              name: 'profileEdit',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) {
+                return const ProfileEdit();
+              },
+            ),
+            GoRoute(
+              path: 'profileNoticationMain',
+              name: 'profileNoticationMain',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) {
+                return const ProfileNotification();
+              },
+            ),
+            GoRoute(
+              path: 'settingMain',
+              name: 'settingMain',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) {
+                return const SettingMain();
+              },
+              routes: [
+                // 회원 정보
+                GoRoute(
+                  path: 'userInfo',
+                  name: 'userInfo',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) {
+                    return const UserInfo();
+                  },
+                  routes: [
+                    // 회원 탈퇴
+                    GoRoute(
+                      path: 'withdrawal',
+                      name: 'withdrawal',
+                      parentNavigatorKey: rootNavkey,
+                      builder: (context, state) {
+                        return const Withdrawal();
+                      },
+                      routes: [
+                        GoRoute(
+                          path: 'withdrawalNext',
+                          name: 'withdrawalNext',
+                          parentNavigatorKey: rootNavkey,
+                          builder: (context, state) {
+                            return const WithdrawalNext();
+                          },
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                // 알림 설정
+                GoRoute(
+                  path: 'settingNotification',
+                  name: 'settingNotification',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) {
+                    return const SettingNotification();
+                  },
+                ),
+                // 자주 묻는 질문
+                GoRoute(
+                  path: 'question',
+                  name: 'question',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) {
+                    return const Question();
+                  },
+                ),
+                // 공지사항
+                GoRoute(
+                  path: 'noticed',
+                  name: 'noticed',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) {
+                    return const Noticed();
+                  },
+                ),
+                // 개인정보처리방침
+                GoRoute(
+                  path: 'privacyPolicy',
+                  name: 'privacyPolicy',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) {
+                    return const PrivacyPolicy();
+                  },
+                ),
+                // 서비스 이용약관
+                GoRoute(
+                  path: 'accessTerms',
+                  name: 'accessTerms',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) {
+                    return const AccessTerms();
+                  },
+                ),
+                // 오픈소스라이센스
+                GoRoute(
+                  path: 'openSourceLicense',
+                  name: 'openSourceLicense',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) {
+                    return const OpenSourceLicense();
+                  },
+                ),
+              ],
+            ),
+            GoRoute(
+              path: 'rankMain',
+              name: 'rankMain',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) {
+                return const RankMain();
+              },
+            ),
+          ],
         ),
       ],
     ),
 
-    // 초기 화면
+    // 초기 화면 (botNavBar에 포함되지 않는 화면)
     GoRoute(
       path: '/',
       pageBuilder: (context, state) {
@@ -185,300 +525,6 @@ final router = GoRouter(
               ],
             ),
           ],
-        ),
-
-        //MARK: - Meet
-        GoRoute(
-          path: 'coinMain',
-          name: 'coinMain',
-          builder: (context, state) {
-            return const CoinMain(from: 'Main');
-          },
-          routes: [
-            GoRoute(
-              path: 'coinMain/coinBuy',
-              name: 'coinBuyFromMain',
-              builder: (context, state) {
-                return const CoinBuy(from: 'Main');
-              },
-              routes: [
-                GoRoute(
-                  path: 'coinMain/coinBuy/coinBuySuccess',
-                  name: 'coinBuySuccessFromMain',
-                  builder: (context, state) {
-                    return const CoinBuySuccess(from: 'Main');
-                  },
-                )
-              ],
-            ),
-            GoRoute(
-              path: 'coinMain/ticketBuy',
-              name: 'ticketBuyFromMain',
-              builder: (context, state) {
-                return const TicketBuy(from: 'Main');
-              },
-              routes: [
-                GoRoute(
-                  path: 'coinMain/ticketBuy/ticketBuySuccess',
-                  name: 'ticketBuySuccessFromMain',
-                  builder: (context, state) {
-                    return const TicketBuySuccess(from: 'Main');
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-        GoRoute(
-          path: 'meetManageMain',
-          name: 'meetManageMain',
-          builder: (context, state) => const Scaffold(
-            body: MeetManageMain(), // meetMain에서만 바텀 네비게이션 표시
-          ),
-          routes: [
-            GoRoute(
-              path: 'meetManageMain/coinMain',
-              name: 'coinMainFromMeetManageMain',
-              builder: (context, state) {
-                return const CoinMain(from: "MeetManageMain");
-              },
-              routes: [
-                GoRoute(
-                  path: 'meetManageMain/coinMain/coinBuy',
-                  name: 'coinBuyFromMeetManageMain',
-                  builder: (context, state) {
-                    return const CoinBuy(from: "MeetManageMain");
-                  },
-                  routes: [
-                    GoRoute(
-                      path: 'meetManageMain/coinMain/coinBuy/coinBuySuccess',
-                      name: 'coinBuySuccessFromMeetManageMain',
-                      builder: (context, state) {
-                        return const CoinBuySuccess(from: 'MeetManageMain');
-                      },
-                    )
-                  ],
-                ),
-                GoRoute(
-                    path: 'meetManageMain/coinMain/ticketBuy',
-                    name: 'ticketBuyFromMeetManageMain',
-                    builder: (context, state) {
-                      return const TicketBuy(from: 'MeetManageMain');
-                    },
-                    routes: [
-                      GoRoute(
-                        path:
-                            'meetManageMain/coinMain/ticketBuy/ticketBuySuccess',
-                        name: 'ticketBuySuccessFromMeetManageMain',
-                        builder: (context, state) {
-                          return const TicketBuySuccess(from: 'MeetManageMain');
-                        },
-                      ),
-                    ]),
-              ],
-            ),
-            GoRoute(
-              path: 'meetDetailRoom_manage',
-              name: 'meetDetailRoom_manage',
-              builder: (context, state) {
-                return const MeetDetailRoom();
-              },
-              routes: [
-                GoRoute(
-                  path: 'meetUserInfo_manage',
-                  name: 'meetUserInfo_manage',
-                  builder: (context, state) {
-                    return const Scaffold(body: MeetUserInfo());
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-        GoRoute(
-          path: 'meetBrowseMain',
-          name: 'meetBrowseMain',
-          builder: (context, state) {
-            return const Scaffold(
-              body: MeetBrowseMain(),
-            );
-          },
-          routes: [
-            GoRoute(
-              path: 'meetDetailRoom_browse',
-              name: 'meetDetailRoom_browse',
-              builder: (context, state) {
-                return const Scaffold(body: MeetDetailRoom());
-              },
-              routes: [
-                GoRoute(
-                  path: 'meetUserInfo_browse',
-                  name: 'meetUserInfo_browse',
-                  builder: (context, state) {
-                    return const Scaffold(body: MeetUserInfo());
-                  },
-                ),
-              ],
-            ),
-            GoRoute(
-              path: 'meetFilterMain',
-              name: 'meetFilterMain',
-              builder: (context, state) {
-                return const Scaffold(body: MeetFilterMain());
-              },
-              routes: [
-                GoRoute(
-                  path: 'meetFilterArea',
-                  name: 'meetFilterArea',
-                  builder: (context, state) {
-                    return const Scaffold(body: MeetFilterArea());
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-        GoRoute(
-          path: 'meetCreate',
-          name: 'meetCreate',
-          builder: (context, state) {
-            return const Scaffold(body: MeetCreate());
-          },
-          routes: [
-            GoRoute(
-              path: 'meetKeyWord',
-              name: 'meetKeyWord',
-              builder: (context, state) {
-                return const MeetKeyWord();
-              },
-            ),
-            GoRoute(
-              path: 'meetCategory',
-              name: 'meetCategory',
-              builder: (context, state) {
-                return const MeetCategory();
-              },
-            ),
-            GoRoute(
-              path: 'meetLocation',
-              name: 'meetLocation',
-              builder: (context, state) {
-                return const MeetLocation();
-              },
-            ),
-          ],
-        ),
-
-        //MARK: - Schedule
-        GoRoute(
-          path: 'addPersonalSchedule',
-          builder: (context, state) {
-            return const AddPersonalSchedule();
-          },
-        ),
-
-        //MARK: - Profile
-        GoRoute(
-          path: 'profileEdit',
-          builder: (context, state) {
-            return const ProfileEdit();
-          },
-        ),
-        GoRoute(
-          path: 'profileNoticationMain',
-          builder: (context, state) {
-            return const ProfileNotification();
-          },
-        ),
-        // Setting
-        GoRoute(
-          path: 'settingMain',
-          builder: (context, state) {
-            return const SettingMain();
-          },
-          routes: [
-            // 회원 정보
-            GoRoute(
-              path: 'userInfo',
-              name: 'userInfo',
-              builder: (context, state) {
-                return const UserInfo();
-              },
-              routes: [
-                // 회원 탈퇴
-                GoRoute(
-                    path: 'withdrawal',
-                    name: 'withdrawal',
-                    builder: (context, state) {
-                      return const Withdrawal();
-                    },
-                    routes: [
-                      GoRoute(
-                        path: 'withdrawalNext',
-                        name: 'withdrawalNext',
-                        builder: (context, state) {
-                          return const WithdrawalNext();
-                        },
-                      )
-                    ]),
-              ],
-            ),
-            // 알림 설정
-            GoRoute(
-              path: 'settingNotification',
-              name: 'settingNotification',
-              builder: (context, state) {
-                return const SettingNotification();
-              },
-            ),
-            // 자주 묻는 질문
-            GoRoute(
-              path: 'question',
-              name: 'question',
-              builder: (context, state) {
-                return const Question();
-              },
-            ),
-            // 공지사항
-            GoRoute(
-              path: 'noticed',
-              name: 'noticed',
-              builder: (context, state) {
-                return const Noticed();
-              },
-            ),
-            // 개인정보처리방침
-            GoRoute(
-              path: 'privacyPolicy',
-              name: 'privacyPolicy',
-              builder: (context, state) {
-                return const PrivacyPolicy();
-              },
-            ),
-            // 서비스 이용약관
-            GoRoute(
-              path: 'accessTerms',
-              name: 'accessTerms',
-              builder: (context, state) {
-                return const AccessTerms();
-              },
-            ),
-            // 오픈소스라이센스
-            GoRoute(
-              path: 'openSourceLicense',
-              name: 'openSourceLicense',
-              builder: (context, state) {
-                return const OpenSourceLicense();
-              },
-            ),
-          ],
-        ),
-        // 등급
-        GoRoute(
-          path: 'rankMain',
-          builder: (context, state) {
-            return const RankMain();
-          },
         ),
       ],
     ),

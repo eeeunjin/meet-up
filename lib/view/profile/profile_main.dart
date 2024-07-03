@@ -81,7 +81,7 @@ class ProfileMain extends StatelessWidget {
           // 알림 버튼
           GestureDetector(
             onTap: () {
-              context.push('/profileNoticationMain');
+              context.goNamed('profileNoticationMain');
             },
             child: Container(
               width: 41.w,
@@ -102,7 +102,7 @@ class ProfileMain extends StatelessWidget {
           // 설정 버튼
           GestureDetector(
             onTap: () async {
-              context.push('/settingMain');
+              context.goNamed('settingMain');
             },
             child: Container(
               width: 41.w,
@@ -178,7 +178,7 @@ class ProfileMain extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () {
                         // 수정 페이지
-                        context.push('/profileEdit');
+                        context.goNamed('profileEdit');
                       },
                       child: Image.asset(
                         ImagePath.profileEditIcon,
@@ -217,7 +217,7 @@ class ProfileMain extends StatelessWidget {
                   // Novice 혜택 보러가기
                   GestureDetector(
                     onTap: () {
-                      context.push('/rankMain');
+                      context.goNamed('rankMain');
                     },
                     child: Padding(
                       padding: EdgeInsets.only(top: 24.0.h, left: 24.h),

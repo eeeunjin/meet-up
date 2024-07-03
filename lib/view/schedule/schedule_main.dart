@@ -29,7 +29,7 @@ class ScheduleMain extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         heroTag: null, // 고유 태그 지정 - hero오류
         onPressed: () {
-          context.push('/addPersonalSchedule');
+          context.goNamed('addPersonalSchedule');
         },
         backgroundColor: Colors.black,
         shape: const CircleBorder(),
