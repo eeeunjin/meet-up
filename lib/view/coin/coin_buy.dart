@@ -50,7 +50,7 @@ class CoinBuy extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          header(back: _back(context), title: '코인/만남권'),
+          header(back: _back(context), title: '코인 구매'),
           SizedBox(
             height: 16.h,
           ),

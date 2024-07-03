@@ -1,10 +1,8 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:logger/logger.dart';
 import 'package:meet_up/loginFunc.dart';
@@ -14,6 +12,7 @@ import 'package:meet_up/service/remote/firebase_options.dart';
 import 'package:meet_up/view_model/bot_nav_view_model.dart';
 import 'package:meet_up/view_model/chat/chat_view_model.dart';
 import 'package:meet_up/view_model/coin/coin_buy_view_model.dart';
+import 'package:meet_up/view_model/coin/coin_purchase_history_view_model.dart';
 import 'package:meet_up/view_model/coin/ticket_buy_view_model.dart';
 import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
 import 'package:meet_up/view_model/login/login_verification_view_model.dart';
@@ -86,6 +85,8 @@ void main() async {
         ChangeNotifierProvider(create: (context) => MeetUserInfoViewModel()),
         ChangeNotifierProvider(create: (context) => CoinBuyViewModel()),
         ChangeNotifierProvider(create: (context) => TicketBuyViewModel()),
+        ChangeNotifierProvider(
+            create: (context) => CoinPurchaseHistoryViewModel()),
         ChangeNotifierProvider(create: (context) => SettingViewModel()),
         ChangeNotifierProvider(create: (context) => ProfileViewModel()),
       ],
@@ -144,7 +145,8 @@ Future<void> _listenToPurchaseUpdated(
 
         // 상품 구매 정보(영수증) 데이터베이스에 저장
         GoodHistoryModel ghm = GoodHistoryModel(
-          gh_type: GoodHistoryType.cp.name,
+          gh_type: GoodHistoryType.coin.name,
+          gh_type_transaction: GoodHistoryTypeOfTransaction.purchase.name,
           gh_uid: userViewModel.uid!,
           gh_result_coin: resultCoin,
           gh_result_ticket: userViewModel.userModel!.ticket,

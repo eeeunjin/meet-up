@@ -86,39 +86,54 @@ class CoinMain extends StatelessWidget {
             padding: EdgeInsets.only(left: 9.w),
             child: Padding(
               padding: EdgeInsets.only(left: 12.0.w),
-              child: Stack(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '코인 보유 현황',
-                        style: AppTextStyles.SU_R_15
-                            .copyWith(color: UsedColor.text_3),
-                      ),
-                      SizedBox(height: 13.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${userViewModel.userModel!.coin} C',
-                            style: AppTextStyles.PR_SB_30
-                                .copyWith(color: UsedColor.charcoal_black),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Positioned(
-                    right: 28.63.w,
-                    top: 39.75.h,
-                    child: Image.asset(
-                      ImagePath.nextArrow,
-                      width: 7.75.w,
-                      height: 15.5.h,
+              child: GestureDetector(
+                onTap: () {
+                  switch (from) {
+                    case 'MeetMain':
+                      context.goNamed('coinPurchaseHistoryFromMeetMain');
+                      break;
+                    case 'MeetManageMain':
+                      context.goNamed('coinPurchaseHistoryFromMeetManageMain');
+                      break;
+                    case 'ProfileMain':
+                      context.goNamed('coinPurchaseHistoryFromProfileMain');
+                      break;
+                  }
+                },
+                child: Stack(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '코인 보유 현황',
+                          style: AppTextStyles.SU_R_15
+                              .copyWith(color: UsedColor.text_3),
+                        ),
+                        SizedBox(height: 13.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${userViewModel.userModel!.coin} C',
+                              style: AppTextStyles.PR_SB_30
+                                  .copyWith(color: UsedColor.charcoal_black),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                    Positioned(
+                      right: 28.63.w,
+                      top: 39.75.h,
+                      child: Image.asset(
+                        ImagePath.nextArrow,
+                        width: 7.75.w,
+                        height: 15.5.h,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

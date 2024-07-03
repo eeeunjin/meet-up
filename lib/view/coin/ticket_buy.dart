@@ -370,19 +370,18 @@ class TicketBuy extends StatelessWidget {
                 data: {
                   "coin": resultCoin,
                   "ticket": resultTicket,
-                  if (ticketBuyViewModel.isFixed == true) "isFixedTicket": true,
+                  // if (ticketBuyViewModel.isFixed == true) "isFixedTicket": true,
                 },
               );
 
               // GoodHistory Model 생성 및 DB에 저장
               final GoodHistoryModel goodHistoryModel = GoodHistoryModel(
-                gh_type: ticketBuyViewModel.isFixed == false
-                    ? GoodHistoryType.tp.name
-                    : GoodHistoryType.tpf.name,
+                gh_type: GoodHistoryType.ticket.name,
+                gh_type_transaction: GoodHistoryTypeOfTransaction.purchase.name,
                 gh_uid: userViewModel.uid!,
                 gh_result_coin: resultCoin,
                 gh_result_ticket: resultTicket,
-                gh_change_coin_amount: 0,
+                gh_change_coin_amount: -totalCoin,
                 gh_change_ticket_amount: ticketBuyViewModel.selectedNum *
                     ((ticketBuyViewModel.isFixed == false) ? 1 : 4),
                 gh_product_id: '',

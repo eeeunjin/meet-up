@@ -5,6 +5,7 @@ import 'package:meet_up/view/chat/chat_main.dart';
 import 'package:meet_up/view/coin/coin_buy.dart';
 import 'package:meet_up/view/coin/coin_buy_success.dart';
 import 'package:meet_up/view/coin/coin_main.dart';
+import 'package:meet_up/view/coin/coin_purchase_history.dart';
 import 'package:meet_up/view/coin/ticket_buy.dart';
 import 'package:meet_up/view/coin/ticket_buy_success.dart';
 import 'package:meet_up/view/login/login_main.dart';
@@ -107,6 +108,12 @@ final router = GoRouter(
                     ),
                   ],
                 ),
+                GoRoute(
+                  path: 'coinPurchaseHistory',
+                  name: 'coinPurchaseHistoryFromMeetMain',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) => const CoinPurchaseHistory(),
+                ),
               ],
             ),
             GoRoute(
@@ -161,6 +168,12 @@ final router = GoRouter(
                           },
                         ),
                       ],
+                    ),
+                    GoRoute(
+                      path: 'coinPurchaseHistory',
+                      name: 'coinPurchaseHistoryFromMeetManageMain',
+                      parentNavigatorKey: rootNavkey,
+                      builder: (context, state) => const CoinPurchaseHistory(),
                     ),
                   ],
                 ),
@@ -429,6 +442,12 @@ final router = GoRouter(
                       parentNavigatorKey: rootNavkey,
                     )
                   ],
+                ),
+                GoRoute(
+                  path: 'coinPurchaseHistory',
+                  name: 'coinPurchaseHistoryFromProfileMain',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) => const CoinPurchaseHistory(),
                 ),
               ],
             )

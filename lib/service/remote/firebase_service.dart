@@ -48,6 +48,15 @@ class FirebaseCRUD {
               colRef: colRef,
             ).get();
           }
+        } else if (T == GoodHistoryModel) {
+          if (filterInfo == null) {
+            logger.e("[GoodHistoryModel Read] 필터 정보가 필요합니다");
+            return List.empty();
+          }
+          querySnapshot = await createFilterQuery(
+            filterInfo: filterInfo,
+            colRef: colRef,
+          ).orderBy("gh_change_date", descending: true).get();
         } else {
           querySnapshot = await colRef.get();
         }
@@ -62,6 +71,15 @@ class FirebaseCRUD {
               filterInfo: filterInfo,
             ).limit(limit).get();
           }
+        } else if (T == GoodHistoryModel) {
+          if (filterInfo == null) {
+            logger.e("[GoodHistoryModel Read] 필터 정보가 필요합니다");
+            return List.empty();
+          }
+          querySnapshot = await createFilterQuery(
+            filterInfo: filterInfo,
+            colRef: colRef,
+          ).limit(limit).orderBy("gh_change_date", descending: true).get();
         } else {
           querySnapshot = await colRef.limit(limit).get();
         }
@@ -77,6 +95,9 @@ class FirebaseCRUD {
           return RoomModel.fromJson(doc.data() as Map<String, Object?>) as T;
         } else if (T == EnterRequestModel) {
           return EnterRequestModel.fromJson(doc.data() as Map<String, Object?>)
+              as T;
+        } else if (T == GoodHistoryModel) {
+          return GoodHistoryModel.fromJson(doc.data() as Map<String, Object?>)
               as T;
         } else {
           // 지정하지 않은 형식의 모델 값이 들어오면 에러를 반환
@@ -182,6 +203,8 @@ class FirebaseCRUD {
     required CollectionReference colRef,
   }) {
     Query<Object?> filteredQuery = colRef;
+    // MARK: - RoomModel 필터 정보
+    // 메인 카테고리 같아야 함
     if (filterInfo.room_category != null) {
       filteredQuery = filteredQuery.where("room_category",
           isEqualTo: filterInfo.room_category);
@@ -216,6 +239,18 @@ class FirebaseCRUD {
       filteredQuery =
           filteredQuery.where("room_rules", isEqualTo: filterInfo.room_rules);
     }
+
+    // MARK: - GoodHistoryModel 필터 정보
+    // uid 가 같아야 함
+    if (filterInfo.uid != null) {
+      filteredQuery = filteredQuery.where("gh_uid", isEqualTo: filterInfo.uid);
+    }
+    // type이 같아야 함
+    if (filterInfo.type != null) {
+      filteredQuery =
+          filteredQuery.where("gh_type", isEqualTo: filterInfo.type);
+    }
+
     return filteredQuery;
   }
 
