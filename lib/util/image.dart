@@ -114,6 +114,7 @@ class ImagePath {
   // MARK: - coin
   static String get plusButton => 'assets/images/plus_button.png';
   static String get minusButton => 'assets/images/minus_button.png';
+  static String get purchaseCompleteIcon => 'assets/images/purchase_complete_icon.png';
 
   // MARK: - rank
   static String get rankMasterOn => 'assets/images/rank_master_on.png';

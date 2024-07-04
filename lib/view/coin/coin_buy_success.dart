@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
+import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/coin/coin_buy_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:provider/provider.dart';
@@ -45,8 +46,15 @@ class CoinBuySuccess extends StatelessWidget {
                 Container(
                   height: 184.h,
                   width: 265.w,
+                  alignment: Alignment.center,
                   decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24.r),
                     color: UsedColor.image_card,
+                  ),
+                  child: Image.asset(
+                    ImagePath.purchaseCompleteIcon,
+                    width: 93.17.w,
+                    height: 93.17.h,
                   ),
                 ),
                 SizedBox(
