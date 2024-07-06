@@ -33,7 +33,7 @@ class SettingNotification extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          header(back: _back(context), title: '알림 설정'),
+          header(back: _back(context), title: '푸시 알림 설정'),
           SizedBox(
             height: 16.h,
           ),
@@ -66,17 +66,17 @@ class SettingNotification extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _meeting(context),
-          _divider(),
+          // _meeting(context),
+          // _divider(),
           _evaluation(context),
           _divider(),
-          _coin(context),
-          _divider(),
-          _rank(context),
-          _divider(),
+          // _coin(context),
+          // _divider(),
+          // _rank(context),
+          // _divider(),
           _report(context),
-          _divider(),
-          _event(context),
+          // _divider(),
+          // _event(context),
         ],
       ),
     );
@@ -89,41 +89,40 @@ class SettingNotification extends StatelessWidget {
     );
   }
 
-  Widget _meeting(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 33.0.w, top: 24.h, bottom: 27.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '만남',
-            style:
-                AppTextStyles.PR_B_18.copyWith(color: UsedColor.charcoal_black),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 33.0.w, right: 40.0.w),
-            child: Column(
-              children: [
-                NotificationToggle(
-                    text: '입장 요청',
-                    initialValue: false,
-                    onChanged: (bool value) {}),
-                SizedBox(height: 28.h),
-                NotificationToggle(
-                    text: '채팅',
-                    initialValue: false,
-                    onChanged: (bool value) {}),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
+  // Widget _meeting(BuildContext context) {
+  //   return Padding(
+  //     padding: EdgeInsets.only(left: 33.0.w, top: 24.h, bottom: 27.h),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Text(
+  //           '만남',
+  //           style:
+  //               AppTextStyles.PR_B_18.copyWith(color: UsedColor.charcoal_black),
+  //         ),
+  //         Padding(
+  //           padding: EdgeInsets.only(left: 33.0.w, right: 40.0.w),
+  //           child: Column(
+  //             children: [
+  //               NotificationToggle(
+  //                   text: '입장 요청',
+  //                   initialValue: false,
+  //                   onChanged: (bool value) {}),
+  //               SizedBox(height: 28.h),
+  //               NotificationToggle(
+  //                   text: '채팅',
+  //                   initialValue: false,
+  //                   onChanged: (bool value) {}),
+  //             ],
+  //           ),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
   Widget _evaluation(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 33.0.w, top: 24.h, bottom: 27.h),
+      padding: EdgeInsets.only(left: 33.0.w, top: 24.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -132,46 +131,22 @@ class SettingNotification extends StatelessWidget {
             style:
                 AppTextStyles.PR_B_18.copyWith(color: UsedColor.charcoal_black),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 33.0.w, right: 40.0.w),
-            child: Column(
-              children: [
-                NotificationToggle(
-                    text: '수신함',
-                    initialValue: false,
-                    onChanged: (bool value) {}),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _coin(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 33.0.w, top: 24.h, bottom: 27.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '코인',
-            style:
-                AppTextStyles.PR_B_18.copyWith(color: UsedColor.charcoal_black),
+          SizedBox(
+            height: 28.h,
           ),
           Padding(
-            padding: EdgeInsets.only(left: 33.0.w, right: 40.0.w),
+            padding: EdgeInsets.only(
+              left: 23.0.w,
+              right: 40.0.w,
+              bottom: 32.h,
+            ),
             child: Column(
               children: [
                 NotificationToggle(
-                    text: '미션',
-                    initialValue: false,
-                    onChanged: (bool value) {}),
-                SizedBox(height: 28.h),
-                NotificationToggle(
-                    text: '결제',
-                    initialValue: false,
-                    onChanged: (bool value) {}),
+                  text: '수신함',
+                  initialValue: false,
+                  onChanged: (bool value) {},
+                ),
               ],
             ),
           )
@@ -179,42 +154,73 @@ class SettingNotification extends StatelessWidget {
       ),
     );
   }
+  // Widget _coin(BuildContext context) {
+  //   return Padding(
+  //     padding: EdgeInsets.only(left: 33.0.w, top: 24.h, bottom: 27.h),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Text(
+  //           '코인',
+  //           style:
+  //               AppTextStyles.PR_B_18.copyWith(color: UsedColor.charcoal_black),
+  //         ),
+  //         Padding(
+  //           padding: EdgeInsets.only(left: 33.0.w, right: 40.0.w),
+  //           child: Column(
+  //             children: [
+  //               NotificationToggle(
+  //                   text: '미션',
+  //                   initialValue: false,
+  //                   onChanged: (bool value) {}),
+  //               SizedBox(height: 28.h),
+  //               NotificationToggle(
+  //                   text: '결제',
+  //                   initialValue: false,
+  //                   onChanged: (bool value) {}),
+  //             ],
+  //           ),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  Widget _rank(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 33.0.w, top: 24.h, bottom: 27.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '등급',
-            style:
-                AppTextStyles.PR_B_18.copyWith(color: UsedColor.charcoal_black),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 33.0.w, right: 40.0.w),
-            child: Column(
-              children: [
-                NotificationToggle(
-                    text: '등급 상승',
-                    initialValue: false,
-                    onChanged: (bool value) {}),
-                SizedBox(height: 28.h),
-                NotificationToggle(
-                    text: '등급 초기화',
-                    initialValue: false,
-                    onChanged: (bool value) {}),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
+  // Widget _rank(BuildContext context) {
+  //   return Padding(
+  //     padding: EdgeInsets.only(left: 33.0.w, top: 24.h, bottom: 27.h),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Text(
+  //           '등급',
+  //           style:
+  //               AppTextStyles.PR_B_18.copyWith(color: UsedColor.charcoal_black),
+  //         ),
+  //         Padding(
+  //           padding: EdgeInsets.only(left: 33.0.w, right: 40.0.w),
+  //           child: Column(
+  //             children: [
+  //               NotificationToggle(
+  //                   text: '등급 상승',
+  //                   initialValue: false,
+  //                   onChanged: (bool value) {}),
+  //               SizedBox(height: 28.h),
+  //               NotificationToggle(
+  //                   text: '등급 초기화',
+  //                   initialValue: false,
+  //                   onChanged: (bool value) {}),
+  //             ],
+  //           ),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _report(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 33.0.w, top: 24.h, bottom: 27.h),
+      padding: EdgeInsets.only(left: 33.0.w, top: 24.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -223,14 +229,20 @@ class SettingNotification extends StatelessWidget {
             style:
                 AppTextStyles.PR_B_18.copyWith(color: UsedColor.charcoal_black),
           ),
+          SizedBox(height: 28.h),
           Padding(
-            padding: EdgeInsets.only(left: 33.0.w, right: 40.0.w),
+            padding: EdgeInsets.only(
+              left: 23.0.w,
+              right: 40.0.w,
+              bottom: 32.h,
+            ),
             child: Column(
               children: [
                 NotificationToggle(
-                    text: '신고 내용',
-                    initialValue: false,
-                    onChanged: (bool value) {}),
+                  text: '신고 내용',
+                  initialValue: false,
+                  onChanged: (bool value) {},
+                ),
               ],
             ),
           )
@@ -238,36 +250,40 @@ class SettingNotification extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _event(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 33.0.w, top: 24.h, bottom: 27.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '이벤트',
-            style:
-                AppTextStyles.PR_B_18.copyWith(color: UsedColor.charcoal_black),
+class NotificationToggle extends StatelessWidget {
+  final String text;
+  final bool initialValue;
+  final Function(bool) onChanged;
+
+  const NotificationToggle(
+      {super.key,
+      required this.text,
+      required this.initialValue,
+      required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          text,
+          style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_3),
+        ),
+        SizedBox(
+          width: 56.w,
+          height: 24.h,
+          child: Switch(
+            value: initialValue,
+            onChanged: onChanged,
+            activeColor: UsedColor.grey1,
+            inactiveThumbColor: Colors.white,
+            inactiveTrackColor: UsedColor.grey1,
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 33.0.w, right: 40.0.w),
-            child: Column(
-              children: [
-                NotificationToggle(
-                    text: '이벤트 안내',
-                    initialValue: false,
-                    onChanged: (bool value) {}),
-                SizedBox(height: 28.h),
-                NotificationToggle(
-                    text: '이벤트 당첨',
-                    initialValue: false,
-                    onChanged: (bool value) {}),
-              ],
-            ),
-          )
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

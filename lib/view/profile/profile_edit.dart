@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/model/province_district_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/next_button.dart';
+import 'package:meet_up/view/widget/province_district_picker_widget.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/profile/profile_view_model.dart';
+import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -116,7 +119,7 @@ class ProfileEdit extends StatelessWidget {
     return Center(
       child: GestureDetector(
         onTap: () {
-          _showProfileEditDialog(context, userViewModel, profileViewModel);
+          // _showProfileEditDialog(context, userViewModel, profileViewModel);
         },
         child: Stack(
           children: [
@@ -257,25 +260,29 @@ class ProfileEdit extends StatelessWidget {
 
   // MARK: - 주소
   Widget _address(BuildContext context) {
-    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final profileViewModel =
+        Provider.of<SignUpDetailViewModel>(context, listen: true);
+    final String displayText =
+        '${profileViewModel.selectedProvince} ${profileViewModel.selectedDistrict}';
+
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w, right: 32.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '주소',
+            '거주지',
             style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
           ),
           SizedBox(height: 16.h),
           GestureDetector(
             onTap: () {
-              _showAddressEditDialog(context, userViewModel);
+              showAddressEditDialog(context, profileViewModel);
             },
             child: SizedBox(
               width: 328.w,
               child: Text(
-                '거주지',
+                displayText,
                 style: AppTextStyles.PR_R_16
                     .copyWith(color: UsedColor.charcoal_black),
               ),
@@ -285,14 +292,14 @@ class ProfileEdit extends StatelessWidget {
           Divider(
             thickness: 0.5.h,
             height: 0.h,
-            color: UsedColor.line,
+            color: Colors.grey,
           ),
         ],
       ),
     );
   }
 
-  //MARK: - 소속 분류
+//MARK: - 소속 분류
   Widget _classification(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     final String job = userViewModel.userModel!.job;
@@ -317,7 +324,7 @@ class ProfileEdit extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           // 소속 분류 선택 창
-          _showClassificationEditDialog(context, userViewModel);
+          showClassificationEditDialog(context, userViewModel);
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -347,7 +354,7 @@ class ProfileEdit extends StatelessWidget {
     );
   }
 
-  //MARK: - 성격
+//MARK: - 성격
   Widget _personality(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     final List<dynamic> personalityListDynamic =
@@ -366,7 +373,7 @@ class ProfileEdit extends StatelessWidget {
           SizedBox(height: 12.h),
           GestureDetector(
             onTap: () {
-              _showPersonalityEditDialog(context, userViewModel);
+              showPersonalityEditDialog(context, userViewModel);
             },
             child: SizedBox(
               width: 328.w,
@@ -406,7 +413,7 @@ class ProfileEdit extends StatelessWidget {
     );
   }
 
-  //MARK: - 관심사
+//MARK: - 관심사
   Widget _interests(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     final List<dynamic> interestListDynamic =
@@ -425,7 +432,7 @@ class ProfileEdit extends StatelessWidget {
           SizedBox(height: 12.h),
           GestureDetector(
             onTap: () {
-              _showInterestsEditDialog(context, userViewModel);
+              showInterestsEditDialog(context, userViewModel);
             },
             child: SizedBox(
               width: 328.w,
@@ -465,7 +472,7 @@ class ProfileEdit extends StatelessWidget {
     );
   }
 
-  //MARK: - 만남 목적
+//MARK: - 만남 목적
   Widget _meetingPurpose(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     final List<dynamic> purposeListDynamic =
@@ -484,7 +491,7 @@ class ProfileEdit extends StatelessWidget {
           SizedBox(height: 12.h),
           GestureDetector(
             onTap: () {
-              _showMeetingPurposeEditDialog(context, userViewModel);
+              showMeetingPurposeEditDialog(context, userViewModel);
             },
             child: SizedBox(
               width: 328.w,
@@ -524,7 +531,7 @@ class ProfileEdit extends StatelessWidget {
     );
   }
 
-  //MARK: - 저장 버튼
+//MARK: - 저장 버튼
   Widget _saveButton() {
     return Padding(
       padding: EdgeInsets.only(bottom: 56.0.h, left: 33.w, right: 32.w),
@@ -535,8 +542,8 @@ class ProfileEdit extends StatelessWidget {
     );
   }
 
-  //MARK: - 프로필 수정 오버레이
-  void _showProfileEditDialog(BuildContext context, UserViewModel userViewModel,
+//MARK: - 프로필 수정 오버레이
+  void showProfileEditDialog(BuildContext context, UserViewModel userViewModel,
       ProfileViewModel profileViewModel) {
     profileViewModel
         .initializeSelectedIconPath(userViewModel.userModel!.profile_icon);
@@ -738,7 +745,7 @@ class ProfileEdit extends StatelessWidget {
                               child: TextButton(
                                 // !: -잉크 효과 이상해서 없애둠
                                 style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
+                                    overlayColor: WidgetStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () {
                                   Navigator.of(context).pop();
@@ -761,7 +768,7 @@ class ProfileEdit extends StatelessWidget {
                               height: 53.h,
                               child: TextButton(
                                 style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
+                                    overlayColor: WidgetStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () async {
                                   // 저장 로직
@@ -785,8 +792,8 @@ class ProfileEdit extends StatelessWidget {
         });
   }
 
-  //MARK: - 소속 수정 오버레이
-  void _showClassificationEditDialog(
+//MARK: - 소속 수정 오버레이
+  void showClassificationEditDialog(
       BuildContext context, UserViewModel userViewModel) {
     showGeneralDialog(
         context: context,
@@ -925,8 +932,8 @@ class ProfileEdit extends StatelessWidget {
                           child: TextButton(
                             // !: -잉크 효과 이상해서 없애둠
                             style: const ButtonStyle(
-                                overlayColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
+                                overlayColor:
+                                    WidgetStatePropertyAll(Colors.transparent)),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
@@ -948,8 +955,8 @@ class ProfileEdit extends StatelessWidget {
                           height: 53.h,
                           child: TextButton(
                             style: const ButtonStyle(
-                                overlayColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
+                                overlayColor:
+                                    WidgetStatePropertyAll(Colors.transparent)),
                             onPressed: () async {
                               // 저장 로직
                             },
@@ -970,107 +977,123 @@ class ProfileEdit extends StatelessWidget {
         });
   }
 
-  //MARK: - 주소 수정 오버레이
-  void _showAddressEditDialog(
-      BuildContext context, UserViewModel userViewModel) {
+//MARK: - 주소 수정 오버레이
+  void showAddressEditDialog(
+      BuildContext context, SignUpDetailViewModel profileViewModel) {
+    String? temporarySelectedProvince = profileViewModel.selectedProvince;
+    String? temporarySelectedDistrict = profileViewModel.selectedDistrict;
+
     showGeneralDialog(
-        context: context,
-        barrierDismissible: true,
-        barrierLabel:
-            MaterialLocalizations.of(context).modalBarrierDismissLabel,
-        barrierColor: Colors.black.withOpacity(0.5), // 외부 색상
-        transitionDuration:
-            const Duration(milliseconds: 200), // 사라질 때 애니메이션 지속 시간
-        pageBuilder: (BuildContext buildContext, Animation animation,
-            Animation secondaryAnimation) {
-          return Center(
-            child: Container(
-              width: 328.w,
-              height: 256.h,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20.0.r),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 24..h, left: 28.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '거주지를 선택해주세요.',
-                          style: AppTextStyles.PR_SB_16.copyWith(
-                              color: UsedColor.charcoal_black,
-                              decoration: TextDecoration.none),
-                        ),
-                        SizedBox(height: 12.h),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: 328.w,
-                    height: 0.3.h,
-                    color: UsedColor.b_line,
-                  ),
-                  Row(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 200),
+      pageBuilder: (BuildContext buildContext, Animation animation,
+          Animation secondaryAnimation) {
+        return Center(
+          child: Container(
+            width: 328.w,
+            height: 256.h,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.0.r),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 24.h, left: 28.w, right: 28.w),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Expanded(
-                        child: SizedBox(
-                          height: 53.h,
-                          child: TextButton(
-                            // !: -잉크 효과 이상해서 없애둠
-                            style: const ButtonStyle(
-                                overlayColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(
-                              '취소',
-                              style: AppTextStyles.PR_M_14
-                                  .copyWith(color: UsedColor.charcoal_black),
-                            ),
-                          ),
+                      Text(
+                        '거주지를 선택해주세요.',
+                        style: AppTextStyles.PR_SB_16.copyWith(
+                          color: UsedColor.charcoal_black,
                         ),
                       ),
-                      Container(
-                        height: 53.h,
-                        width: 0.3.w,
-                        color: UsedColor.b_line,
-                      ),
-                      Expanded(
-                        child: SizedBox(
-                          height: 53.h,
-                          child: TextButton(
-                            style: const ButtonStyle(
-                                overlayColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
-                            onPressed: () async {
-                              // 저장 로직
-                            },
-                            child: Text(
-                              '저장',
-                              style: AppTextStyles.PR_M_14
-                                  .copyWith(color: UsedColor.charcoal_black),
-                            ),
-                          ),
-                        ),
+                      SizedBox(height: 40.h),
+                      ProvinceDistrictPicker(
+                        onProvinceChanged: (String province) {
+                          temporarySelectedProvince = province;
+                        },
+                        onDistrictChanged: (String district) {
+                          temporarySelectedDistrict = district;
+                        },
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+                const Spacer(),
+                Container(
+                  width: 328.w,
+                  height: 0.3.h,
+                  color: UsedColor.b_line,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 54.h,
+                        child: TextButton(
+                          style: const ButtonStyle(
+                            overlayColor:
+                                WidgetStatePropertyAll(Colors.transparent),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            '취소',
+                            style: AppTextStyles.PR_R_16
+                                .copyWith(color: UsedColor.charcoal_black),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 54.h,
+                      width: 0.3.w,
+                      color: UsedColor.b_line,
+                    ),
+                    Expanded(
+                      child: SizedBox(
+                        height: 54.h,
+                        child: TextButton(
+                          style: const ButtonStyle(
+                            overlayColor:
+                                WidgetStatePropertyAll(Colors.transparent),
+                          ),
+                          onPressed: () async {
+                            profileViewModel
+                                .selectProvince(temporarySelectedProvince!);
+                            profileViewModel
+                                .selectDistrict(temporarySelectedDistrict!);
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            '확인',
+                            style: AppTextStyles.PR_R_16
+                                .copyWith(color: UsedColor.charcoal_black),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
-  //MARK: - 성격 수정 오버레이
-  void _showPersonalityEditDialog(
+//MARK: - 성격 수정 오버레이
+  void showPersonalityEditDialog(
       BuildContext context, UserViewModel userViewModel) {
     List<String> options = [
       "사교적인",
@@ -1182,8 +1205,8 @@ class ProfileEdit extends StatelessWidget {
                           child: TextButton(
                             // !: -잉크 효과 이상해서 없애둠
                             style: const ButtonStyle(
-                                overlayColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
+                                overlayColor:
+                                    WidgetStatePropertyAll(Colors.transparent)),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
@@ -1205,8 +1228,8 @@ class ProfileEdit extends StatelessWidget {
                           height: 53.h,
                           child: TextButton(
                             style: const ButtonStyle(
-                                overlayColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
+                                overlayColor:
+                                    WidgetStatePropertyAll(Colors.transparent)),
                             onPressed: () async {
                               // 저장 로직
                             },
@@ -1227,8 +1250,8 @@ class ProfileEdit extends StatelessWidget {
         });
   }
 
-  //MARK: - 관심사 수정 오버레이
-  void _showInterestsEditDialog(
+//MARK: - 관심사 수정 오버레이
+  void showInterestsEditDialog(
       BuildContext context, UserViewModel userViewModel) {
     List<String> options = [
       "운동",
@@ -1340,8 +1363,8 @@ class ProfileEdit extends StatelessWidget {
                           child: TextButton(
                             // !: -잉크 효과 이상해서 없애둠
                             style: const ButtonStyle(
-                                overlayColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
+                                overlayColor:
+                                    WidgetStatePropertyAll(Colors.transparent)),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
@@ -1363,8 +1386,8 @@ class ProfileEdit extends StatelessWidget {
                           height: 53.h,
                           child: TextButton(
                             style: const ButtonStyle(
-                                overlayColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
+                                overlayColor:
+                                    WidgetStatePropertyAll(Colors.transparent)),
                             onPressed: () async {
                               // 저장 로직
                             },
@@ -1385,8 +1408,8 @@ class ProfileEdit extends StatelessWidget {
         });
   }
 
-  //MARK: - 만남 목적 수정 오버레이
-  void _showMeetingPurposeEditDialog(
+//MARK: - 만남 목적 수정 오버레이
+  void showMeetingPurposeEditDialog(
       BuildContext context, UserViewModel userViewModel) {
     List<String> options = [
       "친목",
@@ -1497,8 +1520,8 @@ class ProfileEdit extends StatelessWidget {
                           child: TextButton(
                             // !: -잉크 효과 이상해서 없애둠
                             style: const ButtonStyle(
-                                overlayColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
+                                overlayColor:
+                                    WidgetStatePropertyAll(Colors.transparent)),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
@@ -1520,8 +1543,8 @@ class ProfileEdit extends StatelessWidget {
                           height: 53.h,
                           child: TextButton(
                             style: const ButtonStyle(
-                                overlayColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
+                                overlayColor:
+                                    WidgetStatePropertyAll(Colors.transparent)),
                             onPressed: () async {
                               // 저장 로직
                             },
@@ -1540,5 +1563,127 @@ class ProfileEdit extends StatelessWidget {
             ),
           );
         });
+  }
+}
+
+//MARK: - 거주지 위젯
+class ProvinceDistrictPicker extends StatelessWidget {
+  final Function(String) onProvinceChanged;
+  final Function(String) onDistrictChanged;
+
+  const ProvinceDistrictPicker({
+    super.key,
+    required this.onProvinceChanged,
+    required this.onDistrictChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = Provider.of<SignUpDetailViewModel>(context);
+    final items = ProvinceDistrict.districts.keys.toList();
+    return Stack(
+      children: [
+        SizedBox(
+          width: 274.w,
+          height: 89.h,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: SizedBox(
+                height: 89.h,
+                child: ListWheelScrollView(
+                  itemExtent: 30.h,
+                  physics: const FixedExtentScrollPhysics(),
+                  controller: viewModel.provinceScrollController,
+                  children: items.map((String province) {
+                    final isSelectedProvince =
+                        (province == viewModel.selectedProvince);
+
+                    return _buildItem(province, isSelectedProvince,
+                        viewModel.selectedProvinceIndex, items);
+                  }).toList(),
+                  onSelectedItemChanged: (int index) {
+                    String selectedProvince =
+                        ProvinceDistrict.districts.keys.elementAt(index);
+                    onProvinceChanged(selectedProvince);
+                    viewModel.selectProvince(selectedProvince);
+                    String firstDistrict = ProvinceDistrict
+                        .districts[viewModel.selectedProvince]![0];
+                    onDistrictChanged(firstDistrict);
+                    viewModel.selectDistrict(firstDistrict);
+                    viewModel.districtScrollController.jumpTo(0);
+                  },
+                ),
+              ),
+            ),
+            Expanded(
+              child: SizedBox(
+                height: 89.h,
+                child: ListWheelScrollView(
+                  itemExtent: 30.h,
+                  physics: const FixedExtentScrollPhysics(),
+                  controller: viewModel.districtScrollController,
+                  children:
+                      (ProvinceDistrict.districts[viewModel.selectedProvince] ??
+                              [])
+                          .map((String district) {
+                    final isSelectedDistrict =
+                        (district == viewModel.selectedDistrict);
+                    return _buildItem(
+                        district,
+                        isSelectedDistrict,
+                        viewModel.selectedDistrictIndex,
+                        ProvinceDistrict
+                            .districts[viewModel.selectedProvince]!);
+                  }).toList(),
+                  onSelectedItemChanged: (int index) {
+                    String selectedDistrict = ProvinceDistrict
+                        .districts[viewModel.selectedProvince]![index];
+                    onDistrictChanged(selectedDistrict);
+                    viewModel.selectDistrict(selectedDistrict);
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildItem(
+      String text, bool isSelected, int selectedIndex, List<String> items) {
+    int distanceFromSelected = (selectedIndex - items.indexOf(text)).abs();
+
+    double scale;
+    Color textColor;
+
+    if (distanceFromSelected == 0) {
+      scale = 1.0;
+      textColor = Colors.black;
+    } else if (distanceFromSelected == 1) {
+      scale = 0.97;
+      textColor = const Color(0xFF8D8D8D);
+    } else {
+      scale = 0.94;
+      textColor = const Color(0xFFDFDFDF);
+    }
+
+    return Center(
+      child: Transform.scale(
+        scale: scale,
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 24.sp,
+            color: textColor,
+            fontFamily: 'Pretendard-M',
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
   }
 }

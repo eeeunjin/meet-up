@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:meet_up/util/color.dart';
-import 'package:meet_up/util/font.dart';
 import 'package:meet_up/view/widget/dob_date_picker_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view/widget/province_district_picker_widget.dart';
@@ -49,8 +47,8 @@ class SignUpDetailOneContents extends StatelessWidget {
             },
             enable: viewModel.selectedAllComponents,
             backgroundColor: viewModel.selectedAllComponents
-                ? UsedColor.button
-                : UsedColor.grey1,
+                ? Colors.green
+                : const Color(0xFFD9D9D9),
             textStyle: TextStyle(
               color:
                   viewModel.selectedAllComponents ? Colors.white : Colors.black,
@@ -59,7 +57,7 @@ class SignUpDetailOneContents extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 56.h,
+          height: 25.h,
         )
       ],
     );
@@ -73,12 +71,12 @@ class SignUpDetailOneContents extends StatelessWidget {
         children: [
           Text(
             "성별을 선택해주세요.",
-            style: AppTextStyles.PR_B_22.copyWith(color: Colors.black),
+            style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 8.h),
           Text(
             "추후 수정이 불가합니다",
-            style: AppTextStyles.SU_R_12.copyWith(color: UsedColor.text_3),
+            style: TextStyle(fontSize: 12.sp, color: const Color(0xFF868686)),
           ),
           SizedBox(height: 24.h),
           Consumer<SignUpDetailViewModel>(
@@ -92,13 +90,13 @@ class SignUpDetailOneContents extends StatelessWidget {
                       height: 50.h,
                       decoration: BoxDecoration(
                         color: viewModel.selectedGender == Gender.female
-                            ? UsedColor.button
+                            ? const Color(0xFF7C4DFF)
                             : Colors.white,
                         borderRadius: BorderRadius.circular(19.r),
                         border: Border.all(
                             color: viewModel.selectedGender == Gender.female
-                                ? UsedColor.button
-                                : UsedColor.b_line,
+                                ? const Color(0xFF7C4DFF)
+                                : const Color(0xFFD2D8F8),
                             width: 2.5.w),
                       ),
                       child: Center(
@@ -106,7 +104,7 @@ class SignUpDetailOneContents extends StatelessWidget {
                           '여성',
                           style: TextStyle(
                             fontSize: 17.sp,
-                            fontFamily: "Pretendard-SB",
+                            fontWeight: FontWeight.bold,
                             color: viewModel.selectedGender == Gender.female
                                 ? Colors.white
                                 : Colors.black,
@@ -123,21 +121,21 @@ class SignUpDetailOneContents extends StatelessWidget {
                       height: 50.h,
                       decoration: BoxDecoration(
                         color: viewModel.selectedGender == Gender.male
-                            ? UsedColor.button
+                            ? const Color(0xFF7C4DFF)
                             : Colors.white,
                         borderRadius: BorderRadius.circular(19.r),
                         border: Border.all(
                             color: viewModel.selectedGender == Gender.male
-                                ? UsedColor.button
-                                : UsedColor.b_line,
+                                ? const Color(0xFF7C4DFF)
+                                : const Color(0xFFD2D8F8),
                             width: 2.5.w),
                       ),
                       child: Center(
                         child: Text(
                           '남성',
                           style: TextStyle(
-                            fontFamily: "Pretendard-SB",
                             fontSize: 17.sp,
+                            fontWeight: FontWeight.bold,
                             color: viewModel.selectedGender == Gender.male
                                 ? Colors.white
                                 : Colors.black,
@@ -156,6 +154,10 @@ class SignUpDetailOneContents extends StatelessWidget {
   }
 
   Widget _dateOfBirth(BuildContext context, SignUpDetailViewModel viewModel) {
+    final DateTime startDate = DateTime(1950);
+    final DateTime endDate = DateTime(2050);
+    final DateTime initialDate = viewModel.selectedDate;
+
     void onDateChange(DateTime newDate) {
       viewModel.updateDate(
           newDate); // This will notify all the listeners about date change.
@@ -168,12 +170,12 @@ class SignUpDetailOneContents extends StatelessWidget {
         children: [
           Text(
             "생년월일을 선택해주세요.",
-            style: AppTextStyles.PR_B_22.copyWith(color: Colors.black),
+            style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 8.h),
           Text(
             "추후 수정이 불가합니다",
-            style: AppTextStyles.SU_R_12.copyWith(color: UsedColor.text_3),
+            style: TextStyle(fontSize: 12.sp, color: const Color(0xFF868686)),
           ),
           SizedBox(height: 24.h),
           // Mark - datepicker
@@ -193,7 +195,7 @@ class SignUpDetailOneContents extends StatelessWidget {
         children: [
           Text(
             "거주지를 선택해주세요.",
-            style: AppTextStyles.PR_B_22.copyWith(color: Colors.black),
+            style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 10.h),
           const ProvinceDistrictPicker(),
@@ -210,9 +212,14 @@ class SignUpDetailOneContents extends StatelessWidget {
         children: [
           Text(
             "소속을 선택해주세요.",
-            style: AppTextStyles.PR_B_22.copyWith(color: Colors.black),
+            style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 46.h),
+          SizedBox(height: 8.h),
+          Text(
+            "추후 수정이 불가합니다",
+            style: TextStyle(fontSize: 12.sp, color: const Color(0xFF868686)),
+          ),
+          SizedBox(height: 24.h),
           Consumer<SignUpDetailViewModel>(
             builder: (context, viewModel, child) {
               return Column(
@@ -228,14 +235,14 @@ class SignUpDetailOneContents extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: viewModel.selectedAffiliation ==
                                     Affiliation.student
-                                ? UsedColor.button
+                                ? const Color(0xFF7C4DFF)
                                 : Colors.white,
                             borderRadius: BorderRadius.circular(19.r),
                             border: Border.all(
                               color: viewModel.selectedAffiliation ==
                                       Affiliation.student
-                                  ? UsedColor.button
-                                  : UsedColor.b_line,
+                                  ? const Color(0xFF7C4DFF)
+                                  : const Color(0xFFD2D8F8),
                               width: 2.5.w,
                             ),
                           ),
@@ -243,8 +250,8 @@ class SignUpDetailOneContents extends StatelessWidget {
                             child: Text(
                               '대학생',
                               style: TextStyle(
-                                fontFamily: 'Pretendard-SB',
                                 fontSize: 17.sp,
+                                fontWeight: FontWeight.bold,
                                 color: viewModel.selectedAffiliation ==
                                         Affiliation.student
                                     ? Colors.white
@@ -264,14 +271,14 @@ class SignUpDetailOneContents extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: viewModel.selectedAffiliation ==
                                     Affiliation.employee
-                                ? UsedColor.button
+                                ? const Color(0xFF7C4DFF)
                                 : Colors.white,
                             borderRadius: BorderRadius.circular(19.r),
                             border: Border.all(
                               color: viewModel.selectedAffiliation ==
                                       Affiliation.employee
-                                  ? UsedColor.button
-                                  : UsedColor.b_line,
+                                  ? const Color(0xFF7C4DFF)
+                                  : const Color(0xFFD2D8F8),
                               width: 2.5.w,
                             ),
                           ),
@@ -279,8 +286,8 @@ class SignUpDetailOneContents extends StatelessWidget {
                             child: Text(
                               '직장인',
                               style: TextStyle(
-                                fontFamily: 'Pretendard-SB',
                                 fontSize: 17.sp,
+                                fontWeight: FontWeight.bold,
                                 color: viewModel.selectedAffiliation ==
                                         Affiliation.employee
                                     ? Colors.white
@@ -304,14 +311,14 @@ class SignUpDetailOneContents extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: viewModel.selectedAffiliation ==
                                     Affiliation.freelancer
-                                ? UsedColor.button
+                                ? const Color(0xFF7C4DFF)
                                 : Colors.white,
                             borderRadius: BorderRadius.circular(19.r),
                             border: Border.all(
                               color: viewModel.selectedAffiliation ==
                                       Affiliation.freelancer
-                                  ? UsedColor.button
-                                  : UsedColor.b_line,
+                                  ? const Color(0xFF7C4DFF)
+                                  : const Color(0xFFD2D8F8),
                               width: 2.5.w,
                             ),
                           ),
@@ -319,8 +326,8 @@ class SignUpDetailOneContents extends StatelessWidget {
                             child: Text(
                               '프리랜서',
                               style: TextStyle(
-                                fontFamily: 'Pretendard-SB',
                                 fontSize: 17.sp,
+                                fontWeight: FontWeight.bold,
                                 color: viewModel.selectedAffiliation ==
                                         Affiliation.freelancer
                                     ? Colors.white
@@ -340,14 +347,14 @@ class SignUpDetailOneContents extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: viewModel.selectedAffiliation ==
                                     Affiliation.unemployed
-                                ? UsedColor.button
+                                ? const Color(0xFF7C4DFF)
                                 : Colors.white,
                             borderRadius: BorderRadius.circular(19.r),
                             border: Border.all(
                               color: viewModel.selectedAffiliation ==
                                       Affiliation.unemployed
-                                  ? UsedColor.button
-                                  : UsedColor.b_line,
+                                  ? const Color(0xFF7C4DFF)
+                                  : const Color(0xFFD2D8F8),
                               width: 2.5.w,
                             ),
                           ),
@@ -355,8 +362,8 @@ class SignUpDetailOneContents extends StatelessWidget {
                             child: Text(
                               '무직',
                               style: TextStyle(
-                                fontFamily: 'Pretendard-SB',
                                 fontSize: 17.sp,
+                                fontWeight: FontWeight.bold,
                                 color: viewModel.selectedAffiliation ==
                                         Affiliation.unemployed
                                     ? Colors.white
