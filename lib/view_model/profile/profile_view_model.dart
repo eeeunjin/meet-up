@@ -112,4 +112,19 @@ class ProfileViewModel with ChangeNotifier {
     _selectedAffiliation = affiliation;
     notifyListeners();
   }
+
+  // MARK : - 성격 수정
+  final List<String> _selectedPersonalities = [];
+  List<String> get selectedPersonalities => _selectedPersonalities;
+
+  void togglePersonality(String personality) {
+    if (_selectedPersonalities.contains(personality)) {
+      _selectedPersonalities.remove(personality);
+    } else {
+      if (_selectedPersonalities.length < 3) {
+        _selectedPersonalities.add(personality);
+      }
+    }
+    notifyListeners();
+  }
 }
