@@ -30,7 +30,7 @@ Logger logger = Logger();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeFirebase();
-  await LoginFunc.autoLogin();
+  // await LoginFunc.autoLogin();
 
   DateTime currentDate = DateTime.now();
   DateTime birthDate19YearsAgo =

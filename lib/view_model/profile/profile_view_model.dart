@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meet_up/model/province_district_model.dart';
 import 'package:meet_up/util/image.dart';
 
 class ProfileViewModel with ChangeNotifier {
@@ -77,5 +78,28 @@ class ProfileViewModel with ChangeNotifier {
     }
   }
 
-  // 소속 수정
+  // 프로필 수정 - 거주지
+  String? selectedProvince;
+  String? selectedDistrict;
+  int selectedProvinceIndex = 0;
+  int selectedDistrictIndex = 0;
+
+  final FixedExtentScrollController provinceScrollController =
+      FixedExtentScrollController();
+  final FixedExtentScrollController districtScrollController =
+      FixedExtentScrollController();
+
+  void selectProvince(String province) {
+    selectedProvince = province;
+    selectedProvinceIndex =
+        ProvinceDistrict.districts.keys.toList().indexOf(province);
+    notifyListeners();
+  }
+
+  void selectDistrict(String district) {
+    selectedDistrict = district;
+    selectedDistrictIndex =
+        ProvinceDistrict.districts[selectedProvince]!.indexOf(district);
+    notifyListeners();
+  }
 }
