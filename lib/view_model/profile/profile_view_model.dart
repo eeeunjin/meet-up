@@ -127,4 +127,34 @@ class ProfileViewModel with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  // 관심사 수정
+  final List<String> _selectedInterests = [];
+  List<String> get selectedInterests => _selectedInterests;
+
+  void toggleInterest(String interest) {
+    if (_selectedInterests.contains(interest)) {
+      _selectedInterests.remove(interest);
+    } else {
+      if (_selectedInterests.length < 3) {
+        _selectedInterests.add(interest);
+      }
+    }
+    notifyListeners();
+  }
+
+  // 만남 목적 수정
+  final List<String> _selectedMeetingPurposes = [];
+  List<String> get selectedMeetingPurposes => _selectedMeetingPurposes;
+
+  void toggleMeetingPurpose(String meetingPurpose) {
+    if (_selectedMeetingPurposes.contains(meetingPurpose)) {
+      _selectedMeetingPurposes.remove(meetingPurpose);
+    } else {
+      if (_selectedMeetingPurposes.length < 3) {
+        _selectedMeetingPurposes.add(meetingPurpose);
+      }
+    }
+    notifyListeners();
+  }
 }
