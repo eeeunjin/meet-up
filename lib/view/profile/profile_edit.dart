@@ -970,6 +970,15 @@ class ProfileEdit extends StatelessWidget {
         });
   }
 
+  // 소속 선택 컨테이너
+  Widget _buildAffiliationOption(
+      ProfileViewModel viewModel, String affiliation) {
+    return GestureDetector(
+      onTap: () {},
+      child: Container(),
+    );
+  }
+
   //MARK: - 주소 수정 오버레이
   void _showAddressEditDialog(
       BuildContext context, UserViewModel userViewModel) {

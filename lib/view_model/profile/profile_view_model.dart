@@ -76,4 +76,6 @@ class ProfileViewModel with ChangeNotifier {
         break;
     }
   }
+
+  // 소속 수정
 }
