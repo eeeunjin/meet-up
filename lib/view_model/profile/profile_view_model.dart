@@ -102,4 +102,14 @@ class ProfileViewModel with ChangeNotifier {
         ProvinceDistrict.districts[selectedProvince]!.indexOf(district);
     notifyListeners();
   }
+
+  // MARK: - 소속 수정
+  String? _selectedAffiliation;
+
+  String? get selectedAffiliation => _selectedAffiliation;
+
+  void selectAffiliation(String affiliation) {
+    _selectedAffiliation = affiliation;
+    notifyListeners();
+  }
 }

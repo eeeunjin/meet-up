@@ -836,86 +836,22 @@ class ProfileEdit extends StatelessWidget {
                         ),
                         SizedBox(height: 26.h),
                         // TODO : 소속 선택 컨테이너 박스
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 80.w,
-                              height: 24.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.r),
-                                border: Border.all(
-                                    width: 1.5.w, color: UsedColor.b_line),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '대학생',
-                                  style: AppTextStyles.PR_M_12.copyWith(
-                                      color: UsedColor.charcoal_black,
-                                      decoration: TextDecoration.none),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 12.w),
-                            Container(
-                              width: 80.w,
-                              height: 24.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.r),
-                                border: Border.all(
-                                    width: 1.5.w, color: UsedColor.b_line),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '직장인',
-                                  style: AppTextStyles.PR_M_12.copyWith(
-                                      color: UsedColor.charcoal_black,
-                                      decoration: TextDecoration.none),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 12.w),
-                            Container(
-                              width: 80.w,
-                              height: 24.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.r),
-                                border: Border.all(
-                                    width: 1.5.w, color: UsedColor.b_line),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '프리랜서',
-                                  style: AppTextStyles.PR_M_12.copyWith(
-                                      color: UsedColor.charcoal_black,
-                                      decoration: TextDecoration.none),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 12.w),
-                        Container(
-                          width: 80.w,
-                          height: 24.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.r),
-                            border: Border.all(
-                                width: 1.5.w, color: UsedColor.b_line),
-                          ),
-                          child: Center(
-                            child: Text(
-                              '무직',
-                              style: AppTextStyles.PR_M_12.copyWith(
-                                  color: UsedColor.charcoal_black,
-                                  decoration: TextDecoration.none),
-                            ),
-                          ),
-                        ),
+                        Consumer<ProfileViewModel>(
+                            builder: (context, viewModel, child) {
+                          return Wrap(
+                            spacing: 12.w,
+                            runSpacing: 12.h,
+                            children: [
+                              _buildAffiliationOption(viewModel, '대학생'),
+                              _buildAffiliationOption(viewModel, '직장인'),
+                              _buildAffiliationOption(viewModel, '프리랜서'),
+                              _buildAffiliationOption(viewModel, '무직'),
+                            ],
+                          );
+                        })
                       ],
                     ),
                   ),
-                  // SizedBox(height: 105.h),
                   const Spacer(),
                   Container(
                     width: 328.w,
@@ -976,12 +912,31 @@ class ProfileEdit extends StatelessWidget {
         });
   }
 
-  // 소속 선택 컨테이너
+  // MARK: - 소속 선택 컨테이너
   Widget _buildAffiliationOption(
       ProfileViewModel viewModel, String affiliation) {
+    bool isSelected = viewModel.selectedAffiliation == affiliation;
     return GestureDetector(
-      onTap: () {},
-      child: Container(),
+      onTap: () => viewModel.selectAffiliation(affiliation),
+      child: Container(
+        width: 80.w,
+        height: 24.h,
+        decoration: BoxDecoration(
+          color: isSelected ? UsedColor.button : Colors.white,
+          borderRadius: BorderRadius.circular(8.r),
+          border: Border.all(
+              width: 1.5.w,
+              color: isSelected ? UsedColor.button : UsedColor.b_line),
+        ),
+        child: Center(
+          child: Text(
+            affiliation,
+            style: AppTextStyles.PR_M_12.copyWith(
+                color: isSelected ? Colors.white : UsedColor.charcoal_black,
+                decoration: TextDecoration.none),
+          ),
+        ),
+      ),
     );
   }
 
