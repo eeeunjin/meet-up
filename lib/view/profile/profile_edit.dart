@@ -753,7 +753,7 @@ class ProfileEdit extends StatelessWidget {
                               child: TextButton(
                                 // !: -잉크 효과 이상해서 없애둠
                                 style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
+                                    overlayColor: WidgetStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () {
                                   Navigator.of(context).pop();
@@ -776,7 +776,7 @@ class ProfileEdit extends StatelessWidget {
                               height: 53.h,
                               child: TextButton(
                                 style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
+                                    overlayColor: WidgetStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () async {
                                   // 저장 로직
@@ -876,8 +876,8 @@ class ProfileEdit extends StatelessWidget {
                           child: TextButton(
                             // !: -잉크 효과 이상해서 없애둠
                             style: const ButtonStyle(
-                                overlayColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
+                                overlayColor:
+                                    WidgetStatePropertyAll(Colors.transparent)),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
@@ -899,8 +899,8 @@ class ProfileEdit extends StatelessWidget {
                           height: 53.h,
                           child: TextButton(
                             style: const ButtonStyle(
-                                overlayColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
+                                overlayColor:
+                                    WidgetStatePropertyAll(Colors.transparent)),
                             onPressed: () async {
                               // 저장 로직
                             },
@@ -984,6 +984,7 @@ class ProfileEdit extends StatelessWidget {
                         '거주지를 선택해주세요.',
                         style: AppTextStyles.PR_SB_16.copyWith(
                           color: UsedColor.charcoal_black,
+                          decoration: TextDecoration.none,
                         ),
                       ),
                       SizedBox(height: 40.h),
@@ -1013,7 +1014,7 @@ class ProfileEdit extends StatelessWidget {
                         child: TextButton(
                           style: const ButtonStyle(
                             overlayColor:
-                                MaterialStatePropertyAll(Colors.transparent),
+                                WidgetStatePropertyAll(Colors.transparent),
                           ),
                           onPressed: () {
                             Navigator.of(context).pop();
@@ -1037,7 +1038,7 @@ class ProfileEdit extends StatelessWidget {
                         child: TextButton(
                           style: const ButtonStyle(
                             overlayColor:
-                                MaterialStatePropertyAll(Colors.transparent),
+                                WidgetStatePropertyAll(Colors.transparent),
                           ),
                           onPressed: () async {
                             profileViewModel
@@ -1185,7 +1186,7 @@ class ProfileEdit extends StatelessWidget {
                               child: TextButton(
                                 // !: -잉크 효과 이상해서 없애둠
                                 style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
+                                    overlayColor: WidgetStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () {
                                   Navigator.of(context).pop();
@@ -1208,7 +1209,7 @@ class ProfileEdit extends StatelessWidget {
                               height: 53.h,
                               child: TextButton(
                                 style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
+                                    overlayColor: WidgetStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () async {
                                   // 저장 로직
@@ -1352,7 +1353,7 @@ class ProfileEdit extends StatelessWidget {
                               child: TextButton(
                                 // !: -잉크 효과 이상해서 없애둠
                                 style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
+                                    overlayColor: WidgetStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () {
                                   Navigator.of(context).pop();
@@ -1375,7 +1376,7 @@ class ProfileEdit extends StatelessWidget {
                               height: 53.h,
                               child: TextButton(
                                 style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
+                                    overlayColor: WidgetStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () async {
                                   // 저장 로직
@@ -1521,7 +1522,7 @@ class ProfileEdit extends StatelessWidget {
                               child: TextButton(
                                 // !: -잉크 효과 이상해서 없애둠
                                 style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
+                                    overlayColor: WidgetStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () {
                                   Navigator.of(context).pop();
@@ -1544,7 +1545,7 @@ class ProfileEdit extends StatelessWidget {
                               height: 53.h,
                               child: TextButton(
                                 style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
+                                    overlayColor: WidgetStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () async {
                                   // 저장 로직
@@ -1683,6 +1684,7 @@ class ProvinceDistrictPicker extends StatelessWidget {
             fontSize: 24.sp,
             color: textColor,
             fontFamily: 'Pretendard-M',
+            decoration: TextDecoration.none,
           ),
           textAlign: TextAlign.center,
         ),
