@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meet_up/model/province_district_model.dart';
 import 'package:meet_up/util/image.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
 
 class ProfileViewModel with ChangeNotifier {
   String _selectedRank = 'Novice';
@@ -111,6 +112,33 @@ class ProfileViewModel with ChangeNotifier {
   void selectAffiliation(String affiliation) {
     _selectedAffiliation = affiliation;
     notifyListeners();
+  }
+
+  void saveSelectedAffiliation(UserViewModel userViewModel) {
+    if (_selectedAffiliation != null) {
+      updateUserAffiliation(_selectedAffiliation!, userViewModel);
+    }
+  }
+
+  void updateUserAffiliation(String affiliation, UserViewModel userViewModel) {
+    if (userViewModel.userModel != null) {
+      switch (affiliation) {
+        case '대학생':
+          userViewModel.userModel!.job = 'student';
+          break;
+        case '직장인':
+          userViewModel.userModel!.job = 'employee';
+          break;
+        case '프리랜서':
+          userViewModel.userModel!.job = 'free';
+          break;
+        case '무직':
+          userViewModel.userModel!.job = 'none';
+          break;
+      }
+      userViewModel.notifyListeners();
+      notifyListeners();
+    }
   }
 
   // MARK : - 성격 수정

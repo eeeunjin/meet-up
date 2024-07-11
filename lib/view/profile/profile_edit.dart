@@ -301,6 +301,8 @@ class ProfileEdit extends StatelessWidget {
 //MARK: - 소속 분류
   Widget _classification(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final profileViewModel =
+        Provider.of<ProfileViewModel>(context, listen: false);
     final String job = userViewModel.userModel!.job;
 
     String translationJob(String job) {
@@ -323,7 +325,8 @@ class ProfileEdit extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           // 소속 분류 선택 창
-          showClassificationEditDialog(context, userViewModel);
+          showClassificationEditDialog(
+              context, userViewModel, profileViewModel);
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -801,8 +804,8 @@ class ProfileEdit extends StatelessWidget {
   }
 
 //MARK: - 소속 수정 오버레이
-  void showClassificationEditDialog(
-      BuildContext context, UserViewModel userViewModel) {
+  void showClassificationEditDialog(BuildContext context,
+      UserViewModel userViewModel, ProfileViewModel profileViewModel) {
     showGeneralDialog(
         context: context,
         barrierDismissible: true,
@@ -814,108 +817,114 @@ class ProfileEdit extends StatelessWidget {
         pageBuilder: (BuildContext buildContext, Animation animation,
             Animation secondaryAnimation) {
           return Center(
-            child: Container(
-              width: 328.w,
-              height: 312.h,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20.0.r),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 24..h, left: 28.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '소속을 선택해주세요.',
-                          style: AppTextStyles.PR_SB_16.copyWith(
-                              color: UsedColor.charcoal_black,
-                              decoration: TextDecoration.none),
-                        ),
-                        SizedBox(height: 12.h),
-                        Text(
-                          '본인의 소속을 1개 선택해주세요.',
-                          style: AppTextStyles.SU_R_12.copyWith(
-                              color: UsedColor.text_3,
-                              decoration: TextDecoration.none),
-                        ),
-                        SizedBox(height: 26.h),
-                        // TODO : 소속 선택 컨테이너 박스
-                        Consumer<ProfileViewModel>(
-                            builder: (context, viewModel, child) {
-                          return Wrap(
-                            spacing: 12.w,
-                            runSpacing: 12.h,
-                            children: [
-                              _buildAffiliationOption(viewModel, '대학생'),
-                              _buildAffiliationOption(viewModel, '직장인'),
-                              _buildAffiliationOption(viewModel, '프리랜서'),
-                              _buildAffiliationOption(viewModel, '무직'),
-                            ],
-                          );
-                        })
-                      ],
-                    ),
+            child: ChangeNotifierProvider.value(
+              value: profileViewModel,
+              child: Consumer<ProfileViewModel>(
+                  builder: (context, viewModel, child) {
+                return Container(
+                  width: 328.w,
+                  height: 312.h,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20.0.r),
                   ),
-                  const Spacer(),
-                  Container(
-                    width: 328.w,
-                    height: 0.3.h,
-                    color: UsedColor.b_line,
-                  ),
-                  Row(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: SizedBox(
-                          height: 53.h,
-                          child: TextButton(
-                            // !: -잉크 효과 이상해서 없애둠
-                            style: const ButtonStyle(
-                                overlayColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(
-                              '취소',
-                              style: AppTextStyles.PR_M_14
-                                  .copyWith(color: UsedColor.charcoal_black),
+                      Padding(
+                        padding: EdgeInsets.only(top: 24..h, left: 28.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '소속을 선택해주세요.',
+                              style: AppTextStyles.PR_SB_16.copyWith(
+                                  color: UsedColor.charcoal_black,
+                                  decoration: TextDecoration.none),
                             ),
-                          ),
+                            SizedBox(height: 12.h),
+                            Text(
+                              '본인의 소속을 1개 선택해주세요.',
+                              style: AppTextStyles.SU_R_12.copyWith(
+                                  color: UsedColor.text_3,
+                                  decoration: TextDecoration.none),
+                            ),
+                            SizedBox(height: 26.h),
+                            // TODO : 소속 선택 컨테이너 박스
+                            Wrap(
+                              spacing: 12.w,
+                              runSpacing: 12.h,
+                              children: [
+                                _buildAffiliationOption(viewModel, '대학생'),
+                                _buildAffiliationOption(viewModel, '직장인'),
+                                _buildAffiliationOption(viewModel, '프리랜서'),
+                                _buildAffiliationOption(viewModel, '무직'),
+                              ],
+                            )
+                          ],
                         ),
                       ),
+                      const Spacer(),
                       Container(
-                        height: 53.h,
-                        width: 0.3.w,
+                        width: 328.w,
+                        height: 0.3.h,
                         color: UsedColor.b_line,
                       ),
-                      Expanded(
-                        child: SizedBox(
-                          height: 53.h,
-                          child: TextButton(
-                            style: const ButtonStyle(
-                                overlayColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
-                            onPressed: () async {
-                              // 저장 로직
-                            },
-                            child: Text(
-                              '저장',
-                              style: AppTextStyles.PR_M_14
-                                  .copyWith(color: UsedColor.charcoal_black),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: SizedBox(
+                              height: 53.h,
+                              child: TextButton(
+                                // !: -잉크 효과 이상해서 없애둠
+                                style: const ButtonStyle(
+                                    overlayColor: MaterialStatePropertyAll(
+                                        Colors.transparent)),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  '취소',
+                                  style: AppTextStyles.PR_M_14.copyWith(
+                                      color: UsedColor.charcoal_black),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          Container(
+                            height: 53.h,
+                            width: 0.3.w,
+                            color: UsedColor.b_line,
+                          ),
+                          Expanded(
+                            child: SizedBox(
+                              height: 53.h,
+                              child: TextButton(
+                                style: const ButtonStyle(
+                                    overlayColor: MaterialStatePropertyAll(
+                                        Colors.transparent)),
+                                onPressed: () async {
+                                  // 저장 로직
+                                  profileViewModel
+                                      .saveSelectedAffiliation(userViewModel);
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  '저장',
+                                  style: AppTextStyles.PR_M_14.copyWith(
+                                      color: UsedColor.charcoal_black),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                );
+              }),
             ),
           );
         });
