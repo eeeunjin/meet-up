@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meet_up/model/province_district_model.dart';
 import 'package:meet_up/util/image.dart';
 
 class ProfileViewModel with ChangeNotifier {
@@ -75,5 +76,85 @@ class ProfileViewModel with ChangeNotifier {
         setSelectedIconPath(ImagePath.aengmuSelect);
         break;
     }
+  }
+
+  // 프로필 수정 - 거주지
+  String? selectedProvince;
+  String? selectedDistrict;
+  int selectedProvinceIndex = 0;
+  int selectedDistrictIndex = 0;
+
+  final FixedExtentScrollController provinceScrollController =
+      FixedExtentScrollController();
+  final FixedExtentScrollController districtScrollController =
+      FixedExtentScrollController();
+
+  void selectProvince(String province) {
+    selectedProvince = province;
+    selectedProvinceIndex =
+        ProvinceDistrict.districts.keys.toList().indexOf(province);
+    notifyListeners();
+  }
+
+  void selectDistrict(String district) {
+    selectedDistrict = district;
+    selectedDistrictIndex =
+        ProvinceDistrict.districts[selectedProvince]!.indexOf(district);
+    notifyListeners();
+  }
+
+  // MARK: - 소속 수정
+  String? _selectedAffiliation;
+
+  String? get selectedAffiliation => _selectedAffiliation;
+
+  void selectAffiliation(String affiliation) {
+    _selectedAffiliation = affiliation;
+    notifyListeners();
+  }
+
+  // MARK : - 성격 수정
+  final List<String> _selectedPersonalities = [];
+  List<String> get selectedPersonalities => _selectedPersonalities;
+
+  void togglePersonality(String personality) {
+    if (_selectedPersonalities.contains(personality)) {
+      _selectedPersonalities.remove(personality);
+    } else {
+      if (_selectedPersonalities.length < 3) {
+        _selectedPersonalities.add(personality);
+      }
+    }
+    notifyListeners();
+  }
+
+  // 관심사 수정
+  final List<String> _selectedInterests = [];
+  List<String> get selectedInterests => _selectedInterests;
+
+  void toggleInterest(String interest) {
+    if (_selectedInterests.contains(interest)) {
+      _selectedInterests.remove(interest);
+    } else {
+      if (_selectedInterests.length < 3) {
+        _selectedInterests.add(interest);
+      }
+    }
+    notifyListeners();
+  }
+
+  // 만남 목적 수정
+  final List<String> _selectedMeetingPurposes = [];
+  List<String> get selectedMeetingPurposes => _selectedMeetingPurposes;
+
+  void toggleMeetingPurpose(String meetingPurpose) {
+    if (_selectedMeetingPurposes.contains(meetingPurpose)) {
+      _selectedMeetingPurposes.remove(meetingPurpose);
+    } else {
+      if (_selectedMeetingPurposes.length < 3) {
+        _selectedMeetingPurposes.add(meetingPurpose);
+      }
+    }
+    notifyListeners();
   }
 }
