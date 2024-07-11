@@ -156,6 +156,13 @@ class ProfileViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  void saveSelectedPersonalities(UserViewModel userViewModel) {
+    if (userViewModel.userModel != null) {
+      userViewModel.userModel!.personality_self = _selectedPersonalities;
+      userViewModel.notifyListeners();
+    }
+  }
+
   // 관심사 수정
   final List<String> _selectedInterests = [];
   List<String> get selectedInterests => _selectedInterests;
@@ -171,6 +178,13 @@ class ProfileViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  void saveSelectedInterests(UserViewModel userViewModel) {
+    if (userViewModel.userModel != null) {
+      userViewModel.userModel!.interest = _selectedInterests;
+      userViewModel.notifyListeners();
+    }
+  }
+
   // 만남 목적 수정
   final List<String> _selectedMeetingPurposes = [];
   List<String> get selectedMeetingPurposes => _selectedMeetingPurposes;
@@ -184,5 +198,12 @@ class ProfileViewModel with ChangeNotifier {
       }
     }
     notifyListeners();
+  }
+
+  void saveSelectedMeetingPurposes(UserViewModel userViewModel) {
+    if (userViewModel.userModel != null) {
+      userViewModel.userModel!.purpose = _selectedMeetingPurposes;
+      userViewModel.notifyListeners();
+    }
   }
 }

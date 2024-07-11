@@ -1222,6 +1222,9 @@ class ProfileEdit extends StatelessWidget {
                                         Colors.transparent)),
                                 onPressed: () async {
                                   // 저장 로직
+                                  profileViewModel
+                                      .saveSelectedPersonalities(userViewModel);
+                                  Navigator.of(context).pop();
                                 },
                                 child: Text(
                                   '저장',
@@ -1389,6 +1392,9 @@ class ProfileEdit extends StatelessWidget {
                                         Colors.transparent)),
                                 onPressed: () async {
                                   // 저장 로직
+                                  profileViewModel
+                                      .saveSelectedInterests(userViewModel);
+                                  Navigator.of(context).pop();
                                 },
                                 child: Text(
                                   '저장',
@@ -1505,7 +1511,6 @@ class ProfileEdit extends StatelessWidget {
                                             color: isSelected
                                                 ? Colors.white
                                                 : Colors.black,
-                                            // color: UsedColor.charcoal_black,
                                             decoration: TextDecoration.none),
                                       ),
                                     ),
@@ -1558,6 +1563,9 @@ class ProfileEdit extends StatelessWidget {
                                         Colors.transparent)),
                                 onPressed: () async {
                                   // 저장 로직
+                                  profileViewModel.saveSelectedMeetingPurposes(
+                                      userViewModel);
+                                  Navigator.of(context).pop();
                                 },
                                 child: Text(
                                   '저장',
