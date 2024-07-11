@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:meet_up/model/province_district_model.dart';
+import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/image.dart';
-import 'package:meet_up/view_model/user_view_model.dart';
+import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 
 class ProfileViewModel with ChangeNotifier {
+  // MARK: - 등급
   String _selectedRank = 'Novice';
 
   String get selectedRank => _selectedRank;
@@ -23,7 +25,7 @@ class ProfileViewModel with ChangeNotifier {
     };
   }
 
-  // 회원 탈퇴
+  // MARK: - 회원 탈퇴
   final List<String> _selectedReasons = [];
   List<String> get selectedReasons => _selectedReasons;
 
@@ -48,13 +50,49 @@ class ProfileViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  // 프로필 수정
+  // MARK: - 프로필 수정
+  // 변수 초기화 함수
+  void initializeProfileInfo(UserModel userModel) {
+    initializeSelectedIconPath(userModel.profile_icon);
+    selectedProvince = userModel.region['province'];
+    selectedDistrict = userModel.region['district'];
+    _selectedAffiliation = userModel.job;
+    for (var interest in userModel.interest) {
+      _selectedInterests.add(interest);
+    }
+    for (var personality in userModel.personality_self) {
+      _selectedPersonalities.add(personality);
+    }
+    for (var purpose in userModel.purpose) {
+      _selectedMeetingPurposes.add(purpose);
+    }
+  }
+
+  // 변수 리셋 함수
+  void resetProfileInfo() {
+    _selectedIconPath = '';
+    selectedProvince = null;
+    selectedDistrict = null;
+    _selectedAffiliation = null;
+    _selectedInterests.clear();
+    _selectedPersonalities.clear();
+    _selectedMeetingPurposes.clear();
+  }
+
+  // MARK: - 아이콘
   String _selectedIconPath = '';
+  String _changedIconPath = '';
 
   String get selectedIconPath => _selectedIconPath;
+  String get changedIconPath => _changedIconPath;
 
   void setSelectedIconPath(String path) {
     _selectedIconPath = path;
+    notifyListeners();
+  }
+
+  void setChangedIconPath(String path) {
+    _changedIconPath = path;
     notifyListeners();
   }
 
@@ -62,24 +100,24 @@ class ProfileViewModel with ChangeNotifier {
     final profileIconName = profileIcon.split('/').last.split('_').first;
     switch (profileIconName) {
       case "fedro":
-        setSelectedIconPath(ImagePath.fedroSelect);
+        _selectedIconPath = ImagePath.fedroSelect;
         break;
       case "cogy":
-        setSelectedIconPath(ImagePath.cogySelect);
+        _selectedIconPath = ImagePath.cogySelect;
         break;
       case "piggy":
-        setSelectedIconPath(ImagePath.piggySelect);
+        _selectedIconPath = ImagePath.piggySelect;
         break;
       case "ham":
-        setSelectedIconPath(ImagePath.hamSelect);
+        _selectedIconPath = ImagePath.hamSelect;
         break;
       case "aengmu":
-        setSelectedIconPath(ImagePath.aengmuSelect);
+        _selectedIconPath = ImagePath.aengmuSelect;
         break;
     }
   }
 
-  // 프로필 수정 - 거주지
+  // MARK: - 거주지
   String? selectedProvince;
   String? selectedDistrict;
   int selectedProvinceIndex = 0;
@@ -106,104 +144,120 @@ class ProfileViewModel with ChangeNotifier {
 
   // MARK: - 소속 수정
   String? _selectedAffiliation;
+  String? _changedAffiliation;
 
   String? get selectedAffiliation => _selectedAffiliation;
+  String? get changedAffiliation => _changedAffiliation;
+
+  void setChangedAffiliation(String affiliation) {
+    switch (affiliation) {
+      case '대학생':
+        _changedAffiliation = Affiliation.student.name;
+        break;
+      case '직장인':
+        _changedAffiliation = Affiliation.employee.name;
+        break;
+      case '프리랜서':
+        _changedAffiliation = Affiliation.freelancer.name;
+        break;
+      case '무직':
+        _changedAffiliation = Affiliation.unemployed.name;
+        break;
+      default:
+        _changedAffiliation = null;
+    }
+    notifyListeners();
+  }
 
   void selectAffiliation(String affiliation) {
     _selectedAffiliation = affiliation;
     notifyListeners();
   }
 
-  void saveSelectedAffiliation(UserViewModel userViewModel) {
-    if (_selectedAffiliation != null) {
-      updateUserAffiliation(_selectedAffiliation!, userViewModel);
-    }
-  }
-
-  void updateUserAffiliation(String affiliation, UserViewModel userViewModel) {
-    if (userViewModel.userModel != null) {
-      switch (affiliation) {
-        case '대학생':
-          userViewModel.userModel!.job = 'student';
-          break;
-        case '직장인':
-          userViewModel.userModel!.job = 'employee';
-          break;
-        case '프리랜서':
-          userViewModel.userModel!.job = 'free';
-          break;
-        case '무직':
-          userViewModel.userModel!.job = 'none';
-          break;
-      }
-      userViewModel.notifyListeners();
-      notifyListeners();
-    }
-  }
-
-  // MARK : - 성격 수정
+  // MARK: - 성격
   final List<String> _selectedPersonalities = [];
+  final List<String> _changedPersonalites = [];
+
   List<String> get selectedPersonalities => _selectedPersonalities;
+  List<String> get changedPersonalites => _changedPersonalites;
 
-  void togglePersonality(String personality) {
-    if (_selectedPersonalities.contains(personality)) {
-      _selectedPersonalities.remove(personality);
+  void toggleChangedPersonality(String personality) {
+    if (_changedPersonalites.contains(personality)) {
+      _changedPersonalites.remove(personality);
     } else {
-      if (_selectedPersonalities.length < 3) {
-        _selectedPersonalities.add(personality);
+      if (_changedPersonalites.length < 3) {
+        _changedPersonalites.add(personality);
       }
     }
     notifyListeners();
   }
 
-  void saveSelectedPersonalities(UserViewModel userViewModel) {
-    if (userViewModel.userModel != null) {
-      userViewModel.userModel!.personality_self = _selectedPersonalities;
-      userViewModel.notifyListeners();
-    }
+  void setPersonality(List<String> personalities) {
+    _selectedPersonalities.clear();
+    _selectedPersonalities.addAll(personalities);
+    notifyListeners();
   }
 
-  // 관심사 수정
+  void clearChangedPersonalities() {
+    _changedPersonalites.clear();
+    notifyListeners();
+  }
+
+  // MARK: - 관심사
   final List<String> _selectedInterests = [];
+  final List<String> _changedInterests = [];
+
   List<String> get selectedInterests => _selectedInterests;
+  List<String> get changedInterests => _changedInterests;
 
-  void toggleInterest(String interest) {
-    if (_selectedInterests.contains(interest)) {
-      _selectedInterests.remove(interest);
+  void toggleChangedInterest(String interest) {
+    if (_changedInterests.contains(interest)) {
+      _changedInterests.remove(interest);
     } else {
-      if (_selectedInterests.length < 3) {
-        _selectedInterests.add(interest);
+      if (_changedInterests.length < 3) {
+        _changedInterests.add(interest);
       }
     }
     notifyListeners();
   }
 
-  void saveSelectedInterests(UserViewModel userViewModel) {
-    if (userViewModel.userModel != null) {
-      userViewModel.userModel!.interest = _selectedInterests;
-      userViewModel.notifyListeners();
-    }
+  void setInterest(List<String> interests) {
+    _selectedInterests.clear();
+    _selectedInterests.addAll(interests);
+    notifyListeners();
   }
 
-  // 만남 목적 수정
+  void clearChangedInterests() {
+    _changedInterests.clear();
+    notifyListeners();
+  }
+
+  // MARK: - 만남 목적
   final List<String> _selectedMeetingPurposes = [];
-  List<String> get selectedMeetingPurposes => _selectedMeetingPurposes;
+  final List<String> _changedMeetingPurposes = [];
 
-  void toggleMeetingPurpose(String meetingPurpose) {
-    if (_selectedMeetingPurposes.contains(meetingPurpose)) {
-      _selectedMeetingPurposes.remove(meetingPurpose);
+  List<String> get selectedMeetingPurposes => _selectedMeetingPurposes;
+  List<String> get changedMeetingPurposes => _changedMeetingPurposes;
+
+  void toggleChangedMeetingPurposes(String meetingPurposes) {
+    if (_changedMeetingPurposes.contains(meetingPurposes)) {
+      _changedMeetingPurposes.remove(meetingPurposes);
     } else {
-      if (_selectedMeetingPurposes.length < 3) {
-        _selectedMeetingPurposes.add(meetingPurpose);
+      if (_changedMeetingPurposes.length < 3) {
+        _changedMeetingPurposes.add(meetingPurposes);
       }
     }
     notifyListeners();
   }
 
-  void saveSelectedMeetingPurposes(UserViewModel userViewModel) {
-    if (userViewModel.userModel != null) {
-      userViewModel.userModel!.purpose = _selectedMeetingPurposes;
-      userViewModel.notifyListeners();
-    }
+  void setMeetingPurpose(List<String> meetingPurposes) {
+    _selectedMeetingPurposes.clear();
+    _selectedMeetingPurposes.addAll(meetingPurposes);
+    notifyListeners();
+  }
+
+  void clearChangedMeetingPurposes() {
+    _changedMeetingPurposes.clear();
+    notifyListeners();
   }
 }

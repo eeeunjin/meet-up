@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/model/province_district_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
@@ -17,6 +18,11 @@ class ProfileEdit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // user의 정보를 user view model에서 profile view model에 전달
+    // 변경 사항에 따라 listen 하도록 설정
+    // 변경 사항이 있을 시, rebuild
+    final _ = Provider.of<ProfileViewModel>(context);
+
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -97,28 +103,12 @@ class ProfileEdit extends StatelessWidget {
 
   //MARK: - 프로필 사진
   Widget _profileImage(BuildContext context) {
-    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     final profileViewModel =
         Provider.of<ProfileViewModel>(context, listen: false);
-    final profileIcon = userViewModel.userModel!.profile_icon;
-    final profileIconName = profileIcon.split('/').last.split('_').first;
-    String path = '';
-    switch (profileIconName) {
-      case "fedro":
-        path = ImagePath.fedroSelect;
-      case "cogy":
-        path = ImagePath.cogySelect;
-      case "piggy":
-        path = ImagePath.piggySelect;
-      case "ham":
-        path = ImagePath.hamSelect;
-      case "aengmu":
-        path = ImagePath.aengmuSelect;
-    }
     return Center(
       child: GestureDetector(
         onTap: () {
-          // _showProfileEditDialog(context, userViewModel, profileViewModel);
+          showProfileEditDialog(context, profileViewModel);
         },
         child: Stack(
           children: [
@@ -129,7 +119,7 @@ class ProfileEdit extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(width: 1.5.w, color: UsedColor.b_line),
               ),
-              child: Image.asset(path),
+              child: Image.asset(profileViewModel.selectedIconPath),
             ),
             //MARK: - 프로필 수정 버튼
             Positioned(
@@ -257,10 +247,10 @@ class ProfileEdit extends StatelessWidget {
     );
   }
 
-  // MARK: - 주소
+  // MARK: - 거주지
   Widget _address(BuildContext context) {
     final profileViewModel =
-        Provider.of<SignUpDetailViewModel>(context, listen: true);
+        Provider.of<ProfileViewModel>(context, listen: true);
     final String displayText =
         '${profileViewModel.selectedProvince} ${profileViewModel.selectedDistrict}';
 
@@ -300,18 +290,15 @@ class ProfileEdit extends StatelessWidget {
 
 //MARK: - 소속 분류
   Widget _classification(BuildContext context) {
-    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-    final profileViewModel =
-        Provider.of<ProfileViewModel>(context, listen: false);
-    final String job = userViewModel.userModel!.job;
+    final profileViewModel = Provider.of<ProfileViewModel>(context);
 
     String translationJob(String job) {
       switch (job) {
         case 'student':
-          return '학생';
-        case 'free':
+          return '대학생';
+        case 'freelancer':
           return '프리랜서';
-        case 'none':
+        case 'unemployed':
           return '무직';
         case 'employee':
           return '회사원';
@@ -325,8 +312,7 @@ class ProfileEdit extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           // 소속 분류 선택 창
-          showClassificationEditDialog(
-              context, userViewModel, profileViewModel);
+          showClassificationEditDialog(context, profileViewModel);
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -339,7 +325,7 @@ class ProfileEdit extends StatelessWidget {
             SizedBox(
               width: 328.w,
               child: Text(
-                translationJob(job),
+                translationJob(profileViewModel.selectedAffiliation!),
                 style: AppTextStyles.PR_R_16
                     .copyWith(color: UsedColor.charcoal_black),
               ),
@@ -358,11 +344,10 @@ class ProfileEdit extends StatelessWidget {
 
 //MARK: - 성격
   Widget _personality(BuildContext context) {
-    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     final profileViewModel =
         Provider.of<ProfileViewModel>(context, listen: false);
     final List<dynamic> personalityListDynamic =
-        userViewModel.userModel?.personality_self ?? [];
+        profileViewModel.selectedPersonalities;
     final List<String> personalityList = personalityListDynamic.cast<String>();
 
     return Padding(
@@ -377,8 +362,7 @@ class ProfileEdit extends StatelessWidget {
           SizedBox(height: 12.h),
           GestureDetector(
             onTap: () {
-              showPersonalityEditDialog(
-                  context, userViewModel, profileViewModel);
+              showPersonalityEditDialog(context, profileViewModel);
             },
             child: SizedBox(
               width: 328.w,
@@ -420,11 +404,10 @@ class ProfileEdit extends StatelessWidget {
 
 //MARK: - 관심사
   Widget _interests(BuildContext context) {
-    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     final profileViewModel =
         Provider.of<ProfileViewModel>(context, listen: false);
     final List<dynamic> interestListDynamic =
-        userViewModel.userModel?.interest ?? [];
+        profileViewModel.selectedInterests;
     final List<String> interestList = interestListDynamic.cast<String>();
 
     return Padding(
@@ -439,7 +422,7 @@ class ProfileEdit extends StatelessWidget {
           SizedBox(height: 12.h),
           GestureDetector(
             onTap: () {
-              showInterestsEditDialog(context, userViewModel, profileViewModel);
+              showInterestsEditDialog(context, profileViewModel);
             },
             child: SizedBox(
               width: 328.w,
@@ -481,11 +464,10 @@ class ProfileEdit extends StatelessWidget {
 
 //MARK: - 만남 목적
   Widget _meetingPurpose(BuildContext context) {
-    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     final profileViewModel =
         Provider.of<ProfileViewModel>(context, listen: false);
     final List<dynamic> purposeListDynamic =
-        userViewModel.userModel?.purpose ?? [];
+        profileViewModel.selectedMeetingPurposes;
     final List<String> purposeList = purposeListDynamic.cast<String>();
 
     return Padding(
@@ -500,8 +482,7 @@ class ProfileEdit extends StatelessWidget {
           SizedBox(height: 12.h),
           GestureDetector(
             onTap: () {
-              showMeetingPurposeEditDialog(
-                  context, userViewModel, profileViewModel);
+              showMeetingPurposeEditDialog(context, profileViewModel);
             },
             child: SizedBox(
               width: 328.w,
@@ -554,11 +535,8 @@ class ProfileEdit extends StatelessWidget {
   }
 
 //MARK: - 프로필 수정 오버레이
-  void showProfileEditDialog(BuildContext context, UserViewModel userViewModel,
-      ProfileViewModel profileViewModel) {
-    profileViewModel
-        .initializeSelectedIconPath(userViewModel.userModel!.profile_icon);
-
+  void showProfileEditDialog(
+      BuildContext context, ProfileViewModel profileViewModel) {
     showGeneralDialog(
         context: context,
         barrierDismissible: true,
@@ -602,7 +580,7 @@ class ProfileEdit extends StatelessWidget {
                                 children: [
                                   GestureDetector(
                                     onTap: () =>
-                                        profileViewModel.setSelectedIconPath(
+                                        profileViewModel.setChangedIconPath(
                                             ImagePath.cogySelect),
                                     child: Container(
                                       width: 72.w,
@@ -610,7 +588,7 @@ class ProfileEdit extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         border:
-                                            profileViewModel.selectedIconPath ==
+                                            profileViewModel.changedIconPath ==
                                                     ImagePath.cogySelect
                                                 ? Border.all(
                                                     color: UsedColor.b_line,
@@ -618,7 +596,7 @@ class ProfileEdit extends StatelessWidget {
                                                 : null,
                                       ),
                                       child: Image.asset(
-                                          profileViewModel.selectedIconPath ==
+                                          profileViewModel.changedIconPath ==
                                                   ImagePath.cogySelect
                                               ? ImagePath.cogySelect
                                               : ImagePath.cogyDeselect),
@@ -627,7 +605,7 @@ class ProfileEdit extends StatelessWidget {
                                   SizedBox(width: 12.w),
                                   GestureDetector(
                                     onTap: () =>
-                                        profileViewModel.setSelectedIconPath(
+                                        profileViewModel.setChangedIconPath(
                                             ImagePath.piggySelect),
                                     child: Container(
                                       width: 72.w,
@@ -635,7 +613,7 @@ class ProfileEdit extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         border:
-                                            profileViewModel.selectedIconPath ==
+                                            profileViewModel.changedIconPath ==
                                                     ImagePath.piggySelect
                                                 ? Border.all(
                                                     color: UsedColor.b_line,
@@ -643,7 +621,7 @@ class ProfileEdit extends StatelessWidget {
                                                 : null,
                                       ),
                                       child: Image.asset(
-                                        profileViewModel.selectedIconPath ==
+                                        profileViewModel.changedIconPath ==
                                                 ImagePath.piggySelect
                                             ? ImagePath.piggySelect
                                             : ImagePath.piggyDeselect,
@@ -653,7 +631,7 @@ class ProfileEdit extends StatelessWidget {
                                   SizedBox(width: 12.w),
                                   GestureDetector(
                                     onTap: () =>
-                                        profileViewModel.setSelectedIconPath(
+                                        profileViewModel.setChangedIconPath(
                                             ImagePath.aengmuSelect),
                                     child: Container(
                                       width: 72.w,
@@ -661,7 +639,7 @@ class ProfileEdit extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         border:
-                                            profileViewModel.selectedIconPath ==
+                                            profileViewModel.changedIconPath ==
                                                     ImagePath.aengmuSelect
                                                 ? Border.all(
                                                     color: UsedColor.b_line,
@@ -669,7 +647,7 @@ class ProfileEdit extends StatelessWidget {
                                                 : null,
                                       ),
                                       child: Image.asset(
-                                        profileViewModel.selectedIconPath ==
+                                        profileViewModel.changedIconPath ==
                                                 ImagePath.aengmuSelect
                                             ? ImagePath.aengmuSelect
                                             : ImagePath.aengmuDeselect,
@@ -686,7 +664,7 @@ class ProfileEdit extends StatelessWidget {
                                 children: [
                                   GestureDetector(
                                     onTap: () =>
-                                        profileViewModel.setSelectedIconPath(
+                                        profileViewModel.setChangedIconPath(
                                             ImagePath.hamSelect),
                                     child: Container(
                                       width: 72.w,
@@ -694,7 +672,7 @@ class ProfileEdit extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         border:
-                                            profileViewModel.selectedIconPath ==
+                                            profileViewModel.changedIconPath ==
                                                     ImagePath.hamSelect
                                                 ? Border.all(
                                                     color: UsedColor.b_line,
@@ -702,7 +680,7 @@ class ProfileEdit extends StatelessWidget {
                                                 : null,
                                       ),
                                       child: Image.asset(
-                                        profileViewModel.selectedIconPath ==
+                                        profileViewModel.changedIconPath ==
                                                 ImagePath.hamSelect
                                             ? ImagePath.hamSelect
                                             : ImagePath.hamDeselect,
@@ -712,7 +690,7 @@ class ProfileEdit extends StatelessWidget {
                                   SizedBox(width: 12.w),
                                   GestureDetector(
                                     onTap: () =>
-                                        profileViewModel.setSelectedIconPath(
+                                        profileViewModel.setChangedIconPath(
                                             ImagePath.fedroSelect),
                                     child: Container(
                                       width: 72.w,
@@ -720,7 +698,7 @@ class ProfileEdit extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         border:
-                                            profileViewModel.selectedIconPath ==
+                                            profileViewModel.changedIconPath ==
                                                     ImagePath.fedroSelect
                                                 ? Border.all(
                                                     color: UsedColor.b_line,
@@ -728,7 +706,7 @@ class ProfileEdit extends StatelessWidget {
                                                 : null,
                                       ),
                                       child: Image.asset(
-                                        profileViewModel.selectedIconPath ==
+                                        profileViewModel.changedIconPath ==
                                                 ImagePath.fedroSelect
                                             ? ImagePath.fedroSelect
                                             : ImagePath.fedroDeselect,
@@ -759,7 +737,8 @@ class ProfileEdit extends StatelessWidget {
                                     overlayColor: MaterialStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () {
-                                  Navigator.of(context).pop();
+                                  profileViewModel.setChangedIconPath('');
+                                  context.pop();
                                 },
                                 child: Text(
                                   '취소',
@@ -783,6 +762,14 @@ class ProfileEdit extends StatelessWidget {
                                         Colors.transparent)),
                                 onPressed: () async {
                                   // 저장 로직
+                                  if (profileViewModel.changedIconPath != '') {
+                                    profileViewModel.setSelectedIconPath(
+                                        profileViewModel.changedIconPath);
+                                    profileViewModel.setChangedIconPath('');
+                                    context.pop();
+                                  } else {
+                                    logger.e("항목을 선택하세요 !!");
+                                  }
                                 },
                                 child: Text(
                                   '저장',
@@ -804,8 +791,8 @@ class ProfileEdit extends StatelessWidget {
   }
 
 //MARK: - 소속 수정 오버레이
-  void showClassificationEditDialog(BuildContext context,
-      UserViewModel userViewModel, ProfileViewModel profileViewModel) {
+  void showClassificationEditDialog(
+      BuildContext context, ProfileViewModel profileViewModel) {
     showGeneralDialog(
         context: context,
         barrierDismissible: true,
@@ -878,12 +865,13 @@ class ProfileEdit extends StatelessWidget {
                             child: SizedBox(
                               height: 53.h,
                               child: TextButton(
-                                // !: -잉크 효과 이상해서 없애둠
+                                // 잉크 효과 이상해서 없애둠
                                 style: const ButtonStyle(
                                     overlayColor: MaterialStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () {
-                                  Navigator.of(context).pop();
+                                  profileViewModel.setChangedAffiliation('');
+                                  context.pop();
                                 },
                                 child: Text(
                                   '취소',
@@ -907,9 +895,15 @@ class ProfileEdit extends StatelessWidget {
                                         Colors.transparent)),
                                 onPressed: () async {
                                   // 저장 로직
-                                  profileViewModel
-                                      .saveSelectedAffiliation(userViewModel);
-                                  Navigator.of(context).pop();
+                                  if (profileViewModel.changedAffiliation !=
+                                      null) {
+                                    profileViewModel.selectAffiliation(
+                                        profileViewModel.changedAffiliation!);
+                                    profileViewModel.setChangedAffiliation('');
+                                    context.pop();
+                                  } else {
+                                    logger.e('항목을 선택하세요 !!');
+                                  }
                                 },
                                 child: Text(
                                   '저장',
@@ -933,9 +927,26 @@ class ProfileEdit extends StatelessWidget {
 // MARK: - 소속 선택 컨테이너
   Widget _buildAffiliationOption(
       ProfileViewModel viewModel, String affiliation) {
-    bool isSelected = viewModel.selectedAffiliation == affiliation;
+    String changedAffiliation = '';
+    switch (viewModel.changedAffiliation) {
+      case 'student':
+        changedAffiliation = '대학생';
+        break;
+      case 'employee':
+        changedAffiliation = '직장인';
+        break;
+      case 'freelancer':
+        changedAffiliation = '프리랜서';
+        break;
+      case 'unemployed':
+        changedAffiliation = '무직';
+        break;
+    }
+    bool isSelected = changedAffiliation == affiliation;
+    logger.d(
+        "[test] changedAffiliation: $changedAffiliation // affiliation: $affiliation");
     return GestureDetector(
-      onTap: () => viewModel.selectAffiliation(affiliation),
+      onTap: () => viewModel.setChangedAffiliation(affiliation),
       child: Container(
         width: 80.w,
         height: 24.h,
@@ -960,7 +971,7 @@ class ProfileEdit extends StatelessWidget {
 
 //MARK: - 주소 수정 오버레이
   void showAddressEditDialog(
-      BuildContext context, SignUpDetailViewModel profileViewModel) {
+      BuildContext context, ProfileViewModel profileViewModel) {
     String? temporarySelectedProvince = profileViewModel.selectedProvince;
     String? temporarySelectedDistrict = profileViewModel.selectedDistrict;
 
@@ -1075,8 +1086,8 @@ class ProfileEdit extends StatelessWidget {
   }
 
 //MARK: - 성격 수정 오버레이
-  void showPersonalityEditDialog(BuildContext context,
-      UserViewModel userViewModel, ProfileViewModel profileViewModel) {
+  void showPersonalityEditDialog(
+      BuildContext context, ProfileViewModel profileViewModel) {
     List<String> options = [
       "사교적인",
       "소극적인",
@@ -1136,17 +1147,17 @@ class ProfileEdit extends StatelessWidget {
                                   decoration: TextDecoration.none),
                             ),
                             SizedBox(height: 26.h),
-                            // TODO : 성격 컨테이너들
+                            // 성격 컨테이너들
                             Wrap(
                               spacing: 12.w,
                               runSpacing: 12.h,
                               children: options.map((option) {
-                                bool isSelected = viewModel
-                                    .selectedPersonalities
+                                bool isSelected = viewModel.changedPersonalites
                                     .contains(option);
                                 return GestureDetector(
                                   onTap: () {
-                                    profileViewModel.togglePersonality(option);
+                                    profileViewModel
+                                        .toggleChangedPersonality(option);
                                   },
                                   child: Container(
                                     width: 80.w,
@@ -1198,7 +1209,8 @@ class ProfileEdit extends StatelessWidget {
                                     overlayColor: MaterialStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () {
-                                  Navigator.of(context).pop();
+                                  profileViewModel.clearChangedPersonalities();
+                                  context.pop();
                                 },
                                 child: Text(
                                   '취소',
@@ -1222,9 +1234,17 @@ class ProfileEdit extends StatelessWidget {
                                         Colors.transparent)),
                                 onPressed: () async {
                                   // 저장 로직
-                                  profileViewModel
-                                      .saveSelectedPersonalities(userViewModel);
-                                  Navigator.of(context).pop();
+                                  if (profileViewModel
+                                          .changedPersonalites.length ==
+                                      3) {
+                                    profileViewModel.setPersonality(
+                                        profileViewModel.changedPersonalites);
+                                    profileViewModel
+                                        .clearChangedPersonalities();
+                                    context.pop();
+                                  } else {
+                                    logger.e("항목을 선택해주세요 !!");
+                                  }
                                 },
                                 child: Text(
                                   '저장',
@@ -1246,8 +1266,8 @@ class ProfileEdit extends StatelessWidget {
   }
 
 //MARK: - 관심사 수정 오버레이
-  void showInterestsEditDialog(BuildContext context,
-      UserViewModel userViewModel, ProfileViewModel profileViewModel) {
+  void showInterestsEditDialog(
+      BuildContext context, ProfileViewModel profileViewModel) {
     List<String> options = [
       "운동",
       "음악",
@@ -1307,16 +1327,16 @@ class ProfileEdit extends StatelessWidget {
                                   decoration: TextDecoration.none),
                             ),
                             SizedBox(height: 26.h),
-                            // TODO : 관심사 컨테이너들
+                            // 관심사 컨테이너들
                             Wrap(
                               spacing: 12.w,
                               runSpacing: 12.h,
                               children: options.map((option) {
-                                bool isSelected = viewModel.selectedInterests
-                                    .contains(option);
+                                bool isSelected =
+                                    viewModel.changedInterests.contains(option);
                                 return GestureDetector(
                                   onTap: () {
-                                    viewModel.toggleInterest(option);
+                                    viewModel.toggleChangedInterest(option);
                                   },
                                   child: Container(
                                     width: 80.w,
@@ -1368,7 +1388,8 @@ class ProfileEdit extends StatelessWidget {
                                     overlayColor: MaterialStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () {
-                                  Navigator.of(context).pop();
+                                  profileViewModel.clearChangedInterests();
+                                  context.pop();
                                 },
                                 child: Text(
                                   '취소',
@@ -1392,9 +1413,16 @@ class ProfileEdit extends StatelessWidget {
                                         Colors.transparent)),
                                 onPressed: () async {
                                   // 저장 로직
-                                  profileViewModel
-                                      .saveSelectedInterests(userViewModel);
-                                  Navigator.of(context).pop();
+                                  if (profileViewModel
+                                          .changedInterests.length ==
+                                      3) {
+                                    profileViewModel.setInterest(
+                                        profileViewModel.changedInterests);
+                                    profileViewModel.clearChangedInterests();
+                                    context.pop();
+                                  } else {
+                                    logger.e("항목을 선택해주세요 !!");
+                                  }
                                 },
                                 child: Text(
                                   '저장',
@@ -1416,8 +1444,8 @@ class ProfileEdit extends StatelessWidget {
   }
 
 //MARK: - 만남 목적 수정 오버레이
-  void showMeetingPurposeEditDialog(BuildContext context,
-      UserViewModel userViewModel, ProfileViewModel profileViewModel) {
+  void showMeetingPurposeEditDialog(
+      BuildContext context, ProfileViewModel profileViewModel) {
     List<String> options = [
       "친목",
       "자기성찰",
@@ -1432,158 +1460,169 @@ class ProfileEdit extends StatelessWidget {
       "기타",
     ];
     showGeneralDialog(
-        context: context,
-        barrierDismissible: true,
-        barrierLabel:
-            MaterialLocalizations.of(context).modalBarrierDismissLabel,
-        barrierColor: Colors.black.withOpacity(0.5), // 외부 색상
-        transitionDuration:
-            const Duration(milliseconds: 200), // 사라질 때 애니메이션 지속 시간
-        pageBuilder: (BuildContext buildContext, Animation animation,
-            Animation secondaryAnimation) {
-          return Center(
-            child: ChangeNotifierProvider.value(
-              value: profileViewModel,
-              child: Consumer<ProfileViewModel>(
-                  builder: (context, viewModel, child) {
-                return Container(
-                  width: 328.w,
-                  height: 312.h,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20.0.r),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: 24..h, left: 28.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              '만남 목적을 선택해주세요.',
-                              style: AppTextStyles.PR_SB_16.copyWith(
-                                  color: UsedColor.charcoal_black,
-                                  decoration: TextDecoration.none),
-                            ),
-                            SizedBox(height: 12.h),
-                            Text(
-                              '만남을 가지는 목적을 1~3개 선택해주세요.',
-                              style: AppTextStyles.SU_R_12.copyWith(
-                                  color: UsedColor.text_3,
-                                  decoration: TextDecoration.none),
-                            ),
-                            SizedBox(height: 26.h),
-                            // TODO : 관심사 컨테이너들
-                            Wrap(
-                              spacing: 12.w,
-                              runSpacing: 12.h,
-                              children: options.map((option) {
-                                bool isSelected = viewModel
-                                    .selectedMeetingPurposes
-                                    .contains(option);
-                                return GestureDetector(
-                                  onTap: () {
-                                    viewModel.toggleMeetingPurpose(option);
-                                  },
-                                  child: Container(
-                                    width: 80.w,
-                                    height: 24.h,
-                                    decoration: BoxDecoration(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black.withOpacity(0.5), // 외부 색상
+      transitionDuration:
+          const Duration(milliseconds: 200), // 사라질 때 애니메이션 지속 시간
+      pageBuilder: (BuildContext buildContext, Animation animation,
+          Animation secondaryAnimation) {
+        return Center(
+          child: ChangeNotifierProvider.value(
+            value: profileViewModel,
+            child: Consumer<ProfileViewModel>(
+                builder: (context, viewModel, child) {
+              return Container(
+                width: 328.w,
+                height: 312.h,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.0.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 24..h, left: 28.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '만남 목적을 선택해주세요.',
+                            style: AppTextStyles.PR_SB_16.copyWith(
+                                color: UsedColor.charcoal_black,
+                                decoration: TextDecoration.none),
+                          ),
+                          SizedBox(height: 12.h),
+                          Text(
+                            '만남을 가지는 목적을 1~3개 선택해주세요.',
+                            style: AppTextStyles.SU_R_12.copyWith(
+                                color: UsedColor.text_3,
+                                decoration: TextDecoration.none),
+                          ),
+                          SizedBox(height: 26.h),
+                          // 관심사 컨테이너들
+                          Wrap(
+                            spacing: 12.w,
+                            runSpacing: 12.h,
+                            children: options.map((option) {
+                              bool isSelected = viewModel.changedMeetingPurposes
+                                  .contains(option);
+                              return GestureDetector(
+                                onTap: () {
+                                  viewModel
+                                      .toggleChangedMeetingPurposes(option);
+                                },
+                                child: Container(
+                                  width: 80.w,
+                                  height: 24.h,
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? UsedColor.button
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.circular(8.r),
+                                    border: Border.all(
                                       color: isSelected
                                           ? UsedColor.button
-                                          : Colors.white,
-                                      borderRadius: BorderRadius.circular(8.r),
-                                      border: Border.all(
-                                        color: isSelected
-                                            ? UsedColor.button
-                                            : UsedColor.b_line,
-                                        // color: UsedColor.b_line,
-                                        width: 1.5.w,
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        option,
-                                        style: AppTextStyles.PR_M_12.copyWith(
-                                            color: isSelected
-                                                ? Colors.white
-                                                : Colors.black,
-                                            decoration: TextDecoration.none),
-                                      ),
+                                          : UsedColor.b_line,
+                                      // color: UsedColor.b_line,
+                                      width: 1.5.w,
                                     ),
                                   ),
-                                );
-                              }).toList(),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Spacer(),
-                      Container(
-                        width: 328.w,
-                        height: 0.3.h,
-                        color: UsedColor.b_line,
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: SizedBox(
-                              height: 53.h,
-                              child: TextButton(
-                                // !: -잉크 효과 이상해서 없애둠
-                                style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
-                                        Colors.transparent)),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(
-                                  '취소',
-                                  style: AppTextStyles.PR_M_14.copyWith(
-                                      color: UsedColor.charcoal_black),
+                                  child: Center(
+                                    child: Text(
+                                      option,
+                                      style: AppTextStyles.PR_M_12.copyWith(
+                                          color: isSelected
+                                              ? Colors.white
+                                              : Colors.black,
+                                          decoration: TextDecoration.none),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height: 53.h,
-                            width: 0.3.w,
-                            color: UsedColor.b_line,
-                          ),
-                          Expanded(
-                            child: SizedBox(
-                              height: 53.h,
-                              child: TextButton(
-                                style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
-                                        Colors.transparent)),
-                                onPressed: () async {
-                                  // 저장 로직
-                                  profileViewModel.saveSelectedMeetingPurposes(
-                                      userViewModel);
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(
-                                  '저장',
-                                  style: AppTextStyles.PR_M_14.copyWith(
-                                      color: UsedColor.charcoal_black),
-                                ),
-                              ),
-                            ),
+                              );
+                            }).toList(),
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                );
-              }),
-            ),
-          );
-        });
+                    ),
+                    const Spacer(),
+                    Container(
+                      width: 328.w,
+                      height: 0.3.h,
+                      color: UsedColor.b_line,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 53.h,
+                            child: TextButton(
+                              // !: -잉크 효과 이상해서 없애둠
+                              style: const ButtonStyle(
+                                  overlayColor: MaterialStatePropertyAll(
+                                      Colors.transparent)),
+                              onPressed: () {
+                                profileViewModel.clearChangedMeetingPurposes();
+                                context.pop();
+                              },
+                              child: Text(
+                                '취소',
+                                style: AppTextStyles.PR_M_14
+                                    .copyWith(color: UsedColor.charcoal_black),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 53.h,
+                          width: 0.3.w,
+                          color: UsedColor.b_line,
+                        ),
+                        Expanded(
+                          child: SizedBox(
+                            height: 53.h,
+                            child: TextButton(
+                              style: const ButtonStyle(
+                                  overlayColor: MaterialStatePropertyAll(
+                                      Colors.transparent)),
+                              onPressed: () async {
+                                // 저장 로직
+                                if (profileViewModel
+                                        .changedMeetingPurposes.isNotEmpty &&
+                                    profileViewModel
+                                            .changedMeetingPurposes.length <=
+                                        3) {
+                                  profileViewModel.setMeetingPurpose(
+                                      profileViewModel.changedMeetingPurposes);
+                                  profileViewModel
+                                      .clearChangedMeetingPurposes();
+                                  context.pop();
+                                } else {
+                                  logger.e("항목을 선택해주세요 !!");
+                                }
+                              },
+                              child: Text(
+                                '저장',
+                                style: AppTextStyles.PR_M_14
+                                    .copyWith(color: UsedColor.charcoal_black),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ),
+        );
+      },
+    );
   }
 }
 

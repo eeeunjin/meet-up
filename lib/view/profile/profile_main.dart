@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
+import 'package:meet_up/view_model/profile/profile_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -14,8 +14,6 @@ class ProfileMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-    // logger.d(path);
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -178,6 +176,12 @@ class ProfileMain extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () {
                         // 수정 페이지
+                        final profileViewModel = Provider.of<ProfileViewModel>(
+                            context,
+                            listen: false);
+                        profileViewModel.resetProfileInfo();
+                        profileViewModel
+                            .initializeProfileInfo(userViewModel.userModel!);
                         context.push('/profileEdit');
                       },
                       child: Image.asset(
