@@ -19,7 +19,7 @@ class UsedColor {
   //subs
   static Color green = const Color(0xff76e84e);
   static Color red = const Color(0xffff7878);
-  static Color slected = const Color(0xffe6e6e6);
+  static Color selected = const Color(0xffe6e6e6);
   static Color b_line = const Color(0xffd2d8f8);
   static Color b_line_2 = const Color(0xffcdcdff);
   static Color progress_bar = const Color(0xffa2a3ff);

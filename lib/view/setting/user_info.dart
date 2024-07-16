@@ -219,10 +219,10 @@ class UserInfo extends StatelessWidget {
                               overlayColor:
                                   MaterialStatePropertyAll(Colors.transparent)),
                           onPressed: () async {
-                            await userViewModel.logout();
-                            while (Navigator.of(context).canPop()) {
-                              Navigator.of(context).pop();
+                            while (context.canPop()) {
+                              context.pop();
                             }
+                            await userViewModel.logout();
                           },
                           child: Text(
                             '로그아웃',

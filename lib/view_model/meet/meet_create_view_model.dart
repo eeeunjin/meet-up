@@ -180,8 +180,15 @@ class MeetCreateViewModel with ChangeNotifier {
 
   // 저장 버튼을 누를 수 있는지 판별하는 함수 (생성 페이지)
   bool get isCategorySelectionComplete {
-    return _selectedMainCategories.isNotEmpty &&
-        _selectedSubCategories.isNotEmpty;
+    if (_selectedMainCategories.isNotEmpty &&
+        _selectedMainCategories.first == '기타') {
+      return true;
+    } else if(_selectedMainCategories.isNotEmpty &&
+        _selectedSubCategories.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   // 카테고리 페이지의 정보를 생성 페이지로 넘기는 함수
