@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/model/province_district_model.dart';
 import 'package:meet_up/model/user_model.dart';
+import 'package:meet_up/repository/user_repository.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 
 class ProfileViewModel with ChangeNotifier {
+  final UserRepository _userRepository = UserRepository();
+
   // MARK: - 등급
   String _selectedRank = 'Novice';
 
@@ -53,6 +58,7 @@ class ProfileViewModel with ChangeNotifier {
   // MARK: - 프로필 수정
   // 변수 초기화 함수
   void initializeProfileInfo(UserModel userModel) {
+    nickNameController.text = userModel.nickname;
     initializeSelectedIconPath(userModel.profile_icon);
     selectedProvince = userModel.region['province'];
     selectedDistrict = userModel.region['district'];
@@ -70,6 +76,7 @@ class ProfileViewModel with ChangeNotifier {
 
   // 변수 리셋 함수
   void resetProfileInfo() {
+    nickNameController.clear();
     _selectedIconPath = '';
     selectedProvince = null;
     selectedDistrict = null;
@@ -78,6 +85,9 @@ class ProfileViewModel with ChangeNotifier {
     _selectedPersonalities.clear();
     _selectedMeetingPurposes.clear();
   }
+
+  // MARK: - 닉네임
+  TextEditingController nickNameController = TextEditingController();
 
   // MARK: - 아이콘
   String _selectedIconPath = '';
@@ -259,5 +269,101 @@ class ProfileViewModel with ChangeNotifier {
   void clearChangedMeetingPurposes() {
     _changedMeetingPurposes.clear();
     notifyListeners();
+  }
+
+  // MARK: - 수정된 프로필 정보를 저장하는 함수
+  Future<bool> updateProfileInfo(String uid, UserModel userModel) async {
+    if (uid != '') {
+      logger.d('uid is $uid');
+    } else {
+      logger.e('uid를 확인해주세요');
+    }
+    Map<String, dynamic> updatedData = {};
+    bool anyChanged = false;
+
+    // MARK: - 닉네임
+    if (nickNameController.text != userModel.nickname) {
+      anyChanged = true;
+      updatedData['nickname'] = nickNameController.text;
+      logger.d('닉네임 변경됨');
+    }
+
+    // MARK: - 아이콘
+    if (selectedIconPath != userModel.profile_icon) {
+      anyChanged = true;
+      updatedData['profile_icon'] = selectedIconPath;
+      logger.d('아이콘이 변경됨');
+    }
+
+    // MARK: - 거주지
+    if (selectedProvince != userModel.region['province']) {
+      anyChanged = true;
+      updatedData['region'] = {
+        'province': selectedProvince,
+        'district': selectedDistrict,
+      };
+      logger.d('province 변경됨');
+    }
+
+    if (selectedDistrict != userModel.region['district']) {
+      anyChanged = true;
+      updatedData['region'] = {
+        'province': selectedProvince,
+        'district': selectedDistrict,
+      };
+      logger.d('district 변경됨');
+    }
+
+    // MARK: - 직업
+    if (selectedAffiliation != userModel.job) {
+      anyChanged = true;
+      updatedData['job'] = selectedAffiliation;
+      logger.d('직업 변경 됨');
+    }
+
+    // MARK: - 관심
+    final selectedInterestsSet = selectedInterests.toSet();
+    final selectedInterestsSetLength = selectedInterestsSet.length;
+
+    for (String interest in userModel.interest) {
+      selectedInterestsSet.add(interest);
+    }
+
+    if (selectedInterestsSetLength != selectedInterestsSet.length) {
+      anyChanged = true;
+      updatedData['interest'] = selectedInterestsSet.toList();
+      logger.d('관심사 변경 됨');
+    }
+
+    // MARK: - 성격
+    final selectedPersonalitiesSet = selectedPersonalities.toSet();
+    final selectedPersonalitiesSetLength = selectedPersonalitiesSet.length;
+
+    for (String personality in userModel.personality_self) {
+      selectedPersonalitiesSet.add(personality);
+    }
+
+    if (selectedPersonalitiesSetLength != selectedPersonalitiesSet.length) {
+      anyChanged = true;
+      updatedData['personality_self'] = selectedPersonalitiesSet.toList();
+      logger.d('성격 변경 됨');
+    }
+
+    // MARK: - 만남 목적
+    final selectedMeetingPurposesSet = selectedMeetingPurposes.toSet();
+    final selectedMeetingPurposesSetLength = selectedMeetingPurposesSet.length;
+
+    for (String purpose in userModel.purpose) {
+      selectedMeetingPurposesSet.add(purpose);
+    }
+
+    if (selectedMeetingPurposesSetLength != selectedMeetingPurposesSet.length) {
+      anyChanged = true;
+      updatedData['purpose'] = selectedMeetingPurposesSet.toList();
+      logger.d('만남 목적 변경 됨');
+    }
+
+    return anyChanged;
+    // _userRepository.updateUserDocument(uid: uid, data: data)
   }
 }

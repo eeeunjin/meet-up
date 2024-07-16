@@ -95,7 +95,7 @@ class ProfileEdit extends StatelessWidget {
           SizedBox(height: 32.h),
           _meetingPurpose(context),
           SizedBox(height: 42.h),
-          _saveButton(),
+          _saveButton(context),
         ],
       ),
     );
@@ -139,7 +139,8 @@ class ProfileEdit extends StatelessWidget {
 
   // MARK: - 닉네임
   Widget _nickname(BuildContext context) {
-    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final profileViewModel =
+        Provider.of<ProfileViewModel>(context, listen: false);
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w, right: 32.w),
       child: Column(
@@ -151,8 +152,7 @@ class ProfileEdit extends StatelessWidget {
           ),
           SizedBox(height: 8.h),
           TextField(
-            controller: TextEditingController(
-                text: userViewModel.userModel?.nickname ?? ''),
+            controller: profileViewModel.nickNameController,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.symmetric(vertical: 8.h),
               isDense: true,
@@ -523,11 +523,24 @@ class ProfileEdit extends StatelessWidget {
   }
 
 //MARK: - 저장 버튼
-  Widget _saveButton() {
+  Widget _saveButton(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final profileViewModel =
+        Provider.of<ProfileViewModel>(context, listen: false);
     return Padding(
       padding: EdgeInsets.only(bottom: 56.0.h, left: 33.w, right: 32.w),
       child: NextButton(
-        onTap: () {},
+        onTap: () async {
+          logger.d('프로필 변경 저장 버튼 클릭');
+          if (await profileViewModel.updateProfileInfo(
+            userViewModel.uid!,
+            userViewModel.userModel!,
+          )) {
+            context.pop();
+          } else {
+            logger.e('변경된 사항이 없습니다.');
+          }
+        },
         height: 56.h,
         text: '저장',
       ),
