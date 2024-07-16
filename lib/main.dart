@@ -1,13 +1,19 @@
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:logger/logger.dart';
 import 'package:meet_up/loginFunc.dart';
+import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/router.dart';
 import 'package:meet_up/service/remote/firebase_options.dart';
 import 'package:meet_up/view_model/bot_nav_view_model.dart';
 import 'package:meet_up/view_model/chat/chat_view_model.dart';
 import 'package:meet_up/view_model/coin/coin_buy_view_model.dart';
+import 'package:meet_up/view_model/coin/coin_ticket_purchase_history_view_model.dart';
+import 'package:meet_up/view_model/coin/ticket_buy_view_model.dart';
 import 'package:meet_up/view_model/login/login_phone_num_view_model.dart';
 import 'package:meet_up/view_model/login/login_verification_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_browse_view_model.dart';
@@ -48,6 +54,7 @@ void main() async {
     birthDate60YearsAgo =
         DateTime(currentDate.year - 60, currentDate.month, currentDate.day - 1);
   }
+
   runApp(
     MultiProvider(
       providers: [
@@ -77,10 +84,13 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ChatViewModel()),
         ChangeNotifierProvider(create: (context) => MeetUserInfoViewModel()),
         ChangeNotifierProvider(create: (context) => CoinBuyViewModel()),
+        ChangeNotifierProvider(create: (context) => TicketBuyViewModel()),
+        ChangeNotifierProvider(
+            create: (context) => CoinTicketPurchaseHistoryViewModel()),
         ChangeNotifierProvider(create: (context) => SettingViewModel()),
         ChangeNotifierProvider(create: (context) => ProfileViewModel()),
       ],
-      child: const MyApp(),
+      child: MyApp(),
     ),
   );
 }
@@ -104,27 +114,121 @@ Future<void> initializeFirebase() async {
   );
 }
 
+Future<void> _listenToPurchaseUpdated(
+    List<PurchaseDetails> purchaseDetailsList, BuildContext context) async {
+  final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+  final coinBuyViewModel =
+      Provider.of<CoinBuyViewModel>(context, listen: false);
+
+  for (PurchaseDetails purchaseDetails in purchaseDetailsList) {
+    logger.d("purchaseDetails: ${purchaseDetails.productID}");
+    if (purchaseDetails.status == PurchaseStatus.pending) {
+      logger.d('Purchase pending');
+      coinBuyViewModel.setPurchaseStatus('pending');
+    } else {
+      if (purchaseDetails.status == PurchaseStatus.error) {
+        logger.e('Purchase error');
+        coinBuyViewModel.setPurchaseStatus('error');
+      } else if (purchaseDetails.status == PurchaseStatus.purchased) {
+        logger.d('Purchase purchased');
+        await InAppPurchase.instance.completePurchase(purchaseDetails);
+
+        // 사용자 데이터 업데이트
+        int userCoin = userViewModel.userModel!.coin;
+        int purchaseCoin =
+            int.parse(purchaseDetails.productID.split('_')[0].substring(4));
+        int resultCoin = userCoin + purchaseCoin;
+
+        await userViewModel.updateUserInfo(data: {
+          'coin': resultCoin,
+        });
+
+        // 상품 구매 정보(영수증) 데이터베이스에 저장
+        GoodHistoryModel ghm = GoodHistoryModel(
+          gh_type: GoodHistoryType.coin.name,
+          gh_type_transaction: GoodHistoryTypeOfTransaction.purchase.name,
+          gh_uid: userViewModel.uid!,
+          gh_result_coin: resultCoin,
+          gh_result_ticket: userViewModel.userModel!.ticket,
+          gh_change_coin_amount: purchaseCoin,
+          gh_change_ticket_amount: 0,
+          gh_product_id: purchaseDetails.productID,
+          gh_change_date: Timestamp.now(),
+        );
+
+        await coinBuyViewModel.createGoodHistory(goodHistoryModel: ghm);
+        coinBuyViewModel.setPurchaseStatus('purchased');
+      } else if (purchaseDetails.status == PurchaseStatus.canceled) {
+        logger.d('Purchase canceld');
+
+        await InAppPurchase.instance.completePurchase(purchaseDetails);
+        coinBuyViewModel.setPurchaseStatus('canceled');
+      }
+    }
+  }
+}
+
+// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  late StreamSubscription<List<PurchaseDetails>> _subscription;
+  final InAppPurchase _inAppPurchase = InAppPurchase.instance;
+
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final userModel = Provider.of<UserViewModel>(context, listen: false);
-    // 자동 로그인 된 경우
-    if (LoginFunc.isLogined) {
-      logger.d('자동 로그인 되었습니다');
-      userModel.uid = LoginFunc.uid;
-      return FutureBuilder<void>(
-        future: userModel.loadUserModel(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
+    // InAppPurchase 초기화
+    final Stream<List<PurchaseDetails>> purchaseUpdated =
+        _inAppPurchase.purchaseStream;
+    _subscription = purchaseUpdated.listen((purchaseDetailsList) {
+      _listenToPurchaseUpdated(purchaseDetailsList, context);
+    }, onDone: () {
+      logger.d("Subscription done");
+      _subscription.cancel();
+    }, onError: (Object error) {
+      logger.e("Purchase error: $error");
+    });
+
+    return Selector<UserViewModel, bool>(
+        builder: (context, value, child) {
+          logger.d("[main.dart] rebuilded");
+          // 자동 로그인 된 경우
+          final userViewModel =
+              Provider.of<UserViewModel>(context, listen: false);
+          if (LoginFunc.isLogined) {
+            userViewModel.uid = LoginFunc.uid;
+            return FutureBuilder<void>(
+              future: userViewModel.loadUserModel(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return const Center(child: CircularProgressIndicator());
+                } else {
+                  return ScreenUtilInit(
+                    designSize: const Size(393, 852), // 화면 크기 설정
+                    minTextAdapt: true,
+                    builder: (_, context) => MaterialApp.router(
+                      // Go Router 설정
+                      routerConfig: router,
+                      // routeInformationParser: router.routeInformationParser,
+                      // routerDelegate: router.routerDelegate,
+                      theme: ThemeData(
+                        // themedata 설정
+                        scaffoldBackgroundColor: Colors.white,
+                      ),
+                      debugShowCheckedModeBanner: false, // Debug 배너 없애기
+                    ),
+                  );
+                }
+              },
+            );
+          }
+          // 자동 로그인 안된 경우
+          else {
             return ScreenUtilInit(
               designSize: const Size(393, 852), // 화면 크기 설정
-              minTextAdapt: true,
+              // minTextAdapt: true,
               builder: (_, context) => MaterialApp.router(
                 // Go Router 설정
                 routerConfig: router,
@@ -139,41 +243,6 @@ class MyApp extends StatelessWidget {
             );
           }
         },
-      );
-    }
-    // 자동 로그인 안된 경우
-    else {
-      logger.d('직접 로그인');
-      return Consumer<UserViewModel>(
-        builder: (context, value, child) {
-          return FutureBuilder<void>(
-            future: value.loadUserModel(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return const Center(child: CircularProgressIndicator());
-              } else {
-                return ScreenUtilInit(
-                  designSize: const Size(393, 852), // 화면 크기 설정
-                  minTextAdapt: true,
-                  builder: (_, context) => MaterialApp.router(
-                    // Go Router 설정
-                    routerConfig: router,
-                    // routeInformationParser: router.routeInformationParser,
-                    // routerDelegate: router.routerDelegate,
-                    theme: ThemeData(
-                      // themedata 설정
-                      scaffoldBackgroundColor: Colors.white,
-                    ),
-                    debugShowCheckedModeBanner: false, // Debug 배너 없애기
-                  ),
-                );
-              }
-            },
-          );
-        },
-      );
-    }
+        selector: (_, userViewModel) => userViewModel.rebuild);
   }
 }

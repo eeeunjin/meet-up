@@ -165,6 +165,12 @@ class AppTextStyles {
         height: (24 / 20).h,
       );
 
+  static TextStyle get PR_M_18 => TextStyle(
+        fontFamily: 'Pretendard-M',
+        fontSize: 18.sp,
+        height: (21 / 18).h,
+      );
+
   static TextStyle get PR_M_17 => TextStyle(
         fontFamily: 'Pretendard-M',
         fontSize: 17.sp,

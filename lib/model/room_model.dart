@@ -120,6 +120,7 @@ class EnterRequestModel {
 }
 
 class FilterInfo {
+  // 만남방 검색 필터
   String? room_category;
   String? room_category_detail;
   String? room_region_province;
@@ -127,6 +128,10 @@ class FilterInfo {
   String? room_age;
   String? room_gender_ratio;
   List<bool>? room_rules;
+
+  // 코인 이용 내역 필터
+  String? uid;
+  String? type;
 
   FilterInfo({
     this.room_category,
@@ -136,5 +141,7 @@ class FilterInfo {
     this.room_age,
     this.room_gender_ratio,
     this.room_rules,
+    this.uid,
+    this.type,
   });
 }

@@ -3,20 +3,18 @@ import 'package:meet_up/main.dart';
 import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/repository/good_history_repository.dart';
 
-class CoinBuyViewModel with ChangeNotifier {
-  GoodHistoryRepository _goodHistoryRepository = GoodHistoryRepository();
+class TicketBuyViewModel with ChangeNotifier {
+  final GoodHistoryRepository _goodHistoryRepository = GoodHistoryRepository();
 
-  CoinAmount? _coinAmount;
-  CoinAmount? get coinAmount => _coinAmount;
+  bool? _isFixed;
+  bool? get isFixed => _isFixed;
 
   int _selectedNum = 1;
   int get selectedNum => _selectedNum;
 
-  String purchaseStatus = 'init'; // init, purchased, error, pending, canceled
-
-  void setCoinAmount(CoinAmount? coinAmount) {
-    _coinAmount = coinAmount;
-    logger.d('coinAmount: $coinAmount');
+  void setTicketKind(bool isFixed) {
+    _isFixed = isFixed;
+    logger.d('ticket kind: ${isFixed == true ? '정기권' : '단일권'}');
     notifyListeners();
   }
 
@@ -25,24 +23,15 @@ class CoinBuyViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void setPurchaseStatus(String status) {
-    purchaseStatus = status;
-    notifyListeners();
-  }
-
   Future<void> createGoodHistory(
       {required GoodHistoryModel goodHistoryModel}) async {
     await _goodHistoryRepository.createGoodHistory(goodHistoryModel);
+    logger.d('[TicketBuyViewModel] good history created');
   }
 
   void resetState() {
-    _coinAmount = null;
+    _isFixed = null;
     _selectedNum = 1;
     notifyListeners();
   }
-}
-
-enum CoinAmount {
-  oneThousand,
-  fourThousand,
 }

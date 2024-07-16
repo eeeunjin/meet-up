@@ -79,7 +79,7 @@ class ProfileMain extends StatelessWidget {
           // 알림 버튼
           GestureDetector(
             onTap: () {
-              context.push('/profileNoticationMain');
+              context.goNamed('profileNoticationMain');
             },
             child: Container(
               width: 41.w,
@@ -100,7 +100,7 @@ class ProfileMain extends StatelessWidget {
           // 설정 버튼
           GestureDetector(
             onTap: () async {
-              context.push('/settingMain');
+              context.goNamed('settingMain');
             },
             child: Container(
               width: 41.w,
@@ -185,7 +185,7 @@ class ProfileMain extends StatelessWidget {
                         profileViewModel.resetProfileInfo();
                         profileViewModel
                             .initializeProfileInfo(userViewModel.userModel!);
-                        context.push('/profileEdit');
+                        context.pushNamed('profileEdit');
                       },
                       child: Image.asset(
                         ImagePath.profileEditIcon,
@@ -224,7 +224,7 @@ class ProfileMain extends StatelessWidget {
                   // Novice 혜택 보러가기
                   GestureDetector(
                     onTap: () {
-                      context.push('/rankMain');
+                      context.goNamed('rankMain');
                     },
                     child: Padding(
                       padding: EdgeInsets.only(top: 24.0.h, left: 24.h),
@@ -247,97 +247,102 @@ class ProfileMain extends StatelessWidget {
   //MARK: - 코인,티켓 박스
   Widget _coinAndTicketBox(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // 코인 박스
-        Container(
-          width: 162.w,
-          height: 96.h,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(22.r),
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(left: 24.0.w, top: 20.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  '코인',
-                  style: AppTextStyles.PR_SB_18
-                      .copyWith(color: UsedColor.charcoal_black),
-                ),
-                SizedBox(height: 9.h),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      ImagePath.profileCoinIcon,
-                      width: 32.w,
-                      height: 32.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 7.0.h, left: 7.w),
-                      child: Text(
-                        '${userViewModel.userModel!.coin} C',
-                        style: AppTextStyles.PR_R_14
-                            .copyWith(color: UsedColor.charcoal_black),
+    return GestureDetector(
+      onTap: () {
+        context.goNamed('coinMainFromProfileMain');
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // 코인 박스
+          Container(
+            width: 162.w,
+            height: 96.h,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(22.r),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(left: 24.0.w, top: 20.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    '코인',
+                    style: AppTextStyles.PR_SB_18
+                        .copyWith(color: UsedColor.charcoal_black),
+                  ),
+                  SizedBox(height: 9.h),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        ImagePath.profileCoinIcon,
+                        width: 32.w,
+                        height: 32.h,
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      Padding(
+                        padding: EdgeInsets.only(top: 7.0.h, left: 7.w),
+                        child: Text(
+                          '${userViewModel.userModel!.coin} C',
+                          style: AppTextStyles.PR_R_14
+                              .copyWith(color: UsedColor.charcoal_black),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        SizedBox(width: 16.w),
-        // 만남권 박스
-        Container(
-          width: 162.w,
-          height: 96.h,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(22.r),
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(left: 24.0.w, top: 20.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  '만남권',
-                  style: AppTextStyles.PR_SB_18
-                      .copyWith(color: UsedColor.charcoal_black),
-                ),
-                SizedBox(height: 9.h),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      ImagePath.profileTicketIcon,
-                      width: 32.w,
-                      height: 32.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 7.0.h, left: 7.w),
-                      child: Text(
-                        '${userViewModel.userModel!.ticket}장',
-                        style: AppTextStyles.PR_R_14
-                            .copyWith(color: UsedColor.charcoal_black),
+          SizedBox(width: 16.w),
+          // 만남권 박스
+          Container(
+            width: 162.w,
+            height: 96.h,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(22.r),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(left: 24.0.w, top: 20.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    '만남권',
+                    style: AppTextStyles.PR_SB_18
+                        .copyWith(color: UsedColor.charcoal_black),
+                  ),
+                  SizedBox(height: 9.h),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        ImagePath.profileTicketIcon,
+                        width: 32.w,
+                        height: 32.h,
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      Padding(
+                        padding: EdgeInsets.only(top: 7.0.h, left: 7.w),
+                        child: Text(
+                          '${userViewModel.userModel!.ticket}장',
+                          style: AppTextStyles.PR_R_14
+                              .copyWith(color: UsedColor.charcoal_black),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

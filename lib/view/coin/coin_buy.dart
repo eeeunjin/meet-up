@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/main.dart';
+import 'package:meet_up/purchase.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
@@ -12,7 +11,9 @@ import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:provider/provider.dart';
 
 class CoinBuy extends StatelessWidget {
-  const CoinBuy({super.key});
+  final String from;
+
+  const CoinBuy({super.key, required this.from});
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +34,13 @@ class CoinBuy extends StatelessWidget {
           SizedBox(height: 24.h),
           _coinPriceContainer(
               context: context, coinAmount: CoinAmount.fourThousand),
+          SizedBox(height: 28.h),
+          Text(
+            "하나의 상품은 최대 3개까지 구매 가능합니다.",
+            style: AppTextStyles.PR_B_12.copyWith(
+              color: UsedColor.text_5,
+            ),
+          ),
         ],
       ),
     );
@@ -42,7 +50,7 @@ class CoinBuy extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          header(back: _back(context), title: '코인/만남권'),
+          header(back: _back(context), title: '코인 구매'),
           SizedBox(
             height: 16.h,
           ),
@@ -79,7 +87,6 @@ class CoinBuy extends StatelessWidget {
     final coinBuyViewModel = Provider.of<CoinBuyViewModel>(context);
     return GestureDetector(
       onTap: () {
-        logger.d("coinAmount: $coinAmount, coinPrice: $coinAmount");
         coinBuyViewModel.setCoinAmount(coinAmount);
         showModalBottomSheet(
           context: context,
@@ -95,12 +102,12 @@ class CoinBuy extends StatelessWidget {
       },
       child: Container(
         width: 329.w,
-        height: 56.h,
+        height: 61.h,
         decoration: BoxDecoration(
           color: coinBuyViewModel.coinAmount == coinAmount
               ? UsedColor.button
               : Colors.white,
-          borderRadius: BorderRadius.circular(19.r),
+          borderRadius: BorderRadius.circular(21.r),
           border: Border.all(
             color: coinBuyViewModel.coinAmount == coinAmount
                 ? UsedColor.button
@@ -119,7 +126,7 @@ class CoinBuy extends StatelessWidget {
             children: [
               Text(
                 coinAmount == CoinAmount.oneThousand ? "1,000 C" : "4,000 C",
-                style: AppTextStyles.PR_M_16.copyWith(
+                style: AppTextStyles.PR_M_18.copyWith(
                     color: coinBuyViewModel.coinAmount == coinAmount
                         ? Colors.white
                         : UsedColor.charcoal_black),
@@ -128,8 +135,8 @@ class CoinBuy extends StatelessWidget {
                 width: 12.w,
               ),
               Text(
-                coinAmount == CoinAmount.oneThousand ? "(일회권 1매)" : "(정기권 1매)",
-                style: AppTextStyles.SU_R_11.copyWith(
+                coinAmount == CoinAmount.oneThousand ? "(단일권 1매)" : "(정기권 1매)",
+                style: AppTextStyles.SU_R_12.copyWith(
                     color: coinBuyViewModel.coinAmount == coinAmount
                         ? Colors.white
                         : UsedColor.main),
@@ -137,7 +144,7 @@ class CoinBuy extends StatelessWidget {
               const Spacer(),
               Text(
                 coinAmount == CoinAmount.oneThousand ? "600원" : "2400원",
-                style: AppTextStyles.PR_SB_16.copyWith(
+                style: AppTextStyles.PR_SB_18.copyWith(
                   color: coinBuyViewModel.coinAmount == coinAmount
                       ? Colors.white
                       : UsedColor.violet,
@@ -226,7 +233,7 @@ class CoinBuy extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    if (coinBuyViewModel.selectedNum < 99) {
+                    if (coinBuyViewModel.selectedNum < 3) {
                       coinBuyViewModel
                           .setSelectedNum(coinBuyViewModel.selectedNum + 1);
                     }
@@ -297,37 +304,51 @@ class CoinBuy extends StatelessWidget {
           ),
           SizedBox(height: 36.h),
           GestureDetector(
-            onTap: () {
-              // 인앱 결제 로직 구현
-              // 총 수량, 총 금액(총 수량 * 금액), 총 코인 수량(총 수량 * 코인 개수)을 로깅
-              final int totalNum = coinBuyViewModel.selectedNum;
-              final int totalPrice = coinBuyViewModel.selectedNum *
-                  (coinBuyViewModel.coinAmount == CoinAmount.oneThousand
-                      ? 600
-                      : 2400);
+            onTap: () async {
+              logger.d("결제 버튼 클릭");
+
               final int totalCoin = coinBuyViewModel.selectedNum *
                   (coinBuyViewModel.coinAmount == CoinAmount.oneThousand
                       ? 1000
                       : 4000);
-              logger.d(
-                  "총 수량: $totalNum 개, 결제 금액: $totalPrice 원, Coin 개수: $totalCoin C");
+
+              // MARK: - 인앱 결제 로직 구현
+              // 코인 정보 가져오기
+              final response = await getProductsInfo(totalCoin);
+
+              // 결제 시도
+              await initiatePurchase(response);
+
+              // 결제 완료 시
+              switch (from) {
+                case 'MeetMain':
+                  context.goNamed('coinBuySuccessFromMeetMain');
+                  break;
+                case 'MeetManageMain':
+                  context.goNamed('coinBuySuccessFromMeetManageMain');
+                  break;
+                case 'ProfileMain':
+                  context.goNamed('coinBuySuccessFromProfileMain');
+                  break;
+              }
             },
             child: Container(
-                width: 329.w,
-                height: 56.h,
-                decoration: BoxDecoration(
-                  color: UsedColor.button,
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
-                child: Center(
-                  child: Text(
-                    "결제",
-                    style: AppTextStyles.PR_SB_20.copyWith(
-                      color: Colors.white,
-                    ),
+              width: 329.w,
+              height: 56.h,
+              decoration: BoxDecoration(
+                color: UsedColor.button,
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              child: Center(
+                child: Text(
+                  "결제",
+                  style: AppTextStyles.PR_SB_20.copyWith(
+                    color: Colors.white,
                   ),
-                )),
-          )
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

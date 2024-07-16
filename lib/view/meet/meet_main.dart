@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:meet_up/main.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
@@ -32,7 +31,7 @@ class MeetMain extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         heroTag: null, // 고유 태그 지정 - hero오류
         onPressed: () {
-          context.push('/meetCreate');
+          context.goNamed('meetCreate');
         },
         backgroundColor: Colors.black,
         shape: const CircleBorder(),
@@ -90,7 +89,7 @@ class MeetMain extends StatelessWidget {
   Widget _manageMeetList(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.push('/meetManageMain');
+        context.goNamed('meetManageMain');
       },
       child: Column(
         children: [
@@ -169,7 +168,7 @@ class MeetMain extends StatelessWidget {
   Widget _searchMeetList(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.push('/meetBrowseMain');
+        context.goNamed('meetBrowseMain');
       },
       child: Column(
         children: [
@@ -258,7 +257,7 @@ class MeetMain extends StatelessWidget {
       padding: EdgeInsets.only(right: 3.0.h),
       child: GestureDetector(
         onTap: () {
-          context.push('/coinMain');
+          context.goNamed('coinMainFromMeetMain');
         },
         child: Align(
           alignment: Alignment.centerRight,

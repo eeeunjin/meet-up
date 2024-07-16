@@ -116,7 +116,6 @@ class SettingMain extends StatelessWidget {
         // MARK: - 알림 설정
         GestureDetector(
           onTap: () {
-            // context.push('/settingMain/settingNotification');
             context.goNamed('settingNotification');
           },
           child: SizedBox(
