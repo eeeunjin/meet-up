@@ -5,7 +5,7 @@ import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:provider/provider.dart';
 
 class ProvinceDistrictPicker extends StatelessWidget {
-  const ProvinceDistrictPicker({Key? key}) : super(key: key);
+  const ProvinceDistrictPicker({super.key});
 
   @override
   Widget build(BuildContext context) {
