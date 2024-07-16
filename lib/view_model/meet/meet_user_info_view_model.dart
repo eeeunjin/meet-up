@@ -56,7 +56,7 @@ class MeetUserInfoViewModel with ChangeNotifier {
   String convertAffliationToKor() {
     switch (userModel!.job) {
       case "employee":
-        return "회사원";
+        return "직장인";
       case "freelancer":
         return "프리랜서";
       case "student":
