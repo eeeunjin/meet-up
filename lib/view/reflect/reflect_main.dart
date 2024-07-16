@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meet_up/util/color.dart';
-import 'package:meet_up/util/font.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 
 class ReflectMain extends StatelessWidget {
@@ -30,7 +29,7 @@ class ReflectMain extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          header(title: '채팅', back: null),
+          header(title: '성찰', back: null),
           SizedBox(
             height: 16.h,
           ),

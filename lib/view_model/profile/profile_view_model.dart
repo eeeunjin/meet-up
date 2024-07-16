@@ -58,6 +58,8 @@ class ProfileViewModel with ChangeNotifier {
   // MARK: - 프로필 수정
   // 변수 초기화 함수
   void initializeProfileInfo(UserModel userModel) {
+    logger.d('userModel: ${userModel.toJson()}');
+
     nickNameController.text = userModel.nickname;
     initializeSelectedIconPath(userModel.profile_icon);
     selectedProvince = userModel.region['province'];
@@ -84,10 +86,10 @@ class ProfileViewModel with ChangeNotifier {
     selectedProvince = null;
     selectedDistrict = null;
     _selectedAffiliation = null;
-    _selectedInterests.clear();
-    _selectedPersonalities.clear();
-    _selectedRelationship.clear();
-    _selectedMeetingPurposes.clear();
+    _selectedInterests = [];
+    _selectedPersonalities = [];
+    _selectedRelationship = [];
+    _selectedMeetingPurposes = [];
   }
 
   // MARK: - 닉네임
@@ -189,7 +191,7 @@ class ProfileViewModel with ChangeNotifier {
   }
 
   // MARK: - 대인관계
-  final List<String> _selectedRelationship = [];
+  List<String> _selectedRelationship = [];
   final List<String> _changedRelationship = [];
 
   List<String> get selectedRelationship => _selectedRelationship;
@@ -218,7 +220,7 @@ class ProfileViewModel with ChangeNotifier {
   }
 
   // MARK: - 성격
-  final List<String> _selectedPersonalities = [];
+  List<String> _selectedPersonalities = [];
   final List<String> _changedPersonalites = [];
 
   List<String> get selectedPersonalities => _selectedPersonalities;
@@ -247,7 +249,7 @@ class ProfileViewModel with ChangeNotifier {
   }
 
   // MARK: - 관심사
-  final List<String> _selectedInterests = [];
+  List<String> _selectedInterests = [];
   final List<String> _changedInterests = [];
 
   List<String> get selectedInterests => _selectedInterests;
@@ -276,7 +278,7 @@ class ProfileViewModel with ChangeNotifier {
   }
 
   // MARK: - 만남 목적
-  final List<String> _selectedMeetingPurposes = [];
+  List<String> _selectedMeetingPurposes = [];
   final List<String> _changedMeetingPurposes = [];
 
   List<String> get selectedMeetingPurposes => _selectedMeetingPurposes;
@@ -305,19 +307,23 @@ class ProfileViewModel with ChangeNotifier {
   }
 
   // MARK: - 수정된 프로필 정보를 저장하는 함수
-  Future<bool> updateProfileInfo(String uid, UserModel userModel) async {
+  Future<UserModel?> updateProfileInfo(String uid, UserModel userModel) async {
     if (uid != '') {
       logger.d('uid is $uid');
     } else {
       logger.e('uid를 확인해주세요');
     }
+
+    // MARK: - Firebase DB 정보 변경
     Map<String, dynamic> updatedData = {};
+    UserModel updatedUserModel = userModel;
     bool anyChanged = false;
 
     // MARK: - 닉네임
     if (nickNameController.text != userModel.nickname) {
       anyChanged = true;
       updatedData['nickname'] = nickNameController.text;
+      updatedUserModel.nickname = nickNameController.text;
       logger.d('닉네임 변경됨');
     }
 
@@ -325,6 +331,7 @@ class ProfileViewModel with ChangeNotifier {
     if (selectedIconPath != userModel.profile_icon) {
       anyChanged = true;
       updatedData['profile_icon'] = selectedIconPath;
+      updatedUserModel.profile_icon = selectedIconPath;
       logger.d('아이콘이 변경됨');
     }
 
@@ -332,6 +339,10 @@ class ProfileViewModel with ChangeNotifier {
     if (selectedProvince != userModel.region['province']) {
       anyChanged = true;
       updatedData['region'] = {
+        'province': selectedProvince,
+        'district': selectedDistrict,
+      };
+      updatedUserModel.region = {
         'province': selectedProvince,
         'district': selectedDistrict,
       };
@@ -344,6 +355,10 @@ class ProfileViewModel with ChangeNotifier {
         'province': selectedProvince,
         'district': selectedDistrict,
       };
+      updatedUserModel.region = {
+        'province': selectedProvince,
+        'district': selectedDistrict,
+      };
       logger.d('district 변경됨');
     }
 
@@ -351,6 +366,7 @@ class ProfileViewModel with ChangeNotifier {
     if (selectedAffiliation != userModel.job) {
       anyChanged = true;
       updatedData['job'] = selectedAffiliation;
+      updatedUserModel.job = selectedAffiliation!;
       logger.d('직업 변경 됨');
     }
 
@@ -364,8 +380,25 @@ class ProfileViewModel with ChangeNotifier {
 
     if (selectedInterestsSetLength != selectedInterestsSet.length) {
       anyChanged = true;
-      updatedData['interest'] = selectedInterestsSet.toList();
+      updatedData['interest'] = selectedInterests;
+      updatedUserModel.interest = selectedInterests as List<dynamic>;
       logger.d('관심사 변경 됨');
+    }
+
+    // MARK: - 대인관계
+    final selectedRelationshipSet = selectedRelationship.toSet();
+    final selectedRelationshipSetLength = selectedRelationshipSet.length;
+
+    for (String relationship in userModel.personality_relationship) {
+      selectedRelationshipSet.add(relationship);
+    }
+
+    if (selectedRelationshipSetLength != selectedRelationshipSet.length) {
+      anyChanged = true;
+      updatedData['personality_relationship'] = selectedRelationship;
+      updatedUserModel.personality_relationship =
+          selectedRelationship as List<dynamic>;
+      logger.d('대인관계 변경 됨');
     }
 
     // MARK: - 성격
@@ -378,7 +411,9 @@ class ProfileViewModel with ChangeNotifier {
 
     if (selectedPersonalitiesSetLength != selectedPersonalitiesSet.length) {
       anyChanged = true;
-      updatedData['personality_self'] = selectedPersonalitiesSet.toList();
+      updatedData['personality_self'] = selectedPersonalities;
+      updatedUserModel.personality_self =
+          selectedPersonalities as List<dynamic>;
       logger.d('성격 변경 됨');
     }
 
@@ -392,11 +427,18 @@ class ProfileViewModel with ChangeNotifier {
 
     if (selectedMeetingPurposesSetLength != selectedMeetingPurposesSet.length) {
       anyChanged = true;
-      updatedData['purpose'] = selectedMeetingPurposesSet.toList();
+      updatedData['purpose'] = selectedMeetingPurposes;
+      updatedUserModel.purpose = selectedMeetingPurposes as List<dynamic>;
       logger.d('만남 목적 변경 됨');
     }
 
-    return anyChanged;
-    // _userRepository.updateUserDocument(uid: uid, data: data)
+    logger.d('변경된 data: $updatedData');
+
+    if (anyChanged) {
+      await _userRepository.updateUserDocument(uid: uid, data: updatedData);
+      return updatedUserModel;
+    } else {
+      return null;
+    }
   }
 }

@@ -107,10 +107,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userModel = Provider.of<UserViewModel>(context);
+    final userModel = Provider.of<UserViewModel>(context, listen: false);
 
     // 자동 로그인 된 경우
     if (LoginFunc.isLogined) {
+      logger.d('자동 로그인 되었습니다');
       userModel.uid = LoginFunc.uid;
       return FutureBuilder<void>(
         future: userModel.loadUserModel(),
@@ -141,20 +142,36 @@ class MyApp extends StatelessWidget {
     }
     // 자동 로그인 안된 경우
     else {
-      return ScreenUtilInit(
-        designSize: const Size(393, 852), // 화면 크기 설정
-        // minTextAdapt: true,
-        builder: (_, context) => MaterialApp.router(
-          // Go Router 설정
-          routerConfig: router,
-          // routeInformationParser: router.routeInformationParser,
-          // routerDelegate: router.routerDelegate,
-          theme: ThemeData(
-            // themedata 설정
-            scaffoldBackgroundColor: Colors.white,
-          ),
-          debugShowCheckedModeBanner: false, // Debug 배너 없애기
-        ),
+      logger.d('직접 로그인');
+      return Consumer<UserViewModel>(
+        builder: (context, value, child) {
+          return FutureBuilder<void>(
+            future: value.loadUserModel(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return const Center(child: CircularProgressIndicator());
+              } else {
+                return ScreenUtilInit(
+                  designSize: const Size(393, 852), // 화면 크기 설정
+                  minTextAdapt: true,
+                  builder: (_, context) => MaterialApp.router(
+                    // Go Router 설정
+                    routerConfig: router,
+                    // routeInformationParser: router.routeInformationParser,
+                    // routerDelegate: router.routerDelegate,
+                    theme: ThemeData(
+                      // themedata 설정
+                      scaffoldBackgroundColor: Colors.white,
+                    ),
+                    debugShowCheckedModeBanner: false, // Debug 배너 없애기
+                  ),
+                );
+              }
+            },
+          );
+        },
       );
     }
   }

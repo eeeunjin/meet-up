@@ -59,8 +59,11 @@ class ProfileEdit extends StatelessWidget {
   }
 
   Widget _back(BuildContext context) {
+    final profileViewModel =
+        Provider.of<ProfileViewModel>(context, listen: false);
     return GestureDetector(
       onTap: () {
+        profileViewModel.resetProfileInfo();
         context.pop();
       },
       child: Image.asset(
@@ -303,7 +306,7 @@ class ProfileEdit extends StatelessWidget {
         case 'unemployed':
           return '무직';
         case 'employee':
-          return '회사원';
+          return '직장인';
         default:
           return '알 수 없음';
       }
@@ -595,10 +598,14 @@ class ProfileEdit extends StatelessWidget {
       child: NextButton(
         onTap: () async {
           logger.d('프로필 변경 저장 버튼 클릭');
-          if (await profileViewModel.updateProfileInfo(
+          final updatedUserModel = await profileViewModel.updateProfileInfo(
             userViewModel.uid!,
             userViewModel.userModel!,
-          )) {
+          );
+
+          if (updatedUserModel != null) {
+            logger.d('updatedUserModel: ${updatedUserModel.toJson()}');
+            userViewModel.setUserModel(userModel: updatedUserModel);
             context.pop();
           } else {
             logger.e('변경된 사항이 없습니다.');
