@@ -89,7 +89,9 @@ class ProfileEdit extends StatelessWidget {
           SizedBox(height: 32.h),
           _classification(context),
           SizedBox(height: 32.h),
-          _personality(context),
+          _personalityRelationShip(context),
+          SizedBox(height: 32.h),
+          _personalitySelf(context),
           SizedBox(height: 32.h),
           _interests(context),
           SizedBox(height: 32.h),
@@ -342,8 +344,69 @@ class ProfileEdit extends StatelessWidget {
     );
   }
 
-//MARK: - 성격
-  Widget _personality(BuildContext context) {
+  // MARK: - 대인관계
+  Widget _personalityRelationShip(BuildContext context) {
+    final profileViewModel =
+        Provider.of<ProfileViewModel>(context, listen: false);
+    final List<dynamic> relationShipListDynamic =
+        profileViewModel.selectedRelationship;
+    final List<String> relationShipList =
+        relationShipListDynamic.cast<String>();
+
+    return Padding(
+      padding: EdgeInsets.only(left: 33.0.w, right: 32.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '대인관계',
+            style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+          ),
+          SizedBox(height: 12.h),
+          GestureDetector(
+            onTap: () {
+              showPersonalityRelationShipEditDialog(context, profileViewModel);
+            },
+            child: SizedBox(
+              width: 328.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: relationShipList.map((personality) {
+                  return Padding(
+                    padding: EdgeInsets.only(left: 8.0.w),
+                    child: Container(
+                      width: 80.w,
+                      height: 24.h,
+                      decoration: BoxDecoration(
+                        color: UsedColor.image_card,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Center(
+                        child: Text(
+                          personality,
+                          style: AppTextStyles.PR_R_12
+                              .copyWith(color: UsedColor.charcoal_black),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Divider(
+            thickness: 0.5.h,
+            height: 0.h,
+            color: UsedColor.line,
+          ),
+        ],
+      ),
+    );
+  }
+
+  // MARK: - 성격
+  Widget _personalitySelf(BuildContext context) {
     final profileViewModel =
         Provider.of<ProfileViewModel>(context, listen: false);
     final List<dynamic> personalityListDynamic =
@@ -362,7 +425,7 @@ class ProfileEdit extends StatelessWidget {
           SizedBox(height: 12.h),
           GestureDetector(
             onTap: () {
-              showPersonalityEditDialog(context, profileViewModel);
+              showPersonalitySelfEditDialog(context, profileViewModel);
             },
             child: SizedBox(
               width: 328.w,
@@ -402,7 +465,7 @@ class ProfileEdit extends StatelessWidget {
     );
   }
 
-//MARK: - 관심사
+  // MARK: - 관심사
   Widget _interests(BuildContext context) {
     final profileViewModel =
         Provider.of<ProfileViewModel>(context, listen: false);
@@ -1098,8 +1161,8 @@ class ProfileEdit extends StatelessWidget {
     );
   }
 
-//MARK: - 성격 수정 오버레이
-  void showPersonalityEditDialog(
+  // MARK: - 대인 관계 수정 오버레이
+  void showPersonalityRelationShipEditDialog(
       BuildContext context, ProfileViewModel profileViewModel) {
     List<String> options = [
       "사교적인",
@@ -1108,174 +1171,333 @@ class ProfileEdit extends StatelessWidget {
       "조용한",
       "친절한",
       "자신감 있는",
-      "계획적인",
-      "즉흥적인",
-      "창의적인",
-      "안정적인",
-      "낙관적인",
-      "열정적인"
     ];
     showGeneralDialog(
-        context: context,
-        barrierDismissible: true,
-        barrierLabel:
-            MaterialLocalizations.of(context).modalBarrierDismissLabel,
-        barrierColor: Colors.black.withOpacity(0.5), // 외부 색상
-        transitionDuration:
-            const Duration(milliseconds: 200), // 사라질 때 애니메이션 지속 시간
-        pageBuilder: (BuildContext buildContext, Animation animation,
-            Animation secondaryAnimation) {
-          return Center(
-            child: ChangeNotifierProvider.value(
-              value: profileViewModel,
-              child: Consumer<ProfileViewModel>(
-                  builder: (context, viewModel, child) {
-                return Container(
-                  width: 328.w,
-                  height: 312.h,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20.0.r),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: 24..h, left: 28.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              '성격을 선택해주세요.',
-                              style: AppTextStyles.PR_SB_16.copyWith(
-                                  color: UsedColor.charcoal_black,
-                                  decoration: TextDecoration.none),
-                            ),
-                            SizedBox(height: 12.h),
-                            Text(
-                              '나를 가장 잘 표현하는 키워드 3가지를 선택해주세요.',
-                              style: AppTextStyles.SU_R_12.copyWith(
-                                  color: UsedColor.text_3,
-                                  decoration: TextDecoration.none),
-                            ),
-                            SizedBox(height: 26.h),
-                            // 성격 컨테이너들
-                            Wrap(
-                              spacing: 12.w,
-                              runSpacing: 12.h,
-                              children: options.map((option) {
-                                bool isSelected = viewModel.changedPersonalites
-                                    .contains(option);
-                                return GestureDetector(
-                                  onTap: () {
-                                    profileViewModel
-                                        .toggleChangedPersonality(option);
-                                  },
-                                  child: Container(
-                                    width: 80.w,
-                                    height: 24.h,
-                                    decoration: BoxDecoration(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black.withOpacity(0.5), // 외부 색상
+      transitionDuration:
+          const Duration(milliseconds: 200), // 사라질 때 애니메이션 지속 시간
+      pageBuilder: (BuildContext buildContext, Animation animation,
+          Animation secondaryAnimation) {
+        return Center(
+          child: ChangeNotifierProvider.value(
+            value: profileViewModel,
+            child: Consumer<ProfileViewModel>(
+                builder: (context, viewModel, child) {
+              return Container(
+                width: 328.w,
+                height: 312.h,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.0.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 24..h, left: 28.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '대인관계를 선택해주세요.',
+                            style: AppTextStyles.PR_SB_16.copyWith(
+                                color: UsedColor.charcoal_black,
+                                decoration: TextDecoration.none),
+                          ),
+                          SizedBox(height: 12.h),
+                          Text(
+                            '나를 가장 잘 표현하는 키워드 3가지를 선택해주세요.',
+                            style: AppTextStyles.SU_R_12.copyWith(
+                                color: UsedColor.text_3,
+                                decoration: TextDecoration.none),
+                          ),
+                          SizedBox(height: 26.h),
+                          // 대인관계 컨테이너들
+                          Wrap(
+                            spacing: 12.w,
+                            runSpacing: 12.h,
+                            children: options.map((option) {
+                              bool isSelected = viewModel.changedRelationship
+                                  .contains(option);
+                              return GestureDetector(
+                                onTap: () {
+                                  profileViewModel
+                                      .toggleChangedRelationship(option);
+                                },
+                                child: Container(
+                                  width: 80.w,
+                                  height: 24.h,
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? UsedColor.button
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.circular(8.r),
+                                    border: Border.all(
                                       color: isSelected
                                           ? UsedColor.button
-                                          : Colors.white,
-                                      borderRadius: BorderRadius.circular(8.r),
-                                      border: Border.all(
-                                        color: isSelected
-                                            ? UsedColor.button
-                                            : UsedColor.b_line,
-                                        width: 1.5.w,
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        option,
-                                        style: AppTextStyles.PR_M_12.copyWith(
-                                            color: isSelected
-                                                ? Colors.white
-                                                : Colors.black,
-                                            decoration: TextDecoration.none),
-                                      ),
+                                          : UsedColor.b_line,
+                                      width: 1.5.w,
                                     ),
                                   ),
-                                );
-                              }).toList(),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Spacer(),
-                      Container(
-                        width: 328.w,
-                        height: 0.3.h,
-                        color: UsedColor.b_line,
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: SizedBox(
-                              height: 53.h,
-                              child: TextButton(
-                                // !: -잉크 효과 이상해서 없애둠
-                                style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
-                                        Colors.transparent)),
-                                onPressed: () {
-                                  profileViewModel.clearChangedPersonalities();
-                                  context.pop();
-                                },
-                                child: Text(
-                                  '취소',
-                                  style: AppTextStyles.PR_M_14.copyWith(
-                                      color: UsedColor.charcoal_black),
+                                  child: Center(
+                                    child: Text(
+                                      option,
+                                      style: AppTextStyles.PR_M_12.copyWith(
+                                          color: isSelected
+                                              ? Colors.white
+                                              : Colors.black,
+                                          decoration: TextDecoration.none),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height: 53.h,
-                            width: 0.3.w,
-                            color: UsedColor.b_line,
-                          ),
-                          Expanded(
-                            child: SizedBox(
-                              height: 53.h,
-                              child: TextButton(
-                                style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
-                                        Colors.transparent)),
-                                onPressed: () async {
-                                  // 저장 로직
-                                  if (profileViewModel
-                                          .changedPersonalites.length ==
-                                      3) {
-                                    profileViewModel.setPersonality(
-                                        profileViewModel.changedPersonalites);
-                                    profileViewModel
-                                        .clearChangedPersonalities();
-                                    context.pop();
-                                  } else {
-                                    logger.e("항목을 선택해주세요 !!");
-                                  }
-                                },
-                                child: Text(
-                                  '저장',
-                                  style: AppTextStyles.PR_M_14.copyWith(
-                                      color: UsedColor.charcoal_black),
-                                ),
-                              ),
-                            ),
+                              );
+                            }).toList(),
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                );
-              }),
-            ),
-          );
-        });
+                    ),
+                    const Spacer(),
+                    Container(
+                      width: 328.w,
+                      height: 0.3.h,
+                      color: UsedColor.b_line,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 53.h,
+                            child: TextButton(
+                              // !: -잉크 효과 이상해서 없애둠
+                              style: const ButtonStyle(
+                                  overlayColor: MaterialStatePropertyAll(
+                                      Colors.transparent)),
+                              onPressed: () {
+                                profileViewModel.clearChangedRelationships();
+                                context.pop();
+                              },
+                              child: Text(
+                                '취소',
+                                style: AppTextStyles.PR_M_14
+                                    .copyWith(color: UsedColor.charcoal_black),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 53.h,
+                          width: 0.3.w,
+                          color: UsedColor.b_line,
+                        ),
+                        Expanded(
+                          child: SizedBox(
+                            height: 53.h,
+                            child: TextButton(
+                              style: const ButtonStyle(
+                                  overlayColor: MaterialStatePropertyAll(
+                                      Colors.transparent)),
+                              onPressed: () async {
+                                // 저장 로직
+                                if (profileViewModel
+                                        .changedRelationship.length ==
+                                    3) {
+                                  profileViewModel.setRelationship(
+                                      profileViewModel.changedRelationship);
+                                  profileViewModel.clearChangedRelationships();
+                                  context.pop();
+                                } else {
+                                  logger.e("항목을 선택해주세요 !!");
+                                }
+                              },
+                              child: Text(
+                                '저장',
+                                style: AppTextStyles.PR_M_14
+                                    .copyWith(color: UsedColor.charcoal_black),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ),
+        );
+      },
+    );
+  }
+
+  // MARK: - 성격 수정 오버레이
+  void showPersonalitySelfEditDialog(
+      BuildContext context, ProfileViewModel profileViewModel) {
+    List<String> options = ["계획적인", "즉흥적인", "창의적인", "안정적인", "낙관적인", "열정적인"];
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black.withOpacity(0.5), // 외부 색상
+      transitionDuration:
+          const Duration(milliseconds: 200), // 사라질 때 애니메이션 지속 시간
+      pageBuilder: (BuildContext buildContext, Animation animation,
+          Animation secondaryAnimation) {
+        return Center(
+          child: ChangeNotifierProvider.value(
+            value: profileViewModel,
+            child: Consumer<ProfileViewModel>(
+                builder: (context, viewModel, child) {
+              return Container(
+                width: 328.w,
+                height: 312.h,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.0.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 24..h, left: 28.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '성격을 선택해주세요.',
+                            style: AppTextStyles.PR_SB_16.copyWith(
+                                color: UsedColor.charcoal_black,
+                                decoration: TextDecoration.none),
+                          ),
+                          SizedBox(height: 12.h),
+                          Text(
+                            '나를 가장 잘 표현하는 키워드 3가지를 선택해주세요.',
+                            style: AppTextStyles.SU_R_12.copyWith(
+                                color: UsedColor.text_3,
+                                decoration: TextDecoration.none),
+                          ),
+                          SizedBox(height: 26.h),
+                          // 성격 컨테이너들
+                          Wrap(
+                            spacing: 12.w,
+                            runSpacing: 12.h,
+                            children: options.map((option) {
+                              bool isSelected = viewModel.changedPersonalites
+                                  .contains(option);
+                              return GestureDetector(
+                                onTap: () {
+                                  profileViewModel
+                                      .toggleChangedPersonality(option);
+                                },
+                                child: Container(
+                                  width: 80.w,
+                                  height: 24.h,
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? UsedColor.button
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.circular(8.r),
+                                    border: Border.all(
+                                      color: isSelected
+                                          ? UsedColor.button
+                                          : UsedColor.b_line,
+                                      width: 1.5.w,
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      option,
+                                      style: AppTextStyles.PR_M_12.copyWith(
+                                          color: isSelected
+                                              ? Colors.white
+                                              : Colors.black,
+                                          decoration: TextDecoration.none),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+                    Container(
+                      width: 328.w,
+                      height: 0.3.h,
+                      color: UsedColor.b_line,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 53.h,
+                            child: TextButton(
+                              // !: -잉크 효과 이상해서 없애둠
+                              style: const ButtonStyle(
+                                  overlayColor: MaterialStatePropertyAll(
+                                      Colors.transparent)),
+                              onPressed: () {
+                                profileViewModel.clearChangedPersonalities();
+                                context.pop();
+                              },
+                              child: Text(
+                                '취소',
+                                style: AppTextStyles.PR_M_14
+                                    .copyWith(color: UsedColor.charcoal_black),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 53.h,
+                          width: 0.3.w,
+                          color: UsedColor.b_line,
+                        ),
+                        Expanded(
+                          child: SizedBox(
+                            height: 53.h,
+                            child: TextButton(
+                              style: const ButtonStyle(
+                                  overlayColor: MaterialStatePropertyAll(
+                                      Colors.transparent)),
+                              onPressed: () async {
+                                // 저장 로직
+                                if (profileViewModel
+                                        .changedPersonalites.length ==
+                                    3) {
+                                  profileViewModel.setPersonality(
+                                      profileViewModel.changedPersonalites);
+                                  profileViewModel.clearChangedPersonalities();
+                                  context.pop();
+                                } else {
+                                  logger.e("항목을 선택해주세요 !!");
+                                }
+                              },
+                              child: Text(
+                                '저장',
+                                style: AppTextStyles.PR_M_14
+                                    .copyWith(color: UsedColor.charcoal_black),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ),
+        );
+      },
+    );
   }
 
 //MARK: - 관심사 수정 오버레이

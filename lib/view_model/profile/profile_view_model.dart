@@ -69,6 +69,9 @@ class ProfileViewModel with ChangeNotifier {
     for (var personality in userModel.personality_self) {
       _selectedPersonalities.add(personality);
     }
+    for (var relationship in userModel.personality_relationship) {
+      _selectedRelationship.add(relationship);
+    }
     for (var purpose in userModel.purpose) {
       _selectedMeetingPurposes.add(purpose);
     }
@@ -83,6 +86,7 @@ class ProfileViewModel with ChangeNotifier {
     _selectedAffiliation = null;
     _selectedInterests.clear();
     _selectedPersonalities.clear();
+    _selectedRelationship.clear();
     _selectedMeetingPurposes.clear();
   }
 
@@ -181,6 +185,35 @@ class ProfileViewModel with ChangeNotifier {
 
   void selectAffiliation(String affiliation) {
     _selectedAffiliation = affiliation;
+    notifyListeners();
+  }
+
+  // MARK: - 대인관계
+  final List<String> _selectedRelationship = [];
+  final List<String> _changedRelationship = [];
+
+  List<String> get selectedRelationship => _selectedRelationship;
+  List<String> get changedRelationship => _changedRelationship;
+
+  void toggleChangedRelationship(String relationship) {
+    if (_changedRelationship.contains(relationship)) {
+      _changedRelationship.remove(relationship);
+    } else {
+      if (_changedRelationship.length < 3) {
+        _changedRelationship.add(relationship);
+      }
+    }
+    notifyListeners();
+  }
+
+  void setRelationship(List<String> relationships) {
+    _selectedRelationship.clear();
+    _selectedRelationship.addAll(relationships);
+    notifyListeners();
+  }
+
+  void clearChangedRelationships() {
+    _changedRelationship.clear();
     notifyListeners();
   }
 
