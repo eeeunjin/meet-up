@@ -29,7 +29,7 @@ class ReflectMain extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          header(title: '채팅', back: null),
+          header(title: '성찰', back: null),
           SizedBox(
             height: 16.h,
           ),

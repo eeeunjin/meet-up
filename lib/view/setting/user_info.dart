@@ -148,48 +148,6 @@ class UserInfo extends StatelessWidget {
   }
 
   // MARK: - 로그아웃 다이얼로그
-  // void logoutDialog(BuildContext context, UserViewModel userViewModel) {
-  //   showCupertinoDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return CupertinoAlertDialog(
-  //         title: Padding(
-  //           padding: EdgeInsets.only(top: 6.h, bottom: 6.h),
-  //           child: Text(
-  //             '로그아웃 하시겠습니까?',
-  //             style: AppTextStyles.PR_M_13
-  //                 .copyWith(color: UsedColor.charcoal_black),
-  //           ),
-  //         ),
-  //         actions: [
-  //           CupertinoDialogAction(
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //             child: Text(
-  //               '취소',
-  //               style: AppTextStyles.PR_M_14
-  //                   .copyWith(color: UsedColor.charcoal_black),
-  //             ),
-  //           ),
-  //           CupertinoDialogAction(
-  //             onPressed: () async {
-  //               await userViewModel.logout();
-  //               while (Navigator.of(context).canPop()) {
-  //                 Navigator.of(context).pop();
-  //               }
-  //             },
-  //             child: Text(
-  //               '로그아웃',
-  //               style: AppTextStyles.PR_M_14
-  //                   .copyWith(color: UsedColor.charcoal_black),
-  //             ),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
   void logoutDialog(BuildContext context, UserViewModel userViewModel) {
     showGeneralDialog(
       context: context,
