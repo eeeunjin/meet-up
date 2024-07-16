@@ -1226,11 +1226,7 @@ SPEC CHECKSUMS:
   firebase_auth: 5719ddc9f654b813405899480e84971bd8e61235
   firebase_core: a626d00494efa398e7c54f25f1454a64c8abf197
   firebase_messaging: 06391e8f35dc65a00c56580266285263d2861f10
-<<<<<<< HEAD
-  FirebaseAppCheckInterop: 5da5ce93e8797a215e3f677fb0654b74e736c8b8
-=======
   FirebaseAppCheckInterop: 5315f40293191bfec04b2cfab0215760e441540a
->>>>>>> a6388c5c1e46b061b206dc5b293a8a52be629d1f
   FirebaseAuth: c0f93dcc570c9da2bffb576969d793e95c344fbb
   FirebaseCore: 7ec4d0484817f12c3373955bc87762d96842d483
   FirebaseCoreExtension: f63147b723e2a700fe0f34ec6fb7f358d6fe83e0
