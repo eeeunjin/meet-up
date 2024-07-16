@@ -17,6 +17,11 @@ class UserViewModel with ChangeNotifier {
 
   void setUserModel({required UserModel userModel}) {
     this.userModel = userModel;
+    notifyListeners();
+  }
+
+  void setUserModelWithRebuild({required UserModel userModel}) {
+    this.userModel = userModel;
     rebuild = !rebuild;
     notifyListeners();
   }
@@ -48,7 +53,7 @@ class UserViewModel with ChangeNotifier {
 
     // uid가 null이 아닌 경우 사용자 정보를 저장
     if (uid != null) {
-      setUserModel(
+      setUserModelWithRebuild(
           userModel: await _userRepository.readUserDocument(uid: uid!));
     } else {
       debugPrint("Error: uid value is null");

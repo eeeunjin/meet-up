@@ -185,7 +185,7 @@ class ProfileMain extends StatelessWidget {
                         profileViewModel.resetProfileInfo();
                         profileViewModel
                             .initializeProfileInfo(userViewModel.userModel!);
-                        context.push('/profileEdit');
+                        context.pushNamed('profileEdit');
                       },
                       child: Image.asset(
                         ImagePath.profileEditIcon,
