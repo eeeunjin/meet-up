@@ -93,32 +93,6 @@ class RoomModel {
   }
 }
 
-class EnterRequestModel {
-  Timestamp end_date_time;
-  String requester_uid;
-  bool isAccepted;
-
-  EnterRequestModel(
-      {required this.end_date_time,
-      required this.requester_uid,
-      required this.isAccepted});
-
-  EnterRequestModel.fromJson(Map<String, Object?> json)
-      : this(
-          end_date_time: json['end_date_time']! as Timestamp,
-          requester_uid: json['requester_uid']! as String,
-          isAccepted: json['isAccepted']! as bool,
-        );
-
-  Map<String, Object?> toJson() {
-    return {
-      'end_date_time': end_date_time,
-      'requester_uid': requester_uid,
-      'isAccepted': isAccepted,
-    };
-  }
-}
-
 class FilterInfo {
   // 만남방 검색 필터
   String? room_category;

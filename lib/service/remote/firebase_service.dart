@@ -93,9 +93,6 @@ class FirebaseCRUD {
           return MyRoomModel.fromJson(doc.data() as Map<String, Object?>) as T;
         } else if (T == RoomModel) {
           return RoomModel.fromJson(doc.data() as Map<String, Object?>) as T;
-        } else if (T == EnterRequestModel) {
-          return EnterRequestModel.fromJson(doc.data() as Map<String, Object?>)
-              as T;
         } else if (T == GoodHistoryModel) {
           return GoodHistoryModel.fromJson(doc.data() as Map<String, Object?>)
               as T;
@@ -274,10 +271,6 @@ class FirebaseCRUD {
           RoomModel myEnterRequest = data as RoomModel;
           await docRef.set(myEnterRequest.toJson());
           return true;
-        } else if (T == EnterRequestModel) {
-          EnterRequestModel enterRequest = data as EnterRequestModel;
-          await docRef.set(enterRequest.toJson());
-          return true;
         } else if (T == GoodHistoryModel) {
           GoodHistoryModel goodHistory = data as GoodHistoryModel;
           await docRef.set(goodHistory.toJson());
@@ -314,8 +307,6 @@ class FirebaseCRUD {
           return MyRoomModel.fromJson(data) as T;
         } else if (T == RoomModel) {
           return RoomModel.fromJson(data) as T;
-        } else if (T == EnterRequestModel) {
-          return EnterRequestModel.fromJson(data) as T;
         } else {
           // 지정한 모델이 아닌 경우 에러 코드 반환
           throw Exception("Unsupported document type.");

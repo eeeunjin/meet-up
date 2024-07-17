@@ -6,7 +6,7 @@ class RoomRepository {
   final FirebaseCRUD _firebaseService = FirebaseCRUD();
   final FirebaseRefs _firebaseRefs = FirebaseRefs();
 
-  // < ---------- RoomModel CRUD ---------- >
+  // MARK: - RoomModel CRUD
   Future<List<RoomModel>> readRoomCollection({
     int? limit,
     FilterInfo? filterInfo,
@@ -109,78 +109,6 @@ class RoomRepository {
       colRef: _firebaseRefs.colRefRoom,
       fieldName: "room_owner_reference",
       fieldValue: _firebaseRefs.colRefUser.doc(uid),
-    );
-  }
-
-  // < ---------- EnterRequestModel CRUD ---------- >
-  Future<List<EnterRequestModel>> readEnterRequestCollection(
-      {required String roomId}) async {
-    CollectionReference enterRequestCollectionReference =
-        _firebaseRefs.colRefUser.doc(roomId).collection("enterRequests");
-
-    return await _firebaseService.readCollection<EnterRequestModel>(
-        colRef: enterRequestCollectionReference);
-  }
-
-  Stream<QuerySnapshot<Object?>> readEnterRequestCollectionStream(
-      {required String roomId}) {
-    CollectionReference enterRequestCollectionReference =
-        _firebaseRefs.colRefUser.doc(roomId).collection("enterRequests");
-    return _firebaseService.readCollectionStream<EnterRequestModel>(
-        colRef: enterRequestCollectionReference);
-  }
-
-  Future<String> createEnterRequestDocument({
-    required String roomId,
-    required EnterRequestModel data,
-  }) async {
-    DocumentReference enterRequestDocumentReference =
-        _firebaseRefs.colRefRoom.doc(roomId).collection("enterRequests").doc();
-    await _firebaseService.createDocument<EnterRequestModel>(
-      docRef: enterRequestDocumentReference,
-      data: data,
-    );
-    return enterRequestDocumentReference.path.split('/').last;
-  }
-
-  Future<EnterRequestModel> readEnterRequestDocument({
-    required String roomId,
-    required String enterRequestId,
-  }) async {
-    DocumentReference enterRequestDocumentReference = _firebaseRefs.colRefUser
-        .doc(roomId)
-        .collection("enterRequests")
-        .doc(enterRequestId);
-    return await _firebaseService.readDocument<EnterRequestModel>(
-      docRef: enterRequestDocumentReference,
-    );
-  }
-
-  Future<bool> updateEnterRequestDocument({
-    required String roomId,
-    required String enterRequestId,
-    required Map<String, dynamic> data,
-  }) async {
-    DocumentReference enterRequestDocumentReference = _firebaseRefs.colRefUser
-        .doc(roomId)
-        .collection("enterRequests")
-        .doc(enterRequestId);
-    return await _firebaseService.updateDocument(
-      docRef: enterRequestDocumentReference,
-      data: data,
-    );
-  }
-
-  Future<bool> deleteEnterRequestData({
-    required String roomId,
-    required String enterRequestId,
-  }) async {
-    DocumentReference enterRequestDocumentReference = _firebaseRefs.colRefUser
-        .doc(roomId)
-        .collection("enterRequests")
-        .doc(enterRequestId);
-    return _firebaseService.deleteDocument(
-      docRef: enterRequestDocumentReference,
     );
   }
 }
