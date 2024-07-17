@@ -166,15 +166,24 @@ class FirebaseCRUD {
   }
 
   /// 쿼리로 stream snapshots을 불러오는 함수
-  Stream<QuerySnapshot<Object?>> readCollectionStreamByQuery<T>(
-      {required String uid}) {
+  Stream<QuerySnapshot<Object?>> readCollectionStreamByQuery<T>({
+    required String uid,
+    required bool findAll,
+  }) {
     final firebaseRefs = FirebaseRefs();
 
     if (T == MyRoomModel) {
-      return firebaseRefs.colRefRoom
-          .where('room_owner_reference',
-              isEqualTo: firebaseRefs.colRefUser.doc(uid))
-          .snapshots();
+      if (findAll) {
+        return firebaseRefs.colRefUser
+            .doc(uid)
+            .collection("myRooms")
+            .snapshots();
+      } else {
+        return firebaseRefs.colRefRoom
+            .where('room_owner_reference',
+                isEqualTo: firebaseRefs.colRefUser.doc(uid))
+            .snapshots();
+      }
     } else {
       return const Stream.empty();
     }

@@ -85,7 +85,10 @@ class MeetBrowseViewModel with ChangeNotifier {
 
   // 내가 만든 방 스트림
   Stream<QuerySnapshot<Object?>> getMyRoomModel({required String myUid}) {
-    return _userRepository.readMyRoomCollectionStream(uid: myUid);
+    return _userRepository.readMyRoomCollectionStream(
+      uid: myUid,
+      findAll: false,
+    );
   }
 
   // 방 정보를 한글로 변환

@@ -10,7 +10,6 @@ class UserRepository {
   final FirebaseAUTH _firebaseAUTH = FirebaseAUTH();
 
   // MARK: - UserModel CRUD
-  // Create
   Future<bool> createUserDocument(
       {required UserModel data, required String uid}) async {
     return await _firebaseService.createDocument<UserModel>(
@@ -19,7 +18,6 @@ class UserRepository {
     );
   }
 
-  // Read
   Future<List<UserModel>> readUserCollection() async {
     return await _firebaseService.readCollection<UserModel>(
         colRef: _firebaseRefs.colRefUser);
@@ -40,7 +38,6 @@ class UserRepository {
     return await _firebaseService.readDocument<UserModel>(docRef: docRef);
   }
 
-  // Update
   Future<bool> updateUserDocument({
     required String uid,
     required Map<String, dynamic> data,
@@ -51,7 +48,6 @@ class UserRepository {
     );
   }
 
-  // Delete
   Future<bool> deleteUserData({required String uid}) async {
     try {
       // 나의 방 정보 삭제
@@ -68,7 +64,6 @@ class UserRepository {
   }
 
   // MARK:- MyRoomModel CRUD
-  // Create
   Future<bool> createMyRoomDocument({
     required MyRoomModel data,
     required String uid,
@@ -82,7 +77,6 @@ class UserRepository {
     );
   }
 
-  // Read
   Future<List<MyRoomModel>> readMyRoomCollection({required String uid}) async {
     CollectionReference myRoomCollectionReference =
         _firebaseRefs.colRefUser.doc(uid).collection("myRooms");
@@ -90,9 +84,14 @@ class UserRepository {
         colRef: myRoomCollectionReference);
   }
 
-  Stream<QuerySnapshot<Object?>> readMyRoomCollectionStream(
-      {required String uid}) {
-    return _firebaseService.readCollectionStreamByQuery<MyRoomModel>(uid: uid);
+  Stream<QuerySnapshot<Object?>> readMyRoomCollectionStream({
+    required String uid,
+    required bool findAll,
+  }) {
+    return _firebaseService.readCollectionStreamByQuery<MyRoomModel>(
+      uid: uid,
+      findAll: findAll,
+    );
   }
 
   Future<MyRoomModel> readMyRoomDocument({
@@ -105,7 +104,6 @@ class UserRepository {
         docRef: myRoomDocumentReference);
   }
 
-  // Update
   Future<bool> updateMyRoomDocument({
     required String uid,
     required Map<String, dynamic> data,
@@ -119,7 +117,6 @@ class UserRepository {
     );
   }
 
-  // Delete
   Future<bool> deleteMyRoomData({
     required String uid,
     required String roomId,

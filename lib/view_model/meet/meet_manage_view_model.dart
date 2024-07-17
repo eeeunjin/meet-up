@@ -8,7 +8,10 @@ class MeetManageViewModel with ChangeNotifier {
 
   // MARK - 내가 만든 방 불러오는 함수
   Stream<QuerySnapshot<Object?>> getMyRoomModel({required String myUid}) {
-    return _userRepository.readMyRoomCollectionStream(uid: myUid);
+    return _userRepository.readMyRoomCollectionStream(
+      uid: myUid,
+      findAll: false,
+    );
   }
 
   // MARK: - 불러온 RoomModel 정보 한글로 변환
