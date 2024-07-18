@@ -125,29 +125,6 @@ class MyRoomModel {
   }
 }
 
-class MyGoodsHistoryModel {
-  DocumentReference gh_reference;
-  Timestamp gh_change_date;
-
-  MyGoodsHistoryModel({
-    required this.gh_reference,
-    required this.gh_change_date,
-  });
-
-  MyGoodsHistoryModel.fromJson(Map<String, Object?> json)
-      : this(
-          gh_reference: json["gh_reference"]! as DocumentReference,
-          gh_change_date: json["gh_change_date"]! as Timestamp,
-        );
-
-  Map<String, dynamic> toJson() {
-    return {
-      'gh_reference': gh_reference,
-      'gh_change_date': gh_change_date,
-    };
-  }
-}
-
 class MyTickets {
   int number_of_times_available;
   bool isUsed;
