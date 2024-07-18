@@ -152,6 +152,7 @@ Future<void> _listenToPurchaseUpdated(
           gh_result_ticket: userViewModel.userModel!.ticket,
           gh_change_coin_amount: purchaseCoin,
           gh_change_ticket_amount: 0,
+          gh_ticket_references: [],
           gh_product_id: purchaseDetails.productID,
           gh_change_date: Timestamp.now(),
         );

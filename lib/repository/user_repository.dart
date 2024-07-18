@@ -126,6 +126,22 @@ class UserRepository {
     return _firebaseService.deleteDocument(docRef: myRoomDocumentReference);
   }
 
+  // MARK: - MyTicketModel CRUD
+  Future<DocumentReference> createMyTicketDocument({
+    required MyTicketModel data,
+    required String uid,
+  }) async {
+    DocumentReference myTicketDocumentReference =
+        _firebaseRefs.colRefUser.doc(uid).collection("myTickets").doc();
+
+    await _firebaseService.createDocument<MyTicketModel>(
+      docRef: myTicketDocumentReference,
+      data: data,
+    );
+    
+    return myTicketDocumentReference;
+  }
+
   // MARK: - Auth Functions
 
   /// 전화번호 인증을 위한 메서드

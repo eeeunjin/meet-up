@@ -125,18 +125,18 @@ class MyRoomModel {
   }
 }
 
-class MyTickets {
+class MyTicketModel {
   int number_of_times_available;
   bool isUsed;
-  DocumentReference roomReference;
+  DocumentReference? roomReference;
 
-  MyTickets({
+  MyTicketModel({
     required this.number_of_times_available,
     required this.isUsed,
     required this.roomReference,
   });
 
-  MyTickets.fromJson(Map<String, Object?> json)
+  MyTicketModel.fromJson(Map<String, Object?> json)
       : this(
           number_of_times_available: json["number_of_times_available"]! as int,
           isUsed: json["isUsed"]! as bool,

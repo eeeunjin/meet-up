@@ -276,6 +276,10 @@ class FirebaseCRUD {
           MyRoomModel myRoom = data as MyRoomModel;
           await docRef.set(myRoom.toJson());
           return true;
+        } else if (T == MyTicketModel) {
+          MyTicketModel myTicket = data as MyTicketModel;
+          await docRef.set(myTicket.toJson());
+          return true;
         } else if (T == RoomModel) {
           RoomModel myEnterRequest = data as RoomModel;
           await docRef.set(myEnterRequest.toJson());
