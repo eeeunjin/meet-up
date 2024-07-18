@@ -187,7 +187,7 @@ class TicketBuy extends StatelessWidget {
               ),
               child: Text(
                 ticketBuyViewModel.isFixed == false
-                    ? ' - 단일권 5개 제공\n - 한 번에 3개까지 구매 가능 합니다.'
+                    ? ' - 단일권 1개 제공\n - 한 번에 3개까지 구매 가능 합니다.'
                     : ' - 만남 방 1회 생성 혹은 참여 가능\n - (추가 혜택 필요)',
                 style: AppTextStyles.PR_R_12.copyWith(color: UsedColor.text_3),
                 textAlign: TextAlign.start,
