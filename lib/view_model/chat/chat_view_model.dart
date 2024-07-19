@@ -15,4 +15,50 @@ class ChatViewModel with ChangeNotifier {
       findAll: true,
     );
   }
+
+  // MARK: - 일정 등록
+  // 일정
+  String _scheduleNaming = '';
+
+  String get scheduleNaming => _scheduleNaming;
+
+  void namingContents(String newNamingCount) {
+    if (_scheduleNaming != newNamingCount) {
+      _scheduleNaming = newNamingCount;
+      notifyListeners();
+    }
+  }
+
+  // naming check
+  bool get namingCompleted {
+    return _scheduleNaming.trim().isNotEmpty;
+  }
+
+  // datePicker
+  bool _isDatePanelExpanded = false;
+
+  bool get isDatePanelExpanded => _isDatePanelExpanded;
+
+  // ExpansionPanel 토글
+  void toggleDatePanel() {
+    _isDatePanelExpanded = !_isDatePanelExpanded; // 상태 반전
+    notifyListeners();
+  }
+
+  // timePicker
+  bool _isTimePanelExpanded = false;
+
+  bool get isTimePanelExpanded => _isTimePanelExpanded;
+
+  // ExpansionPanel 토글
+  void toggleTimePanel() {
+    _isTimePanelExpanded = !_isTimePanelExpanded;
+    notifyListeners();
+  }
+
+  // check
+
+  bool get allCheckCompleted {
+    return namingCompleted;
+  }
 }
