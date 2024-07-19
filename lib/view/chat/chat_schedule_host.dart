@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
+import 'package:meet_up/view/widget/dob_date_picker_widget.dart';
 import 'package:meet_up/view_model/chat/chat_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
@@ -183,10 +184,9 @@ class ChatScheduleHost extends StatelessWidget {
                     border: Border.all(width: 1.w, color: UsedColor.b_line),
                   ),
                   // 데이트 피커 넣기
-                  child: const Center(
-                    child: Text(
-                      '데이트 피커 넣기',
-                      style: TextStyle(color: Colors.black),
+                  child: Center(
+                    child: DobDatePicker<ChatViewModel>(
+                      onChangeListener: (DateTime dt) {},
                     ),
                   ),
                 ),
