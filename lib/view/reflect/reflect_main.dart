@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
+import 'package:provider/provider.dart';
 
 class ReflectMain extends StatelessWidget {
   const ReflectMain({super.key});
@@ -18,7 +20,7 @@ class ReflectMain extends StatelessWidget {
             ),
             child: _header(context),
           ),
-          // Expanded(child: _main(context)),
+          Expanded(child: _main(context)),
         ],
       ),
     );
@@ -40,6 +42,24 @@ class ReflectMain extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _main(BuildContext context) {
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            context.goNamed('chatScheduleHost');
+          },
+          child: Container(
+            width: 100.w,
+            height: 50.h,
+            color: Colors.red,
+            child: const Center(child: Text('TEST')),
+          ),
+        )
+      ],
     );
   }
 }
