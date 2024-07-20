@@ -114,7 +114,8 @@ class ImagePath {
   // MARK: - coin
   static String get plusButton => 'assets/images/plus_button.png';
   static String get minusButton => 'assets/images/minus_button.png';
-  static String get purchaseCompleteIcon => 'assets/images/purchase_complete_icon.png';
+  static String get purchaseCompleteIcon =>
+      'assets/images/purchase_complete_icon.png';
 
   // MARK: - rank
   static String get rankMasterOn => 'assets/images/rank_master_on.png';
@@ -129,4 +130,28 @@ class ImagePath {
       'assets/images/rank_intermediate_off.png';
   static String get rankNoviceOff => 'assets/images/rank_novice_off.png';
   static String get rankBeginnerOff => 'assets/images/rank_beginner_off.png';
+
+  // MARK: - chat
+
+  static String get chatNotification1 =>
+      'assets/images/chat_notification_1.png';
+  static String get chatNotification2 =>
+      'assets/images/chat_notification_2.png';
+  static String get chatNotification3 =>
+      'assets/images/chat_notification_3.png';
+  static String get chatNotification4 =>
+      'assets/images/chat_notification_4.png';
+  static String get chatNotification5 =>
+      'assets/images/chat_notification_5.png';
+  static String get chatNotification6 =>
+      'assets/images/chat_notification_6.png';
+
+  static String get chatNotification7 =>
+      'assets/images/chat_notification_7.png';
+  static String get chatNotification8 =>
+      'assets/images/chat_notification_8.png';
+  static String get chatNotification9 =>
+      'assets/images/chat_notification_9.png';
+  static String get chatNotification10 =>
+      'assets/images/chat_notification_10.png';
 }
