@@ -154,4 +154,29 @@ class ImagePath {
       'assets/images/chat_notification_9.png';
   static String get chatNotification10 =>
       'assets/images/chat_notification_10.png';
+
+  static String get chatReview1Off => 'assets/images/chat_review_1';
+  static String get chatReview1On => 'assets/images/chat_review_1-1';
+  static String get chatReview2Off => 'assets/images/chat_review_2';
+  static String get chatReview2On => 'assets/images/chat_review_2-1';
+  static String get chatReview3Off => 'assets/images/chat_review_3';
+  static String get chatReview3On => 'assets/images/chat_review_3-1';
+  static String get chatReview4Off => 'assets/images/chat_review_4';
+  static String get chatReview4On => 'assets/images/chat_review_4-1';
+  static String get chatReview5Off => 'assets/images/chat_review_5';
+  static String get chatReview5On => 'assets/images/chat_review_5-1';
+  static String get chatReview6Off => 'assets/images/chat_review_12';
+  static String get chatReview6On => 'assets/images/chat_review_12-1';
+  static String get chatReview7Off => 'assets/images/chat_review_6';
+  static String get chatReview7On => 'assets/images/chat_review_6-1';
+  static String get chatReview8Off => 'assets/images/chat_review_7';
+  static String get chatReview8On => 'assets/images/chat_review_7-1';
+  static String get chatReview9Off => 'assets/images/chat_review_8';
+  static String get chatReview9On => 'assets/images/chat_review_8-1';
+  static String get chatReview10Off => 'assets/images/chat_review_9';
+  static String get chatReview10On => 'assets/images/chat_review_9-1';
+  static String get chatReview11Off => 'assets/images/chat_review_10';
+  static String get chatReview11On => 'assets/images/chat_review_10-1';
+  static String get chatReview12Off => 'assets/images/chat_review_11';
+  static String get chatReview12On => 'assets/images/chat_review_11-1';
 }

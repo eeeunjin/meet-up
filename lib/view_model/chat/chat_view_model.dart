@@ -172,4 +172,14 @@ class ChatViewModel with ChangeNotifier {
   bool get allCheckCompleted {
     return namingCompleted;
   }
+
+  // MARK: - 공지 온보딩
+  bool _isChecked = false;
+
+  bool get isChecked => _isChecked;
+
+  void toggleChecked() {
+    _isChecked = !_isChecked;
+    notifyListeners();
+  }
 }
