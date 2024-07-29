@@ -85,8 +85,8 @@ class AddPersonalSchedule extends StatelessWidget {
   // 구분선
   Widget _divider() {
     return Divider(
-            thickness: 0.3.h,
-            height: 0.h,
+      thickness: 0.3.h,
+      height: 0.h,
       color: UsedColor.line,
     );
   }
@@ -258,22 +258,18 @@ class AddPersonalSchedule extends StatelessWidget {
           ),
           SizedBox(width: 16.w),
           Expanded(
-            child: Transform.translate(
-              offset: Offset(0, -4.0.h),
-              child: Container(
-                alignment: Alignment.center,
-                height: 19.h,
-                child: TextField(
-                  decoration: const InputDecoration(
-                    isDense: true,
-                    contentPadding: EdgeInsets.zero,
-                    border: InputBorder.none,
-                    hintText: '만남 장소를 입력해주세요',
-                    hintStyle: TextStyle(color: UsedColor.text_5),
-                  ),
-                  style:
-                      AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
+            child: Container(
+              alignment: Alignment.center,
+              height: 19.h,
+              child: TextField(
+                decoration: const InputDecoration(
+                  isDense: true,
+                  contentPadding: EdgeInsets.zero,
+                  border: InputBorder.none,
+                  hintText: '만남 장소를 입력해주세요',
+                  hintStyle: TextStyle(color: UsedColor.text_5),
                 ),
+                style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
               ),
             ),
           ),
@@ -386,23 +382,19 @@ class AddPersonalSchedule extends StatelessWidget {
           ),
           SizedBox(width: 16.w),
           Expanded(
-            child: Transform.translate(
-              offset: Offset(0, -4.0.h),
-              child: Container(
-                alignment: Alignment.center,
-                height: 19.h,
-                child: TextField(
-                  onChanged: (text) => viewModel.namingContents(text),
-                  decoration: const InputDecoration(
-                    isDense: true,
-                    contentPadding: EdgeInsets.zero,
-                    border: InputBorder.none,
-                    hintText: '일정을 입력해주세요',
-                    hintStyle: TextStyle(color: UsedColor.text_5),
-                  ),
-                  style:
-                      AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
+            child: Container(
+              alignment: Alignment.center,
+              height: 19.h,
+              child: TextField(
+                onChanged: (text) => viewModel.namingContents(text),
+                decoration: const InputDecoration(
+                  isDense: true,
+                  contentPadding: EdgeInsets.zero,
+                  border: InputBorder.none,
+                  hintText: '일정을 입력해주세요',
+                  hintStyle: TextStyle(color: UsedColor.text_5),
                 ),
+                style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
               ),
             ),
           ),

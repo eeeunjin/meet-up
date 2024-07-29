@@ -15,4 +15,128 @@ class ChatViewModel with ChangeNotifier {
       findAll: true,
     );
   }
+
+  // MARK: - 일정 등록
+  // 일정
+  String _scheduleNaming = '';
+
+  String get scheduleNaming => _scheduleNaming;
+
+  void namingContents(String newNamingCount) {
+    if (_scheduleNaming != newNamingCount) {
+      _scheduleNaming = newNamingCount;
+      notifyListeners();
+    }
+  }
+
+  // naming check
+  bool get namingCompleted {
+    return _scheduleNaming.trim().isNotEmpty;
+  }
+
+  // datePicker
+  bool _isDatePanelExpanded = false;
+
+  bool get isDatePanelExpanded => _isDatePanelExpanded;
+
+  DateTime _selectedDate;
+  DateTime get selectedDate => _selectedDate; // 선택된 날짜
+
+  // DatePicker
+  final DateTime _start;
+  final DateTime _end;
+
+  ChatViewModel({
+    required DateTime init,
+    required DateTime start,
+    required DateTime end,
+  })  : _selectedDate = init,
+        _start = start,
+        _end = end;
+
+  DateTime get start => _start;
+  DateTime get end => _end;
+
+  set selectedDate(DateTime newValue) {
+    if (_selectedDate != newValue) {
+      _selectedDate = newValue;
+      notifyListeners();
+    }
+  }
+
+  void updateDate(DateTime date) {
+    if (_selectedDate != date) {
+      _selectedDate = date;
+      notifyListeners();
+    }
+  }
+
+  // 연도 업데이트
+  void updateYear(int year) {
+    if (_selectedDate.year != year) {
+      _selectedDate = DateTime(year, _selectedDate.month, _selectedDate.day);
+      notifyListeners();
+    }
+  }
+
+  // 월 업데이트
+  void updateMonth(int month) {
+    if (_selectedDate.month != month) {
+      _selectedDate = DateTime(_selectedDate.year, month, _selectedDate.day);
+      notifyListeners();
+    }
+  }
+
+  // 일 업데이트
+  void updateDay(int day) {
+    if (_selectedDate.day != day) {
+      _selectedDate = DateTime(_selectedDate.year, _selectedDate.month, day);
+      notifyListeners();
+    }
+  }
+
+  List<int> getYearList() {
+    return List<int>.generate(
+        end.year - start.year + 1, (index) => start.year + index);
+  }
+
+  List<int> getMonthList() {
+    if (selectedDate.year == end.year) {
+      return List<int>.generate(end.month, (index) => index + 1);
+    } else {
+      return List<int>.generate(12, (index) => index + 1);
+    }
+  }
+
+  List<int> getDayList() {
+    DateTime lastDateOfMonth =
+        DateTime(selectedDate.year, selectedDate.month + 1, 0);
+    if (selectedDate.year == end.year && selectedDate.month == end.month) {
+      return List<int>.generate(end.day, (index) => index + 1);
+    }
+    return List<int>.generate(lastDateOfMonth.day, (index) => index + 1);
+  }
+
+  // ExpansionPanel 토글
+  void toggleDatePanel() {
+    _isDatePanelExpanded = !_isDatePanelExpanded; // 상태 반전
+    notifyListeners();
+  }
+
+  // timePicker
+  bool _isTimePanelExpanded = false;
+
+  bool get isTimePanelExpanded => _isTimePanelExpanded;
+
+  // ExpansionPanel 토글
+  void toggleTimePanel() {
+    _isTimePanelExpanded = !_isTimePanelExpanded;
+    notifyListeners();
+  }
+
+  // check
+
+  bool get allCheckCompleted {
+    return namingCompleted;
+  }
 }

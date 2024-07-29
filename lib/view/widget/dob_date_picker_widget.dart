@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
 import 'package:provider/provider.dart';
 
-class DobDatePicker extends StatelessWidget {
+class DobDatePicker<T extends ChangeNotifier> extends StatelessWidget {
   final Function(DateTime dt) onChangeListener;
 
   const DobDatePicker({
@@ -13,75 +12,69 @@ class DobDatePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<SignUpDetailViewModel>(context);
+    final viewModel = Provider.of<T>(context);
 
-    return ChangeNotifierProvider<SignUpDetailViewModel>.value(
-      value: viewModel,
-      child: Consumer<SignUpDetailViewModel>(
-        builder: (context, viewModel, child) {
-          return Stack(
-            children: [
-              Positioned(
-                  top: (113.h - 26.3.h) / 2 + 3.h,
-                  left: 25.w,
-                  child: Container(
-                    width: 274.w,
-                    height: 26.3.h,
-                    decoration: BoxDecoration(
-                        color: const Color(0xFFF5F5F5),
-                        borderRadius: BorderRadius.circular(6.58.r)),
-                  )),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IntrinsicWidth(
-                    child: Container(
-                      width: 90.w,
-                      alignment: Alignment.centerRight,
-                      child: _CustomPicker(
-                        items: viewModel.getYearList(),
-                        initialItem:
-                            viewModel.selectedDate.year - viewModel.start.year,
-                        onChanged: (int v) {
-                          viewModel.updateYear(viewModel.start.year + v);
-                        },
-                        type: '년',
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 30.w),
-                  SizedBox(
-                    width: 50.w,
-                    child: _CustomPicker(
-                      items: viewModel.getMonthList(),
-                      initialItem: viewModel.selectedDate.month - 1,
-                      onChanged: (int v) {
-                        viewModel.updateMonth(v + 1);
-                      },
-                      type: '월',
-                    ),
-                  ),
-                  SizedBox(width: 30.w),
-                  IntrinsicWidth(
-                    child: Container(
-                      width: 90.w,
-                      alignment: Alignment.centerLeft,
-                      child: _CustomPicker(
-                        items: viewModel.getDayList(),
-                        initialItem: viewModel.selectedDate.day - 1,
-                        onChanged: (int v) {
-                          viewModel.updateDay(v + 1);
-                        },
-                        type: '일',
-                      ),
-                    ),
-                  ),
-                ],
+    return Stack(
+      children: [
+        Positioned(
+            top: (113.h - 26.3.h) / 2 + 3.h,
+            left: 25.w,
+            child: Container(
+              width: 274.w,
+              height: 26.3.h,
+              decoration: BoxDecoration(
+                  color: const Color(0xFFF5F5F5),
+                  borderRadius: BorderRadius.circular(6.58.r)),
+            )),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IntrinsicWidth(
+              child: Container(
+                width: 90.w,
+                alignment: Alignment.centerRight,
+                child: _CustomPicker(
+                  items: (viewModel as dynamic).getYearList(),
+                  initialItem: (viewModel as dynamic).selectedDate.year -
+                      (viewModel as dynamic).start.year,
+                  onChanged: (int v) {
+                    (viewModel as dynamic)
+                        .updateYear((viewModel as dynamic).start.year + v);
+                  },
+                  type: '년',
+                ),
               ),
-            ],
-          );
-        },
-      ),
+            ),
+            SizedBox(width: 30.w),
+            SizedBox(
+              width: 50.w,
+              child: _CustomPicker(
+                items: (viewModel as dynamic).getMonthList(),
+                initialItem: (viewModel as dynamic).selectedDate.month - 1,
+                onChanged: (int v) {
+                  (viewModel as dynamic).updateMonth(v + 1);
+                },
+                type: '월',
+              ),
+            ),
+            SizedBox(width: 30.w),
+            IntrinsicWidth(
+              child: Container(
+                width: 90.w,
+                alignment: Alignment.centerLeft,
+                child: _CustomPicker(
+                  items: (viewModel as dynamic).getDayList(),
+                  initialItem: (viewModel as dynamic).selectedDate.day - 1,
+                  onChanged: (int v) {
+                    (viewModel as dynamic).updateDay(v + 1);
+                  },
+                  type: '일',
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -96,9 +89,9 @@ class _CustomPicker extends StatelessWidget {
     required this.items,
     required this.initialItem,
     required this.onChanged,
-    Key? key,
+    super.key,
     required this.type,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
