@@ -178,7 +178,7 @@ class SignUpDetailOneContents extends StatelessWidget {
           ),
           SizedBox(height: 24.h),
           // Mark - datepicker
-          DobDatePicker<SignUpDetailViewModel>(
+          DobDatePicker(
             onChangeListener: onDateChange,
           ),
         ],

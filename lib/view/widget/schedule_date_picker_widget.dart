@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
+import 'package:meet_up/view_model/chat/chat_view_model.dart';
 import 'package:provider/provider.dart';
 
-class DobDatePicker extends StatelessWidget {
+class ScheduleDatePicker extends StatelessWidget {
   final Function(DateTime dt) onChangeListener;
 
-  const DobDatePicker({
+  const ScheduleDatePicker({
     super.key,
     required this.onChangeListener,
   });
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<SignUpDetailViewModel>(context);
+    final viewModel = Provider.of<ChatViewModel>(context);
 
-    return ChangeNotifierProvider<SignUpDetailViewModel>.value(
+    return ChangeNotifierProvider<ChatViewModel>.value(
       value: viewModel,
-      child: Consumer<SignUpDetailViewModel>(
+      child: Consumer<ChatViewModel>(
         builder: (context, viewModel, child) {
           return Stack(
             children: [
               Positioned(
-                  top: (113.h - 26.3.h) / 2 + 3.h,
-                  left: 25.w,
+                  top: (132.h - 29.h) / 2,
+                  left: 12.w,
                   child: Container(
-                    width: 274.w,
-                    height: 26.3.h,
+                    width: 255.w,
+                    height: 24.h,
                     decoration: BoxDecoration(
                         color: const Color(0xFFF5F5F5),
                         borderRadius: BorderRadius.circular(6.58.r)),
@@ -36,7 +36,7 @@ class DobDatePicker extends StatelessWidget {
                 children: [
                   IntrinsicWidth(
                     child: Container(
-                      width: 90.w,
+                      width: 75.w,
                       alignment: Alignment.centerRight,
                       child: _CustomPicker(
                         items: viewModel.getYearList(),
@@ -49,7 +49,7 @@ class DobDatePicker extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(width: 30.w),
+                  SizedBox(width: 26.w),
                   SizedBox(
                     width: 50.w,
                     child: _CustomPicker(
@@ -61,10 +61,10 @@ class DobDatePicker extends StatelessWidget {
                       type: '월',
                     ),
                   ),
-                  SizedBox(width: 30.w),
+                  SizedBox(width: 26.w),
                   IntrinsicWidth(
                     child: Container(
-                      width: 90.w,
+                      width: 75.w,
                       alignment: Alignment.centerLeft,
                       child: _CustomPicker(
                         items: viewModel.getDayList(),
@@ -127,7 +127,7 @@ class _CustomPicker extends StatelessWidget {
     int distanceFromCenter = (initialItem - index).abs();
 
     double scale = 1.0;
-    final double baseHeight = 29.h;
+    final double baseHeight = 24.h;
 
     Color textColor = Colors.black;
     // AutoSizeText 사용
@@ -135,10 +135,10 @@ class _CustomPicker extends StatelessWidget {
       scale = 1.0;
       textColor = Colors.black;
     } else if (distanceFromCenter == 1) {
-      scale = 24.h / baseHeight;
+      scale = 20.h / baseHeight;
       textColor = const Color(0xFF8D8D8D);
     } else {
-      scale = 18.h / baseHeight;
+      scale = 16.h / baseHeight;
       textColor = const Color(0xFFDFDFDF);
     }
 
@@ -150,7 +150,7 @@ class _CustomPicker extends StatelessWidget {
           '${items[index]}$type',
           maxLines: 1,
           style: TextStyle(
-            fontSize: 24.sp,
+            fontSize: 20.sp,
             color: textColor,
             fontFamily: 'Pretendard-M',
           ),
