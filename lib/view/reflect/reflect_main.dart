@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
-import 'package:provider/provider.dart';
 
 class ReflectMain extends StatelessWidget {
   const ReflectMain({super.key});

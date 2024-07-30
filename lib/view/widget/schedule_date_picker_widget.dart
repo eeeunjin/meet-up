@@ -44,6 +44,10 @@ class ScheduleDatePicker extends StatelessWidget {
                             viewModel.selectedDate.year - viewModel.start.year,
                         onChanged: (int v) {
                           viewModel.updateYear(viewModel.start.year + v);
+                          onChangeListener(DateTime(
+                              viewModel.start.year + v,
+                              viewModel.selectedDate.month,
+                              viewModel.selectedDate.day));
                         },
                         type: '년',
                       ),
@@ -57,6 +61,10 @@ class ScheduleDatePicker extends StatelessWidget {
                       initialItem: viewModel.selectedDate.month - 1,
                       onChanged: (int v) {
                         viewModel.updateMonth(v + 1);
+                        onChangeListener(DateTime(viewModel.selectedDate.year,
+                            v + 1, viewModel.selectedDate.day));
+                        onChangeListener(DateTime(viewModel.selectedDate.year,
+                            viewModel.selectedDate.month, v + 1));
                       },
                       type: '월',
                     ),
@@ -128,8 +136,8 @@ class _CustomPicker extends StatelessWidget {
 
     double scale = 1.0;
     final double baseHeight = 24.h;
-
     Color textColor = Colors.black;
+
     // AutoSizeText 사용
     if (distanceFromCenter == 0) {
       scale = 1.0;
