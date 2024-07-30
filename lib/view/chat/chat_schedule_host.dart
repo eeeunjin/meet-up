@@ -18,6 +18,7 @@ class ChatScheduleHost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false, // 채팅 overflow 방지
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
