@@ -137,7 +137,7 @@ class ProfileMain extends StatelessWidget {
       case "ham":
         path = ImagePath.hamSelect;
       case "aengmu":
-        path = ImagePath.aengmuSelect;
+        path = ImagePath.annumSelect;
     }
     return Container(
       width: 340.w,

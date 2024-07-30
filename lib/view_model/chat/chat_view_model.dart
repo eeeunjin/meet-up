@@ -182,4 +182,102 @@ class ChatViewModel with ChangeNotifier {
     _isChecked = !_isChecked;
     notifyListeners();
   }
+// MARK: - 만남 후기
+
+  int _rating = 0;
+  int get rating => _rating;
+
+  Map<String, bool> selectedChips = {
+    'chatReview1': false,
+    'chatReview2': false,
+    'chatReview3': false,
+    'chatReview4': false,
+    'chatReview5': false,
+    'chatReview6': false,
+    'chatReview7': false,
+    'chatReview8': false,
+    'chatReview9': false,
+    'chatReview10': false,
+    'chatReview11': false,
+    'chatReview12': false,
+  };
+
+// 별점
+  void setRating(int rating) {
+    _rating = rating;
+    checkReviewCompletion();
+    notifyListeners();
+  }
+
+// 이미지칩을 선택/해제
+  void toggleChip(String chipName) {
+    if (selectedChips.containsKey(chipName)) {
+      selectedChips[chipName] = !selectedChips[chipName]!;
+      checkReviewCompletion();
+      notifyListeners();
+    }
+  }
+
+// 코멘트 설정
+  void setComment(String comment) {
+    _comment = comment;
+    checkReviewCompletion();
+    notifyListeners();
+  }
+
+// 별점에 따른 이미지 리스트 반환
+  List<String> get images {
+    if (_rating >= 3) {
+      return [
+        'chatReview1',
+        'chatReview2',
+        'chatReview3',
+        'chatReview4',
+        'chatReview5',
+        'chatReview6'
+      ];
+    } else {
+      return [
+        'chatReview7',
+        'chatReview8',
+        'chatReview9',
+        'chatReview10',
+        'chatReview11',
+        'chatReview12'
+      ];
+    }
+  }
+
+// 이미지칩이 선택되었는지
+  bool isSelected(String chipName) {
+    return selectedChips[chipName] ?? false;
+  }
+
+  int _currentPage = 0;
+  int get currentPage => _currentPage;
+
+  String _comment = '';
+  String get comment => _comment;
+
+// 다음 페이지로 이동
+  void nextPage() {
+    _currentPage++;
+    if (_currentPage < 3) {
+      _rating = 0;
+      selectedChips.updateAll((key, value) => false);
+      _comment = '';
+    }
+    notifyListeners();
+  }
+
+  bool get isReviewComplete {
+    return rating > 0 &&
+        selectedChips.values.any((isSelected) => isSelected) &&
+        comment.length >= 20 &&
+        comment.length <= 100;
+  }
+
+  void checkReviewCompletion() {
+    notifyListeners();
+  }
 }

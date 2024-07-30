@@ -715,7 +715,7 @@ class ProfileEdit extends StatelessWidget {
                                   GestureDetector(
                                     onTap: () =>
                                         profileViewModel.setChangedIconPath(
-                                            ImagePath.aengmuSelect),
+                                            ImagePath.annumSelect),
                                     child: Container(
                                       width: 72.w,
                                       height: 72.h,
@@ -723,7 +723,7 @@ class ProfileEdit extends StatelessWidget {
                                         shape: BoxShape.circle,
                                         border:
                                             profileViewModel.changedIconPath ==
-                                                    ImagePath.aengmuSelect
+                                                    ImagePath.annumSelect
                                                 ? Border.all(
                                                     color: UsedColor.b_line,
                                                     width: 2.5.w)
@@ -731,8 +731,8 @@ class ProfileEdit extends StatelessWidget {
                                       ),
                                       child: Image.asset(
                                         profileViewModel.changedIconPath ==
-                                                ImagePath.aengmuSelect
-                                            ? ImagePath.aengmuSelect
+                                                ImagePath.annumSelect
+                                            ? ImagePath.annumSelect
                                             : ImagePath.aengmuDeselect,
                                       ),
                                     ),
@@ -817,7 +817,7 @@ class ProfileEdit extends StatelessWidget {
                               child: TextButton(
                                 // !: -잉크 효과 이상해서 없애둠
                                 style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
+                                    overlayColor: WidgetStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () {
                                   profileViewModel.setChangedIconPath('');
@@ -841,7 +841,7 @@ class ProfileEdit extends StatelessWidget {
                               height: 53.h,
                               child: TextButton(
                                 style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
+                                    overlayColor: WidgetStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () async {
                                   // 저장 로직
@@ -950,7 +950,7 @@ class ProfileEdit extends StatelessWidget {
                               child: TextButton(
                                 // 잉크 효과 이상해서 없애둠
                                 style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
+                                    overlayColor: WidgetStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () {
                                   profileViewModel.setChangedAffiliation('');
@@ -974,7 +974,7 @@ class ProfileEdit extends StatelessWidget {
                               height: 53.h,
                               child: TextButton(
                                 style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
+                                    overlayColor: WidgetStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () async {
                                   // 저장 로직
@@ -1117,7 +1117,7 @@ class ProfileEdit extends StatelessWidget {
                         child: TextButton(
                           style: const ButtonStyle(
                             overlayColor:
-                                MaterialStatePropertyAll(Colors.transparent),
+                                WidgetStatePropertyAll(Colors.transparent),
                           ),
                           onPressed: () {
                             Navigator.of(context).pop();
@@ -1141,7 +1141,7 @@ class ProfileEdit extends StatelessWidget {
                         child: TextButton(
                           style: const ButtonStyle(
                             overlayColor:
-                                MaterialStatePropertyAll(Colors.transparent),
+                                WidgetStatePropertyAll(Colors.transparent),
                           ),
                           onPressed: () async {
                             profileViewModel
@@ -1282,7 +1282,7 @@ class ProfileEdit extends StatelessWidget {
                             child: TextButton(
                               // !: -잉크 효과 이상해서 없애둠
                               style: const ButtonStyle(
-                                  overlayColor: MaterialStatePropertyAll(
+                                  overlayColor: WidgetStatePropertyAll(
                                       Colors.transparent)),
                               onPressed: () {
                                 profileViewModel.clearChangedRelationships();
@@ -1306,7 +1306,7 @@ class ProfileEdit extends StatelessWidget {
                             height: 53.h,
                             child: TextButton(
                               style: const ButtonStyle(
-                                  overlayColor: MaterialStatePropertyAll(
+                                  overlayColor: WidgetStatePropertyAll(
                                       Colors.transparent)),
                               onPressed: () async {
                                 // 저장 로직
@@ -1448,7 +1448,7 @@ class ProfileEdit extends StatelessWidget {
                             child: TextButton(
                               // !: -잉크 효과 이상해서 없애둠
                               style: const ButtonStyle(
-                                  overlayColor: MaterialStatePropertyAll(
+                                  overlayColor: WidgetStatePropertyAll(
                                       Colors.transparent)),
                               onPressed: () {
                                 profileViewModel.clearChangedPersonalities();
@@ -1472,7 +1472,7 @@ class ProfileEdit extends StatelessWidget {
                             height: 53.h,
                             child: TextButton(
                               style: const ButtonStyle(
-                                  overlayColor: MaterialStatePropertyAll(
+                                  overlayColor: WidgetStatePropertyAll(
                                       Colors.transparent)),
                               onPressed: () async {
                                 // 저장 로직
@@ -1627,7 +1627,7 @@ class ProfileEdit extends StatelessWidget {
                               child: TextButton(
                                 // !: -잉크 효과 이상해서 없애둠
                                 style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
+                                    overlayColor: WidgetStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () {
                                   profileViewModel.clearChangedInterests();
@@ -1651,7 +1651,7 @@ class ProfileEdit extends StatelessWidget {
                               height: 53.h,
                               child: TextButton(
                                 style: const ButtonStyle(
-                                    overlayColor: MaterialStatePropertyAll(
+                                    overlayColor: WidgetStatePropertyAll(
                                         Colors.transparent)),
                                 onPressed: () async {
                                   // 저장 로직
@@ -1805,7 +1805,7 @@ class ProfileEdit extends StatelessWidget {
                             child: TextButton(
                               // !: -잉크 효과 이상해서 없애둠
                               style: const ButtonStyle(
-                                  overlayColor: MaterialStatePropertyAll(
+                                  overlayColor: WidgetStatePropertyAll(
                                       Colors.transparent)),
                               onPressed: () {
                                 profileViewModel.clearChangedMeetingPurposes();
@@ -1829,7 +1829,7 @@ class ProfileEdit extends StatelessWidget {
                             height: 53.h,
                             child: TextButton(
                               style: const ButtonStyle(
-                                  overlayColor: MaterialStatePropertyAll(
+                                  overlayColor: WidgetStatePropertyAll(
                                       Colors.transparent)),
                               onPressed: () async {
                                 // 저장 로직

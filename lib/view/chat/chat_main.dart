@@ -93,8 +93,7 @@ class ChatMain extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => const ChatMeetingReview()),
+              MaterialPageRoute(builder: (context) => ChatMeetingReview()),
             );
           },
           child: const Text('만남 후기 보내기'),

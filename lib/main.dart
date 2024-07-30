@@ -97,6 +97,13 @@ void main() async {
             create: (context) => CoinTicketPurchaseHistoryViewModel()),
         ChangeNotifierProvider(create: (context) => SettingViewModel()),
         ChangeNotifierProvider(create: (context) => ProfileViewModel()),
+        ChangeNotifierProvider(
+          create: (context) => ChatViewModel(
+            init: DateTime.now(),
+            start: DateTime(2020, 1, 1),
+            end: DateTime(2025, 12, 31),
+          ),
+        ),
       ],
       child: MyApp(),
     ),

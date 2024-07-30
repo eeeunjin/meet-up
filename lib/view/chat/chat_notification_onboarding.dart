@@ -139,9 +139,9 @@ class ChatNotification extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildIndicator(true),
-                  _buildIndicator(false),
-                  _buildIndicator(false),
+                  _indicator(true),
+                  _indicator(false),
+                  _indicator(false),
                 ],
               ),
             ),
@@ -173,7 +173,7 @@ class ChatNotification extends StatelessWidget {
             WarningSection(
               title: '욕설, 비방, 폭력, 혐오 표현',
               iconPath: ImagePath.chatNotification6,
-              items: const ['채팅 중에 욕설, 비방, 폭력, 혐오를 표현하는 경우'],
+              items: const ['채팅 중에 욕설, 비방, 폭력, 혐오를\n 표현하는 경우'],
             ),
             SizedBox(
               height: 40.h,
@@ -181,7 +181,7 @@ class ChatNotification extends StatelessWidget {
             WarningSection(
               title: '불법 행위',
               iconPath: ImagePath.chatNotification7,
-              items: const ['도박, 사기, 규제 상품 판매 등 불법적인 행위를 하는 경우'],
+              items: const ['도박, 사기, 규제 상품 판매 등\n 불법적인 행위를 하는 경우'],
             ),
             SizedBox(
               height: 40.h,
@@ -213,9 +213,9 @@ class ChatNotification extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildIndicator(false),
-                  _buildIndicator(true),
-                  _buildIndicator(false),
+                  _indicator(false),
+                  _indicator(true),
+                  _indicator(false),
                 ],
               ),
             ),
@@ -241,7 +241,7 @@ class ChatNotification extends StatelessWidget {
             WarningSection(
               title: '노골적인 성적 표현',
               iconPath: ImagePath.chatNotification9,
-              items: const ['성매매 유도나 성적 발언을 하는 참여자가 있을 경우'],
+              items: const ['성매매 유도나 성적 발언을 하는\n 참여자가 있을 경우'],
             ),
             SizedBox(
               height: 40.h,
@@ -310,74 +310,83 @@ class ChatNotification extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0.r)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),
       ),
       builder: (context) {
         return Padding(
-          padding: EdgeInsets.only(
-            left: 38.w,
-            right: 31.w,
-            top: 72.h,
-            bottom: 56.h,
-          ),
+          padding:
+              EdgeInsets.only(left: 33.w, top: 51.h, right: 33.w, bottom: 56.h),
           child: Consumer<ChatViewModel>(
             builder: (context, viewModel, child) {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '채팅방 입장 전\n주의 사항을 확인해주세요!',
-                    style: AppTextStyles.PR_SB_22.copyWith(color: Colors.black),
-                  ),
-                  SizedBox(height: 35.67.h),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(
-                        viewModel.isChecked
-                            ? Icons.check_circle
-                            : Icons.check_circle,
-                        color: viewModel.isChecked
-                            ? UsedColor.violet
-                            : UsedColor.text_5,
-                      ),
-                      SizedBox(width: 17.67.w),
-                      Expanded(
-                        child: Text(
-                          '채팅 시 주의 사항을 모두 숙지해야 합니다.\n',
-                          style: AppTextStyles.PR_R_17.copyWith(
-                            color: viewModel.isChecked
-                                ? Colors.black
-                                : UsedColor.text_5,
-                          ),
-                        ),
+                      Text(
+                        '채팅방 입장 전\n주의 사항을 확인해주세요!',
+                        style: AppTextStyles.PR_SB_22
+                            .copyWith(color: Colors.black),
                       ),
                       GestureDetector(
                         onTap: () {
                           viewModel.toggleChecked();
                         },
-                        child: Container(
+                        child: SizedBox(
                           width: 33.w,
                           height: 33.h,
-                          decoration: BoxDecoration(
-                            color: UsedColor.image_card,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.check,
-                            color: viewModel.isChecked
-                                ? UsedColor.violet
-                                : UsedColor.button_g,
-                            size: 18.53.w,
+                          child: Center(
+                            child: viewModel.isChecked
+                                ? Image.asset(ImagePath.checkBoxOn)
+                                : Image.asset(ImagePath.checkBoxOff),
                           ),
                         ),
                       ),
                     ],
                   ),
-                  Text(
-                    '주의 사항 미숙지로 인한 규칙 위반 행위는\n이용에 제재를 받을 수 있습니다.',
-                    style:
-                        AppTextStyles.PR_R_17.copyWith(color: UsedColor.text_5),
+                  SizedBox(height: 35.h),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          viewModel.toggleChecked();
+                        },
+                        child: SizedBox(
+                          width: 14.w,
+                          height: 11.h,
+                          child: Center(
+                            child: viewModel.isChecked
+                                ? Image.asset(ImagePath.checkOn)
+                                : Image.asset(ImagePath.checkOff),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 17.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '채팅 시 주의 사항을 모두 숙지해야 합니다.\n',
+                              style: AppTextStyles.PR_R_17.copyWith(
+                                color: viewModel.isChecked
+                                    ? Colors.black
+                                    : UsedColor.text_5,
+                              ),
+                            ),
+                            Text(
+                              '주의 사항 미숙지로 인한 규칙 위반 행위는\n이용에 제재를 받을 수 있습니다.',
+                              style: AppTextStyles.PR_R_17.copyWith(
+                                color: UsedColor.text_5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 57.h),
                   Center(
@@ -385,7 +394,6 @@ class ChatNotification extends StatelessWidget {
                       onPressed: viewModel.isChecked
                           ? () {
                               Navigator.pop(context);
-                              // 다음 화면으로 이동하는 코드 추가
                             }
                           : null,
                       style: ElevatedButton.styleFrom(
@@ -393,15 +401,19 @@ class ChatNotification extends StatelessWidget {
                             ? UsedColor.button
                             : UsedColor.button_g,
                         padding: EdgeInsets.symmetric(
-                            vertical: 16.h, horizontal: 91.w),
+                            vertical: 8.h, horizontal: 45.w),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16.r),
                         ),
+                        minimumSize: Size(327.w, 56.h),
                       ),
                       child: Text(
                         '동의하고 시작하기',
-                        style: AppTextStyles.PR_SB_20
-                            .copyWith(color: Colors.white),
+                        style: AppTextStyles.PR_SB_20.copyWith(
+                          color: viewModel.isChecked
+                              ? Colors.white
+                              : UsedColor.text_2,
+                        ),
                       ),
                     ),
                   ),
@@ -414,7 +426,7 @@ class ChatNotification extends StatelessWidget {
     );
   }
 
-  Widget _buildIndicator(bool isActive) {
+  Widget _indicator(bool isActive) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 4.w),
       child: Container(
