@@ -57,7 +57,18 @@ class ReflectMain extends StatelessWidget {
             color: Colors.red,
             child: const Center(child: Text('TEST')),
           ),
-        )
+        ),
+        GestureDetector(
+          onTap: () {
+            context.goNamed('chatScheduleHostView');
+          },
+          child: Container(
+            width: 100.w,
+            height: 50.h,
+            color: Colors.blue,
+            child: const Center(child: Text('HOSTVIEWTEST')),
+          ),
+        ),
       ],
     );
   }

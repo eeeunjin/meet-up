@@ -5,6 +5,7 @@ import 'package:meet_up/model/chat_room_model.dart';
 import 'package:meet_up/view/chat/chat_main.dart';
 import 'package:meet_up/view/chat/chat_room.dart';
 import 'package:meet_up/view/chat/chat_schedule_host.dart';
+import 'package:meet_up/view/chat/chat_schedule_host_view.dart';
 import 'package:meet_up/view/coin/coin_buy.dart';
 import 'package:meet_up/view/coin/coin_buy_success.dart';
 import 'package:meet_up/view/coin/coin_main.dart';
@@ -337,7 +338,13 @@ final router = GoRouter(
                 name: 'chatScheduleHost',
                 parentNavigatorKey: rootNavkey,
                 builder: (context, state) => const ChatScheduleHost(),
-              )
+              ),
+              GoRoute(
+                path: 'chatScheduleHostView',
+                name: 'chatScheduleHostView',
+                parentNavigatorKey: rootNavkey,
+                builder: (context, state) => const ChatScheduleHostView(),
+              ),
             ]),
         // Profile
         GoRoute(

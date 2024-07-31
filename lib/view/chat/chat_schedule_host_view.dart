@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
-import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view/widget/schedule_date_picker_widget.dart';
 import 'package:meet_up/view/widget/schedule_time_picker_widget.dart';
 import 'package:meet_up/view_model/chat/chat_view_model.dart';
@@ -12,8 +11,8 @@ import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
 import 'package:provider/provider.dart';
 
-class ChatScheduleHost extends StatelessWidget {
-  const ChatScheduleHost({super.key});
+class ChatScheduleHostView extends StatelessWidget {
+  const ChatScheduleHostView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +26,6 @@ class ChatScheduleHost extends StatelessWidget {
             child: _header(context),
           ),
           _main(context),
-          const Spacer(),
-          Padding(
-            padding: EdgeInsets.only(left: 33.0.w, right: 33.w, bottom: 56.h),
-            child: _bottom(context),
-          ),
         ],
       ),
     );
@@ -100,22 +94,24 @@ class ChatScheduleHost extends StatelessWidget {
         SizedBox(height: 20.h),
         _location(context),
         SizedBox(height: 20.h),
+        _divider(),
+        SizedBox(height: 20.h),
+        _scheduleCheck(context),
       ],
     );
   }
 
-  // MARK: - 일정 등록
   Widget _naming(BuildContext context) {
     final viewModel = Provider.of<ChatViewModel>(context);
 
     return Padding(
-      padding: EdgeInsets.only(left: 23.0.w),
+      padding: EdgeInsets.only(left: 23.w),
       child: Row(
         children: [
           Image.asset(
             ImagePath.scheduleIcon1,
-            width: 20.w,
-            height: 20.h,
+            width: 19.17.w,
+            height: 19.17.h,
           ),
           SizedBox(width: 14.w),
           Text(
@@ -124,30 +120,13 @@ class ChatScheduleHost extends StatelessWidget {
                 AppTextStyles.PR_M_16.copyWith(color: UsedColor.charcoal_black),
           ),
           SizedBox(width: 22.w),
-          Expanded(
-            child: Container(
-              alignment: Alignment.center,
-              height: 19.h,
-              child: TextField(
-                onChanged: (text) => viewModel.namingContents(text),
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.zero,
-                  border: InputBorder.none,
-                  hintText: '일정을 입력해주세요',
-                  hintStyle:
-                      AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_1),
-                ),
-                style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_1),
-              ),
-            ),
-          ),
         ],
+        // 일정 입력인지 입력된 일정 이름 확인인지 모르겠음
       ),
     );
   }
 
-  // MARK: - 날짜
+  //MARK: - 날짜
   Widget _date(BuildContext context) {
     final viewModel = Provider.of<ChatViewModel>(context, listen: false);
 
@@ -234,13 +213,13 @@ class ChatScheduleHost extends StatelessWidget {
           ExpansionPanel(
             headerBuilder: (BuildContext context, bool isExpanded) {
               return Padding(
-                padding: EdgeInsets.only(left: 20.0.w),
+                padding: EdgeInsets.only(left: 21.0.w),
                 child: Row(
                   children: [
                     Image.asset(
                       ImagePath.scheduleIcon3,
                       width: 23.w,
-                      height: 23.h,
+                      height: 23.w,
                     ),
                     SizedBox(width: 12.w),
                     Text(
@@ -291,7 +270,7 @@ class ChatScheduleHost extends StatelessWidget {
   //MARK: - 장소
   Widget _location(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 20.0.w),
+      padding: EdgeInsets.only(left: 21.0.w),
       child: Row(
         children: [
           Image.asset(
@@ -328,12 +307,27 @@ class ChatScheduleHost extends StatelessWidget {
     );
   }
 
-  Widget _bottom(BuildContext context) {
-    return NextButton(
-      onTap: () {},
-      width: 327.w,
-      height: 56.h,
-      text: '저장',
+  //MARK: - 일정 확인
+  Widget _scheduleCheck(BuildContext context) {
+    final viewModel = Provider.of<ChatViewModel>(context);
+
+    return Padding(
+      padding: EdgeInsets.only(left: 23.w),
+      child: Row(
+        children: [
+          Image.asset(
+            ImagePath.scheduleIconCheck,
+            width: 23.w,
+            height: 23.h,
+          ),
+          SizedBox(width: 12.w),
+          Text(
+            '일정 확정',
+            style:
+                AppTextStyles.PR_M_16.copyWith(color: UsedColor.charcoal_black),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -115,6 +115,11 @@ class ImagePath {
   static String get scheduleIcon4 => 'assets/images/schedule_icon_4.png';
   static String get scheduleIcon5 => 'assets/images/schedule_icon_5.png';
   static String get scheduleIcon6 => 'assets/images/schedule_icon_6.png';
+  static String get scheduleIconCheck =>
+      'assets/images/schedule_icon_check.png';
+  static String get scheduleIconMember =>
+      'assets/images/schedule_icon_member.png';
+
   static String get downArrow => 'assets/images/down_arrow.png';
 
   // MARK: - userinfo
