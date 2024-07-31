@@ -16,7 +16,7 @@ class ImagePath {
 
   static String get cogySelect => 'assets/images/cogy_select.png';
   static String get piggySelect => 'assets/images/piggy_select.png';
-  static String get aengmuSelect => 'assets/images/aengmu_select.png';
+  static String get annumSelect => 'assets/images/aengmu_select.png';
   static String get hamSelect => 'assets/images/ham_select.png';
   static String get fedroSelect => 'assets/images/fedro_select.png';
   static String get cogyDeselect => 'assets/images/cogy_deselect.png';
@@ -56,6 +56,8 @@ class ImagePath {
 
   static String get checkBoxOff => 'assets/images/checkboxoff.png';
   static String get checkBoxOn => 'assets/images/checkboxon.png';
+  static String get checkOff => 'assets/images/checkOff.png';
+  static String get checkOn => 'assets/images/checkOn.png';
 
   static String get crownIcon => 'assets/images/crown_icon.png';
   static String get reportIcon => 'assets/images/report_icon.png';
@@ -144,4 +146,74 @@ class ImagePath {
       'assets/images/rank_intermediate_off.png';
   static String get rankNoviceOff => 'assets/images/rank_novice_off.png';
   static String get rankBeginnerOff => 'assets/images/rank_beginner_off.png';
+
+  // MARK: - chat
+
+  static String get chatNotification1 =>
+      'assets/images/chat_notification_1.png';
+  static String get chatNotification2 =>
+      'assets/images/chat_notification_2.png';
+  static String get chatNotification3 =>
+      'assets/images/chat_notification_3.png';
+  static String get chatNotification4 =>
+      'assets/images/chat_notification_4.png';
+  static String get chatNotification5 =>
+      'assets/images/chat_notification_5.png';
+  static String get chatNotification6 =>
+      'assets/images/chat_notification_6.png';
+
+  static String get chatNotification7 =>
+      'assets/images/chat_notification_7.png';
+  static String get chatNotification8 =>
+      'assets/images/chat_notification_8.png';
+  static String get chatNotification9 =>
+      'assets/images/chat_notification_9.png';
+  static String get chatNotification10 =>
+      'assets/images/chat_notification_10.png';
+
+  static String get chatReview1 => 'assets/images/chat_review1.png';
+  static String get chatReview1Selected =>
+      'assets/images/chat_review1_selected.png';
+  static String get chatReview2 => 'assets/images/chat_review2.png';
+  static String get chatReview2Selected =>
+      'assets/images/chat_review2_selected.png';
+  static String get chatReview3 => 'assets/images/chat_review3.png';
+  static String get chatReview3Selected =>
+      'assets/images/chat_review3_selected.png';
+  static String get chatReview4 => 'assets/images/chat_review4.png';
+  static String get chatReview4Selected =>
+      'assets/images/chat_review4_selected.png';
+  static String get chatReview5 => 'assets/images/chat_review5.png';
+  static String get chatReview5Selected =>
+      'assets/images/chat_review5_selected.png';
+  static String get chatReview6 => 'assets/images/chat_review6.png';
+  static String get chatReview6Selected =>
+      'assets/images/chat_review6_selected.png';
+  static String get chatReview7 => 'assets/images/chat_review7.png';
+  static String get chatReview7Selected =>
+      'assets/images/chat_review7_selected.png';
+  static String get chatReview8 => 'assets/images/chat_review8.png';
+  static String get chatReview8Selected =>
+      'assets/images/chat_review8_selected.png';
+  static String get chatReview9 => 'assets/images/chat_review9.png';
+  static String get chatReview9Selected =>
+      'assets/images/chat_review9_selected.png';
+  static String get chatReview10 => 'assets/images/chat_review10.png';
+  static String get chatReview10Selected =>
+      'assets/images/chat_review10_selected.png';
+  static String get chatReview11 => 'assets/images/chat_review11.png';
+  static String get chatReview11Selected =>
+      'assets/images/chat_review11_selected.png';
+  static String get chatReview12 => 'assets/images/chat_review12.png';
+  static String get chatReview12Selected =>
+      'assets/images/chat_review12_selected.png';
+
+  static String chatReview(String name) => 'assets/images/$name.png';
+  static String chatReviewSelected(String name) =>
+      'assets/images/${name}_selected.png';
+
+  static String get chatReviewLetter => 'assets/images/chat_review_letter.png';
+
+  static String get starSelected => 'assets/images/star_selected.png';
+  static String get star => 'assets/images/star.png';
 }

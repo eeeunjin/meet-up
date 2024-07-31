@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_up/repository/user_repository.dart';
+import 'package:intl/intl.dart';
 
 class ChatViewModel with ChangeNotifier {
   final UserRepository _userRepository = UserRepository();
@@ -14,5 +15,269 @@ class ChatViewModel with ChangeNotifier {
       uid: uid,
       findAll: true,
     );
+  }
+
+  // MARK: - 일정 등록
+  // 일정
+  String _scheduleNaming = '';
+
+  String get scheduleNaming => _scheduleNaming;
+
+  void namingContents(String newNamingCount) {
+    if (_scheduleNaming != newNamingCount) {
+      _scheduleNaming = newNamingCount;
+      notifyListeners();
+    }
+  }
+
+  // naming check
+  bool get namingCompleted {
+    return _scheduleNaming.trim().isNotEmpty;
+  }
+
+  // datePicker
+  bool _isDatePanelExpanded = false;
+
+  bool get isDatePanelExpanded => _isDatePanelExpanded;
+
+  DateTime _selectedDate;
+  DateTime get selectedDate => _selectedDate; // 선택된 날짜
+
+  // MARK: - DatePicker
+  final DateTime _start;
+  final DateTime _end;
+
+  ChatViewModel({
+    required DateTime init,
+    required DateTime start,
+    required DateTime end,
+  })  : _selectedDate = init,
+        _start = start,
+        _end = end,
+        _selectedTime = const TimeOfDay(hour: 19, minute: 30); // 타임 피커 초기화
+
+  DateTime get start => _start;
+  DateTime get end => _end;
+
+  set selectedDate(DateTime newValue) {
+    if (_selectedDate != newValue) {
+      _selectedDate = newValue;
+      notifyListeners();
+    }
+  }
+
+  void updateDate(DateTime date) {
+    if (_selectedDate != date) {
+      _selectedDate = date;
+      notifyListeners();
+    }
+  }
+
+  // 연도 업데이트
+  void updateYear(int year) {
+    if (_selectedDate.year != year) {
+      _selectedDate = DateTime(year, _selectedDate.month, _selectedDate.day);
+      notifyListeners();
+    }
+  }
+
+  // 월 업데이트
+  void updateMonth(int month) {
+    if (_selectedDate.month != month) {
+      _selectedDate = DateTime(_selectedDate.year, month, _selectedDate.day);
+      notifyListeners();
+    }
+  }
+
+  // 일 업데이트
+  void updateDay(int day) {
+    if (_selectedDate.day != day) {
+      _selectedDate = DateTime(_selectedDate.year, _selectedDate.month, day);
+      notifyListeners();
+    }
+  }
+
+  List<int> getYearList() {
+    return List<int>.generate(
+        end.year - start.year + 1, (index) => start.year + index);
+  }
+
+  List<int> getMonthList() {
+    if (selectedDate.year == end.year) {
+      return List<int>.generate(end.month, (index) => index + 1);
+    } else {
+      return List<int>.generate(12, (index) => index + 1);
+    }
+  }
+
+  List<int> getDayList() {
+    DateTime lastDateOfMonth =
+        DateTime(selectedDate.year, selectedDate.month + 1, 0);
+    if (selectedDate.year == end.year && selectedDate.month == end.month) {
+      return List<int>.generate(end.day, (index) => index + 1);
+    }
+    return List<int>.generate(lastDateOfMonth.day, (index) => index + 1);
+  }
+
+  // 요일 계산 메서드
+  String getDayOfWeek(DateTime date) {
+    final DateFormat formatter = DateFormat.EEEE('ko');
+    return formatter.format(date);
+  }
+
+  // ExpansionPanel 토글
+  void toggleDatePanel() {
+    _isDatePanelExpanded = !_isDatePanelExpanded; // 상태 반전
+    notifyListeners();
+  }
+
+  // MARK: - timePicker
+  bool _isTimePanelExpanded = false;
+
+  // 선택된 시간 초기화
+  TimeOfDay _selectedTime;
+
+  bool get isTimePanelExpanded => _isTimePanelExpanded;
+  TimeOfDay get selectedTime => _selectedTime;
+
+  // ExpansionPanel 토글
+  void toggleTimePanel() {
+    _isTimePanelExpanded = !_isTimePanelExpanded;
+    notifyListeners();
+  }
+
+  void updateTime(TimeOfDay newTime) {
+    if (_selectedTime != newTime) {
+      _selectedTime = newTime;
+      notifyListeners();
+    }
+  }
+
+  // String getFormattedTime() {
+  //   final period = _selectedTime.period == DayPeriod.am ? '오전' : '오후';
+  //   final hour = _selectedTime.hourOfPeriod.toString().padLeft(2, '0');
+  //   final minute = _selectedTime.minute.toString().padLeft(2, '0');
+  //   return '$period $hour:$minute';
+  // }
+
+  String formatTime(TimeOfDay time) {
+    final hour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
+    final period = time.period == DayPeriod.am ? '오전' : '오후';
+    final minute = time.minute.toString().padLeft(2, '0');
+    return '$period $hour:$minute';
+  }
+
+  // MARK: - check
+
+  bool get allCheckCompleted {
+    return namingCompleted;
+  }
+
+  // MARK: - 공지 온보딩
+  bool _isChecked = false;
+
+  bool get isChecked => _isChecked;
+
+  void toggleChecked() {
+    _isChecked = !_isChecked;
+    notifyListeners();
+  }
+// MARK: - 만남 후기
+
+  int _rating = 0;
+  int get rating => _rating;
+
+  Map<String, bool> selectedChips = {
+    'chatReview1': false,
+    'chatReview2': false,
+    'chatReview3': false,
+    'chatReview4': false,
+    'chatReview5': false,
+    'chatReview6': false,
+    'chatReview7': false,
+    'chatReview8': false,
+    'chatReview9': false,
+    'chatReview10': false,
+    'chatReview11': false,
+    'chatReview12': false,
+  };
+
+// 별점
+  void setRating(int rating) {
+    _rating = rating;
+    checkReviewCompletion();
+    notifyListeners();
+  }
+
+// 이미지칩을 선택/해제
+  void toggleChip(String chipName) {
+    if (selectedChips.containsKey(chipName)) {
+      selectedChips[chipName] = !selectedChips[chipName]!;
+      checkReviewCompletion();
+      notifyListeners();
+    }
+  }
+
+// 코멘트 설정
+  void setComment(String comment) {
+    _comment = comment;
+    checkReviewCompletion();
+    notifyListeners();
+  }
+
+// 별점에 따른 이미지 리스트 반환
+  List<String> get images {
+    if (_rating >= 3) {
+      return [
+        'chatReview1',
+        'chatReview2',
+        'chatReview3',
+        'chatReview4',
+        'chatReview5',
+        'chatReview6'
+      ];
+    } else {
+      return [
+        'chatReview7',
+        'chatReview8',
+        'chatReview9',
+        'chatReview10',
+        'chatReview11',
+        'chatReview12'
+      ];
+    }
+  }
+
+// 이미지칩이 선택되었는지
+  bool isSelected(String chipName) {
+    return selectedChips[chipName] ?? false;
+  }
+
+  int _currentPage = 0;
+  int get currentPage => _currentPage;
+
+  String _comment = '';
+  String get comment => _comment;
+
+// 다음 페이지로 이동
+  void nextPage() {
+    _currentPage++;
+    if (_currentPage < 3) {
+      _rating = 0;
+      selectedChips.updateAll((key, value) => false);
+      _comment = '';
+    }
+    notifyListeners();
+  }
+
+  bool get isReviewComplete {
+    return rating > 0 &&
+        selectedChips.values.any((isSelected) => isSelected) &&
+        comment.length >= 20 &&
+        comment.length <= 100;
+  }
+
+  void checkReviewCompletion() {
+    notifyListeners();
   }
 }

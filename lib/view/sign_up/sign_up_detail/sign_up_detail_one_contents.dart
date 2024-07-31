@@ -160,8 +160,7 @@ class SignUpDetailOneContents extends StatelessWidget {
     final DateTime initialDate = viewModel.selectedDate;
 
     void onDateChange(DateTime newDate) {
-      viewModel.updateDate(
-          newDate); // This will notify all the listeners about date change.
+      viewModel.updateDate(newDate);
     }
 
     return Padding(

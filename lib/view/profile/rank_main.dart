@@ -101,7 +101,7 @@ class RankMain extends StatelessWidget {
       case "ham":
         path = ImagePath.hamSelect;
       case "aengmu":
-        path = ImagePath.aengmuSelect;
+        path = ImagePath.annumSelect;
     }
 
     return Container(
