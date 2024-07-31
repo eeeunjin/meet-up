@@ -301,7 +301,7 @@ class ChatScheduleHost extends StatelessWidget {
             style:
                 AppTextStyles.PR_M_16.copyWith(color: UsedColor.charcoal_black),
           ),
-          SizedBox(width: 16.w),
+          SizedBox(width: 22.w),
           Expanded(
             child: Container(
               alignment: Alignment.center,
@@ -314,7 +314,7 @@ class ChatScheduleHost extends StatelessWidget {
                   hintText: '만남 장소를 입력해주세요',
                   hintStyle: TextStyle(color: UsedColor.text_5),
                 ),
-                style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
+                style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_1),
               ),
             ),
           ),
