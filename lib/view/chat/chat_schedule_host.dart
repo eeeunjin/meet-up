@@ -264,6 +264,7 @@ class ChatScheduleHost extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.only(top: 8.0.h, left: 70.w, bottom: 34.h),
                 child: Container(
+                  alignment: Alignment.center,
                   width: 279.w,
                   height: 132.h,
                   decoration: BoxDecoration(
@@ -271,12 +272,10 @@ class ChatScheduleHost extends StatelessWidget {
                     border: Border.all(width: 1.w, color: UsedColor.b_line),
                   ),
                   // 타임 피커 넣기
-                  child: Center(
-                    child: ScheduleTimePicker(
-                      onTimeChanged: (TimeOfDay time) {
-                        viewModel.updateTime(time);
-                      },
-                    ),
+                  child: ScheduleTimePicker(
+                    onTimeChanged: (TimeOfDay time) {
+                      viewModel.updateTime(time);
+                    },
                   ),
                 ),
               ),
