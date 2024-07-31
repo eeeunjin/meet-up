@@ -18,7 +18,7 @@ class ScheduleTimePicker extends StatelessWidget {
     return Stack(
       children: [
         Positioned(
-            top: (132.h - 24.h) / 2 + 3.h,
+            top: (132.h - 29.h) / 2,
             left: 12.w,
             right: 12.w,
             child: Container(

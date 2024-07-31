@@ -104,6 +104,7 @@ class ChatScheduleHost extends StatelessWidget {
     );
   }
 
+  // MARK: - 일정 등록
   Widget _naming(BuildContext context) {
     final viewModel = Provider.of<ChatViewModel>(context);
 
@@ -122,7 +123,7 @@ class ChatScheduleHost extends StatelessWidget {
             style:
                 AppTextStyles.PR_M_16.copyWith(color: UsedColor.charcoal_black),
           ),
-          SizedBox(width: 16.w),
+          SizedBox(width: 22.w),
           Expanded(
             child: Container(
               alignment: Alignment.center,
