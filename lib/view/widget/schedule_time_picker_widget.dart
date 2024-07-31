@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meet_up/view_model/chat/chat_view_model.dart';
@@ -18,7 +19,7 @@ class ScheduleTimePicker extends StatelessWidget {
     return Stack(
       children: [
         Positioned(
-            top: (132.h - 29.h) / 2,
+            top: (132.h - 40.h) / 2,
             left: 12.w,
             right: 12.w,
             child: Container(
@@ -31,19 +32,16 @@ class ScheduleTimePicker extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            IntrinsicWidth(
-              child: Container(
-                width: 90.w,
-                alignment: Alignment.centerRight,
-                child: _TimePicker(
-                  items: List<int>.generate(24, (index) => index),
-                  initialItem: viewModel.selectedTime.hour,
-                  onChanged: (int hour) {
-                    viewModel.updateTime(TimeOfDay(
-                        hour: hour, minute: viewModel.selectedTime.minute));
-                  },
-                  type: 'hour',
-                ),
+            SizedBox(
+              width: 50.w,
+              child: _TimePicker(
+                items: List<int>.generate(24, (index) => index),
+                initialItem: viewModel.selectedTime.hour,
+                onChanged: (int hour) {
+                  viewModel.updateTime(TimeOfDay(
+                      hour: hour, minute: viewModel.selectedTime.minute));
+                },
+                type: 'hour',
               ),
             ),
             SizedBox(width: 30.w),
