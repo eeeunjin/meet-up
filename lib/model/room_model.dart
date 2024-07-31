@@ -107,6 +107,9 @@ class FilterInfo {
   String? uid;
   String? type;
 
+  // 채팅 방 필터
+  DocumentReference? room_reference;
+
   FilterInfo({
     this.room_category,
     this.room_category_detail,
@@ -117,5 +120,6 @@ class FilterInfo {
     this.room_rules,
     this.uid,
     this.type,
+    this.room_reference,
   });
 }

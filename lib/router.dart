@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/loginFunc.dart';
+import 'package:meet_up/model/chat_room_model.dart';
 import 'package:meet_up/view/chat/chat_main.dart';
+import 'package:meet_up/view/chat/chat_room.dart';
 import 'package:meet_up/view/coin/coin_buy.dart';
 import 'package:meet_up/view/coin/coin_buy_success.dart';
 import 'package:meet_up/view/coin/coin_main.dart';
@@ -300,6 +302,14 @@ final router = GoRouter(
           path: '/chatMain',
           builder: (context, state) => const ChatMain(),
           parentNavigatorKey: shellNavkey,
+          routes: [
+            GoRoute(
+              path: 'chatRoom',
+              name: 'chatRoom',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) => const ChatRoom(),
+            ),
+          ],
         ),
         // Schedule
         GoRoute(

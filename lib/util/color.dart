@@ -40,4 +40,7 @@ class UsedColor {
 
   //surface
   static Color image_card = const Color(0xfff1f3fd);
+
+  //chat
+  static Color chat = const Color(0xfff0f4ff);
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/util/color.dart';
 import 'package:meet_up/view/widget/dob_date_picker_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view/widget/province_district_picker_widget.dart';
@@ -47,7 +48,7 @@ class SignUpDetailOneContents extends StatelessWidget {
             },
             enable: viewModel.selectedAllComponents,
             backgroundColor: viewModel.selectedAllComponents
-                ? Colors.green
+                ? UsedColor.button
                 : const Color(0xFFD9D9D9),
             textStyle: TextStyle(
               color:
@@ -90,12 +91,12 @@ class SignUpDetailOneContents extends StatelessWidget {
                       height: 50.h,
                       decoration: BoxDecoration(
                         color: viewModel.selectedGender == Gender.female
-                            ? const Color(0xFF7C4DFF)
+                            ? UsedColor.button
                             : Colors.white,
                         borderRadius: BorderRadius.circular(19.r),
                         border: Border.all(
                             color: viewModel.selectedGender == Gender.female
-                                ? const Color(0xFF7C4DFF)
+                                ? UsedColor.button
                                 : const Color(0xFFD2D8F8),
                             width: 2.5.w),
                       ),
@@ -121,12 +122,12 @@ class SignUpDetailOneContents extends StatelessWidget {
                       height: 50.h,
                       decoration: BoxDecoration(
                         color: viewModel.selectedGender == Gender.male
-                            ? const Color(0xFF7C4DFF)
+                            ? UsedColor.button
                             : Colors.white,
                         borderRadius: BorderRadius.circular(19.r),
                         border: Border.all(
                             color: viewModel.selectedGender == Gender.male
-                                ? const Color(0xFF7C4DFF)
+                                ? UsedColor.button
                                 : const Color(0xFFD2D8F8),
                             width: 2.5.w),
                       ),
@@ -235,13 +236,13 @@ class SignUpDetailOneContents extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: viewModel.selectedAffiliation ==
                                     Affiliation.student
-                                ? const Color(0xFF7C4DFF)
+                                ? UsedColor.button
                                 : Colors.white,
                             borderRadius: BorderRadius.circular(19.r),
                             border: Border.all(
                               color: viewModel.selectedAffiliation ==
                                       Affiliation.student
-                                  ? const Color(0xFF7C4DFF)
+                                  ? UsedColor.button
                                   : const Color(0xFFD2D8F8),
                               width: 2.5.w,
                             ),
@@ -271,13 +272,13 @@ class SignUpDetailOneContents extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: viewModel.selectedAffiliation ==
                                     Affiliation.employee
-                                ? const Color(0xFF7C4DFF)
+                                ? UsedColor.button
                                 : Colors.white,
                             borderRadius: BorderRadius.circular(19.r),
                             border: Border.all(
                               color: viewModel.selectedAffiliation ==
                                       Affiliation.employee
-                                  ? const Color(0xFF7C4DFF)
+                                  ? UsedColor.button
                                   : const Color(0xFFD2D8F8),
                               width: 2.5.w,
                             ),
@@ -311,13 +312,13 @@ class SignUpDetailOneContents extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: viewModel.selectedAffiliation ==
                                     Affiliation.freelancer
-                                ? const Color(0xFF7C4DFF)
+                                ? UsedColor.button
                                 : Colors.white,
                             borderRadius: BorderRadius.circular(19.r),
                             border: Border.all(
                               color: viewModel.selectedAffiliation ==
                                       Affiliation.freelancer
-                                  ? const Color(0xFF7C4DFF)
+                                  ? UsedColor.button
                                   : const Color(0xFFD2D8F8),
                               width: 2.5.w,
                             ),
@@ -347,13 +348,13 @@ class SignUpDetailOneContents extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: viewModel.selectedAffiliation ==
                                     Affiliation.unemployed
-                                ? const Color(0xFF7C4DFF)
+                                ? UsedColor.button
                                 : Colors.white,
                             borderRadius: BorderRadius.circular(19.r),
                             border: Border.all(
                               color: viewModel.selectedAffiliation ==
                                       Affiliation.unemployed
-                                  ? const Color(0xFF7C4DFF)
+                                  ? UsedColor.button
                                   : const Color(0xFFD2D8F8),
                               width: 2.5.w,
                             ),

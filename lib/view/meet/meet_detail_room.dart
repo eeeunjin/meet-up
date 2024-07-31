@@ -8,6 +8,7 @@ import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
+import 'package:meet_up/view_model/bot_nav_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/meet/meet_manage_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_detail_room_view_model.dart';
@@ -571,6 +572,8 @@ class MeetDetailRoom extends StatelessWidget {
     final meetDetailRoomViewModel =
         Provider.of<MeetDetailRoomViewModel>(context, listen: false);
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final botNavBarViewModel =
+        Provider.of<BottomNavigationBarViewModel>(context, listen: false);
     return Padding(
       padding: EdgeInsets.only(bottom: 56.h, left: 6.w, right: 6.w),
       child: GestureDetector(
@@ -582,16 +585,43 @@ class MeetDetailRoom extends StatelessWidget {
             if (context.mounted) context.pop();
           }
         },
-        child: Container(
-          width: 327.w,
-          height: 56.h,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(19.r),
-              color: UsedColor.charcoal_black),
-          child: Center(
-            child: Text(
-              meetDetailRoomViewModel.isMyRoom! ? '삭제' : '참여하기',
-              style: AppTextStyles.PR_SB_20.copyWith(color: Colors.white),
+        child: GestureDetector(
+          onTap: () async {
+            logger.d('참여하기 버튼이 눌렸습니다.');
+            // 1. 해당 room 정보 update
+            await meetDetailRoomViewModel.updateRoomInfo(
+                myUid: userViewModel.uid!,
+                participants: meetDetailRoomViewModel
+                    .currentRoomModel!.room_participant_reference,
+                roomId: meetDetailRoomViewModel.currentRoomModel!.roomId);
+
+            // 2. myRoom에 참여한 방 정보 추가
+            await meetDetailRoomViewModel.addMyRoomInfo(
+              myUid: userViewModel.uid!,
+              roomId: meetDetailRoomViewModel.currentRoomModel!.roomId,
+            );
+
+            // // 3. 이전에 들어온 탭 전부 pop
+            // if (context.mounted) {
+            //   while (context.canPop()) {
+            //     context.pop();
+            //   }
+            // }
+
+            // // 4. 채팅 탭으로 이동
+            // botNavBarViewModel.changeIndex(1);
+          },
+          child: Container(
+            width: 327.w,
+            height: 56.h,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(19.r),
+                color: UsedColor.charcoal_black),
+            child: Center(
+              child: Text(
+                meetDetailRoomViewModel.isMyRoom! ? '삭제' : '참여하기',
+                style: AppTextStyles.PR_SB_20.copyWith(color: Colors.white),
+              ),
             ),
           ),
         ),

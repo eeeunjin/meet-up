@@ -1,0 +1,565 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:meet_up/main.dart';
+import 'package:meet_up/model/chat_room_model.dart';
+import 'package:meet_up/model/user_model.dart';
+import 'package:meet_up/util/color.dart';
+import 'package:meet_up/util/font.dart';
+import 'package:meet_up/util/image.dart';
+import 'package:meet_up/view_model/chat/chat_room_view_model.dart';
+import 'package:meet_up/view_model/meet/header_widget.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
+import 'package:provider/provider.dart';
+
+class ChatRoom extends StatelessWidget {
+  const ChatRoom({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: 58.h,
+            ),
+            child: _header(context),
+          ),
+          Expanded(
+            child: Container(
+              width: 1.sw,
+              color: Colors.white,
+              child: _main(context),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // header
+  Widget _header(BuildContext context) {
+    return Center(
+      child: Column(
+        children: [
+          Stack(
+            children: [
+              header(
+                title: '초보 클밍 모임',
+                back: _back(context),
+              ),
+              Positioned(
+                right: 11.w,
+                child: GestureDetector(
+                  onTap: () {
+                    logger.d("옵션 버튼이 눌렸습니다");
+                  },
+                  child: Image.asset(
+                    ImagePath.chatRoomMoreOptionButton,
+                    width: 28.h,
+                    height: 28.h,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 16.h,
+          ),
+          Divider(
+            thickness: 0.3.h,
+            height: 0.h,
+            color: UsedColor.line,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _back(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        context.pop();
+      },
+      child: Image.asset(
+        ImagePath.back,
+        width: 10.w,
+        height: 20.h,
+      ),
+    );
+  }
+
+  Widget _main(BuildContext context) {
+    return Column(
+      children: [
+        _chatListView(context),
+        _typeMessageBox(context),
+      ],
+    );
+  }
+
+  Widget _chatListView(BuildContext context) {
+    final chatRoomViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: chatRoomViewModel.getChatStream(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        if (snapshot.error != null) {
+          return const Center(
+            child: Text("에러가 발생했습니다."),
+          );
+        }
+
+        final chatListDocs = snapshot.data!.docs;
+        // chatListDocs의 정보를 ChatModel로 변환
+        final chatModels = chatListDocs
+            .map((chatDoc) =>
+                ChatModel.fromJson(chatDoc.data() as Map<String, dynamic>))
+            .toList();
+
+        // chatModels를 시간 순으로 정렬
+        chatModels.sort((a, b) => a.date.compareTo(b.date));
+
+        // chatModels를 [String(~년 ~월 ~일), ChatModel]으로 변환, DateFormat을 사용하여 날짜 변환
+        final chatModelsGroupByDate = <String, List<ChatModel>>{};
+        for (var chatModel in chatModels) {
+          final date = chatModel.date.toDate();
+          final dateString = "${date.year}년 ${date.month}월 ${date.day}일";
+          if (chatModelsGroupByDate[dateString] == null) {
+            chatModelsGroupByDate[dateString] = [];
+          }
+          chatModelsGroupByDate[dateString]!.add(chatModel);
+        }
+
+        return Expanded(
+          child: GestureDetector(
+            onTap: () {
+              // 키보드 내리기
+              chatRoomViewModel.setStartEdit(false);
+              FocusScope.of(context).unfocus();
+            },
+            child: Container(
+              color: Colors.white,
+              child: Column(
+                children: [
+                  SizedBox(height: 20.h),
+                  Container(
+                    width: 357.w,
+                    height: 31.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.5.r),
+                      color: UsedColor.image_card,
+                    ),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 12.w,
+                        ),
+                        Image.asset(
+                          ImagePath.chatRoomNoticeImage,
+                          width: 20.w,
+                          height: 20.h,
+                        ),
+                        SizedBox(
+                          width: 6.14.w,
+                        ),
+                        Text(
+                          "채팅 시 주의 사항",
+                          style: AppTextStyles.PR_SB_15.copyWith(
+                            color: UsedColor.charcoal_black,
+                          ),
+                        ),
+                        const Spacer(),
+                        Image.asset(
+                          ImagePath.chatRoomChevronRightImage,
+                          width: 6.25.w,
+                          height: 12.5.h,
+                        ),
+                        SizedBox(
+                          width: 14.37.w,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: SingleChildScrollView(
+                        reverse: true,
+                        controller: chatRoomViewModel.scrollController,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ...chatModelsGroupByDate.keys.map(
+                              (key) {
+                                return Column(
+                                  children: [
+                                    SizedBox(height: 20.h),
+                                    Container(
+                                      width: 110.w,
+                                      height: 23.h,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(11.5.r),
+                                        color: UsedColor.chat,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          key,
+                                          style: AppTextStyles.PR_R_11.copyWith(
+                                            color: UsedColor.text_4,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 20.h),
+                                    // chatModelsGroupByDate[key]의 ChatModel 별로 chatBox 생성
+                                    ...chatModelsGroupByDate[key]!.map(
+                                      (chatModel) {
+                                        final isMyChat =
+                                            chatModel.uid == userViewModel.uid;
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                            bottom: 20.h,
+                                          ),
+                                          child: _chatBox(
+                                            context,
+                                            isMyChat: isMyChat,
+                                            chatModel: chatModel,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _chatBox(BuildContext context,
+      {required bool isMyChat, required ChatModel chatModel}) {
+    final chatRoomViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
+    // 채팅 라인 수에 맞춘 높이 계산
+    final lineNum = chatRoomViewModel.calculateLineCount(
+        chatModel.content, 240.w, AppTextStyles.PR_R_12);
+
+    final height = ((isMyChat) ? 30.h : 51.h) + (lineNum - 1) * 14.h;
+    final chatBoxHeight = isMyChat ? 0.h : 30.h + (lineNum - 1) * 14.h;
+
+    // 채팅 길이에 맞춘 너비 계산
+    // 1. 채팅 내용을 줄바꿈으로 나누기
+    final contentSplited = chatModel.content.split('\n');
+    // 2. 채팅 내용 중 가장 긴 너비 계산
+    var limitWidth = 198.w;
+    var maxWidth = 0.w;
+    for (var content in contentSplited) {
+      final width =
+          chatRoomViewModel.calculateTextWidth(content, AppTextStyles.PR_R_12);
+      if (width > maxWidth) maxWidth = width;
+    }
+    if (maxWidth > limitWidth) maxWidth = limitWidth;
+    // 3. 채팅 박스 너비 계산
+    final chatBoxWidth = maxWidth + 28.w;
+    // 4. 채팅 보낸 시간 계산
+    final sendTime = chatModel.date.toDate();
+    final sendTimeHour = sendTime.hour % 12;
+    final sendTimeMinute =
+        sendTime.minute < 10 ? "0${sendTime.minute}" : sendTime.minute;
+    final sendTimeString =
+        '${sendTime.hour > 12 ? '오후' : '오전'} $sendTimeHour:$sendTimeMinute';
+
+    // 다른 사람의 채팅인 경우 해당 유저 정보 불러오기
+    UserModel? otherUser;
+    if (!isMyChat) {
+      otherUser = chatRoomViewModel.userModels
+          .where((element) => element.nickname == chatModel.nickName)
+          .first;
+    }
+
+    if (isMyChat) {
+      return SizedBox(
+        width: 393.w,
+        height: height,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              sendTimeString,
+              style: AppTextStyles.PR_M_10.copyWith(color: UsedColor.text_3),
+            ),
+            SizedBox(
+              width: 4.w,
+            ),
+            Container(
+              width: chatBoxWidth,
+              height: height,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14.r),
+                color: UsedColor.main,
+              ),
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: 12.w,
+                    right: 12.w,
+                    top: 8.h,
+                    bottom: 8.h,
+                  ),
+                  child: Text(
+                    chatModel.content,
+                    style: AppTextStyles.PR_R_12.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 28.w),
+          ],
+        ),
+      );
+    } else {
+      return SizedBox(
+        width: 393.w,
+        height: height,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 28.h,
+            ),
+            Image.asset(
+              otherUser!.profile_icon,
+              width: 45.h,
+              height: 45.h,
+            ),
+            SizedBox(
+              width: 11.h,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  otherUser.nickname,
+                  style: AppTextStyles.PR_SB_13.copyWith(
+                    color: UsedColor.charcoal_black,
+                  ),
+                ),
+                SizedBox(
+                  height: 4.h,
+                ),
+                Container(
+                  width: chatBoxWidth,
+                  height: chatBoxHeight,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14.r),
+                    color: UsedColor.chat,
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        left: 12.w,
+                        right: 12.w,
+                        top: 8.h,
+                        bottom: 8.h,
+                      ),
+                      child: Text(
+                        chatModel.content,
+                        style: AppTextStyles.PR_R_12.copyWith(
+                          color: UsedColor.charcoal_black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(width: 4.w),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    logger.d("[${otherUser!.nickname}]님에 대한 신고 버튼이 눌렸습니다.");
+                  },
+                  child: Image.asset(
+                    ImagePath.chatRoomDeclarationButton,
+                    height: 19.h,
+                    width: 19.h,
+                  ),
+                ),
+                Text(
+                  sendTimeString,
+                  style: AppTextStyles.PR_M_10.copyWith(
+                    color: UsedColor.text_3,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Widget _typeMessageBox(BuildContext context) {
+    return Consumer<ChatRoomViewModel>(
+      builder: (context, chatRoomViewModel, child) {
+        var additionalHeight =
+            ((chatRoomViewModel.lineNum > 5 ? 5 : chatRoomViewModel.lineNum) -
+                    1) *
+                12.h;
+        if (chatRoomViewModel.lineNum == 0) additionalHeight = 0;
+        return SizedBox(
+          height:
+              (chatRoomViewModel.startEdit ? 70.h : 106.h) + additionalHeight,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Divider(
+                thickness: 0.5.h,
+                height: 0.h,
+                color: UsedColor.line,
+              ),
+              SizedBox(height: 16.h),
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 16.w, right: 16.w),
+                    child: Container(
+                      width: chatRoomViewModel.startEdit ? 296.w : 357.w,
+                      height: 38.h + additionalHeight,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(19.r),
+                        color: UsedColor.bg_color,
+                      ),
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 4.h),
+                          child: TextField(
+                            textAlignVertical: TextAlignVertical.top,
+                            cursorColor: UsedColor.main,
+                            // cursorHeight: 18.h,
+                            controller: chatRoomViewModel.messageController,
+                            maxLines: null,
+                            onTap: () {
+                              chatRoomViewModel.setStartEdit(true);
+                            },
+                            onEditingComplete: () {
+                              // 키보드에서 완료 누를 때 키보드 내려가지 않도록 막기
+                            },
+                            onChanged: (value) {
+                              final lineNum =
+                                  chatRoomViewModel.calculateLineCount(
+                                      value, 240.w, AppTextStyles.PR_R_13);
+                              chatRoomViewModel.setLineNum(lineNum);
+                            },
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.only(
+                                left: 22.w,
+                                right: 22.w,
+                                bottom: (chatRoomViewModel.lineNum == 1 ||
+                                        chatRoomViewModel.lineNum == 0)
+                                    ? 16.h
+                                    : 4.h,
+                              ),
+                              hintText: '메시지를 입력해주세요',
+                              hintStyle: AppTextStyles.PR_R_13
+                                  .copyWith(color: UsedColor.text_3),
+                              border: InputBorder.none,
+                            ),
+                            style: AppTextStyles.PR_R_13
+                                .copyWith(color: UsedColor.text_3),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (chatRoomViewModel.startEdit) ...[
+                    GestureDetector(
+                      onTap: () async {
+                        // 채탱이 입력되어 채팅 리스트에 채팅 항목 생 후 List Rebuild
+                        final message =
+                            chatRoomViewModel.messageController.text;
+                        // 메시지가 없으면 전송하지 않음
+                        if (message.isEmpty) return;
+
+                        // 메시지가 존재하는 경우 전송
+                        logger.d(message);
+                        chatRoomViewModel.messageController.clear();
+                        chatRoomViewModel.setLineNum(0);
+
+                        // DB에 채팅 데이터 저장
+                        final userViewModel =
+                            Provider.of<UserViewModel>(context, listen: false);
+
+                        final chatModel = ChatModel(
+                          uid: userViewModel.uid!,
+                          nickName: userViewModel.userModel!.nickname,
+                          content: message,
+                          date: Timestamp.now(),
+                          room_id: chatRoomViewModel.roomID,
+                        );
+
+                        // 채팅 정보를 전달
+                        await chatRoomViewModel.createChatDocument(chatModel);
+
+                        // 채팅 리스트를 최하단으로 이동
+                        chatRoomViewModel.scrollToBottom();
+                      },
+                      child: Container(
+                        width: 49.w,
+                        height: 38.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(19.r),
+                          color: UsedColor.image_card,
+                        ),
+                        child: Center(
+                          child: Image.asset(
+                            ImagePath.chatRoomSendMessageButton,
+                            width: 19.53.w,
+                            height: 16.31.h,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}

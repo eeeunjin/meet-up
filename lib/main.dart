@@ -10,6 +10,7 @@ import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/router.dart';
 import 'package:meet_up/service/remote/firebase_options.dart';
 import 'package:meet_up/view_model/bot_nav_view_model.dart';
+import 'package:meet_up/view_model/chat/chat_room_view_model.dart';
 import 'package:meet_up/view_model/chat/chat_view_model.dart';
 import 'package:meet_up/view_model/coin/coin_buy_view_model.dart';
 import 'package:meet_up/view_model/coin/coin_ticket_purchase_history_view_model.dart';
@@ -82,6 +83,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ScheduleMainViewModel()),
         ChangeNotifierProvider(create: (context) => UserViewModel()),
         ChangeNotifierProvider(create: (context) => ChatViewModel()),
+        ChangeNotifierProvider(create: (context) => ChatRoomViewModel()),
         ChangeNotifierProvider(create: (context) => MeetUserInfoViewModel()),
         ChangeNotifierProvider(create: (context) => CoinBuyViewModel()),
         ChangeNotifierProvider(create: (context) => TicketBuyViewModel()),

@@ -97,4 +97,45 @@ class MeetDetailRoomViewModel with ChangeNotifier {
         return "(여성 ${2 - womanCount}자리, 남성 ${2 - manCount}자리 남음)";
     }
   }
+
+  Future<void> updateRoomInfo(
+      {required String myUid,
+      required List<dynamic> participants,
+      required roomId}) async {
+    try {
+      final participantList = participants;
+      participantList.add(FirebaseFirestore.instance.collection('users').doc(myUid));
+
+      final data = {
+        'room_participant_reference': participantList,
+      };
+
+      await _roomRepository.updateRoomDocument(
+        roomId: roomId,
+        data: data,
+      );
+    } catch (e) {
+      logger.e("방 정보 추가 중 에러가 발생하였습니다. $e");
+    }
+  }
+
+  Future<void> addMyRoomInfo(
+      {required String myUid, required String roomId}) async {
+    try {
+      // 유저의 방 정보 생성
+      MyRoomModel myRoomModel = MyRoomModel(
+        isMyRoom: false,
+        room_reference:
+            FirebaseFirestore.instance.collection('rooms').doc(roomId),
+      );
+      // 유저의 방 정보 저장
+      await _userRepository.createMyRoomDocument(
+        data: myRoomModel,
+        uid: myUid,
+        roomId: roomId,
+      );
+    } catch (e) {
+      logger.e("방 정보 추가 중 에러가 발생하였습니다. $e");
+    }
+  }
 }

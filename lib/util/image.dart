@@ -60,6 +60,20 @@ class ImagePath {
   static String get crownIcon => 'assets/images/crown_icon.png';
   static String get reportIcon => 'assets/images/report_icon.png';
 
+  // MARK: - Chat
+  static String get chatRoomDeclarationButton =>
+      "assets/images/chat_room_declaration_button.png";
+  static String get chatRoomMoreOptionButton =>
+      "assets/images/chat_room_more_option_button.png";
+  static String get chatRoomNoticeImage =>
+      "assets/images/chat_room_notice_image.png";
+  static String get chatRoomOwnerCrownImage =>
+      "assets/images/chat_room_owner_crown_image.png";
+  static String get chatRoomSendMessageButton =>
+      "assets/images/chat_room_send_message_button.png";
+  static String get chatRoomChevronRightImage =>
+      "assets/images/chat_room_chevron_right_image.png";
+
   // MARK: - bot_nav
   static String get meetOn => 'assets/images/bot_nav_meet_on.png';
   static String get meetOff => 'assets/images/bot_nav_meet_off.png';
@@ -114,7 +128,8 @@ class ImagePath {
   // MARK: - coin
   static String get plusButton => 'assets/images/plus_button.png';
   static String get minusButton => 'assets/images/minus_button.png';
-  static String get purchaseCompleteIcon => 'assets/images/purchase_complete_icon.png';
+  static String get purchaseCompleteIcon =>
+      'assets/images/purchase_complete_icon.png';
 
   // MARK: - rank
   static String get rankMasterOn => 'assets/images/rank_master_on.png';

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_up/main.dart';
+import 'package:meet_up/model/chat_room_model.dart';
 import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
@@ -22,6 +23,8 @@ class FirebaseRefs {
   CollectionReference colRefRoom = FirebaseInstance.db.collection("rooms");
   CollectionReference colRefGoodHistory =
       FirebaseInstance.db.collection("goodHistories");
+  CollectionReference colRefChatRoom =
+      FirebaseInstance.db.collection("chatRooms");
 }
 
 ///
@@ -287,6 +290,14 @@ class FirebaseCRUD {
         } else if (T == GoodHistoryModel) {
           GoodHistoryModel goodHistory = data as GoodHistoryModel;
           await docRef.set(goodHistory.toJson());
+          return true;
+        } else if (T == ChatRoomModel) {
+          ChatRoomModel chatRoom = data as ChatRoomModel;
+          await docRef.set(chatRoom.toJson());
+          return true;
+        } else if (T == ChatModel) {
+          ChatModel chat = data as ChatModel;
+          await docRef.set(chat.toJson());
           return true;
         } else {
           // 지정하지 않은 모델인 경우 에러 반환

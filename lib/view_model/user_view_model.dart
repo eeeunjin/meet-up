@@ -46,6 +46,7 @@ class UserViewModel with ChangeNotifier {
 
   // MARK: - 로그인 & 회원가입 & 로그아웃 & 탈퇴
 
+  // MARK: - 내 정보
   // 로그인이 된 경우, 유저 정보를 불러오는 함수
   Future<void> loadUserModel() async {
     // 처음 한번만 불러오도록 함
@@ -107,8 +108,6 @@ class UserViewModel with ChangeNotifier {
       throw Exception("Error: $e");
     }
   }
-
-  // MARK: - 전처리 함수
 
   // 나이대 구하는 함수
   String getAgeRange() {

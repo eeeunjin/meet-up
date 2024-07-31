@@ -1,15 +1,16 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:meet_up/main.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
+import 'package:meet_up/view_model/chat/chat_room_view_model.dart';
 import 'package:meet_up/view_model/chat/chat_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
@@ -65,6 +66,8 @@ class ChatMain extends StatelessWidget {
   Widget _main(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     final chatViewModel = Provider.of<ChatViewModel>(context, listen: false);
+    final chatRoomViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 25.w),
       child: Column(
@@ -105,6 +108,7 @@ class ChatMain extends StatelessWidget {
                           },
                         ).toList() ??
                         [];
+
                 return myRoomDocumentList.isNotEmpty
                     ? Expanded(
                         child: ListView.builder(
@@ -157,81 +161,117 @@ class ChatMain extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Container(
-                                        height: 80.h,
-                                        width: 345.w,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(15.r),
-                                          color: Colors.white,
-                                        ),
-                                        child: Column(
-                                          children: [
-                                            SizedBox(
-                                              height: 17.h,
-                                            ),
-                                            Row(
-                                              children: [
-                                                SizedBox(width: 20.w),
-                                                SizedBox(
-                                                  width: 92.w,
-                                                  child: Text(
-                                                    roomModel.room_name,
-                                                    style: AppTextStyles
-                                                        .PR_SB_16
-                                                        .copyWith(
-                                                      color: UsedColor
-                                                          .charcoal_black,
+                                      GestureDetector(
+                                        onTap: () async {
+                                          logger
+                                              .d(myRoomDocumentList[index].id);
+                                          // 입장 하는 방의 상태 값 초기화
+                                          chatRoomViewModel.resetState();
+
+                                          // 입장 하려는 방에 정보 전달
+                                          chatRoomViewModel.setRoomID(
+                                              myRoomDocumentList[index].id);
+
+                                          final userRefs = roomModel
+                                              .room_participant_reference;
+
+                                          userRefs.add(
+                                              roomModel.room_owner_reference);
+
+                                          await chatRoomViewModel
+                                              .setUserModels(userRefs);
+
+                                          context.goNamed('chatRoom');
+                                        },
+                                        child: Container(
+                                          height: 80.h,
+                                          width: 345.w,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15.r),
+                                            color: Colors.white,
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 17.h,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  SizedBox(width: 20.w),
+                                                  SizedBox(
+                                                    width: 92.w,
+                                                    child: Text(
+                                                      roomModel.room_name,
+                                                      style: AppTextStyles
+                                                          .PR_SB_16
+                                                          .copyWith(
+                                                        color: UsedColor
+                                                            .charcoal_black,
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
                                                   ),
-                                                ),
-                                                SizedBox(width: 2.w),
-                                                Text(
-                                                  "${roomModel.room_participant_reference.length + 1}",
-                                                  style: AppTextStyles.PR_SB_13
-                                                      .copyWith(
-                                                          color:
-                                                              UsedColor.violet),
-                                                ),
-                                                Text(
-                                                  "/4명",
-                                                  style: AppTextStyles.PR_M_12
-                                                      .copyWith(
-                                                          color:
-                                                              UsedColor.text_5),
-                                                ),
-                                                SizedBox(width: 10.w),
-                                                // 알림 설정 상태
-                                                Container(
-                                                  height: 12.h,
-                                                  width: 12.w,
-                                                  color: UsedColor.text_6,
-                                                ),
-                                                const Spacer(),
-                                                Text(
-                                                  "${roomModel.room_creation_date.toDate().add(const Duration(days: 7)).toString().substring(0, 10).replaceAll('-', '.')} 만료",
-                                                  style: AppTextStyles.PR_M_11
-                                                      .copyWith(
-                                                    color: timeOver
-                                                        ? UsedColor.red
-                                                        : UsedColor.text_3,
+                                                  SizedBox(width: 2.w),
+                                                  Text(
+                                                    "${roomModel.room_participant_reference.length + 1}",
+                                                    style: AppTextStyles
+                                                        .PR_SB_13
+                                                        .copyWith(
+                                                            color: UsedColor
+                                                                .violet),
                                                   ),
-                                                ),
-                                                SizedBox(width: 19.w),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: 8.h,
-                                            ),
-                                            Row(
-                                              children: [
-                                                SizedBox(width: 20.w),
-                                                recentMessage.length > 18
-                                                    ? SizedBox(
-                                                        width: 186.w,
-                                                        child: Text(
+                                                  Text(
+                                                    "/4명",
+                                                    style: AppTextStyles.PR_M_12
+                                                        .copyWith(
+                                                            color: UsedColor
+                                                                .text_5),
+                                                  ),
+                                                  SizedBox(width: 10.w),
+                                                  // 알림 설정 상태
+                                                  Container(
+                                                    height: 12.h,
+                                                    width: 12.w,
+                                                    color: UsedColor.text_6,
+                                                  ),
+                                                  const Spacer(),
+                                                  Text(
+                                                    "${roomModel.room_creation_date.toDate().add(const Duration(days: 7)).toString().substring(0, 10).replaceAll('-', '.')} 만료",
+                                                    style: AppTextStyles.PR_M_11
+                                                        .copyWith(
+                                                      color: timeOver
+                                                          ? UsedColor.red
+                                                          : UsedColor.text_3,
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 19.w),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 8.h,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  SizedBox(width: 20.w),
+                                                  recentMessage.length > 18
+                                                      ? SizedBox(
+                                                          width: 186.w,
+                                                          child: Text(
+                                                            recentMessage,
+                                                            style: AppTextStyles
+                                                                .PR_R_14
+                                                                .copyWith(
+                                                              color: UsedColor
+                                                                  .text_3,
+                                                            ),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
+                                                        )
+                                                      : Text(
                                                           recentMessage,
                                                           style: AppTextStyles
                                                               .PR_R_14
@@ -242,50 +282,40 @@ class ChatMain extends StatelessWidget {
                                                           overflow: TextOverflow
                                                               .ellipsis,
                                                         ),
-                                                      )
-                                                    : Text(
-                                                        recentMessage,
+                                                  if (recentMessage.length <=
+                                                      18)
+                                                    SizedBox(width: 8.w),
+                                                  Container(
+                                                    height: 13.h,
+                                                    width: newMessageCount > 10
+                                                        ? 17.w
+                                                        : 13.w,
+                                                    padding: EdgeInsets.only(
+                                                      top: 1.h,
+                                                      right: 0.5.h,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                        6.5.r,
+                                                      ),
+                                                      color: UsedColor.main,
+                                                    ),
+                                                    child: Center(
+                                                      child: Text(
+                                                        '$newMessageCount',
                                                         style: AppTextStyles
-                                                            .PR_R_14
+                                                            .PR_SB_10
                                                             .copyWith(
-                                                          color:
-                                                              UsedColor.text_3,
+                                                          color: Colors.white,
                                                         ),
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
-                                                if (recentMessage.length <= 18)
-                                                  SizedBox(width: 8.w),
-                                                Container(
-                                                  height: 13.h,
-                                                  width: newMessageCount > 10
-                                                      ? 17.w
-                                                      : 13.w,
-                                                  padding: EdgeInsets.only(
-                                                    top: 1.h,
-                                                    right: 0.5.h,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                      6.5.r,
-                                                    ),
-                                                    color: UsedColor.main,
-                                                  ),
-                                                  child: Center(
-                                                    child: Text(
-                                                      '$newMessageCount',
-                                                      style: AppTextStyles
-                                                          .PR_SB_10
-                                                          .copyWith(
-                                                        color: Colors.white,
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                       SizedBox(height: 20.h)

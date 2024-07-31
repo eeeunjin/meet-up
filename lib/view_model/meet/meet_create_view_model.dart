@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:meet_up/model/chat_room_model.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
+import 'package:meet_up/repository/chat_repository.dart';
 import 'package:meet_up/repository/room_repository.dart';
 import 'package:meet_up/repository/user_repository.dart';
 import 'package:meet_up/service/remote/firebase_service.dart';
@@ -13,6 +15,7 @@ class MeetCreateViewModel with ChangeNotifier {
   // Room 관련 DB 동작을 하는 Repository
   final RoomRepository _roomRepository = RoomRepository();
   final UserRepository _userRepository = UserRepository();
+  final ChatRepository _chatRepository = ChatRepository();
   final FirebaseRefs _firebaseRefs = FirebaseRefs();
 
   // MARK: - naming
@@ -183,7 +186,7 @@ class MeetCreateViewModel with ChangeNotifier {
     if (_selectedMainCategories.isNotEmpty &&
         _selectedMainCategories.first == '기타') {
       return true;
-    } else if(_selectedMainCategories.isNotEmpty &&
+    } else if (_selectedMainCategories.isNotEmpty &&
         _selectedSubCategories.isNotEmpty) {
       return true;
     } else {
@@ -326,10 +329,22 @@ class MeetCreateViewModel with ChangeNotifier {
       room_reference: roomDocRef,
     );
     // 유저의 방 정보 저장
-    _userRepository.createMyRoomDocument(
+    await _userRepository.createMyRoomDocument(
       data: myRoomModel,
       uid: uid,
       roomId: roomDocRef.path.split('/').last,
+    );
+
+    // chatRoom Model 생성
+    ChatRoomModel chatRoomModel = ChatRoomModel(
+      room_reference: roomDocRef,
+      isDeleted: false,
+    );
+
+    // chatRoom 생성
+    await _chatRepository.createChatRoom(
+      chatRoomModel,
+      roomDocRef.id,
     );
   }
 
