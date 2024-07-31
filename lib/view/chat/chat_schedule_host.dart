@@ -130,14 +130,15 @@ class ChatScheduleHost extends StatelessWidget {
               height: 19.h,
               child: TextField(
                 onChanged: (text) => viewModel.namingContents(text),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
                   border: InputBorder.none,
                   hintText: '일정을 입력해주세요',
-                  hintStyle: TextStyle(color: UsedColor.text_1),
+                  hintStyle:
+                      AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_1),
                 ),
-                style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
+                style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_1),
               ),
             ),
           ),
@@ -308,12 +309,13 @@ class ChatScheduleHost extends StatelessWidget {
               alignment: Alignment.center,
               height: 19.h,
               child: TextField(
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
                   border: InputBorder.none,
                   hintText: '만남 장소를 입력해주세요',
-                  hintStyle: TextStyle(color: UsedColor.text_1),
+                  hintStyle:
+                      AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_1),
                 ),
                 style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_1),
               ),
