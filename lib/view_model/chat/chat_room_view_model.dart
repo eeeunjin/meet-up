@@ -13,9 +13,16 @@ class ChatRoomViewModel with ChangeNotifier {
   String _roomID = '';
   String get roomID => _roomID;
 
+  // 채팅 방 이름
+  String _roomName = '';
+  String get roomName => _roomName;
+
   // 방에 참가한 유저 정보
   final List<UserModel> _userModels = [];
   List<UserModel> get userModels => _userModels;
+
+  // 방 owner UID
+  UserModel get ownerUID => _userModels[0];
 
   // 채팅 메시지 입력 컨트롤러
   final TextEditingController _messageController = TextEditingController();
@@ -33,8 +40,16 @@ class ChatRoomViewModel with ChangeNotifier {
   final ScrollController _scrollController = ScrollController();
   ScrollController get scrollController => _scrollController;
 
+  // 더 보기 옵션 버튼 눌렸는지 여부
+  bool _moreOptionClicked = false;
+  bool get moreOptionClicked => _moreOptionClicked;
+
   void setRoomID(String value) {
     _roomID = value;
+  }
+
+  void setRoomName(String value) {
+    _roomName = value;
   }
 
   Future<void> setUserModels(List<dynamic> userRefs) async {
@@ -47,6 +62,11 @@ class ChatRoomViewModel with ChangeNotifier {
 
   void setStartEdit(bool value) {
     _startEdit = value;
+    notifyListeners();
+  }
+
+  void setMoreOptionClicked(bool value) {
+    _moreOptionClicked = value;
     notifyListeners();
   }
 

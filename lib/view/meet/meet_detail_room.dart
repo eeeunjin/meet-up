@@ -601,15 +601,15 @@ class MeetDetailRoom extends StatelessWidget {
               roomId: meetDetailRoomViewModel.currentRoomModel!.roomId,
             );
 
-            // // 3. 이전에 들어온 탭 전부 pop
-            // if (context.mounted) {
-            //   while (context.canPop()) {
-            //     context.pop();
-            //   }
-            // }
+            // 3. 이전에 들어온 탭 전부 pop
+            if (context.mounted) {
+              while (context.canPop()) {
+                context.pop();
+              }
+            }
 
-            // // 4. 채팅 탭으로 이동
-            // botNavBarViewModel.changeIndex(1);
+            // 4. 채팅 탭으로 이동
+            botNavBarViewModel.changeIndex(1);
           },
           child: Container(
             width: 327.w,

@@ -13,10 +13,13 @@ Widget header({required Widget? back, required title}) {
           child: back,
         ),
       if (back == null) const Spacer(),
-      Text(
-        title,
-        style: AppTextStyles.SU_R_20.copyWith(color: UsedColor.text_3),
-        textAlign: TextAlign.center,
+      Padding(
+        padding: EdgeInsets.only(top: 3.h),
+        child: Text(
+          title,
+          style: AppTextStyles.SU_R_20.copyWith(color: UsedColor.text_3),
+          textAlign: TextAlign.center,
+        ),
       ),
       if (back == null) const Spacer(),
       if (back != null) Container(width: 40.w), // 여백 조절

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/main.dart';
@@ -14,60 +13,124 @@ import 'package:meet_up/view_model/chat/chat_room_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_down_button/pull_down_button.dart';
 
 class ChatRoom extends StatelessWidget {
   const ChatRoom({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: 58.h,
+    final chatRoomViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
+    return Selector<ChatRoomViewModel, bool>(
+      builder: (context, value, child) {
+        return Opacity(
+          opacity: value ? 0.8 : 1,
+          child: Scaffold(
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Stack(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: 58.h,
+                      ),
+                      child: _header(context),
+                    ),
+                    Positioned(
+                      right: 11.w,
+                      bottom: 2.h,
+                      child: PullDownButton(
+                        routeTheme: PullDownMenuRouteTheme(width: 200.w),
+                        itemBuilder: (context) => [
+                          PullDownMenuItem(
+                            title: '알람 켜기',
+                            itemTheme: PullDownMenuItemTheme(
+                              textStyle: AppTextStyles.PR_M_13.copyWith(
+                                color: Colors.black,
+                              ),
+                            ),
+                            onTap: () {
+                              logger.d("알람 켜기 버튼 눌림");
+
+                              chatRoomViewModel.setMoreOptionClicked(false);
+                            },
+                          ),
+                          PullDownMenuItem(
+                            title: '방 세부 정보 보기',
+                            itemTheme: PullDownMenuItemTheme(
+                              textStyle: AppTextStyles.PR_M_13.copyWith(
+                                color: Colors.black,
+                              ),
+                            ),
+                            onTap: () {
+                              logger.d("방 세부 정보 보기 버튼 눌림");
+
+                              chatRoomViewModel.setMoreOptionClicked(false);
+                            },
+                          ),
+                          PullDownMenuItem(
+                            title: '채팅방 나가기',
+                            itemTheme: PullDownMenuItemTheme(
+                              textStyle: AppTextStyles.PR_SB_13.copyWith(
+                                color: Colors.red,
+                              ),
+                            ),
+                            onTap: () {
+                              logger.d("방 나가기 버튼 눌림");
+                              _showOutRoomDialog(context);
+                              chatRoomViewModel.setMoreOptionClicked(false);
+                            },
+                          ),
+                        ],
+                        buttonBuilder: (context, showMenu) => CupertinoButton(
+                          onPressed: () {
+                            chatRoomViewModel.setMoreOptionClicked(true);
+                            showMenu();
+                          },
+                          padding: EdgeInsets.zero,
+                          child: Image.asset(
+                            ImagePath.chatRoomMoreOptionButton,
+                            width: 28.h,
+                            height: 28.h,
+                          ),
+                        ),
+                        onCanceled: () {
+                          chatRoomViewModel.setMoreOptionClicked(false);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: Container(
+                    width: 1.sw,
+                    color: Colors.white,
+                    child: _main(context),
+                  ),
+                ),
+              ],
             ),
-            child: _header(context),
           ),
-          Expanded(
-            child: Container(
-              width: 1.sw,
-              color: Colors.white,
-              child: _main(context),
-            ),
-          ),
-        ],
-      ),
+        );
+      },
+      selector: (context, chatRoomViewModel) =>
+          chatRoomViewModel.moreOptionClicked,
     );
   }
 
   // header
   Widget _header(BuildContext context) {
+    final chatViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
     return Center(
       child: Column(
         children: [
-          Stack(
-            children: [
-              header(
-                title: '초보 클밍 모임',
-                back: _back(context),
-              ),
-              Positioned(
-                right: 11.w,
-                child: GestureDetector(
-                  onTap: () {
-                    logger.d("옵션 버튼이 눌렸습니다");
-                  },
-                  child: Image.asset(
-                    ImagePath.chatRoomMoreOptionButton,
-                    width: 28.h,
-                    height: 28.h,
-                  ),
-                ),
-              ),
-            ],
+          header(
+            title: chatViewModel.roomName,
+            back: _back(context),
           ),
           SizedBox(
             height: 16.h,
@@ -303,6 +366,10 @@ class ChatRoom extends StatelessWidget {
           .first;
     }
 
+    // 5. 방장의 채팅인지 확인하는 변수
+    bool isOwnerChat =
+        chatModel.nickName == chatRoomViewModel.userModels[0].nickname;
+
     if (isMyChat) {
       return SizedBox(
         width: 393.w,
@@ -357,10 +424,33 @@ class ChatRoom extends StatelessWidget {
             SizedBox(
               width: 28.h,
             ),
-            Image.asset(
-              otherUser!.profile_icon,
-              width: 45.h,
-              height: 45.h,
+            Stack(
+              children: [
+                Image.asset(
+                  otherUser!.profile_icon,
+                  width: 45.h,
+                  height: 45.h,
+                ),
+                if (isOwnerChat)
+                  Positioned(
+                    right: 0.h,
+                    bottom: 0.h,
+                    child: Container(
+                      width: 19.h,
+                      height: 19.h,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(9.5.r),
+                        color: UsedColor.main,
+                      ),
+                      child: Image.asset(
+                        ImagePath.chatRoomOwnerCrownImage,
+                        width: 12.0.h,
+                        height: 12.0.h,
+                      ),
+                    ),
+                  ),
+              ],
             ),
             SizedBox(
               width: 11.h,
@@ -440,6 +530,16 @@ class ChatRoom extends StatelessWidget {
                     1) *
                 12.h;
         if (chatRoomViewModel.lineNum == 0) additionalHeight = 0;
+
+        // 방장인지 확인하는 변수
+        final userViewModel =
+            Provider.of<UserViewModel>(context, listen: false);
+        final isOwner = chatRoomViewModel.userModels[0].nickname ==
+            userViewModel.userModel!.nickname;
+        double typeContainerWidth = chatRoomViewModel.startEdit ? 296.w : 357.w;
+        double typeContainerWidthEnd =
+            isOwner ? typeContainerWidth - 52.w : typeContainerWidth;
+
         return SizedBox(
           height:
               (chatRoomViewModel.startEdit ? 70.h : 106.h) + additionalHeight,
@@ -454,10 +554,28 @@ class ChatRoom extends StatelessWidget {
               SizedBox(height: 16.h),
               Row(
                 children: [
+                  if (isOwner) ...[
+                    SizedBox(width: 18.w),
+                    Container(
+                      width: 38.h,
+                      height: 38.h,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(19.r),
+                        color: UsedColor.button_g,
+                      ),
+                      child: Image.asset(
+                        ImagePath.chatRoomScheduleSetButton,
+                        width: 22.86.h,
+                        height: 22.86.h,
+                      ),
+                    ),
+                  ],
                   Padding(
-                    padding: EdgeInsets.only(left: 16.w, right: 16.w),
+                    padding: EdgeInsets.only(
+                        left: isOwner ? 12.w : 16.w, right: 16.w),
                     child: Container(
-                      width: chatRoomViewModel.startEdit ? 296.w : 357.w,
+                      width: typeContainerWidthEnd,
                       height: 38.h + additionalHeight,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(19.r),
@@ -560,6 +678,54 @@ class ChatRoom extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  void _showOutRoomDialog(BuildContext context) {
+    logger.d("채팅방 나가기 다이얼로그 출력");
+    showCupertinoDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: Text(
+          "채팅방에서 나가시겠습니까?",
+          style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
+        ),
+        content: Container(
+          alignment: Alignment.bottomCenter,
+          height: 20.h,
+          child: Text(
+            "채팅방을 나가면 대화 내용이 전부 삭제됩니다.",
+            style: AppTextStyles.PR_R_12.copyWith(color: UsedColor.text_3),
+          ),
+        ),
+        actions: [
+          CupertinoDialogAction(
+            child: Text(
+              "취소",
+              style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
+            ),
+            onPressed: () {
+              context.pop();
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text(
+              "나가기",
+              style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
+            ),
+            onPressed: () {
+              // 채팅방 나가기
+              // myRoom 정보 삭제
+              // room 정보 변경
+              // 1. 나간 사람이 방장인 경우
+              // 2. 나간 사람이 참여자인 경우
+              // 2-1) 나간 사람의 만남권 횟수가 남은 경우
+              // 2-2) 나간 사람의 만남권 횟수가 없는 경우
+              context.pop();
+            },
+          ),
+        ],
+      ),
     );
   }
 }

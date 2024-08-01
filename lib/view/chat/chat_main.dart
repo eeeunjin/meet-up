@@ -211,11 +211,13 @@ class ChatMain extends StatelessWidget {
                                           // 입장 하려는 방에 정보 전달
                                           chatRoomViewModel.setRoomID(
                                               myRoomDocumentList[index].id);
+                                          chatRoomViewModel
+                                              .setRoomName(roomModel.room_name);
 
                                           final userRefs = roomModel
                                               .room_participant_reference;
 
-                                          userRefs.add(
+                                          userRefs.insert(0,
                                               roomModel.room_owner_reference);
 
                                           await chatRoomViewModel
