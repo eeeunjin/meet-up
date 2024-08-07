@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -46,33 +47,37 @@ class ChatMeetingReview extends StatelessWidget {
 
   Widget _reviewPage(BuildContext context, String nickname, String group,
       String profileImage) {
-    return Padding(
-      padding: EdgeInsets.only(
-        top: 12.h,
-        left: 27.w,
-        right: 26.w,
-        bottom: 28.h,
-      ),
-      child: Center(
-        child: Container(
-          width: 340.w,
-          // height: 708.h,
-          padding: EdgeInsets.only(top: 12.h),
-          decoration: BoxDecoration(
-            color: UsedColor.image_card,
-            borderRadius: BorderRadius.circular(29.r),
-          ),
-          child: Column(
-            children: [
-              _indicator(),
-              _userInfo(nickname, group, profileImage),
-              const Divider(),
-              _ratingSection(context),
-              _feedbackSection(context),
-              _commentSection(context),
-              // const Spacer(),
-              _submitButton(context),
-            ],
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: 12.h,
+          left: 27.w,
+          right: 26.w,
+          bottom: 28.h,
+        ),
+        child: Center(
+          child: Container(
+            width: 340.w,
+            // height: 708.h,
+            padding: EdgeInsets.only(top: 12.h),
+            decoration: BoxDecoration(
+              color: UsedColor.image_card,
+              borderRadius: BorderRadius.circular(29.r),
+            ),
+            child: Column(
+              children: [
+                _indicator(),
+                _userInfo(nickname, group, profileImage),
+                Divider(
+                  thickness: 0.7,
+                  color: UsedColor.b_line,
+                ),
+                _ratingSection(context),
+                _feedbackSection(context),
+                _commentSection(context),
+                _submitButton(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -396,7 +401,7 @@ class ChatMeetingReview extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(height: 16.h),
+            SizedBox(height: 16.h)
           ],
         );
       },
@@ -409,30 +414,34 @@ class ChatMeetingReview extends StatelessWidget {
       builder: (context, viewModel, child) {
         return Column(
           children: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: UsedColor.button,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(21.r),
+            SizedBox(
+              height: 35.h,
+              width: 154.w,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: UsedColor.button,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(21.r),
+                  ),
+                  padding:
+                      EdgeInsets.symmetric(vertical: 9.h, horizontal: 50.w),
                 ),
-                padding: EdgeInsets.symmetric(vertical: 9.h, horizontal: 50.w),
-                minimumSize: Size(154.w, 35.h),
-              ),
-              onPressed: viewModel.isReviewComplete
-                  ? () {
-                      if (viewModel.currentPage < 3) {
-                        _pageController.nextPage(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeIn,
-                        );
-                        viewModel.nextPage();
+                onPressed: viewModel.isReviewComplete
+                    ? () {
+                        if (viewModel.currentPage < 3) {
+                          _pageController.nextPage(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeIn,
+                          );
+                          viewModel.nextPage();
+                        }
                       }
-                    }
-                  : null,
-              child: Text(
-                '전송하기',
-                style: AppTextStyles.PR_SB_15.copyWith(
-                  color: Colors.white,
+                    : () {},
+                child: Text(
+                  '전송하기',
+                  style: AppTextStyles.PR_SB_15.copyWith(
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),

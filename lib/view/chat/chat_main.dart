@@ -11,7 +11,7 @@ import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/view_model/chat/chat_room_view_model.dart';
-import 'package:meet_up/view/chat/%20chat_meeting_review.dart';
+import 'package:meet_up/view/chat/chat_meeting_review.dart';
 import 'package:meet_up/view/chat/chat_notification_onboarding.dart';
 import 'package:meet_up/view_model/chat/chat_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
