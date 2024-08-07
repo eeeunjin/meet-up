@@ -214,6 +214,7 @@ class MeetManageMain extends StatelessWidget {
                     meetDetailRoomViewModel.setCurrentRoomModel(
                         roomModel: roomModel);
                     meetDetailRoomViewModel.setIsMyRoom(isMyRoom: true);
+                    meetDetailRoomViewModel.setIsChatRoom(isChatRoom: false);
                     context.goNamed('meetDetailRoom_manage');
                   },
                   child: Container(

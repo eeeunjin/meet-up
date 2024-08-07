@@ -4,11 +4,13 @@ import 'package:meet_up/model/chat_room_model.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/repository/chat_repository.dart';
+import 'package:meet_up/repository/room_repository.dart';
 import 'package:meet_up/repository/user_repository.dart';
 
 class ChatRoomViewModel with ChangeNotifier {
   final ChatRepository _chatRepository = ChatRepository();
   final UserRepository _userRepository = UserRepository();
+  final RoomRepository _roomRepository = RoomRepository();
 
   // 방, 채팅 방의 document 아이디 (둘이 동일 함)
   String _roomID = '';
@@ -126,6 +128,16 @@ class ChatRoomViewModel with ChangeNotifier {
   // 채팅 메시지 스트림 함수
   Stream<QuerySnapshot<Object?>> getChatStream() {
     return _chatRepository.getChatStream(_roomID);
+  }
+
+  // myRoom 정보 삭제
+  Future<void> deleteMyRoom({required String uid, required String roomId}) async {
+    await _userRepository.deleteMyRoomData(uid: uid, roomId: roomId);
+  }
+
+  // Room 정보 업데이트
+  Future<void> updateRoomData({required String roomId, required Map<String, dynamic> data}) async {
+    await _roomRepository.updateRoomDocument(roomId: roomId, data: data);
   }
 
   // 상태 초기화 함수

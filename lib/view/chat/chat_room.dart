@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/main.dart';
@@ -19,6 +20,7 @@ import 'package:pull_down_button/pull_down_button.dart';
 class ChatRoom extends StatelessWidget {
   const ChatRoom({super.key});
 
+  // MARK: - 빌드
   @override
   Widget build(BuildContext context) {
     final chatRoomViewModel =
@@ -130,7 +132,7 @@ class ChatRoom extends StatelessWidget {
     );
   }
 
-  // header
+  // MARK: - 헤더
   Widget _header(BuildContext context) {
     final chatViewModel =
         Provider.of<ChatRoomViewModel>(context, listen: false);
@@ -154,6 +156,7 @@ class ChatRoom extends StatelessWidget {
     );
   }
 
+  // MARK: - 뒤로가기
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -167,6 +170,7 @@ class ChatRoom extends StatelessWidget {
     );
   }
 
+  // MARK: - 메인
   Widget _main(BuildContext context) {
     return Column(
       children: [
@@ -176,6 +180,7 @@ class ChatRoom extends StatelessWidget {
     );
   }
 
+  // MARK: - 채팅 리스트
   Widget _chatListView(BuildContext context) {
     final chatRoomViewModel =
         Provider.of<ChatRoomViewModel>(context, listen: false);
@@ -334,8 +339,68 @@ class ChatRoom extends StatelessWidget {
     );
   }
 
-  Widget _chatBox(BuildContext context,
-      {required bool isMyChat, required ChatModel chatModel}) {
+  Widget _chatBox(
+    BuildContext context, {
+    required bool isMyChat,
+    required ChatModel chatModel,
+  }) {
+    switch (chatModel.type) {
+      case "chat":
+        return _chat(context, isMyChat: isMyChat, chatModel: chatModel);
+      // case "enter":
+      //   return _enter(context, isMyChat: isMyChat, chatModel: chatModel);
+      case "exit":
+        return _exit(context, isMyChat: isMyChat, chatModel: chatModel);
+      default:
+        return Container();
+    }
+  }
+
+  // MARK: - 채팅방 퇴장
+  Widget _exit(
+    BuildContext context, {
+    required bool isMyChat,
+    required ChatModel chatModel,
+  }) {
+    return Center(
+      child: Container(
+        width: 344.w,
+        color: Colors.transparent,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Container(
+                height: 0.5.h,
+                color: UsedColor.text_4,
+              ),
+            ),
+            SizedBox(width: 4.w),
+            Text(
+              chatModel.nickName + chatModel.content,
+              style: AppTextStyles.PR_M_11.copyWith(
+                color: UsedColor.text_4,
+              ),
+            ),
+            SizedBox(width: 4.w),
+            Expanded(
+              child: Container(
+                height: 0.5.h,
+                color: UsedColor.text_4,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // MARK: - 채팅
+  Widget _chat(
+    BuildContext context, {
+    required bool isMyChat,
+    required ChatModel chatModel,
+  }) {
     final chatRoomViewModel =
         Provider.of<ChatRoomViewModel>(context, listen: false);
     // 채팅 라인 수에 맞춘 높이 계산
@@ -531,6 +596,7 @@ class ChatRoom extends StatelessWidget {
     }
   }
 
+  // MARK: - 메시지 입력창
   Widget _typeMessageBox(BuildContext context) {
     return Consumer<ChatRoomViewModel>(
       builder: (context, chatRoomViewModel, child) {
@@ -691,6 +757,7 @@ class ChatRoom extends StatelessWidget {
     );
   }
 
+  // MARK: - 채팅방 나가기
   void _showOutRoomDialog(BuildContext context) {
     logger.d("채팅방 나가기 다이얼로그 출력");
     final chatRoomViewModel =
@@ -726,7 +793,7 @@ class ChatRoom extends StatelessWidget {
               "나가기",
               style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
             ),
-            onPressed: () {
+            onPressed: () async {
               // 1. 나간 사람이 방장인 경우
               // 2. 나간 사람이 참여자인 경우
               // 참여자인지 방장인지 구별하는 변수
@@ -734,17 +801,53 @@ class ChatRoom extends StatelessWidget {
                   userViewModel.userModel?.nickname;
 
               // myRoom 정보 삭제
-              // chatRoomViewModel.deleteMyRoom(isOwner: isOnwer);
+              await chatRoomViewModel.deleteMyRoom(
+                uid: userViewModel.uid!,
+                roomId: chatRoomViewModel.roomID,
+              );
               // room 정보 변경
-              // chatRoomViewModel.updateRoomInfo(isOwner: isOnwer);
+              // 방장이 나간 경우
+              if (isOnwer) {
+                // TODO: 방장이 나간 경우에 대한 함수 작성
+                // owner 정보 지우고, 방장이 나간 경우에 대한 변수 전달 필요
+                logger.e("방장이 나간 경우에 대한 함수가 없습니다.");
+                return;
+              }
+              // 참여자가 나간 경우
+              else {
+                var participantRefs = List.from(
+                  chatRoomViewModel.roomModel.room_participant_reference,
+                );
+                participantRefs.remove(FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(userViewModel.uid));
+
+                await chatRoomViewModel.updateRoomData(
+                  roomId: chatRoomViewModel.roomID,
+                  data: {"room_participant_reference": participantRefs},
+                );
+              }
+
               // chatModel 추가
-              // chatRoomViewModel.createChatDocument(chatModel: ChatModel());
+              final chatModel = ChatModel(
+                uid: userViewModel.uid!,
+                nickName: userViewModel.userModel?.nickname ?? '',
+                content: " 님이 채팅방을 나갔습니다.",
+                date: Timestamp.now(),
+                room_id: chatRoomViewModel.roomID,
+                type: "exit",
+              );
+              await chatRoomViewModel.createChatDocument(chatModel);
 
               // TODO: 만남권 소진 로직 추가 이후 작성
+              // Ticket 관련 로직 추가 (사용 가능 횟수 감소)
               // 2-1) 나간 사람의 만남권 횟수가 남은 경우
               // 2-2) 나간 사람의 만남권 횟수가 없는 경우
 
-              context.pop();
+              // 채팅 방 나가기
+              while (context.canPop()) {
+                context.pop();
+              }
             },
           ),
         ],
