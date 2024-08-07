@@ -223,4 +223,7 @@ class ImagePath {
 
   static String get starSelected => 'assets/images/star_selected.png';
   static String get star => 'assets/images/star.png';
+
+  static String get chatcheckboxon => 'assets/images/chatcheckbox.png';
+  static String get chatcheckboxoff => 'assets/images/chatcheckboxoff.png';
 }

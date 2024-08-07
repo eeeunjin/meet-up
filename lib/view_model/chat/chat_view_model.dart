@@ -182,6 +182,7 @@ class ChatViewModel with ChangeNotifier {
     _isChecked = !_isChecked;
     notifyListeners();
   }
+
 // MARK: - 만남 후기
 
   int _rating = 0;
@@ -202,13 +203,6 @@ class ChatViewModel with ChangeNotifier {
     'chatReview12': false,
   };
 
-// 별점
-  void setRating(int rating) {
-    _rating = rating;
-    checkReviewCompletion();
-    notifyListeners();
-  }
-
 // 이미지칩을 선택/해제
   void toggleChip(String chipName) {
     if (selectedChips.containsKey(chipName)) {
@@ -227,7 +221,7 @@ class ChatViewModel with ChangeNotifier {
 
 // 별점에 따른 이미지 리스트 반환
   List<String> get images {
-    if (_rating >= 3) {
+    if (_rating == 0 || _rating >= 3) {
       return [
         'chatReview1',
         'chatReview2',
@@ -279,5 +273,27 @@ class ChatViewModel with ChangeNotifier {
 
   void checkReviewCompletion() {
     notifyListeners();
+  }
+
+  // 모든 데이터를 초기화하는 메서드 추가
+  void resetData() {
+    _rating = 0;
+    selectedChips.updateAll((key, value) => false);
+    _comment = '';
+    _currentPage = 0;
+    notifyListeners();
+  }
+
+  // 별점 설정 시 기존 데이터 초기화
+  void setRating(int rating) {
+    resetData(); // 데이터 초기화
+    _rating = rating;
+    checkReviewCompletion();
+    notifyListeners();
+  }
+
+  // 뒤로 나갔다 올 때 데이터 초기화
+  void onBackPressed() {
+    resetData();
   }
 }

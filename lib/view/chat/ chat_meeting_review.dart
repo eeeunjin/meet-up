@@ -13,70 +13,66 @@ class ChatMeetingReview extends StatelessWidget {
   ChatMeetingReview({super.key});
 
   final PageController _pageController = PageController();
+
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ChatViewModel(
-        init: DateTime.now(),
-        start: DateTime(2020, 1, 1),
-        end: DateTime(2030, 12, 31),
-      ),
-      child: Scaffold(
-        body: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: 58.h),
-              child: _header(context),
+    return Scaffold(
+      body: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 58.h),
+            child: _header(context),
+          ),
+          Expanded(
+            child: PageView(
+              controller: _pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              onPageChanged: (int page) {
+                Provider.of<ChatViewModel>(context, listen: false).resetData();
+                Provider.of<ChatViewModel>(context, listen: false).nextPage();
+              },
+              children: [
+                _reviewPage(context, '닉네임1', '초보 클빙 모임', ImagePath.cogySelect),
+                _reviewPage(context, '닉네임2', '초보 클빙 모임', ImagePath.piggySelect),
+                _reviewPage(context, '닉네임3', '초보 클빙 모임', ImagePath.annumSelect),
+                _finalPage(context),
+              ],
             ),
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                onPageChanged: (int page) {
-                  context.read<ChatViewModel>().nextPage();
-                },
-                children: [
-                  _reviewPage(
-                      context, '닉네임1', '초보 클빙 모임', ImagePath.cogySelect),
-                  _reviewPage(
-                      context, '닉네임2', '초보 클빙 모임', ImagePath.piggySelect),
-                  _reviewPage(
-                      context, '닉네임3', '초보 클빙 모임', ImagePath.annumSelect),
-                  _finalPage(context),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _reviewPage(BuildContext context, String nickname, String group,
       String profileImage) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding:
-            EdgeInsets.only(top: 18.h, left: 27.w, right: 26.w, bottom: 28.h),
-        child: Center(
-          child: Container(
-            width: 340.w,
-            padding: EdgeInsets.only(top: 12.h),
-            decoration: BoxDecoration(
-              color: UsedColor.image_card,
-              borderRadius: BorderRadius.circular(29.r),
-            ),
-            child: Column(
-              children: [
-                _indicator(),
-                _userInfo(nickname, group, profileImage),
-                const Divider(),
-                _ratingSection(context),
-                _feedbackSection(context),
-                _commentSection(context),
-                _submitButton(context),
-              ],
-            ),
+    return Padding(
+      padding: EdgeInsets.only(
+        top: 12.h,
+        left: 27.w,
+        right: 26.w,
+        bottom: 28.h,
+      ),
+      child: Center(
+        child: Container(
+          width: 340.w,
+          // height: 708.h,
+          padding: EdgeInsets.only(top: 12.h),
+          decoration: BoxDecoration(
+            color: UsedColor.image_card,
+            borderRadius: BorderRadius.circular(29.r),
+          ),
+          child: Column(
+            children: [
+              _indicator(),
+              _userInfo(nickname, group, profileImage),
+              const Divider(),
+              _ratingSection(context),
+              _feedbackSection(context),
+              _commentSection(context),
+              // const Spacer(),
+              _submitButton(context),
+            ],
           ),
         ),
       ),
@@ -84,54 +80,54 @@ class ChatMeetingReview extends StatelessWidget {
   }
 
   Widget _finalPage(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding:
-            EdgeInsets.only(top: 18.h, left: 27.w, right: 26.w, bottom: 28.h),
-        child: Center(
-          child: Container(
-            width: 340.w,
-            height: 708.h,
-            padding: EdgeInsets.only(top: 12.h, left: 24.w, right: 25.w),
-            decoration: BoxDecoration(
-              color: UsedColor.image_card,
-              borderRadius: BorderRadius.circular(29.r),
-            ),
-            child: Column(
-              children: [
-                SizedBox(height: 222.h),
-                Text(
-                  '후기가 모두에게 전송되었습니다.',
-                  style: AppTextStyles.PR_B_18.copyWith(
-                    color: UsedColor.charcoal_black,
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 27.w,
+        right: 26.w,
+        bottom: 28.h,
+      ),
+      child: Center(
+        child: Container(
+          width: 340.w,
+          padding: EdgeInsets.only(left: 37.w, right: 37.w),
+          decoration: BoxDecoration(
+            color: UsedColor.image_card,
+            borderRadius: BorderRadius.circular(29.r),
+          ),
+          child: Column(
+            children: [
+              SizedBox(height: 195.h),
+              Text(
+                '후기가 모두에게 전송되었습니다.',
+                style: AppTextStyles.PR_B_18.copyWith(
+                  color: UsedColor.charcoal_black,
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Text(
+                '소중한 후기를 남겨 주셔서 감사합니다.\n(닉네임4) 님에게 60point가 지급될 예정입니다.',
+                textAlign: TextAlign.center,
+                style: AppTextStyles.PR_R_14.copyWith(
+                  color: UsedColor.text_1,
+                ),
+              ),
+              SizedBox(height: 44.h),
+              Container(
+                width: 208.w,
+                height: 208.h,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Image.asset(
+                    ImagePath.chatReviewLetter,
+                    width: 117.w,
+                    height: 117.h,
                   ),
                 ),
-                SizedBox(height: 16.h),
-                Text(
-                  '소중한 후기를 남겨 주셔서 감사합니다.\n(닉네임4) 님에게 60point가 지급될 예정입니다.',
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.PR_R_14.copyWith(
-                    color: UsedColor.text_1,
-                  ),
-                ),
-                SizedBox(height: 44.h),
-                Container(
-                  width: 208.w,
-                  height: 208.h,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Image.asset(
-                      ImagePath.chatReviewLetter,
-                      width: 117.w,
-                      height: 117.h,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -165,12 +161,7 @@ class ChatMeetingReview extends StatelessWidget {
       child: Column(
         children: [
           header(back: _back(context), title: '만남 후기 보내기'),
-          SizedBox(height: 18.h),
-          Divider(
-            thickness: 0.3.h,
-            height: 0.h,
-            color: UsedColor.line,
-          ),
+          // SizedBox(height: 21.h),
         ],
       ),
     );
@@ -179,6 +170,7 @@ class ChatMeetingReview extends StatelessWidget {
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        Provider.of<ChatViewModel>(context, listen: false).resetData();
         context.pop();
       },
       child: Image.asset(
@@ -193,13 +185,10 @@ class ChatMeetingReview extends StatelessWidget {
     return Column(
       children: [
         SizedBox(height: 12.h),
-        CircleAvatar(
-          radius: 40.r,
-          backgroundColor: Colors.white,
-          child: Image.asset(
-            profileImage,
-            fit: BoxFit.cover,
-          ),
+        Image.asset(
+          profileImage,
+          width: 80.w,
+          height: 80.h,
         ),
         SizedBox(height: 8.h),
         Text(
@@ -226,7 +215,7 @@ class ChatMeetingReview extends StatelessWidget {
         children: [
           SizedBox(height: 12.h),
           Text(
-            '‘닉네임’님과(와) 만남은 어땠나요?',
+            '‘닉네임’님과(와) 만남은 어떠셨나요?',
             style: AppTextStyles.PR_SB_15.copyWith(
               color: UsedColor.charcoal_black,
             ),
@@ -245,8 +234,8 @@ class ChatMeetingReview extends StatelessWidget {
                     index < viewModel.rating
                         ? ImagePath.starSelected
                         : ImagePath.star,
-                    width: 33.89.w,
-                    height: 33.89.h,
+                    width: 33.w,
+                    height: 33.h,
                   ),
                 ),
               );
@@ -278,15 +267,20 @@ class ChatMeetingReview extends StatelessWidget {
     ];
 
     return Consumer<ChatViewModel>(builder: (context, viewModel, child) {
-      final imageNames =
-          viewModel.rating >= 3 ? positiveLabels : negativeLabels;
+      String questionText = '어떤 점이 좋으셨나요?';
+      List<String> imageNames = positiveLabels;
+
+      if (viewModel.rating > 0 && viewModel.rating < 3) {
+        questionText = '어떤 점이 아쉬우셨나요?';
+        imageNames = negativeLabels;
+      }
       return Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                '어떤 점이 좋으셨나요?',
+                questionText,
                 style: AppTextStyles.PR_SB_15.copyWith(
                   color: UsedColor.charcoal_black,
                 ),
@@ -302,7 +296,7 @@ class ChatMeetingReview extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
           Padding(
-            padding: EdgeInsets.only(left: 55.w, right: 55.w),
+            padding: EdgeInsets.only(left: 59.w, right: 59.w),
             child: Wrap(
               spacing: 24.w,
               runSpacing: 12.h,
@@ -322,6 +316,7 @@ class ChatMeetingReview extends StatelessWidget {
   }
 
   Widget _imageChip(ChatViewModel viewModel, String imageName, String label) {
+    bool isSelected = viewModel.isSelected(imageName);
     return Column(
       children: [
         GestureDetector(
@@ -333,19 +328,21 @@ class ChatMeetingReview extends StatelessWidget {
             height: 58.h,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: viewModel.isSelected(imageName) == true
-                  ? UsedColor.button
-                  : Colors.white,
+              color: isSelected ? UsedColor.button : Colors.white,
             ),
-            child: Image.asset(
-              viewModel.selectedChips[imageName] == true
-                  ? ImagePath.chatReviewSelected(imageName)
-                  : ImagePath.chatReview(imageName),
-              fit: BoxFit.fill,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(
+                  isSelected
+                      ? ImagePath.chatReviewSelected(imageName)
+                      : ImagePath.chatReview(imageName),
+                  width: 33.w,
+                  height: 33.h,
+                  fit: BoxFit.contain),
             ),
           ),
         ),
-        SizedBox(height: 8.h),
+        SizedBox(height: 7.h),
         Text(
           label,
           style: AppTextStyles.PR_M_12.copyWith(
@@ -377,27 +374,29 @@ class ChatMeetingReview extends StatelessWidget {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(18.r),
               ),
-              padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 16.h),
               child: TextField(
-                controller: TextEditingController(text: viewModel.comment),
                 minLines: 3,
                 maxLines: null,
                 style: AppTextStyles.PR_R_13.copyWith(
                   color: UsedColor.text_5,
                 ),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText:
                       '내가 본 상대방의 모습을 작성해 주세요.\n만남 평가 시 한 명당 20point를 지급해 드려요.\n(최소 20자 이상)',
+                  contentPadding: EdgeInsets.symmetric(
+                      vertical: 14.h, horizontal: 16.w), // content padding 설정
                 ),
                 onChanged: (text) {
                   if (text.length >= 20 && text.length <= 100) {
                     viewModel.setComment(text);
+                  } else {
+                    viewModel.setComment('');
                   }
                 },
               ),
             ),
-            SizedBox(height: 16.11.h),
+            SizedBox(height: 16.h),
           ],
         );
       },
@@ -437,7 +436,7 @@ class ChatMeetingReview extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 24.11.h),
+            SizedBox(height: 24.h),
           ],
         );
       },
