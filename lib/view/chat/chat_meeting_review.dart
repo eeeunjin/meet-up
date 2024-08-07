@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -21,7 +23,9 @@ class ChatMeetingReview extends StatelessWidget {
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 58.h),
+            padding: Platform.isIOS
+                ? EdgeInsets.only(top: 44.h)
+                : EdgeInsets.only(top: 58.h),
             child: _header(context),
           ),
           Expanded(
