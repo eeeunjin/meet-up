@@ -347,13 +347,52 @@ class ChatRoom extends StatelessWidget {
     switch (chatModel.type) {
       case "chat":
         return _chat(context, isMyChat: isMyChat, chatModel: chatModel);
-      // case "enter":
-      //   return _enter(context, isMyChat: isMyChat, chatModel: chatModel);
+      case "enter":
+        return _enter(context, isMyChat: isMyChat, chatModel: chatModel);
       case "exit":
         return _exit(context, isMyChat: isMyChat, chatModel: chatModel);
       default:
         return Container();
     }
+  }
+
+  // MAKR: - 채팅방 입장
+  Widget _enter(
+    BuildContext context, {
+    required bool isMyChat,
+    required ChatModel chatModel,
+  }) {
+    return Center(
+      child: Container(
+        width: 344.w,
+        color: Colors.transparent,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Container(
+                height: 0.5.h,
+                color: UsedColor.text_4,
+              ),
+            ),
+            SizedBox(width: 4.w),
+            Text(
+              chatModel.nickName + chatModel.content,
+              style: AppTextStyles.PR_M_11.copyWith(
+                color: UsedColor.text_4,
+              ),
+            ),
+            SizedBox(width: 4.w),
+            Expanded(
+              child: Container(
+                height: 0.5.h,
+                color: UsedColor.text_4,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   // MARK: - 채팅방 퇴장
@@ -800,11 +839,6 @@ class ChatRoom extends StatelessWidget {
               final isOnwer = chatRoomViewModel.userModels[0].nickname ==
                   userViewModel.userModel?.nickname;
 
-              // myRoom 정보 삭제
-              await chatRoomViewModel.deleteMyRoom(
-                uid: userViewModel.uid!,
-                roomId: chatRoomViewModel.roomID,
-              );
               // room 정보 변경
               // 방장이 나간 경우
               if (isOnwer) {
@@ -827,6 +861,12 @@ class ChatRoom extends StatelessWidget {
                   data: {"room_participant_reference": participantRefs},
                 );
               }
+
+              // myRoom 정보 삭제
+              await chatRoomViewModel.deleteMyRoom(
+                uid: userViewModel.uid!,
+                roomId: chatRoomViewModel.roomID,
+              );
 
               // chatModel 추가
               final chatModel = ChatModel(

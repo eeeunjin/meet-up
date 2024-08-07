@@ -21,6 +21,7 @@ import 'package:provider/provider.dart';
 class ChatMain extends StatelessWidget {
   const ChatMain({super.key});
 
+  // MARK: - 빌드
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +49,7 @@ class ChatMain extends StatelessWidget {
     );
   }
 
-  // header
+  // MARK: - 헤더
   Widget _header(BuildContext context) {
     return Center(
       child: Column(
@@ -67,6 +68,7 @@ class ChatMain extends StatelessWidget {
     );
   }
 
+  // MARK: - 유의 사항
   Widget _notification(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(16.w),
@@ -85,6 +87,7 @@ class ChatMain extends StatelessWidget {
     );
   }
 
+  // MARK: - 만남 후기
   Widget _meetingReview(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(16.w),
@@ -103,6 +106,7 @@ class ChatMain extends StatelessWidget {
     );
   }
 
+  // MARK: - 메인
   Widget _main(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     final chatViewModel = Provider.of<ChatViewModel>(context, listen: false);

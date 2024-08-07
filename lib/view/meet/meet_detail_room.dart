@@ -1,14 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/main.dart';
+import 'package:meet_up/model/chat_room_model.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/bot_nav_view_model.dart';
+import 'package:meet_up/view_model/chat/chat_room_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/meet/meet_manage_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_detail_room_view_model.dart';
@@ -322,7 +325,7 @@ class MeetDetailRoom extends StatelessWidget {
                                         meetUserInfoViewModel.userModel =
                                             userModels[index];
                                         context.goNamed('meetUserInfo_manage');
-                                      } 
+                                      }
                                       // 만남 방 둘러보기
                                       else {
                                         meetUserInfoViewModel.userModel =
@@ -404,7 +407,7 @@ class MeetDetailRoom extends StatelessWidget {
               ),
               SizedBox(height: 48.h),
               if (meetDetailRoomViewModel.isChatRoom != true)
-                _removeButton(context)
+                _bottomButton(context)
             ],
           ),
         ),
@@ -580,12 +583,15 @@ class MeetDetailRoom extends StatelessWidget {
   }
 
   //MARK: - 삭제 or 참여 요청 버튼
-  Widget _removeButton(BuildContext context) {
+  Widget _bottomButton(BuildContext context) {
     final meetDetailRoomViewModel =
         Provider.of<MeetDetailRoomViewModel>(context, listen: false);
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     final botNavBarViewModel =
         Provider.of<BottomNavigationBarViewModel>(context, listen: false);
+    final chatRoomViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
+        
     return Padding(
       padding: EdgeInsets.only(bottom: 56.h, left: 6.w, right: 6.w),
       child: GestureDetector(
@@ -595,10 +601,7 @@ class MeetDetailRoom extends StatelessWidget {
             await meetDetailRoomViewModel.deleteRoom(myUid: userViewModel.uid!);
             // 삭제가 완료 되면 뒤로 가기
             if (context.mounted) context.pop();
-          }
-        },
-        child: GestureDetector(
-          onTap: () async {
+          } else {
             logger.d('참여하기 버튼이 눌렸습니다.');
             // 1. 해당 room 정보 update
             await meetDetailRoomViewModel.updateRoomInfo(
@@ -613,27 +616,38 @@ class MeetDetailRoom extends StatelessWidget {
               roomId: meetDetailRoomViewModel.currentRoomModel!.roomId,
             );
 
-            // 3. 이전에 들어온 탭 전부 pop
+            // 3. 해당 방에 입장 chatModel 생성
+            final chatModel = ChatModel(
+              uid: userViewModel.uid!,
+              nickName: userViewModel.userModel?.nickname ?? "",
+              content: " 님이 채팅방에 입장했습니다.",
+              date: Timestamp.now(),
+              room_id: meetDetailRoomViewModel.currentRoomModel!.roomId,
+              type: "enter",
+            );
+            await chatRoomViewModel.createChatDocument(chatModel);
+
+            // 4. 이전에 들어온 탭 전부 pop
             if (context.mounted) {
               while (context.canPop()) {
                 context.pop();
               }
             }
 
-            // 4. 채팅 탭으로 이동
+            // 5. 채팅 탭으로 이동
             botNavBarViewModel.changeIndex(1);
-          },
-          child: Container(
-            width: 327.w,
-            height: 56.h,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(19.r),
-                color: UsedColor.charcoal_black),
-            child: Center(
-              child: Text(
-                meetDetailRoomViewModel.isMyRoom! ? '삭제' : '참여하기',
-                style: AppTextStyles.PR_SB_20.copyWith(color: Colors.white),
-              ),
+          }
+        },
+        child: Container(
+          width: 327.w,
+          height: 56.h,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(19.r),
+              color: UsedColor.charcoal_black),
+          child: Center(
+            child: Text(
+              meetDetailRoomViewModel.isMyRoom! ? '삭제' : '참여하기',
+              style: AppTextStyles.PR_SB_20.copyWith(color: Colors.white),
             ),
           ),
         ),
