@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -111,29 +112,37 @@ class ChatNotification extends StatelessWidget {
           ),
           SizedBox(height: 132.h),
           Center(
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 16.w),
-              decoration: BoxDecoration(
-                color: UsedColor.button_g,
-                borderRadius: BorderRadius.circular(12.5.r),
-              ),
-              child: Text(
-                '최초 신고자 50coin 지급',
-                style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_1),
+            child: Padding(
+              padding: EdgeInsets.only(right: 21.w),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 4.h, horizontal: 16.w),
+                    decoration: BoxDecoration(
+                      color: UsedColor.button_g,
+                      borderRadius: BorderRadius.circular(12.5.r),
+                    ),
+                    child: Text(
+                      '최초 신고자 50coin 지급',
+                      style: AppTextStyles.PR_R_14
+                          .copyWith(color: UsedColor.text_1),
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _indicator(true),
+                      _indicator(false),
+                      _indicator(false),
+                    ],
+                  ),
+                ],
               ),
             ),
-          ),
-          SizedBox(height: 20.h),
-          Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _indicator(true),
-                _indicator(false),
-                _indicator(false),
-              ],
-            ),
-          ),
+          )
         ],
       ),
     );
@@ -144,7 +153,6 @@ class ChatNotification extends StatelessWidget {
       padding: EdgeInsets.only(
         top: 51.h,
         left: 21.w,
-        right: 21.w,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,29 +190,36 @@ class ChatNotification extends StatelessWidget {
             height: 124.h,
           ),
           Center(
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 16.w),
-              decoration: BoxDecoration(
-                color: UsedColor.button_g,
-                borderRadius: BorderRadius.circular(12.5.r),
-              ),
-              child: Text(
-                '최초 신고자 50coin 지급',
-                style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_1),
+            child: Padding(
+              padding: EdgeInsets.only(right: 21.w),
+              child: Column(
+                children: [
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 4.h, horizontal: 16.w),
+                    decoration: BoxDecoration(
+                      color: UsedColor.button_g,
+                      borderRadius: BorderRadius.circular(12.5.r),
+                    ),
+                    child: Text(
+                      '최초 신고자 50coin 지급',
+                      style: AppTextStyles.PR_R_14
+                          .copyWith(color: UsedColor.text_1),
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _indicator(false),
+                      _indicator(true),
+                      _indicator(false),
+                    ],
+                  ),
+                ],
               ),
             ),
-          ),
-          SizedBox(height: 20.h),
-          Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _indicator(false),
-                _indicator(true),
-                _indicator(false),
-              ],
-            ),
-          ),
+          )
         ],
       ),
     );
@@ -213,10 +228,10 @@ class ChatNotification extends StatelessWidget {
   Widget _page3(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
+        top: 51.h,
         left: 21.w,
         right: 21.w,
         bottom: 56.h,
-        top: 51.h,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
