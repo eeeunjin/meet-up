@@ -88,7 +88,7 @@ class RankMain extends StatelessWidget {
   //MARK: - 프로필 랭크 박스
   Widget _profileRankBox(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-    final profileIcon = userViewModel.userModel!.profile_icon;
+    final profileIcon = userViewModel.userModel?.profile_icon ?? 'fedro_1';
     final profileIconName = profileIcon.split('/').last.split('_').first;
     String path = '';
     switch (profileIconName) {
@@ -141,7 +141,7 @@ class RankMain extends StatelessWidget {
                     Text.rich(
                       TextSpan(
                         text:
-                            '${userViewModel.userModel!.nickname} 님의\n이번 달 등급은 ',
+                            '${userViewModel.userModel?.nickname ?? ''} 님의\n이번 달 등급은 ',
                         style: AppTextStyles.PR_R_14
                             .copyWith(color: UsedColor.charcoal_black),
                         children: <TextSpan>[

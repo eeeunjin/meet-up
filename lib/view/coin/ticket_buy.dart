@@ -45,7 +45,7 @@ class TicketBuy extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 34.w),
             child: Text(
-              '${userViewModel.userModel!.coin} C'.replaceAllMapped(
+              '${userViewModel.userModel?.coin ?? -1} C'.replaceAllMapped(
                   RegExp(r'\d{1,3}(?=(\d{3})+(?!\d))'),
                   (Match m) => '${m[0]},'),
               style: AppTextStyles.PR_SB_36
@@ -352,15 +352,15 @@ class TicketBuy extends StatelessWidget {
 
               // MARK: - 만남권 결제
               // 유저 코인이 결제 코인보다 적은 경우
-              if (totalCoin > userViewModel.userModel!.coin) {
+              if (totalCoin > (userViewModel.userModel?.coin ?? -1)) {
                 logger.e("유저의 코인이 부족합니다.");
                 return;
               }
 
               // 유저 정보 업데이트
-              int userCoin = userViewModel.userModel!.coin;
+              int userCoin = userViewModel.userModel?.coin ?? -1;
               int resultCoin = userCoin - totalCoin;
-              int userTicket = userViewModel.userModel!.ticket;
+              int userTicket = userViewModel.userModel?.ticket ?? -1;
               int resultTicket = userTicket +
                   ticketBuyViewModel.selectedNum *
                       ((ticketBuyViewModel.isFixed == false) ? 1 : 4);

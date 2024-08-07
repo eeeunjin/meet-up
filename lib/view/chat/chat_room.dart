@@ -535,7 +535,7 @@ class ChatRoom extends StatelessWidget {
         final userViewModel =
             Provider.of<UserViewModel>(context, listen: false);
         final isOwner = chatRoomViewModel.userModels[0].nickname ==
-            userViewModel.userModel!.nickname;
+            (userViewModel.userModel?.nickname ?? '');
         double typeContainerWidth = chatRoomViewModel.startEdit ? 296.w : 357.w;
         double typeContainerWidthEnd =
             isOwner ? typeContainerWidth - 52.w : typeContainerWidth;
@@ -643,7 +643,7 @@ class ChatRoom extends StatelessWidget {
 
                         final chatModel = ChatModel(
                           uid: userViewModel.uid!,
-                          nickName: userViewModel.userModel!.nickname,
+                          nickName: userViewModel.userModel?.nickname ?? '',
                           content: message,
                           date: Timestamp.now(),
                           room_id: chatRoomViewModel.roomID,

@@ -151,7 +151,7 @@ Future<void> _listenToPurchaseUpdated(
         await InAppPurchase.instance.completePurchase(purchaseDetails);
 
         // 사용자 데이터 업데이트
-        int userCoin = userViewModel.userModel!.coin;
+        int userCoin = userViewModel.userModel?.coin ?? -1;
         int purchaseCoin =
             int.parse(purchaseDetails.productID.split('_')[0].substring(4));
         int resultCoin = userCoin + purchaseCoin;
@@ -166,7 +166,7 @@ Future<void> _listenToPurchaseUpdated(
           gh_type_transaction: GoodHistoryTypeOfTransaction.purchase.name,
           gh_uid: userViewModel.uid!,
           gh_result_coin: resultCoin,
-          gh_result_ticket: userViewModel.userModel!.ticket,
+          gh_result_ticket: userViewModel.userModel?.ticket ?? -1,
           gh_change_coin_amount: purchaseCoin,
           gh_change_ticket_amount: 0,
           gh_ticket_references: [],
@@ -210,6 +210,7 @@ class MyApp extends StatelessWidget {
     return Selector<UserViewModel, bool>(
         builder: (context, value, child) {
           logger.d("[main.dart] rebuilded");
+          logger.d("[main.dart] isLogined: ${LoginFunc.isLogined}");
           // 자동 로그인 된 경우
           final userViewModel =
               Provider.of<UserViewModel>(context, listen: false);

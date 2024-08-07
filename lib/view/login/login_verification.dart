@@ -331,7 +331,8 @@ class LoginVerification extends StatelessWidget {
           // smsCode가 동일한 경우 다음 화면으로 넘어감
           UserCredential credential = await phoneNumViewModel
               .signInWithSmsCode(verificationViewModel.controller.text);
-          // DB에 유저 정보를 저장 (UID + 휴대전화 번호)
+
+          // 가입되지 않은 정보인 경우 Alert 띄우기
           if (credential.user != null) {
             if (credential.additionalUserInfo!.isNewUser) {
               if (context.mounted) {
@@ -371,6 +372,10 @@ class LoginVerification extends StatelessWidget {
                   await userViewModel.loadUserModel();
                   FocusManager.instance.primaryFocus?.unfocus();
                 }
+
+                // reset state
+                verificationViewModel.resetState();
+                phoneNumViewModel.resetState();
               }
               // 전화 번호만 있는 경우
               else {

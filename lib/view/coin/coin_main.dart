@@ -116,7 +116,7 @@ class CoinMain extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              '${userViewModel.userModel!.coin} C'
+                              '${userViewModel.userModel?.coin ?? -1} C'
                                   .replaceAllMapped(
                                       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
                                       (Match m) => '${m[1]},'),
@@ -216,13 +216,13 @@ class CoinMain extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              '만남권 ${userViewModel.userModel!.ticket}개',
+                              '만남권 ${userViewModel.userModel?.ticket ?? -1}개',
                               style: AppTextStyles.PR_SB_26
                                   .copyWith(color: UsedColor.charcoal_black),
                             ),
                             SizedBox(width: 12.w),
                             //MARK: - 정기권 혜택 적용 여부 컨테이너
-                            if (userViewModel.userModel!.isFixedTicket)
+                            if (userViewModel.userModel?.isFixedTicket ?? false)
                               Container(
                                 width: 96.w,
                                 height: 16.h,

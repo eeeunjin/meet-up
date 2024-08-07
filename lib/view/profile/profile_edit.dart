@@ -191,7 +191,7 @@ class ProfileEdit extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
           Text(
-            userViewModel.userModel!.gender == 'male' ? '남성' : '여성',
+            userViewModel.userModel?.gender == 'male' ? '남성' : '여성',
             style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_3),
           ),
           SizedBox(height: 8.h),

@@ -89,7 +89,7 @@ class TicketPurchaseHistory extends StatelessWidget {
             height: 14.h,
           ),
           Text(
-            "만남권 ${userViewModel.userModel!.ticket}개",
+            "만남권 ${userViewModel.userModel?.ticket ?? -1}개",
             style: AppTextStyles.PR_SB_36.copyWith(
               color: UsedColor.charcoal_black,
             ),

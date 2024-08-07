@@ -38,7 +38,7 @@ class MeetUserInfo extends StatelessWidget {
         children: [
           header(
             back: _back(context),
-            title: meetUserInfoViewModel.userModel!.nickname,
+            title: meetUserInfoViewModel.userModel?.nickname ?? '',
           ),
           SizedBox(
             height: 16.h,

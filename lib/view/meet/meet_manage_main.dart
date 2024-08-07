@@ -157,9 +157,9 @@ class MeetManageMain extends StatelessWidget {
               context.goNamed('coinMainFromMeetManageMain');
             },
             child: CoinWidget(
-              coinAmount: userViewModel.userModel!.coin,
-              ticketAmount: userViewModel.userModel!.ticket,
-              isFixed: userViewModel.userModel!.isFixedTicket,
+              coinAmount: userViewModel.userModel?.coin ?? -1,
+              ticketAmount: userViewModel.userModel?.ticket ?? -1,
+              isFixed: userViewModel.userModel?.isFixedTicket ?? false,
             ),
           ),
         ),

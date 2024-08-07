@@ -262,9 +262,9 @@ class MeetMain extends StatelessWidget {
         child: Align(
           alignment: Alignment.centerRight,
           child: CoinWidget(
-            coinAmount: userViewModel.userModel!.coin,
-            ticketAmount: userViewModel.userModel!.ticket,
-            isFixed: userViewModel.userModel!.isFixedTicket,
+            coinAmount: userViewModel.userModel?.coin ?? -1,
+            ticketAmount: userViewModel.userModel?.ticket ?? -1,
+            isFixed: userViewModel.userModel?.isFixedTicket ?? false,
           ),
         ),
       ),

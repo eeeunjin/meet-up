@@ -257,12 +257,12 @@ class WithdrawalNext extends StatelessWidget {
                       style: const ButtonStyle(
                           overlayColor:
                               MaterialStatePropertyAll(Colors.transparent)),
-                      onPressed: () {
+                      onPressed: () async {
                         // 로그인 페이지로 이동
                         while (context.canPop()) {
                           context.pop();
                         }
-                        userViewModel.logout();
+                        await userViewModel.logout();
                       },
                       child: Text(
                         '확인',

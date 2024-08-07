@@ -9,7 +9,7 @@ class MeetUserInfoViewModel with ChangeNotifier {
 
   // 나이대 구하는 함수
   String getAgeRange() {
-    DateTime birthDate = userModel!.birthday; // 생년월일 설정
+    DateTime birthDate = userModel?.birthday ?? DateTime.now(); // 생년월일 설정
     DateTime currentDate = DateTime.now(); // 현재 날짜 가져오기
 
     // 생일이 지났는지 확인
@@ -49,12 +49,12 @@ class MeetUserInfoViewModel with ChangeNotifier {
 
   // 성별 변환
   String convertGenderToKor() {
-    return (userModel!.gender != Gender.female.name) ? "남성" : '여성';
+    return (userModel?.gender != Gender.female.name) ? "남성" : '여성';
   }
 
   // 직장
   String convertAffliationToKor() {
-    switch (userModel!.job) {
+    switch (userModel?.job) {
       case "employee":
         return "직장인";
       case "freelancer":

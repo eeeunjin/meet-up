@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/loginFunc.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/model/chat_room_model.dart';
 import 'package:meet_up/view/chat/chat_main.dart';
 import 'package:meet_up/view/chat/chat_room.dart';
@@ -306,11 +307,25 @@ final router = GoRouter(
           parentNavigatorKey: shellNavkey,
           routes: [
             GoRoute(
-              path: 'chatRoom',
-              name: 'chatRoom',
-              parentNavigatorKey: rootNavkey,
-              builder: (context, state) => const ChatRoom(),
-            ),
+                path: 'chatRoom',
+                name: 'chatRoom',
+                parentNavigatorKey: rootNavkey,
+                builder: (context, state) => const ChatRoom(),
+                routes: [
+                  GoRoute(
+                      path: 'chatRoomDetail',
+                      name: 'chatRoomDetail',
+                      parentNavigatorKey: rootNavkey,
+                      builder: (context, state) => const MeetDetailRoom(),
+                      routes: [
+                        GoRoute(
+                          path: 'meetUserInfo_chat',
+                          name: 'meetUserInfo_chat',
+                          parentNavigatorKey: rootNavkey,
+                          builder: (context, state) => const MeetUserInfo(),
+                        ),
+                      ])
+                ]),
           ],
         ),
         // Schedule
@@ -504,8 +519,10 @@ final router = GoRouter(
     // 초기 화면 (botNavBar에 포함되지 않는 화면)
     GoRoute(
       path: '/',
+      parentNavigatorKey: rootNavkey,
       pageBuilder: (context, state) {
         // logger.d("GoRoute Path Location: ${state.fullPath}");
+        logger.d("여기는 오나");
         if (LoginFunc.isLogined) {
           // logger.d("로그인 상태 확인: 로그인 상태입니다.");
           return const NoTransitionPage(child: BotNavBar());
@@ -519,11 +536,13 @@ final router = GoRouter(
         GoRoute(
           path: 'loginPhoneNum',
           name: 'loginPhoneNum',
+          parentNavigatorKey: rootNavkey,
           builder: (context, state) => const LoginPhoneNum(),
           routes: [
             GoRoute(
               path: 'loginVerification',
               name: 'loginVerification',
+              parentNavigatorKey: rootNavkey,
               builder: (context, state) => const LoginVerification(),
             ),
           ],
@@ -533,38 +552,45 @@ final router = GoRouter(
         GoRoute(
           path: 'signUpPhoneNum',
           name: 'signUpPhoneNum',
+          parentNavigatorKey: rootNavkey,
           builder: (context, state) => const SignUpPhoneNum(),
           routes: [
             GoRoute(
               path: 'signUpVerification',
               name: 'signUpVerification',
+              parentNavigatorKey: rootNavkey,
               builder: (context, state) => const SignUpVerification(),
               routes: [
                 GoRoute(
                   path: 'signUpDetailOne',
                   name: 'signUpDetailOne',
+                  parentNavigatorKey: rootNavkey,
                   builder: (context, state) => const SignUpDetailOne(),
                   routes: [
                     GoRoute(
                       path: 'signUpDetailTwo',
                       name: 'signUpDetailTwo',
+                      parentNavigatorKey: rootNavkey,
                       builder: (context, state) => const SignUpDetailTwo(),
                       routes: [
                         GoRoute(
                           path: 'signUpDetailThree',
                           name: 'signUpDetailThree',
+                          parentNavigatorKey: rootNavkey,
                           builder: (context, state) =>
                               const SignUpDetailThree(),
                           routes: [
                             GoRoute(
                               path: 'signUpDetailFour',
                               name: 'signUpDetailFour',
+                              parentNavigatorKey: rootNavkey,
                               builder: (context, state) =>
                                   const SignUpDetailFour(),
                               routes: [
                                 GoRoute(
                                   path: 'signUpDetailFive',
                                   name: 'signUpDetailFive',
+                                  parentNavigatorKey: rootNavkey,
                                   builder: (context, state) =>
                                       const SignUpDetailFive(),
                                 ),

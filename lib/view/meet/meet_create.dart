@@ -612,11 +612,11 @@ class MeetCreate extends StatelessWidget {
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: () => userViewModel.userModel!.gender == 'male'
+                  onTap: () => userViewModel.userModel?.gender == 'male'
                       ? null
                       : viewModel.selectWomen4(),
                   child: Image.asset(
-                    userViewModel.userModel!.gender == 'male'
+                    userViewModel.userModel?.gender == 'male'
                         ? ImagePath.grW4Blur
                         : viewModel.roomGenderRatio == RoomGenderRatio.womanOnly
                             ? ImagePath.grW4
@@ -638,11 +638,11 @@ class MeetCreate extends StatelessWidget {
                 ),
                 SizedBox(width: 24.w),
                 GestureDetector(
-                  onTap: () => userViewModel.userModel!.gender == 'female'
+                  onTap: () => userViewModel.userModel?.gender == 'female'
                       ? null
                       : viewModel.selectMen4(),
                   child: Image.asset(
-                    userViewModel.userModel!.gender == 'female'
+                    userViewModel.userModel?.gender == 'female'
                         ? ImagePath.grW4Blur
                         : viewModel.roomGenderRatio == RoomGenderRatio.manOnly
                             ? ImagePath.grM4

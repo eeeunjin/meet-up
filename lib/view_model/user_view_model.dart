@@ -20,7 +20,7 @@ class UserViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void setUserModelWithRebuild({required UserModel userModel}) {
+  void setUserModelWithRebuild({required UserModel? userModel}) {
     this.userModel = userModel;
     rebuild = !rebuild;
     notifyListeners();
@@ -83,12 +83,11 @@ class UserViewModel with ChangeNotifier {
   // 로그아웃 시, 로그인 정보 및 uid 정보 삭제
   Future<void> logout() async {
     try {
-      LoginFunc.isLogined = false;
       // firebase secure storage에 uid 값 삭제
       await LoginFunc.storage.delete(key: "uid");
-      userModel = null;
+      LoginFunc.isLogined = false;
       uid = null;
-      // notifyListeners();
+      setUserModelWithRebuild(userModel: null);
     } catch (e) {
       LoginFunc.isLogined = true;
       logger.e("[logout] Error: $e");

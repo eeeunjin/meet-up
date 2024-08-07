@@ -89,7 +89,7 @@ class CoinPurchaseHistory extends StatelessWidget {
             height: 14.h,
           ),
           Text(
-            "${userViewModel.userModel!.coin} C".replaceAllMapped(
+            "${userViewModel.userModel?.coin ?? -1} C".replaceAllMapped(
                 RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
                 (Match m) => '${m[1]},'),
             style: AppTextStyles.PR_SB_36.copyWith(

@@ -124,7 +124,7 @@ class ProfileMain extends StatelessWidget {
 
   Widget _profileBox(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context);
-    final profileIcon = userViewModel.userModel!.profile_icon;
+    final profileIcon = userViewModel.userModel?.profile_icon ?? 'fedro_1';
     final profileIconName = profileIcon.split('/').last.split('_').first;
     String path = '';
     switch (profileIconName) {
@@ -177,7 +177,7 @@ class ProfileMain extends StatelessWidget {
                       onTap: () {
                         // 수정 페이지
                         logger.d(
-                            'userModel: ${userViewModel.userModel!.toJson()}');
+                            'userModel: ${userViewModel.userModel?.toJson()}');
 
                         final profileViewModel = Provider.of<ProfileViewModel>(
                             context,
@@ -198,7 +198,7 @@ class ProfileMain extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 24.0.w, bottom: 3.h),
                     child: Text(
-                      userViewModel.userModel!.nickname,
+                      userViewModel.userModel?.nickname ?? '',
                       style: AppTextStyles.PR_SB_18
                           .copyWith(color: UsedColor.charcoal_black),
                     ),
@@ -286,7 +286,7 @@ class ProfileMain extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(top: 7.0.h, left: 7.w),
                         child: Text(
-                          '${userViewModel.userModel!.coin} C',
+                          '${userViewModel.userModel?.coin ?? -1} C',
                           style: AppTextStyles.PR_R_14
                               .copyWith(color: UsedColor.charcoal_black),
                         ),
@@ -330,7 +330,7 @@ class ProfileMain extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(top: 7.0.h, left: 7.w),
                         child: Text(
-                          '${userViewModel.userModel!.ticket}장',
+                          '${userViewModel.userModel?.ticket ?? -1}장',
                           style: AppTextStyles.PR_R_14
                               .copyWith(color: UsedColor.charcoal_black),
                         ),
