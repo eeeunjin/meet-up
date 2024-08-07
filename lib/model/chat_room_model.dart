@@ -39,6 +39,9 @@ class ChatModel {
   Timestamp date;
   // 방 레퍼런스
   String room_id;
+  // 타입
+  // enter, exit, chat
+  String type;
 
   ChatModel({
     required this.uid,
@@ -46,6 +49,7 @@ class ChatModel {
     required this.content,
     required this.date,
     required this.room_id,
+    required this.type,
   });
 
   ChatModel.fromJson(Map<String, Object?> json)
@@ -55,6 +59,7 @@ class ChatModel {
           content: json['Content']! as String,
           date: json['date']! as Timestamp,
           room_id: json['room_reference']! as String,
+          type: json['type']! as String,
         );
 
   Map<String, Object?> toJson() {
@@ -64,6 +69,7 @@ class ChatModel {
       'Content': content,
       'date': date,
       'room_reference': room_id,
+      'type': type,
     };
   }
 }

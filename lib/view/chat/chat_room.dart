@@ -71,7 +71,7 @@ class ChatRoom extends StatelessWidget {
                             onTap: () {
                               logger.d("방 세부 정보 보기 버튼 눌림");
                               meetDetailRoomViewModel.setCurrentRoomModel(
-                                  roomModel: chatRoomViewModel.roomModel!);
+                                  roomModel: chatRoomViewModel.roomModel);
                               meetDetailRoomViewModel.setIsChatRoom(
                                   isChatRoom: true);
                               meetDetailRoomViewModel.setIsMyRoom(
@@ -656,6 +656,7 @@ class ChatRoom extends StatelessWidget {
                           content: message,
                           date: Timestamp.now(),
                           room_id: chatRoomViewModel.roomID,
+                          type: "chat",
                         );
 
                         // 채팅 정보를 전달
@@ -692,6 +693,9 @@ class ChatRoom extends StatelessWidget {
 
   void _showOutRoomDialog(BuildContext context) {
     logger.d("채팅방 나가기 다이얼로그 출력");
+    final chatRoomViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     showCupertinoDialog(
       context: context,
       builder: (context) => CupertinoAlertDialog(
@@ -723,13 +727,23 @@ class ChatRoom extends StatelessWidget {
               style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
             ),
             onPressed: () {
-              // 채팅방 나가기
-              // myRoom 정보 삭제
-              // room 정보 변경
               // 1. 나간 사람이 방장인 경우
               // 2. 나간 사람이 참여자인 경우
+              // 참여자인지 방장인지 구별하는 변수
+              final isOnwer = chatRoomViewModel.userModels[0].nickname ==
+                  userViewModel.userModel?.nickname;
+
+              // myRoom 정보 삭제
+              // chatRoomViewModel.deleteMyRoom(isOwner: isOnwer);
+              // room 정보 변경
+              // chatRoomViewModel.updateRoomInfo(isOwner: isOnwer);
+              // chatModel 추가
+              // chatRoomViewModel.createChatDocument(chatModel: ChatModel());
+
+              // TODO: 만남권 소진 로직 추가 이후 작성
               // 2-1) 나간 사람의 만남권 횟수가 남은 경우
               // 2-2) 나간 사람의 만남권 횟수가 없는 경우
+
               context.pop();
             },
           ),
