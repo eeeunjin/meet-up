@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/next_button.dart';
+import 'package:meet_up/view_model/bot_nav_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/profile/profile_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
@@ -258,11 +260,14 @@ class WithdrawalNext extends StatelessWidget {
                           overlayColor:
                               MaterialStatePropertyAll(Colors.transparent)),
                       onPressed: () async {
-                        // 로그인 페이지로 이동
-                        while (context.canPop()) {
-                          context.pop();
-                        }
                         await userViewModel.logout();
+                        while (router.canPop()) {
+                          router.pop();
+                        }
+                        router.go('/');
+                        Provider.of<BottomNavigationBarViewModel>(context,
+                                listen: false)
+                            .changeIndex(0);
                       },
                       child: Text(
                         '확인',
