@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_up/model/chat_room_model.dart';
+import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/repository/chat_repository.dart';
 import 'package:meet_up/repository/user_repository.dart';
@@ -14,8 +15,11 @@ class ChatRoomViewModel with ChangeNotifier {
   String get roomID => _roomID;
 
   // 채팅 방 이름
-  String _roomName = '';
-  String get roomName => _roomName;
+  String get roomName => roomModel.room_name;
+
+  // 방 정보 모델
+  RoomModel? _roomModel;
+  RoomModel get roomModel => _roomModel!;
 
   // 방에 참가한 유저 정보
   final List<UserModel> _userModels = [];
@@ -48,11 +52,15 @@ class ChatRoomViewModel with ChangeNotifier {
     _roomID = value;
   }
 
-  void setRoomName(String value) {
-    _roomName = value;
+  void setRoomModel(RoomModel value) {
+    _roomModel = value;
   }
 
-  Future<void> setUserModels(List<dynamic> userRefs) async {
+  Future<void> setUserModels() async {
+    final userRefs = List.from(roomModel.room_participant_reference);
+
+    userRefs.insert(0, roomModel.room_owner_reference);
+
     for (DocumentReference userRef in userRefs) {
       UserModel userModel =
           await _userRepository.readUserDocument(uid: userRef.id);

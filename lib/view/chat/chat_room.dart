@@ -11,6 +11,7 @@ import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/chat/chat_room_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
+import 'package:meet_up/view_model/meet/meet_detail_room_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_down_button/pull_down_button.dart';
@@ -22,6 +23,8 @@ class ChatRoom extends StatelessWidget {
   Widget build(BuildContext context) {
     final chatRoomViewModel =
         Provider.of<ChatRoomViewModel>(context, listen: false);
+    final meetDetailRoomViewModel =
+        Provider.of<MeetDetailRoomViewModel>(context, listen: false);
     return Selector<ChatRoomViewModel, bool>(
       builder: (context, value, child) {
         return Opacity(
@@ -67,7 +70,13 @@ class ChatRoom extends StatelessWidget {
                             ),
                             onTap: () {
                               logger.d("방 세부 정보 보기 버튼 눌림");
-
+                              meetDetailRoomViewModel.setCurrentRoomModel(
+                                  roomModel: chatRoomViewModel.roomModel!);
+                              meetDetailRoomViewModel.setIsChatRoom(
+                                  isChatRoom: true);
+                              meetDetailRoomViewModel.setIsMyRoom(
+                                  isMyRoom: false);
+                              context.goNamed('chatRoomDetail');
                               chatRoomViewModel.setMoreOptionClicked(false);
                             },
                           ),

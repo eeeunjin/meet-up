@@ -11,6 +11,7 @@ class MeetDetailRoomViewModel with ChangeNotifier {
   final RoomRepository _roomRepository = RoomRepository();
   RoomModel? currentRoomModel; // 현재 방 모델
   bool? isMyRoom;
+  bool? isChatRoom;
 
   void setCurrentRoomModel({required RoomModel roomModel}) {
     currentRoomModel = roomModel.clone();
@@ -18,6 +19,11 @@ class MeetDetailRoomViewModel with ChangeNotifier {
 
   void setIsMyRoom({required bool isMyRoom}) {
     this.isMyRoom = isMyRoom;
+    notifyListeners();
+  }
+
+  void setIsChatRoom({required bool isChatRoom}) {
+    this.isChatRoom = isChatRoom;
     notifyListeners();
   }
 
@@ -104,7 +110,8 @@ class MeetDetailRoomViewModel with ChangeNotifier {
       required roomId}) async {
     try {
       final participantList = participants;
-      participantList.add(FirebaseFirestore.instance.collection('users').doc(myUid));
+      participantList
+          .add(FirebaseFirestore.instance.collection('users').doc(myUid));
 
       final data = {
         'room_participant_reference': participantList,

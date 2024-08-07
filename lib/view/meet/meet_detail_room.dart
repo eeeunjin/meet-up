@@ -309,11 +309,22 @@ class MeetDetailRoom extends StatelessWidget {
                                   return GestureDetector(
                                     onTap: () {
                                       // 눌렀을 때 프로필 상세 정보로 넘어가기
+                                      meetUserInfoViewModel.userModel =
+                                          userModels[index];
+                                      // 채팅 방
+                                      if (meetDetailRoomViewModel.isChatRoom ==
+                                          true) {
+                                        context.goNamed('meetUserInfo_chat');
+                                        return;
+                                      }
+                                      // 나의 만남 방 관리
                                       if (meetDetailRoomViewModel.isMyRoom!) {
                                         meetUserInfoViewModel.userModel =
                                             userModels[index];
                                         context.goNamed('meetUserInfo_manage');
-                                      } else {
+                                      } 
+                                      // 만남 방 둘러보기
+                                      else {
                                         meetUserInfoViewModel.userModel =
                                             userModels[index];
                                         context.goNamed('meetUserInfo_browse');
@@ -392,7 +403,8 @@ class MeetDetailRoom extends StatelessWidget {
                 },
               ),
               SizedBox(height: 48.h),
-              _removeButton(context),
+              if (meetDetailRoomViewModel.isChatRoom != true)
+                _removeButton(context)
             ],
           ),
         ),
