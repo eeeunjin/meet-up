@@ -80,7 +80,8 @@ class ChatNotification extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          WarningSection(
+          _warningSection(
+            context,
             title: '이탈 (일정 확정 전)',
             iconPath: ImagePath.chatNotification1,
             items: const ['하나의 만남권당 최대 3번까지 이탈 가능', '이후 이탈 만남권 소진'],
@@ -88,7 +89,8 @@ class ChatNotification extends StatelessWidget {
           SizedBox(
             height: 48.h,
           ),
-          WarningSection(
+          _warningSection(
+            context,
             title: '이탈 (일정 확정 후)',
             iconPath: ImagePath.chatNotification2,
             items: const ['만남권 소진'],
@@ -96,7 +98,8 @@ class ChatNotification extends StatelessWidget {
           SizedBox(
             height: 40.h,
           ),
-          WarningSection(
+          _warningSection(
+            context,
             title: '이탈 (일정 확정 후 당일 이탈)',
             iconPath: ImagePath.chatNotification3,
             items: const ['1회: 일주일 정지', '2회: 한 달 정지', '3회: 영구 정지 처리'],
@@ -104,7 +107,8 @@ class ChatNotification extends StatelessWidget {
           SizedBox(
             height: 40.h,
           ),
-          WarningSection(
+          _warningSection(
+            context,
             title: '개인정보 유출 및 공유',
             iconPath: ImagePath.chatNotification4,
             items: const ['만남 이전, 연락처를 공유하거나 요구하는 경우', '다른 사람의 개인정보를 유출하는 경우'],
@@ -149,7 +153,8 @@ class ChatNotification extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          WarningSection(
+          _warningSection(
+            context,
             title: '특정 단체 관련 포교 행위',
             iconPath: ImagePath.chatNotification5,
             items: const ['종교나 특정 단체에 대한 포교 행위'],
@@ -157,7 +162,8 @@ class ChatNotification extends StatelessWidget {
           SizedBox(
             height: 48.h,
           ),
-          WarningSection(
+          _warningSection(
+            context,
             title: '욕설, 비방, 폭력, 혐오 표현',
             iconPath: ImagePath.chatNotification6,
             items: const ['채팅 중에 욕설, 비방, 폭력, 혐오를\n 표현하는 경우'],
@@ -165,7 +171,8 @@ class ChatNotification extends StatelessWidget {
           SizedBox(
             height: 48.h,
           ),
-          WarningSection(
+          _warningSection(
+            context,
             title: '불법 행위',
             iconPath: ImagePath.chatNotification7,
             items: const ['도박, 사기, 규제 상품 판매 등\n 불법적인 행위를 하는 경우'],
@@ -173,7 +180,8 @@ class ChatNotification extends StatelessWidget {
           SizedBox(
             height: 40.h,
           ),
-          WarningSection(
+          _warningSection(
+            context,
             title: '허위 신고',
             iconPath: ImagePath.chatNotification8,
             items: const ['1회: 일주일 정지', '2회: 한 달 정지', '3회: 영구 정지 처리'],
@@ -215,13 +223,14 @@ class ChatNotification extends StatelessWidget {
       padding: EdgeInsets.only(
         left: 21.w,
         right: 21.w,
-        bottom: 56.h,
+        bottom: 51.h,
         top: 51.h,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          WarningSection(
+          _warningSection(
+            context,
             title: '노골적인 성적 표현',
             iconPath: ImagePath.chatNotification9,
             items: const ['성매매 유도나 성적 발언을 하는\n 참여자가 있을 경우'],
@@ -229,7 +238,8 @@ class ChatNotification extends StatelessWidget {
           SizedBox(
             height: 48.h,
           ),
-          WarningSection(
+          _warningSection(
+            context,
             title: '장시간 채팅 불참',
             iconPath: ImagePath.chatNotification10,
             items: const ['12시간 이상 채팅에 참여하지 않는 경우'],
@@ -427,23 +437,11 @@ class ChatNotification extends StatelessWidget {
       ),
     );
   }
-}
 
-// WarningSection 위젯 정의
-class WarningSection extends StatelessWidget {
-  final String title;
-  final String iconPath;
-  final List<String> items;
-
-  const WarningSection({
-    super.key,
-    required this.title,
-    required this.iconPath,
-    required this.items,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _warningSection(BuildContext context,
+      {required String title,
+      required String iconPath,
+      required List<String> items}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
