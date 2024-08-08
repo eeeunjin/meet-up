@@ -176,6 +176,7 @@ Future<void> roomDocumentCreationTest() async {
 
   final myRoomModel = MyRoomModel(
     isMyRoom: true,
+    isNew: true,
     room_reference: docRef,
   );
 

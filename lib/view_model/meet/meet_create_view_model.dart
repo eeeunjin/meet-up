@@ -326,8 +326,10 @@ class MeetCreateViewModel with ChangeNotifier {
     // 유저의 방 정보 생성
     MyRoomModel myRoomModel = MyRoomModel(
       isMyRoom: true,
+      isNew: true,
       room_reference: roomDocRef,
     );
+    
     // 유저의 방 정보 저장
     await _userRepository.createMyRoomDocument(
       data: myRoomModel,

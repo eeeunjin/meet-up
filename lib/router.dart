@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/loginFunc.dart';
 import 'package:meet_up/main.dart';
-import 'package:meet_up/model/chat_room_model.dart';
 import 'package:meet_up/view/chat/chat_main.dart';
+import 'package:meet_up/view/chat/chat_notification_onboarding.dart';
 import 'package:meet_up/view/chat/chat_room.dart';
 import 'package:meet_up/view/chat/chat_schedule_host.dart';
 import 'package:meet_up/view/chat/chat_schedule_host_view.dart';
@@ -307,25 +307,34 @@ final router = GoRouter(
           parentNavigatorKey: shellNavkey,
           routes: [
             GoRoute(
-                path: 'chatRoom',
-                name: 'chatRoom',
-                parentNavigatorKey: rootNavkey,
-                builder: (context, state) => const ChatRoom(),
-                routes: [
-                  GoRoute(
-                      path: 'chatRoomDetail',
-                      name: 'chatRoomDetail',
+              path: 'chatNotificationOnboarding',
+              name: 'first_enter_onboarding',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) => const ChatNotification(),
+            ),
+            
+            GoRoute(
+              path: 'chatRoom',
+              name: 'chatRoom',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) => const ChatRoom(),
+              routes: [
+                GoRoute(
+                  path: 'chatRoomDetail',
+                  name: 'chatRoomDetail',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) => const MeetDetailRoom(),
+                  routes: [
+                    GoRoute(
+                      path: 'meetUserInfo_chat',
+                      name: 'meetUserInfo_chat',
                       parentNavigatorKey: rootNavkey,
-                      builder: (context, state) => const MeetDetailRoom(),
-                      routes: [
-                        GoRoute(
-                          path: 'meetUserInfo_chat',
-                          name: 'meetUserInfo_chat',
-                          parentNavigatorKey: rootNavkey,
-                          builder: (context, state) => const MeetUserInfo(),
-                        ),
-                      ])
-                ]),
+                      builder: (context, state) => const MeetUserInfo(),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ],
         ),
         // Schedule

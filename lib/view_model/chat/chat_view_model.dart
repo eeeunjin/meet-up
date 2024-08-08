@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 class ChatViewModel with ChangeNotifier {
   final UserRepository _userRepository = UserRepository();
 
-  // myRoom 정보 불러오기 테스트
+  // myRoom 정보 불러오기
   Stream<QuerySnapshot<Object?>> readMyRoomCollectionStream({
     required String uid,
   }) {
@@ -16,6 +16,20 @@ class ChatViewModel with ChangeNotifier {
       findAll: true,
     );
   }
+
+  // myRoom 정보 업데이트 (isNew 변수)
+  Future<void> updateMyRoomInfo({
+    required String uid,
+    required String roomId,
+    required Map<String, dynamic> data,
+  }) async {
+    await _userRepository.updateMyRoomDocument(
+      uid: uid,
+      data: data,
+      roomId: roomId,
+    );
+  }
+
 
   // MARK: - 일정 등록
   // 일정
@@ -168,7 +182,6 @@ class ChatViewModel with ChangeNotifier {
   }
 
   // MARK: - check
-
   bool get allCheckCompleted {
     return namingCompleted;
   }

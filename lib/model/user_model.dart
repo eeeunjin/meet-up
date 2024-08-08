@@ -104,22 +104,26 @@ class UserModel {
 
 class MyRoomModel {
   bool isMyRoom;
+  bool isNew;
   DocumentReference room_reference;
 
   MyRoomModel({
     required this.isMyRoom,
+    required this.isNew,
     required this.room_reference,
   });
 
   MyRoomModel.fromJson(Map<String, Object?> json)
       : this(
           isMyRoom: json['isMyRoom']! as bool,
+          isNew: json['isNew']! as bool,
           room_reference: json['room_reference']! as DocumentReference,
         );
 
   Map<String, dynamic> toJson() {
     return {
       'isMyRoom': isMyRoom,
+      'isNew': isNew,
       'room_reference': room_reference,
     };
   }

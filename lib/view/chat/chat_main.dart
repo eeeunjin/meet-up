@@ -143,17 +143,22 @@ class ChatMain extends StatelessWidget {
                   child: CircularProgressIndicator(),
                 );
               } else {
-                List<DocumentReference> myRoomDocumentList =
-                    snapshot.data?.docs.map(
-                          (e) {
-                            final myRoomModel = MyRoomModel.fromJson(
-                                e.data() as Map<String, dynamic>);
-                            return myRoomModel.room_reference;
-                          },
-                        ).toList() ??
-                        [];
+                List<MyRoomModel> myRoomModels = snapshot.data?.docs.map(
+                      (e) {
+                        return MyRoomModel.fromJson(
+                            e.data() as Map<String, dynamic>);
+                      },
+                    ).toList() ??
+                    [];
 
-                return myRoomDocumentList.isNotEmpty
+                List<DocumentReference> roomModelDocumentList =
+                    myRoomModels.map(
+                  (e) {
+                    return e.room_reference;
+                  },
+                ).toList();
+
+                return roomModelDocumentList.isNotEmpty
                     ? Expanded(
                         child: ListView.builder(
                           itemCount: snapshot.data?.docs.length ?? 0,
@@ -162,7 +167,7 @@ class ChatMain extends StatelessWidget {
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return StreamBuilder<DocumentSnapshot>(
-                              stream: myRoomDocumentList[index].snapshots(),
+                              stream: roomModelDocumentList[index].snapshots(),
                               builder: (context, snapshot) {
                                 if (snapshot.hasError) {
                                   return Center(
@@ -207,14 +212,14 @@ class ChatMain extends StatelessWidget {
                                     children: [
                                       GestureDetector(
                                         onTap: () async {
-                                          logger
-                                              .d(myRoomDocumentList[index].id);
+                                          logger.d(
+                                              roomModelDocumentList[index].id);
                                           // 입장 하는 방의 상태 값 초기화
                                           chatRoomViewModel.resetState();
 
                                           // 입장 하려는 방에 정보 전달
                                           chatRoomViewModel.setRoomID(
-                                              myRoomDocumentList[index].id);
+                                              roomModelDocumentList[index].id);
 
                                           chatRoomViewModel
                                               .setRoomModel(roomModel);
@@ -222,7 +227,22 @@ class ChatMain extends StatelessWidget {
                                           await chatRoomViewModel
                                               .setUserModels();
 
-                                          context.goNamed('chatRoom');
+                                          // 처음 입장하는 방인 경우
+                                          if (myRoomModels[index].isNew) {
+                                            // isNew 상태를 false로 변경
+                                            await chatViewModel
+                                                .updateMyRoomInfo(
+                                              uid: userViewModel.uid!,
+                                              roomId: roomModel.roomId,
+                                              data: {'isNew': false},
+                                            );
+                                            context.goNamed(
+                                                'first_enter_onboarding');
+                                          }
+                                          // 처음 입장하는 방이 아닌 경우
+                                          else {
+                                            context.goNamed('chatRoom');
+                                          }
                                         },
                                         child: Container(
                                           height: 80.h,

@@ -132,6 +132,7 @@ class MeetDetailRoomViewModel with ChangeNotifier {
       // 유저의 방 정보 생성
       MyRoomModel myRoomModel = MyRoomModel(
         isMyRoom: false,
+        isNew: true,
         room_reference:
             FirebaseFirestore.instance.collection('rooms').doc(roomId),
       );
