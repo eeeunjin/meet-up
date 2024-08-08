@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -406,7 +404,8 @@ class ChatNotification extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: viewModel.isChecked
                           ? () {
-                              Navigator.pop(context);
+                              // chatViewModel의 필요한 값은 Onboarding으로 넘어오기 전에 다 전달해서 안넘겨줘도 됨
+                              context.goNamed('chatRoom');
                             }
                           : null,
                       style: ElevatedButton.styleFrom(

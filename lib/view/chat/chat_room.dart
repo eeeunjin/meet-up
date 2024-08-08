@@ -174,14 +174,87 @@ class ChatRoom extends StatelessWidget {
   Widget _main(BuildContext context) {
     return Column(
       children: [
-        _chatListView(context),
+        _chatBody(context),
         _typeMessageBox(context),
       ],
     );
   }
 
+  // MARK: - 채팅 바디
+  Widget _chatBody(BuildContext context) {
+    final chatRoomViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          // 키보드 내리기
+          chatRoomViewModel.setStartEdit(false);
+          FocusScope.of(context).unfocus();
+        },
+        child: Container(
+          color: Colors.white,
+          child: Column(
+            children: [
+              SizedBox(height: 20.h),
+              _chatNotification(context),
+              _chatList(context),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // MARK: - 채팅 공지
+  Widget _chatNotification(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        logger.d("채팅 시 주의 사항 버튼이 눌렸습니다.");
+        context.goNamed('chat_room_onboarding');
+      },
+      child: Container(
+        width: 357.w,
+        height: 31.h,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.5.r),
+          color: UsedColor.image_card,
+        ),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 12.w,
+            ),
+            Image.asset(
+              ImagePath.chatRoomNoticeImage,
+              width: 20.w,
+              height: 20.h,
+            ),
+            SizedBox(
+              width: 6.14.w,
+            ),
+            Text(
+              "채팅 시 주의 사항",
+              style: AppTextStyles.PR_SB_15.copyWith(
+                color: UsedColor.charcoal_black,
+              ),
+            ),
+            const Spacer(),
+            Image.asset(
+              ImagePath.chatRoomChevronRightImage,
+              width: 6.25.w,
+              height: 12.5.h,
+            ),
+            SizedBox(
+              width: 14.37.w,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   // MARK: - 채팅 리스트
-  Widget _chatListView(BuildContext context) {
+  Widget _chatList(BuildContext context) {
     final chatRoomViewModel =
         Provider.of<ChatRoomViewModel>(context, listen: false);
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
@@ -223,113 +296,57 @@ class ChatRoom extends StatelessWidget {
         }
 
         return Expanded(
-          child: GestureDetector(
-            onTap: () {
-              // 키보드 내리기
-              chatRoomViewModel.setStartEdit(false);
-              FocusScope.of(context).unfocus();
-            },
-            child: Container(
-              color: Colors.white,
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: SingleChildScrollView(
+              reverse: true,
+              controller: chatRoomViewModel.scrollController,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 20.h),
-                  Container(
-                    width: 357.w,
-                    height: 31.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.5.r),
-                      color: UsedColor.image_card,
-                    ),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 12.w,
-                        ),
-                        Image.asset(
-                          ImagePath.chatRoomNoticeImage,
-                          width: 20.w,
-                          height: 20.h,
-                        ),
-                        SizedBox(
-                          width: 6.14.w,
-                        ),
-                        Text(
-                          "채팅 시 주의 사항",
-                          style: AppTextStyles.PR_SB_15.copyWith(
-                            color: UsedColor.charcoal_black,
-                          ),
-                        ),
-                        const Spacer(),
-                        Image.asset(
-                          ImagePath.chatRoomChevronRightImage,
-                          width: 6.25.w,
-                          height: 12.5.h,
-                        ),
-                        SizedBox(
-                          width: 14.37.w,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: SingleChildScrollView(
-                        reverse: true,
-                        controller: chatRoomViewModel.scrollController,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ...chatModelsGroupByDate.keys.map(
-                              (key) {
-                                return Column(
-                                  children: [
-                                    SizedBox(height: 20.h),
-                                    Container(
-                                      width: 110.w,
-                                      height: 23.h,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(11.5.r),
-                                        color: UsedColor.chat,
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          key,
-                                          style: AppTextStyles.PR_R_11.copyWith(
-                                            color: UsedColor.text_4,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 20.h),
-                                    // chatModelsGroupByDate[key]의 ChatModel 별로 chatBox 생성
-                                    ...chatModelsGroupByDate[key]!.map(
-                                      (chatModel) {
-                                        final isMyChat =
-                                            chatModel.uid == userViewModel.uid;
-                                        return Padding(
-                                          padding: EdgeInsets.only(
-                                            bottom: 20.h,
-                                          ),
-                                          child: _chatBox(
-                                            context,
-                                            isMyChat: isMyChat,
-                                            chatModel: chatModel,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
+                  ...chatModelsGroupByDate.keys.map(
+                    (key) {
+                      return Column(
+                        children: [
+                          SizedBox(height: 20.h),
+                          Container(
+                            width: 110.w,
+                            height: 23.h,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(11.5.r),
+                              color: UsedColor.chat,
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
+                            child: Center(
+                              child: Text(
+                                key,
+                                style: AppTextStyles.PR_R_11.copyWith(
+                                  color: UsedColor.text_4,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20.h),
+                          // chatModelsGroupByDate[key]의 ChatModel 별로 chatBox 생성
+                          ...chatModelsGroupByDate[key]!.map(
+                            (chatModel) {
+                              final isMyChat =
+                                  chatModel.uid == userViewModel.uid;
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: 20.h,
+                                ),
+                                child: _chatBox(
+                                  context,
+                                  isMyChat: isMyChat,
+                                  chatModel: chatModel,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -339,6 +356,7 @@ class ChatRoom extends StatelessWidget {
     );
   }
 
+  // MARK: - 채팅박스 (종류에 따라 다른 채팅박스 생성)
   Widget _chatBox(
     BuildContext context, {
     required bool isMyChat,

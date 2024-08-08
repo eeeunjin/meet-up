@@ -42,7 +42,6 @@ class ChatMain extends StatelessWidget {
               child: _main(context),
             ),
           ),
-          _notification(context),
           _meetingReview(context),
         ],
       ),
@@ -64,25 +63,6 @@ class ChatMain extends StatelessWidget {
             color: UsedColor.line,
           ),
         ],
-      ),
-    );
-  }
-
-  // MARK: - 유의 사항
-  Widget _notification(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      color: UsedColor.bg_color,
-      child: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ChatNotification()),
-            );
-          },
-          child: const Text('채팅 시 주의 사항'),
-        ),
       ),
     );
   }
@@ -230,17 +210,21 @@ class ChatMain extends StatelessWidget {
                                           // 처음 입장하는 방인 경우
                                           if (myRoomModels[index].isNew) {
                                             // isNew 상태를 false로 변경
+                                            logger.d(
+                                                'uid: ${userViewModel.uid} // roomId: ${myRoomModels[index].room_reference.id}');
                                             await chatViewModel
                                                 .updateMyRoomInfo(
                                               uid: userViewModel.uid!,
-                                              roomId: roomModel.roomId,
+                                              roomId: myRoomModels[index].room_reference.id,
                                               data: {'isNew': false},
                                             );
+                                            // 온 보딩 화면으로 전환
                                             context.goNamed(
                                                 'first_enter_onboarding');
                                           }
                                           // 처음 입장하는 방이 아닌 경우
                                           else {
+                                            // 바로 채팅방으로 이동
                                             context.goNamed('chatRoom');
                                           }
                                         },

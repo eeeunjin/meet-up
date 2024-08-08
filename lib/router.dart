@@ -312,13 +312,18 @@ final router = GoRouter(
               parentNavigatorKey: rootNavkey,
               builder: (context, state) => const ChatNotification(),
             ),
-            
             GoRoute(
               path: 'chatRoom',
               name: 'chatRoom',
               parentNavigatorKey: rootNavkey,
               builder: (context, state) => const ChatRoom(),
               routes: [
+                GoRoute(
+                  path: 'chatNotificationOnboarding',
+                  name: 'chat_room_onboarding',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) => const ChatNotification(),
+                ),
                 GoRoute(
                   path: 'chatRoomDetail',
                   name: 'chatRoomDetail',
