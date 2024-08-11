@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -362,6 +364,7 @@ class ChatRoom extends StatelessWidget {
     required bool isMyChat,
     required ChatModel chatModel,
   }) {
+    logger.d("채팅박스 생성: ${chatModel.type}");
     switch (chatModel.type) {
       case "chat":
         return _chat(context, isMyChat: isMyChat, chatModel: chatModel);
@@ -369,6 +372,9 @@ class ChatRoom extends StatelessWidget {
         return _enter(context, isMyChat: isMyChat, chatModel: chatModel);
       case "exit":
         return _exit(context, isMyChat: isMyChat, chatModel: chatModel);
+      case "schedule_write":
+        return _scheduleWrite(context,
+            isMyChat: isMyChat, chatModel: chatModel);
       default:
         return Container();
     }
@@ -653,6 +659,64 @@ class ChatRoom extends StatelessWidget {
     }
   }
 
+  // MARK: - 일정 작성 가능 알림
+  Widget _scheduleWrite(
+    BuildContext context, {
+    required bool isMyChat,
+    required ChatModel chatModel,
+  }) {
+    return Container(
+      width: 338.w,
+      height: 79.h,
+      padding: EdgeInsets.only(left: 13.w),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(18.r),
+        color: UsedColor.image_card,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 7.h,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: 20.w,
+                height: 20.h,
+                child: Image.asset(
+                  ImagePath.chatRoomScheduleWriteIcon,
+                ),
+              ),
+              SizedBox(width: 6.w),
+              Text(
+                '일정 등록 가능',
+                style: AppTextStyles.PR_SB_14
+                    .copyWith(color: UsedColor.charcoal_black),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 9.h,
+          ),
+          Text(
+            '채팅방에 인원이 모두 들어왔습니다.',
+            style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+          ),
+          SizedBox(
+            height: 5.h,
+          ),
+          Text(
+            '대화를 나누고, 일정을 등록해 보세요!',
+            style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+          )
+        ],
+      ),
+    );
+  }
+
   // MARK: - 메시지 입력창
   Widget _typeMessageBox(BuildContext context) {
     return Consumer<ChatRoomViewModel>(
@@ -740,8 +804,12 @@ class ChatRoom extends StatelessWidget {
                                 right: 22.w,
                                 bottom: (chatRoomViewModel.lineNum == 1 ||
                                         chatRoomViewModel.lineNum == 0)
-                                    ? 16.h
-                                    : 4.h,
+                                    ? (Platform.isAndroid)
+                                        ? 22.h
+                                        : 16.h
+                                    : (Platform.isAndroid)
+                                        ? 10.h
+                                        : 4.h,
                               ),
                               hintText: '메시지를 입력해주세요',
                               hintStyle: AppTextStyles.PR_R_13
