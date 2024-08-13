@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
+import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view/widget/schedule_date_picker_widget.dart';
 import 'package:meet_up/view/widget/schedule_time_picker_widget.dart';
 import 'package:meet_up/view_model/chat/chat_view_model.dart';
@@ -25,7 +27,7 @@ class ChatScheduleHostView extends StatelessWidget {
             padding: EdgeInsets.only(top: 58.h),
             child: _header(context),
           ),
-          _main(context),
+          SingleChildScrollView(child: _main(context)),
         ],
       ),
     );
@@ -78,6 +80,7 @@ class ChatScheduleHostView extends StatelessWidget {
 
   Widget _main(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 22.h),
         _naming(context),
@@ -97,6 +100,15 @@ class ChatScheduleHostView extends StatelessWidget {
         _divider(),
         SizedBox(height: 20.h),
         _scheduleCheck(context),
+        SizedBox(height: 20.h),
+        _checkButton(context),
+        SizedBox(height: 20.h),
+        _checkText(context),
+        SizedBox(height: 20.h),
+        _divider(),
+        SizedBox(height: 20.h),
+        _member(context),
+        _deleteButton(context),
       ],
     );
   }
@@ -307,12 +319,12 @@ class ChatScheduleHostView extends StatelessWidget {
     );
   }
 
-  //MARK: - 일정 확인
+  //MARK: - 일정 확정
   Widget _scheduleCheck(BuildContext context) {
     final viewModel = Provider.of<ChatViewModel>(context);
 
     return Padding(
-      padding: EdgeInsets.only(left: 23.w),
+      padding: EdgeInsets.only(left: 21.w),
       child: Row(
         children: [
           Image.asset(
@@ -329,5 +341,174 @@ class ChatScheduleHostView extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  //MARK: - 참석 확인
+  Widget _checkButton(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 52.0.w),
+      child: Container(
+        width: 287.w,
+        height: 41.h,
+        decoration: BoxDecoration(
+            color: UsedColor.button, borderRadius: BorderRadius.circular(9.r)),
+        child: Center(
+          child: Text(
+            '참석 확인',
+            style: AppTextStyles.PR_SB_18.copyWith(color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+
+  //MARK: - 참석 확인 아래 텍스트
+  Widget _checkText(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 31.0.w),
+      child: Text(
+        '모든 참석자가 참석 확정 버튼을 누르면 일정이 확정됩니다.\n1일 내로  일정 확정이 되지 않으면 방이 사라집니다.\n참석 확정 버튼을 누르면 추후 변경이 불가합니다.',
+        style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  //MARK: - 참석 여부
+  Widget _member(BuildContext context) {
+    final viewModel = Provider.of<ChatViewModel>(context);
+
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: 21.w),
+          child: Row(
+            children: [
+              Image.asset(
+                ImagePath.scheduleIconMember,
+                width: 23.w,
+                height: 23.h,
+              ),
+              SizedBox(width: 12.w),
+              Text(
+                '참석 여부',
+                style: AppTextStyles.PR_M_16
+                    .copyWith(color: UsedColor.charcoal_black),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 21.h),
+        //TODO: 방 인원 확인하는 것처럼 해두기
+      ],
+    );
+  }
+
+  Widget _deleteButton(BuildContext context) {
+    final chatViewModel = Provider.of<ChatViewModel>(context, listen: false);
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: 56.0.h, left: 51.w),
+      child: NextButton(
+        onTap: () {
+          //TODO: 누를 때, 확인 문구 먼저
+          deleteDialog(context, chatViewModel);
+        },
+        height: 50.h,
+        width: 291.w,
+        text: '일정 삭제하기',
+      ),
+    );
+  }
+
+  // MARK: - 일정 삭제 다이얼로그
+  void deleteDialog(BuildContext context, ChatViewModel chatViewModel) {
+    showGeneralDialog(
+        context: context,
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              width: 245.w,
+              height: 164.h,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 20.h),
+                    child: Text(
+                      '일정을 삭제하시겠습니까?',
+                      style: AppTextStyles.PR_M_13.copyWith(
+                          color: Colors.black, decoration: TextDecoration.none),
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  Text(
+                    '일정을 삭제하면 참석자들의\n기존 참석 확인은 무효 처리됩니다.\n일정은 하단 일정 등록 버튼을 통해\n방장이 새롭게 등록 가능합니다.',
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.PR_R_12.copyWith(
+                        color: UsedColor.text_3,
+                        decoration: TextDecoration.none),
+                  ),
+                  SizedBox(height: 18.h),
+                  // 구분선
+                  Container(
+                    height: 0.3.h,
+                    width: 245.w,
+                    color: UsedColor.b_line,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 35.h,
+                          child: TextButton(
+                            // ! : - 잉크 효과 X
+                            style: const ButtonStyle(
+                                overlayColor: MaterialStatePropertyAll(
+                                    Colors.transparent)),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              '취소',
+                              style: AppTextStyles.PR_M_14
+                                  .copyWith(color: UsedColor.charcoal_black),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 35.h,
+                        width: 0.3.w,
+                        color: UsedColor.b_line,
+                      ),
+                      Expanded(
+                          child: SizedBox(
+                        height: 35.h,
+                        child: TextButton(
+                          style: const ButtonStyle(
+                              overlayColor:
+                                  MaterialStatePropertyAll(Colors.transparent)),
+                          onPressed: () {},
+                          child: Text(
+                            '나가기',
+                            style: AppTextStyles.PR_M_14
+                                .copyWith(color: UsedColor.charcoal_black),
+                          ),
+                        ),
+                      ))
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
