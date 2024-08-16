@@ -221,7 +221,7 @@ class ChatScheduleHost extends StatelessWidget {
   Widget _time(BuildContext context) {
     final viewModel = Provider.of<ChatViewModel>(context, listen: false);
 
-    // Mark - ExpansionPanel 사용
+    // ExpansionPanel 사용
     return Theme(
       data: Theme.of(context).copyWith(cardColor: Colors.white),
       child: ExpansionPanelList(

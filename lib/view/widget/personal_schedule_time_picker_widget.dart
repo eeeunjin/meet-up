@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:meet_up/view_model/chat/chat_view_model.dart';
+import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:provider/provider.dart';
 
-class ScheduleTimePicker extends StatelessWidget {
+class PersonalScheduleTimePicker extends StatelessWidget {
   final Function(TimeOfDay) onTimeChanged;
 
-  const ScheduleTimePicker({
+  const PersonalScheduleTimePicker({
     super.key,
     required this.onTimeChanged,
   });
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<ChatViewModel>(context);
+    final viewModel = Provider.of<ScheduleMainViewModel>(context);
 
     return Stack(
       children: [

@@ -88,7 +88,12 @@ void main() async {
         ChangeNotifierProvider(create: (context) => MeetDetailRoomViewModel()),
         ChangeNotifierProvider(create: (context) => MeetBrowseViewModel()),
         ChangeNotifierProvider(create: (context) => MeetFilterViewModel()),
-        ChangeNotifierProvider(create: (context) => ScheduleMainViewModel()),
+        ChangeNotifierProvider(
+            create: (context) => ScheduleMainViewModel(
+                  init: currentDate,
+                  start: oneMonthAgo,
+                  end: twoYearsLater,
+                )),
         ChangeNotifierProvider(create: (context) => UserViewModel()),
         ChangeNotifierProvider(create: (context) => ChatRoomViewModel()),
         ChangeNotifierProvider(

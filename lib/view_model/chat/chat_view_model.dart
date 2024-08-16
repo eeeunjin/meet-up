@@ -30,7 +30,6 @@ class ChatViewModel with ChangeNotifier {
     );
   }
 
-
   // MARK: - 일정 등록
   // 일정
   String _scheduleNaming = '';
@@ -166,13 +165,6 @@ class ChatViewModel with ChangeNotifier {
       notifyListeners();
     }
   }
-
-  // String getFormattedTime() {
-  //   final period = _selectedTime.period == DayPeriod.am ? '오전' : '오후';
-  //   final hour = _selectedTime.hourOfPeriod.toString().padLeft(2, '0');
-  //   final minute = _selectedTime.minute.toString().padLeft(2, '0');
-  //   return '$period $hour:$minute';
-  // }
 
   String formatTime(TimeOfDay time) {
     final hour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
