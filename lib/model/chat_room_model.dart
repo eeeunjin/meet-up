@@ -40,7 +40,7 @@ class ChatModel {
   // 방 레퍼런스
   String room_id;
   // 타입
-  // enter, exit, chat
+  // enter, exit, chat, schedule_write,
   String type;
 
   ChatModel({
