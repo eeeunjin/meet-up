@@ -10,7 +10,7 @@ import 'package:meet_up/loginFunc.dart';
 import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/router.dart';
 import 'package:meet_up/service/remote/firebase_options.dart';
-import 'package:meet_up/view/chat/chat_schedule_host.dart';
+import 'package:meet_up/view/chat/chat_schedule_register.dart';
 import 'package:meet_up/view_model/bot_nav_view_model.dart';
 import 'package:meet_up/view_model/chat/chat_room_schedule_host_view_model.dart';
 import 'package:meet_up/view_model/chat/chat_room_view_model.dart';

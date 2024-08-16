@@ -14,8 +14,8 @@ import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
 import 'package:provider/provider.dart';
 
-class ChatScheduleHost extends StatelessWidget {
-  const ChatScheduleHost({super.key});
+class ChatScheduleRegister extends StatelessWidget {
+  const ChatScheduleRegister({super.key});
 
   // MARK: - 빌드
   @override

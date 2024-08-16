@@ -1207,7 +1207,7 @@ class ChatRoom extends StatelessWidget {
           logger.d("참가자: ${userModel.nickname}");
         }
         if (chatRoomViewModel.userModels.length == 4) {
-          context.goNamed('chatScheduleHost');
+          context.goNamed('chatScheduleRegister');
         }
       },
       child: Container(

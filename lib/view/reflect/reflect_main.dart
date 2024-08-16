@@ -49,7 +49,7 @@ class ReflectMain extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () {
-            context.goNamed('chatScheduleHostView');
+            context.goNamed('chatScheduleCheck');
           },
           child: Container(
             width: 100.w,

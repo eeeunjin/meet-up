@@ -10,8 +10,8 @@ import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
 import 'package:provider/provider.dart';
 
-class ChatScheduleHostView extends StatelessWidget {
-  const ChatScheduleHostView({super.key});
+class ChatScheduleCheck extends StatelessWidget {
+  const ChatScheduleCheck({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +137,8 @@ class ChatScheduleHostView extends StatelessWidget {
 
   //MARK: - 날짜
   Widget _date(BuildContext context) {
-    final viewModel = Provider.of<ChatRoomSchduleHostViewModel>(context, listen: false);
+    final viewModel =
+        Provider.of<ChatRoomSchduleHostViewModel>(context, listen: false);
 
     return Padding(
       padding: EdgeInsets.only(left: 21.0.w),
@@ -168,7 +169,8 @@ class ChatScheduleHostView extends StatelessWidget {
 
 // MARK: - Time
 Widget _time(BuildContext context) {
-  final viewModel = Provider.of<ChatRoomSchduleHostViewModel>(context, listen: false);
+  final viewModel =
+      Provider.of<ChatRoomSchduleHostViewModel>(context, listen: false);
 
   return Padding(
     padding: EdgeInsets.only(left: 21.0.w),
@@ -323,7 +325,8 @@ Widget _member(BuildContext context) {
 
 //MARK: - 일정 삭제 버튼
 Widget _deleteButton(BuildContext context) {
-  final viewModel = Provider.of<ChatRoomSchduleHostViewModel>(context, listen: false);
+  final viewModel =
+      Provider.of<ChatRoomSchduleHostViewModel>(context, listen: false);
 
   return Padding(
     padding: EdgeInsets.only(bottom: 56.0.h, left: 51.w),
@@ -340,7 +343,8 @@ Widget _deleteButton(BuildContext context) {
 }
 
 // MARK: - 일정 삭제 다이얼로그
-void deleteDialog(BuildContext context, ChatRoomSchduleHostViewModel ChatRoomSchduleHostViewModel) {
+void deleteDialog(BuildContext context,
+    ChatRoomSchduleHostViewModel ChatRoomSchduleHostViewModel) {
   showGeneralDialog(
       context: context,
       pageBuilder: (BuildContext buildContext, Animation animation,

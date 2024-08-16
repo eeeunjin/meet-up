@@ -5,8 +5,8 @@ import 'package:meet_up/main.dart';
 import 'package:meet_up/view/chat/chat_main.dart';
 import 'package:meet_up/view/chat/chat_notification_onboarding.dart';
 import 'package:meet_up/view/chat/chat_room.dart';
-import 'package:meet_up/view/chat/chat_schedule_host.dart';
-import 'package:meet_up/view/chat/chat_schedule_host_view.dart';
+import 'package:meet_up/view/chat/chat_schedule_register.dart';
+import 'package:meet_up/view/chat/chat_schedule_check.dart';
 import 'package:meet_up/view/coin/coin_buy.dart';
 import 'package:meet_up/view/coin/coin_buy_success.dart';
 import 'package:meet_up/view/coin/coin_main.dart';
@@ -339,10 +339,10 @@ final router = GoRouter(
                   ],
                 ),
                 GoRoute(
-                  path: 'chatScheduleHost',
-                  name: 'chatScheduleHost',
+                  path: 'chatScheduleRegister',
+                  name: 'chatScheduleRegister',
                   parentNavigatorKey: rootNavkey,
-                  builder: (context, state) => const ChatScheduleHost(),
+                  builder: (context, state) => const ChatScheduleRegister(),
                 ),
               ],
             ),
@@ -369,10 +369,10 @@ final router = GoRouter(
             parentNavigatorKey: shellNavkey,
             routes: [
               GoRoute(
-                path: 'chatScheduleHostView',
-                name: 'chatScheduleHostView',
+                path: 'chatScheduleCheck',
+                name: 'chatScheduleCheck',
                 parentNavigatorKey: rootNavkey,
-                builder: (context, state) => const ChatScheduleHostView(),
+                builder: (context, state) => const ChatScheduleCheck(),
               ),
             ]),
         // Profile
