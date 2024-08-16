@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:meet_up/view_model/chat/chat_view_model.dart';
+import 'package:meet_up/view_model/chat/chat_room_schedule_host_view_model.dart';
 import 'package:provider/provider.dart';
 
 class ScheduleDatePicker extends StatelessWidget {
@@ -13,11 +13,11 @@ class ScheduleDatePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<ChatViewModel>(context);
+    final viewModel = Provider.of<ChatRoomSchduleHostViewModel>(context);
 
-    return ChangeNotifierProvider<ChatViewModel>.value(
+    return ChangeNotifierProvider<ChatRoomSchduleHostViewModel>.value(
       value: viewModel,
-      child: Consumer<ChatViewModel>(
+      child: Consumer<ChatRoomSchduleHostViewModel>(
         builder: (context, viewModel, child) {
           return Stack(
             children: [

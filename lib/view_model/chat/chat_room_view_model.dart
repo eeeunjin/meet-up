@@ -12,6 +12,10 @@ class ChatRoomViewModel with ChangeNotifier {
   final UserRepository _userRepository = UserRepository();
   final RoomRepository _roomRepository = RoomRepository();
 
+  // RoomRef 정보
+  DocumentReference? _roomRef;
+  DocumentReference get roomRef => _roomRef!;
+
   // 방, 채팅 방의 document 아이디 (둘이 동일 함)
   String _roomID = '';
   String get roomID => _roomID;
@@ -50,6 +54,10 @@ class ChatRoomViewModel with ChangeNotifier {
   bool _moreOptionClicked = false;
   bool get moreOptionClicked => _moreOptionClicked;
 
+  void setRoomRef(DocumentReference value) {
+    _roomRef = value;
+  }
+
   void setRoomID(String value) {
     _roomID = value;
   }
@@ -60,14 +68,18 @@ class ChatRoomViewModel with ChangeNotifier {
 
   Future<void> setUserModels() async {
     final userRefs = List.from(roomModel.room_participant_reference);
-
     userRefs.insert(0, roomModel.room_owner_reference);
+
+    List<UserModel> newUserModels = [];
 
     for (DocumentReference userRef in userRefs) {
       UserModel userModel =
           await _userRepository.readUserDocument(uid: userRef.id);
-      _userModels.add(userModel);
+      newUserModels.add(userModel);
     }
+
+    _userModels.clear();
+    _userModels.addAll(newUserModels);
   }
 
   void setStartEdit(bool value) {
@@ -117,6 +129,15 @@ class ChatRoomViewModel with ChangeNotifier {
     );
   }
 
+  // 년, 월, 일, 정보를 받아서 요일을 계산 및 반환하는 함수
+  String getDayOfWeek(int year, int month, int day) {
+    final DateTime date = DateTime(year, month, day);
+    final List<String> days = ['일', '월', '화', '수', '목', '금', '토'];
+
+    return days[date.weekday - 1];
+  }
+
+
   // 채팅 메시지 전송 함수
   Future<bool> createChatDocument(ChatModel chatModel) async {
     return await _chatRepository.createChat(
@@ -131,12 +152,14 @@ class ChatRoomViewModel with ChangeNotifier {
   }
 
   // myRoom 정보 삭제
-  Future<void> deleteMyRoom({required String uid, required String roomId}) async {
+  Future<void> deleteMyRoom(
+      {required String uid, required String roomId}) async {
     await _userRepository.deleteMyRoomData(uid: uid, roomId: roomId);
   }
 
   // Room 정보 업데이트
-  Future<void> updateRoomData({required String roomId, required Map<String, dynamic> data}) async {
+  Future<void> updateRoomData(
+      {required String roomId, required Map<String, dynamic> data}) async {
     await _roomRepository.updateRoomDocument(roomId: roomId, data: data);
   }
 

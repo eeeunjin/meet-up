@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view/widget/schedule_date_picker_widget.dart';
 import 'package:meet_up/view/widget/schedule_time_picker_widget.dart';
-import 'package:meet_up/view_model/chat/chat_view_model.dart';
+import 'package:meet_up/view_model/chat/chat_room_schedule_host_view_model.dart';
+import 'package:meet_up/view_model/chat/chat_room_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +17,7 @@ import 'package:provider/provider.dart';
 class ChatScheduleHost extends StatelessWidget {
   const ChatScheduleHost({super.key});
 
+  // MARK: - 빌드
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +40,7 @@ class ChatScheduleHost extends StatelessWidget {
     );
   }
 
-// header
+  // MARK: - 헤더
   Widget _header(BuildContext context) {
     return Center(
       child: Column(
@@ -56,6 +59,7 @@ class ChatScheduleHost extends StatelessWidget {
     );
   }
 
+  // MARK: - 뒤로가기
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -63,7 +67,7 @@ class ChatScheduleHost extends StatelessWidget {
         final viewModel =
             Provider.of<MeetCreateViewModel>(context, listen: false);
         viewModel.locationClearSelection();
-        context.pop(context);
+        context.pop();
       },
       child: Image.asset(
         ImagePath.back,
@@ -73,7 +77,7 @@ class ChatScheduleHost extends StatelessWidget {
     );
   }
 
-  // 구분선
+  // MARK: - 구분선
   Widget _divider() {
     return Divider(
       thickness: 0.3.h,
@@ -82,6 +86,7 @@ class ChatScheduleHost extends StatelessWidget {
     );
   }
 
+  // MARK: - 메인
   Widget _main(BuildContext context) {
     return Column(
       children: [
@@ -106,7 +111,7 @@ class ChatScheduleHost extends StatelessWidget {
 
   // MARK: - 일정 등록
   Widget _naming(BuildContext context) {
-    final viewModel = Provider.of<ChatViewModel>(context);
+    final viewModel = Provider.of<ChatRoomSchduleHostViewModel>(context);
 
     return Padding(
       padding: EdgeInsets.only(left: 23.0.w),
@@ -129,7 +134,8 @@ class ChatScheduleHost extends StatelessWidget {
               alignment: Alignment.center,
               height: 19.h,
               child: TextField(
-                onChanged: (text) => viewModel.namingContents(text),
+                controller: viewModel.scheduleNameController,
+                onChanged: (value) => viewModel.notify(),
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
@@ -149,7 +155,8 @@ class ChatScheduleHost extends StatelessWidget {
 
   // MARK: - 날짜
   Widget _date(BuildContext context) {
-    final viewModel = Provider.of<ChatViewModel>(context, listen: false);
+    final viewModel =
+        Provider.of<ChatRoomSchduleHostViewModel>(context, listen: false);
 
     //ExpansionPanel 사용
     return Theme(
@@ -210,16 +217,18 @@ class ChatScheduleHost extends StatelessWidget {
                 ),
               ),
             ),
-            isExpanded: Provider.of<ChatViewModel>(context).isDatePanelExpanded,
+            isExpanded: Provider.of<ChatRoomSchduleHostViewModel>(context)
+                .isDatePanelExpanded,
           ),
         ],
       ),
     );
   }
 
-  // MARK: - Time
+  // MARK: - 시간
   Widget _time(BuildContext context) {
-    final viewModel = Provider.of<ChatViewModel>(context, listen: false);
+    final viewModel =
+        Provider.of<ChatRoomSchduleHostViewModel>(context, listen: false);
 
     // Mark - ExpansionPanel 사용
     return Theme(
@@ -280,7 +289,8 @@ class ChatScheduleHost extends StatelessWidget {
                 ),
               ),
             ),
-            isExpanded: Provider.of<ChatViewModel>(context).isTimePanelExpanded,
+            isExpanded: Provider.of<ChatRoomSchduleHostViewModel>(context)
+                .isTimePanelExpanded,
           ),
         ],
       ),
@@ -289,6 +299,8 @@ class ChatScheduleHost extends StatelessWidget {
 
   //MARK: - 장소
   Widget _location(BuildContext context) {
+    final viewModel =
+        Provider.of<ChatRoomSchduleHostViewModel>(context, listen: false);
     return Padding(
       padding: EdgeInsets.only(left: 20.0.w),
       child: Row(
@@ -310,6 +322,8 @@ class ChatScheduleHost extends StatelessWidget {
               alignment: Alignment.center,
               height: 19.h,
               child: TextField(
+                controller: viewModel.locationController,
+                onChanged: (value) => viewModel.notify(),
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
@@ -327,9 +341,23 @@ class ChatScheduleHost extends StatelessWidget {
     );
   }
 
+  // MARK: - 저장 버튼
   Widget _bottom(BuildContext context) {
+    final chatRoomViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
+    final chatRoomScheduleHostViewModel =
+        Provider.of<ChatRoomSchduleHostViewModel>(context, listen: false);
     return NextButton(
-      onTap: () {},
+      onTap: () async {
+        logger.d('저장 버튼 클릭');
+        await chatRoomScheduleHostViewModel.registerSchedule(
+          roomId: chatRoomViewModel.roomID,
+          uid: chatRoomViewModel.roomModel.room_owner_reference.id,
+          nickname: chatRoomViewModel.userModels[0].nickname,
+        );
+        context.pop();
+      },
+      enable: chatRoomScheduleHostViewModel.allCheckCompleted,
       width: 327.w,
       height: 56.h,
       text: '저장',

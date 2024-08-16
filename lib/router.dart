@@ -337,7 +337,13 @@ final router = GoRouter(
                       builder: (context, state) => const MeetUserInfo(),
                     ),
                   ],
-                )
+                ),
+                GoRoute(
+                  path: 'chatScheduleHost',
+                  name: 'chatScheduleHost',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) => const ChatScheduleHost(),
+                ),
               ],
             ),
           ],
@@ -362,12 +368,6 @@ final router = GoRouter(
             builder: (context, state) => const ReflectMain(),
             parentNavigatorKey: shellNavkey,
             routes: [
-              GoRoute(
-                path: 'chatScheduleHost',
-                name: 'chatScheduleHost',
-                parentNavigatorKey: rootNavkey,
-                builder: (context, state) => const ChatScheduleHost(),
-              ),
               GoRoute(
                 path: 'chatScheduleHostView',
                 name: 'chatScheduleHostView',

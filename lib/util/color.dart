@@ -43,4 +43,5 @@ class UsedColor {
 
   //chat
   static Color chat = const Color(0xfff0f4ff);
+  static Color chat_line = const Color(0xffcedbff);
 }

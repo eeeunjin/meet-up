@@ -18,6 +18,7 @@ class RoomModel {
   Timestamp room_creation_date;
   DocumentReference room_owner_reference;
   List<dynamic> room_participant_reference;
+  Map<String, dynamic>? room_schedule;
 
   RoomModel({
     this.roomId = '',
@@ -34,24 +35,27 @@ class RoomModel {
     required this.room_creation_date,
     required this.room_owner_reference,
     required this.room_participant_reference,
+    this.room_schedule,
   });
 
   RoomModel clone() {
     return RoomModel(
-        room_name: room_name,
-        room_category: room_category,
-        room_category_detail: room_category_detail,
-        room_region_province: room_region_province,
-        room_region_district: room_region_district,
-        room_keyword: room_keyword,
-        room_description: room_description,
-        room_age: room_age,
-        room_gender_ratio: room_gender_ratio,
-        room_rules: room_rules,
-        room_creation_date: room_creation_date,
-        room_owner_reference: room_owner_reference,
-        room_participant_reference: room_participant_reference,
-        roomId: roomId);
+      room_name: room_name,
+      room_category: room_category,
+      room_category_detail: room_category_detail,
+      room_region_province: room_region_province,
+      room_region_district: room_region_district,
+      room_keyword: room_keyword,
+      room_description: room_description,
+      room_age: room_age,
+      room_gender_ratio: room_gender_ratio,
+      room_rules: room_rules,
+      room_creation_date: room_creation_date,
+      room_owner_reference: room_owner_reference,
+      room_participant_reference: room_participant_reference,
+      roomId: roomId,
+      room_schedule: room_schedule,
+    );
   }
 
   RoomModel.fromJson(Map<String, Object?> json)
@@ -71,6 +75,8 @@ class RoomModel {
               json['room_owner_reference']! as DocumentReference,
           room_participant_reference:
               json['room_participant_reference']! as List<dynamic>,
+          roomId: json['roomId']! as String,
+          room_schedule: json['room_schedule'] as Map<String, dynamic>?,
         );
 
   Map<String, Object?> toJson() {
@@ -89,6 +95,34 @@ class RoomModel {
       'room_creation_date': room_creation_date,
       'room_owner_reference': room_owner_reference,
       'room_participant_reference': room_participant_reference,
+      'room_schedule': room_schedule,
+    };
+  }
+}
+
+class RoomSchedule {
+  String title;
+  Timestamp date;
+  String location;
+
+  RoomSchedule({
+    required this.title,
+    required this.date,
+    required this.location,
+  });
+
+  RoomSchedule.fromJson(Map<String, Object?> json)
+      : this(
+          title: json['title']! as String,
+          date: json['date']! as Timestamp,
+          location: json['location']! as String,
+        );
+
+  Map<String, Object?> toJson() {
+    return {
+      'title': title,
+      'date': date,
+      'location': location,
     };
   }
 }

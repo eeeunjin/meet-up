@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/main.dart';
@@ -12,7 +11,6 @@ import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/view_model/chat/chat_room_view_model.dart';
 import 'package:meet_up/view/chat/chat_meeting_review.dart';
-import 'package:meet_up/view/chat/chat_notification_onboarding.dart';
 import 'package:meet_up/view_model/chat/chat_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
@@ -198,14 +196,8 @@ class ChatMain extends StatelessWidget {
                                           chatRoomViewModel.resetState();
 
                                           // 입장 하려는 방에 정보 전달
-                                          chatRoomViewModel.setRoomID(
-                                              roomModelDocumentList[index].id);
-
-                                          chatRoomViewModel
-                                              .setRoomModel(roomModel);
-
-                                          await chatRoomViewModel
-                                              .setUserModels();
+                                          chatRoomViewModel.setRoomRef(
+                                              roomModelDocumentList[index]);
 
                                           // 처음 입장하는 방인 경우
                                           if (myRoomModels[index].isNew) {

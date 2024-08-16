@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/next_button.dart';
-import 'package:meet_up/view/widget/schedule_date_picker_widget.dart';
-import 'package:meet_up/view/widget/schedule_time_picker_widget.dart';
-import 'package:meet_up/view_model/chat/chat_view_model.dart';
+import 'package:meet_up/view_model/chat/chat_room_schedule_host_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
 import 'package:provider/provider.dart';
@@ -114,7 +111,7 @@ class ChatScheduleHostView extends StatelessWidget {
   }
 
   Widget _naming(BuildContext context) {
-    final viewModel = Provider.of<ChatViewModel>(context);
+    final viewModel = Provider.of<ChatRoomSchduleHostViewModel>(context);
 
     return Padding(
       padding: EdgeInsets.only(left: 23.w),
@@ -140,7 +137,7 @@ class ChatScheduleHostView extends StatelessWidget {
 
   //MARK: - 날짜
   Widget _date(BuildContext context) {
-    final viewModel = Provider.of<ChatViewModel>(context, listen: false);
+    final viewModel = Provider.of<ChatRoomSchduleHostViewModel>(context, listen: false);
 
     return Padding(
       padding: EdgeInsets.only(left: 21.0.w),
@@ -171,7 +168,7 @@ class ChatScheduleHostView extends StatelessWidget {
 
 // MARK: - Time
 Widget _time(BuildContext context) {
-  final viewModel = Provider.of<ChatViewModel>(context, listen: false);
+  final viewModel = Provider.of<ChatRoomSchduleHostViewModel>(context, listen: false);
 
   return Padding(
     padding: EdgeInsets.only(left: 21.0.w),
@@ -241,7 +238,7 @@ Widget _location(BuildContext context) {
 
 //MARK: - 일정 확정
 Widget _scheduleCheck(BuildContext context) {
-  final viewModel = Provider.of<ChatViewModel>(context);
+  final viewModel = Provider.of<ChatRoomSchduleHostViewModel>(context);
 
   return Padding(
     padding: EdgeInsets.only(left: 21.w),
@@ -296,7 +293,7 @@ Widget _checkText(BuildContext context) {
 
 //MARK: - 참석 여부
 Widget _member(BuildContext context) {
-  final viewModel = Provider.of<ChatViewModel>(context);
+  final viewModel = Provider.of<ChatRoomSchduleHostViewModel>(context);
 
   return Column(
     children: [
@@ -326,14 +323,14 @@ Widget _member(BuildContext context) {
 
 //MARK: - 일정 삭제 버튼
 Widget _deleteButton(BuildContext context) {
-  final chatViewModel = Provider.of<ChatViewModel>(context, listen: false);
+  final viewModel = Provider.of<ChatRoomSchduleHostViewModel>(context, listen: false);
 
   return Padding(
     padding: EdgeInsets.only(bottom: 56.0.h, left: 51.w),
     child: NextButton(
       onTap: () {
         //TODO: 누를 때, 확인 문구 먼저
-        deleteDialog(context, chatViewModel);
+        deleteDialog(context, viewModel);
       },
       height: 50.h,
       width: 291.w,
@@ -343,7 +340,7 @@ Widget _deleteButton(BuildContext context) {
 }
 
 // MARK: - 일정 삭제 다이얼로그
-void deleteDialog(BuildContext context, ChatViewModel chatViewModel) {
+void deleteDialog(BuildContext context, ChatRoomSchduleHostViewModel ChatRoomSchduleHostViewModel) {
   showGeneralDialog(
       context: context,
       pageBuilder: (BuildContext buildContext, Animation animation,
