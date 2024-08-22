@@ -165,6 +165,23 @@ class ScheduleMainViewModel with ChangeNotifier {
     return '$period $hour:$minute';
   }
 
+  // MARK: - 참여 인원
+  final List<String> _selectedParticipants = [];
+
+  List<String> get selectedParticipants => _selectedParticipants;
+
+  void addParticipant(String participant) {
+    if (!_selectedParticipants.contains(participant)) {
+      _selectedParticipants.add(participant);
+      notifyListeners();
+    }
+  }
+
+  void removeParticipant(String participant) {
+    _selectedParticipants.remove(participant);
+    notifyListeners();
+  }
+
   // check
 
   bool get allCheckCompleted {

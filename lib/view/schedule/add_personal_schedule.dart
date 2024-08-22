@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -29,11 +29,6 @@ class AddPersonalSchedule extends StatelessWidget {
             child: _header(context),
           ),
           _main(context),
-          const Spacer(),
-          Padding(
-            padding: EdgeInsets.only(left: 33.0.w, right: 33.w, bottom: 56.h),
-            child: _bottom(context),
-          ),
         ],
       ),
     );
@@ -84,7 +79,7 @@ class AddPersonalSchedule extends StatelessWidget {
     );
   }
 
-  // 메인
+  //MARK: - 메인
   Widget _main(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
@@ -111,6 +106,50 @@ class AddPersonalSchedule extends StatelessWidget {
           _divider(),
           SizedBox(height: 18.h),
           _member(context),
+          SizedBox(height: 104.h),
+          _bottom(context),
+        ],
+      ),
+    );
+  }
+
+  //MARK: - 일정
+  Widget _naming(BuildContext context) {
+    final viewModel = Provider.of<ScheduleMainViewModel>(context);
+
+    return Padding(
+      padding: EdgeInsets.only(left: 23.0.w),
+      child: Row(
+        children: [
+          Image.asset(
+            ImagePath.scheduleIcon1,
+            width: 20.w,
+            height: 20.h,
+          ),
+          SizedBox(width: 14.w),
+          Text(
+            '일정',
+            style:
+                AppTextStyles.PR_M_16.copyWith(color: UsedColor.charcoal_black),
+          ),
+          SizedBox(width: 22.w),
+          Expanded(
+            child: Container(
+              alignment: Alignment.center,
+              height: 19.h,
+              child: TextField(
+                onChanged: (text) => viewModel.namingContents(text),
+                decoration: const InputDecoration(
+                  isDense: true,
+                  contentPadding: EdgeInsets.zero,
+                  border: InputBorder.none,
+                  hintText: '일정을 입력해주세요',
+                  hintStyle: TextStyle(color: UsedColor.text_5),
+                ),
+                style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_5),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -188,7 +227,7 @@ class AddPersonalSchedule extends StatelessWidget {
     );
   }
 
-  // MARK: - Time
+  // MARK: - 시간
   Widget _time(BuildContext context) {
     final viewModel =
         Provider.of<ScheduleMainViewModel>(context, listen: false);
@@ -263,7 +302,7 @@ class AddPersonalSchedule extends StatelessWidget {
   //MARK: - 장소
   Widget _location(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 23.0.w),
+      padding: EdgeInsets.only(left: 21.0.w),
       child: Row(
         children: [
           Image.asset(
@@ -271,13 +310,13 @@ class AddPersonalSchedule extends StatelessWidget {
             width: 20.w,
             height: 20.h,
           ),
-          SizedBox(width: 20.w),
+          SizedBox(width: 12.w),
           Text(
             '장소',
             style:
                 AppTextStyles.PR_M_16.copyWith(color: UsedColor.charcoal_black),
           ),
-          SizedBox(width: 16.w),
+          SizedBox(width: 22.w),
           Expanded(
             child: Container(
               alignment: Alignment.center,
@@ -290,7 +329,7 @@ class AddPersonalSchedule extends StatelessWidget {
                   hintText: '만남 장소를 입력해주세요',
                   hintStyle: TextStyle(color: UsedColor.text_5),
                 ),
-                style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
+                style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_5),
               ),
             ),
           ),
@@ -302,7 +341,7 @@ class AddPersonalSchedule extends StatelessWidget {
   //MARK: - 설명
   Widget _detail(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 23.0.w),
+      padding: EdgeInsets.only(left: 21.0.w),
       child: Row(
         children: [
           Image.asset(
@@ -310,13 +349,13 @@ class AddPersonalSchedule extends StatelessWidget {
             width: 20.w,
             height: 20.h,
           ),
-          SizedBox(width: 20.w),
+          SizedBox(width: 12.w),
           Text(
             '설명',
             style:
                 AppTextStyles.PR_M_16.copyWith(color: UsedColor.charcoal_black),
           ),
-          SizedBox(width: 16.w),
+          SizedBox(width: 22.w),
           Expanded(
             child: Transform.translate(
               offset: Offset(0, -4.0.h),
@@ -332,7 +371,7 @@ class AddPersonalSchedule extends StatelessWidget {
                     hintStyle: TextStyle(color: UsedColor.text_5),
                   ),
                   style:
-                      AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
+                      AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_5),
                 ),
               ),
             ),
@@ -345,7 +384,7 @@ class AddPersonalSchedule extends StatelessWidget {
   //MARK: - 참여
   Widget _member(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 23.0.w),
+      padding: EdgeInsets.only(left: 21.0.w),
       child: Row(
         children: [
           Image.asset(
@@ -353,7 +392,7 @@ class AddPersonalSchedule extends StatelessWidget {
             width: 20.w,
             height: 20.h,
           ),
-          SizedBox(width: 20.w),
+          SizedBox(width: 12.w),
           Text(
             '참여',
             style:
@@ -361,72 +400,63 @@ class AddPersonalSchedule extends StatelessWidget {
           ),
           SizedBox(width: 22.w),
           // 참여자 선택 힌트 텍스트
+          GestureDetector(
+              onTap: () {
+                // 참여자 선택 페이지로 이동
+                context.goNamed('addMemberPersonal');
+              },
+              child: _selectedMembers(context)),
         ],
       ),
     );
   }
 
-  Widget _naming(BuildContext context) {
+  Widget _selectedMembers(BuildContext context) {
     final viewModel = Provider.of<ScheduleMainViewModel>(context);
+    return Consumer<ScheduleMainViewModel>(
+        builder: (context, viewmodel, child) {
+      List<String> participants = viewModel.selectedParticipants;
 
-    return Padding(
-      padding: EdgeInsets.only(left: 23.0.w),
-      child: Row(
-        children: [
-          Image.asset(
-            ImagePath.scheduleIcon1,
-            width: 20.w,
-            height: 20.h,
-          ),
-          SizedBox(width: 20.w),
-          Text(
-            '일정',
-            style:
-                AppTextStyles.PR_M_16.copyWith(color: UsedColor.charcoal_black),
-          ),
-          SizedBox(width: 16.w),
-          Expanded(
-            child: Container(
-              alignment: Alignment.center,
-              height: 19.h,
-              child: TextField(
-                onChanged: (text) => viewModel.namingContents(text),
-                decoration: const InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.zero,
-                  border: InputBorder.none,
-                  hintText: '일정을 입력해주세요',
-                  hintStyle: TextStyle(color: UsedColor.text_5),
-                ),
-                style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+      if (participants.isEmpty) {
+        return Text(
+          '인원 및 참여자 정보를 입력해주세요.',
+          style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_5),
+        );
+      } else {
+        return Wrap(
+          spacing: 8.w,
+          children: participants.map((participants) {
+            return Container();
+          }).toList(),
+        );
+      }
+    });
   }
-}
 
-// 저장
-Widget _bottom(BuildContext context) {
-  return Consumer<ScheduleMainViewModel>(builder: (context, viewModel, child) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 56.0.h, left: 51.w, right: 51.w),
-      child: NextButton(
-        onTap: () async {
-          if (!viewModel.allCheckCompleted) return;
-        },
-        height: 50.h,
-        text: '저장',
-        enable: viewModel.allCheckCompleted,
-        backgroundColor:
-            viewModel.allCheckCompleted ? UsedColor.button : UsedColor.button_g,
-        textStyle: TextStyle(
-          color: viewModel.allCheckCompleted ? Colors.white : UsedColor.text_2,
-          fontSize: 20.sp,
+//MARK: - 저장
+  Widget _bottom(BuildContext context) {
+    return Consumer<ScheduleMainViewModel>(
+        builder: (context, viewModel, child) {
+      return Padding(
+        padding: EdgeInsets.only(bottom: 56.0.h, left: 33.w, right: 33.w),
+        child: NextButton(
+          onTap: () async {
+            if (!viewModel.allCheckCompleted) return;
+          },
+          height: 56.h,
+          width: 327.w,
+          text: '저장',
+          enable: viewModel.allCheckCompleted,
+          backgroundColor: viewModel.allCheckCompleted
+              ? UsedColor.button
+              : UsedColor.button_g,
+          textStyle: TextStyle(
+            color:
+                viewModel.allCheckCompleted ? Colors.white : UsedColor.text_2,
+            fontSize: 20.sp,
+          ),
         ),
-      ),
-    );
-  });
+      );
+    });
+  }
 }

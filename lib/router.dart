@@ -33,6 +33,7 @@ import 'package:meet_up/view/profile/profile_main.dart';
 import 'package:meet_up/view/profile/profile_notification.dart';
 import 'package:meet_up/view/profile/rank_main.dart';
 import 'package:meet_up/view/reflect/reflect_main.dart';
+import 'package:meet_up/view/schedule/add_member_personal.dart';
 import 'package:meet_up/view/schedule/add_personal_schedule.dart';
 import 'package:meet_up/view/schedule/schedule_main.dart';
 import 'package:meet_up/view/setting/noticed.dart';
@@ -342,21 +343,28 @@ final router = GoRouter(
             ),
           ],
         ),
-        // Schedule
+        //MARK: - Schedule
         GoRoute(
           path: '/scheduleMain',
           builder: (context, state) => const ScheduleMain(),
           parentNavigatorKey: shellNavkey,
           routes: [
             GoRoute(
-              path: 'addPersonalSchedule',
-              name: 'addPersonalSchedule',
-              parentNavigatorKey: rootNavkey,
-              builder: (context, state) => const AddPersonalSchedule(),
-            ),
+                path: 'addPersonalSchedule',
+                name: 'addPersonalSchedule',
+                parentNavigatorKey: rootNavkey,
+                builder: (context, state) => const AddPersonalSchedule(),
+                routes: [
+                  GoRoute(
+                    path: 'addMemberPersonal',
+                    name: 'addMemberPersonal',
+                    parentNavigatorKey: rootNavkey,
+                    builder: (context, state) => const AddMemberPersonal(),
+                  )
+                ]),
           ],
         ),
-        // Reflect
+        //MARK: - Reflect
         GoRoute(
             path: '/ReflectMain',
             builder: (context, state) => const ReflectMain(),
