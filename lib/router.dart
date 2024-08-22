@@ -32,7 +32,9 @@ import 'package:meet_up/view/profile/profile_edit.dart';
 import 'package:meet_up/view/profile/profile_main.dart';
 import 'package:meet_up/view/profile/profile_notification.dart';
 import 'package:meet_up/view/profile/rank_main.dart';
+import 'package:meet_up/view/reflect/reflect_diary_details.dart';
 import 'package:meet_up/view/reflect/reflect_main.dart';
+import 'package:meet_up/view/reflect/reflect_writing_diary.dart';
 import 'package:meet_up/view/schedule/add_personal_schedule.dart';
 import 'package:meet_up/view/schedule/schedule_main.dart';
 import 'package:meet_up/view/setting/noticed.dart';
@@ -358,23 +360,38 @@ final router = GoRouter(
         ),
         // Reflect
         GoRoute(
-            path: '/ReflectMain',
-            builder: (context, state) => const ReflectMain(),
-            parentNavigatorKey: shellNavkey,
-            routes: [
-              GoRoute(
-                path: 'chatScheduleHost',
-                name: 'chatScheduleHost',
-                parentNavigatorKey: rootNavkey,
-                builder: (context, state) => const ChatScheduleHost(),
-              ),
-              GoRoute(
-                path: 'chatScheduleHostView',
-                name: 'chatScheduleHostView',
-                parentNavigatorKey: rootNavkey,
-                builder: (context, state) => const ChatScheduleHostView(),
-              ),
-            ]),
+          path: '/ReflectMain',
+          builder: (context, state) => const ReflectMain(),
+          parentNavigatorKey: shellNavkey,
+          routes: [
+            GoRoute(
+              path: 'chatScheduleHost',
+              name: 'chatScheduleHost',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) => const ChatScheduleHost(),
+            ),
+            GoRoute(
+              path: 'chatScheduleHostView',
+              name: 'chatScheduleHostView',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) => const ChatScheduleHostView(),
+            ),
+            GoRoute(
+              path: 'reflectWritingDiary',
+              name: 'reflectWritingDiary',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) => const ReflectWritingDiary(),
+              routes: [
+                GoRoute(
+                  path: 'reflectDiaryDetails',
+                  name: 'reflectDiaryDetails',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) => const ReflectDiaryDetails(),
+                ),
+              ],
+            ),
+          ],
+        ),
         // Profile
         GoRoute(
           path: '/profileMain',
