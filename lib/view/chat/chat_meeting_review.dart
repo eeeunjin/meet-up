@@ -326,40 +326,43 @@ class ChatMeetingReview extends StatelessWidget {
 
   Widget _imageChip(ChatViewModel viewModel, String imageName, String label) {
     bool isSelected = viewModel.isSelected(imageName);
-    return Column(
-      children: [
-        GestureDetector(
-          onTap: () {
-            viewModel.toggleChip(imageName);
-          },
-          child: Container(
-            width: 58.w,
-            height: 58.h,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isSelected ? UsedColor.button : Colors.white,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                  isSelected
-                      ? ImagePath.chatReviewSelected(imageName)
-                      : ImagePath.chatReview(imageName),
-                  width: 33.w,
-                  height: 33.h,
-                  fit: BoxFit.contain),
+    return Align(
+      alignment: Alignment.center,
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              viewModel.toggleChip(imageName);
+            },
+            child: Container(
+              width: 58.w,
+              height: 58.h,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isSelected ? UsedColor.button : Colors.white,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset(
+                    isSelected
+                        ? ImagePath.chatReviewSelected(imageName)
+                        : ImagePath.chatReview(imageName),
+                    width: 33.w,
+                    height: 33.h,
+                    fit: BoxFit.contain),
+              ),
             ),
           ),
-        ),
-        SizedBox(height: 7.h),
-        Text(
-          label,
-          style: AppTextStyles.PR_M_12.copyWith(
-            color: UsedColor.text_2,
+          SizedBox(height: 7.h),
+          Text(
+            label,
+            style: AppTextStyles.PR_M_12.copyWith(
+              color: UsedColor.text_2,
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
-        ),
-      ],
+        ],
+      ),
     );
   }
 
