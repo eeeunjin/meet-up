@@ -6,12 +6,40 @@ class ReflectViewModel with ChangeNotifier {
   final List<int> completedSelection = [];
   final Map<int, String> _answers = {}; // 답변을 저장할 맵
 
+  final Map<int, TextEditingController> _controllers = {};
+
+  TextEditingController getController(int index) {
+    if (!_controllers.containsKey(index)) {
+      _controllers[index] = TextEditingController();
+    }
+    return _controllers[index]!;
+  }
+
+  // 질문을 제거할 때 컨트롤러도 함께 제거
+  void removeQuestion(int index) {
+    _controllers[index]?.dispose();
+    _controllers.remove(index);
+    _answers.remove(_selectedImages[index]); // 답변도 함께 삭제
+    completedSelection.remove(_selectedImages[index]);
+    _selectedImages.removeAt(index);
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    // 모든 컨트롤러를 해제
+    for (var controller in _controllers.values) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
   List<int> get selectedImages => _selectedImages;
 
   // 별점 관련 변수
   final List<int> ratings = List<int>.filled(6, 0);
 
-  // 상태 초기화 메서드 추가
+  // 상태 초기화
   void reset() {
     _selectedImages.clear();
     completedSelection.clear();
@@ -36,8 +64,8 @@ class ReflectViewModel with ChangeNotifier {
   }
 
   void markAsCompleted() {
-    completedSelection.clear(); // completedSelection을 비웁니다.
-    completedSelection.addAll(_selectedImages); // 선택된 이미지를 추가합니다.
+    completedSelection.clear();
+    completedSelection.addAll(_selectedImages); // 선택된 이미지를 추가
     notifyListeners();
   }
 
@@ -53,18 +81,11 @@ class ReflectViewModel with ChangeNotifier {
     return _selectedImages.map((index) => questions[index]).toList();
   }
 
-  void removeQuestion(int index) {
-    _answers.remove(_selectedImages[index]); // 답변도 함께 삭제
-    completedSelection.remove(_selectedImages[index]);
-    _selectedImages.removeAt(index);
-    notifyListeners();
-  }
-
   bool canSelectMoreQuestions() {
     return _selectedImages.length < 3;
   }
 
-  // 답변을 저장하는 메서드
+  // 답변을 저장
   void updateAnswer(int questionIndex, String answer) {
     _answers[questionIndex] = answer;
     notifyListeners();

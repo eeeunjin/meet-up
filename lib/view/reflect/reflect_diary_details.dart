@@ -57,8 +57,8 @@ class ReflectDiaryDetails extends StatelessWidget {
       },
       child: Image.asset(
         ImagePath.back,
-        width: 40.w,
-        height: 40.h,
+        width: 10.w,
+        height: 20.h,
       ),
     );
   }
@@ -180,6 +180,7 @@ class ReflectDiaryDetails extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16.r),
               ),
               child: TextField(
+                controller: viewModel.getController(index),
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
                 onChanged: (text) => viewModel.updateAnswer(index, text),
