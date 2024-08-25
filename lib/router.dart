@@ -34,11 +34,8 @@ import 'package:meet_up/view/profile/profile_notification.dart';
 import 'package:meet_up/view/profile/rank_main.dart';
 import 'package:meet_up/view/reflect/reflect_diary_details.dart';
 import 'package:meet_up/view/reflect/reflect_main.dart';
-<<<<<<< HEAD
-import 'package:meet_up/view/schedule/add_member_personal.dart';
-=======
 import 'package:meet_up/view/reflect/reflect_writing_diary.dart';
->>>>>>> 14cd8e726bc4e2e5e3ea2ea983d656b436db07ac
+import 'package:meet_up/view/schedule/add_member_personal.dart';
 import 'package:meet_up/view/schedule/add_personal_schedule.dart';
 import 'package:meet_up/view/schedule/schedule_main.dart';
 import 'package:meet_up/view/setting/noticed.dart';

@@ -27,6 +27,7 @@ import 'package:meet_up/view_model/meet/meet_manage_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_user_info_view_model.dart';
 import 'package:meet_up/view_model/profile/profile_view_model.dart';
 import 'package:meet_up/view_model/reflect/reflect_view_model.dart';
+import 'package:meet_up/view_model/schedule/schedule_add_member_view_model.dart';
 import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:meet_up/view_model/setting/setting_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
@@ -95,6 +96,8 @@ void main() async {
                   start: oneMonthAgo,
                   end: twoYearsLater,
                 )),
+        ChangeNotifierProvider(
+            create: (create) => ScheduleAddMemberViewModel()),
         ChangeNotifierProvider(create: (context) => UserViewModel()),
         ChangeNotifierProvider(create: (context) => ChatRoomViewModel()),
         ChangeNotifierProvider(
