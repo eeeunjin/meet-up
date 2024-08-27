@@ -13,14 +13,14 @@ class ScheduleAddMemberViewModel with ChangeNotifier {
     }
   }
 
-  // keywords list
+  // members list
   final TextEditingController textController = TextEditingController();
-  final List<String> _keywords = [];
-  List<String> get keywords => _keywords;
+  final List<String> _members = [];
+  List<String> get members => _members;
 
   void addKeyword(String keyword) {
-    if (keyword.isNotEmpty && !_keywords.contains(keyword)) {
-      _keywords.add(keyword);
+    if (keyword.isNotEmpty && !_members.contains(keyword)) {
+      _members.add(keyword);
       _keywordCount = '0/8';
       notifyListeners();
     }
@@ -30,7 +30,7 @@ class ScheduleAddMemberViewModel with ChangeNotifier {
   String get currentInput => _currentInput;
 
   void removeKeyword(String keyword) {
-    _keywords.remove(keyword);
+    _members.remove(keyword);
     notifyListeners();
   }
 
@@ -41,16 +41,15 @@ class ScheduleAddMemberViewModel with ChangeNotifier {
     }
   }
 
-  // check
-  bool get keywordCheckComplted =>
-      _keywords.isNotEmpty && _keywords.length <= 4;
+  // MARK: - Check
+  bool get memberCheckCompleted => _members.isNotEmpty && _members.length <= 4;
 
   // keyword tap clear
-  void keywordClearSelection() {
+  void memberClearSelection() {
     textController.clear();
     _textCount = '';
     _currentInput = '';
-    _keywords.clear();
+    _members.clear();
     notifyListeners();
   }
 

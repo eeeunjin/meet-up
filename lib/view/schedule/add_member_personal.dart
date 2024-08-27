@@ -7,6 +7,7 @@ import 'package:meet_up/main.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
+import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/schedule/schedule_add_member_view_model.dart';
 import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
@@ -32,7 +33,7 @@ class AddMemberPersonal extends StatelessWidget {
           SizedBox(height: 63.h),
           _main(context, viewModel),
           const Spacer(),
-          // _bottom(context),
+          _bottom(context),
         ],
       ),
     );
@@ -62,8 +63,8 @@ class AddMemberPersonal extends StatelessWidget {
       onTap: () {
         // 정보 초기화
         final viewModel =
-            Provider.of<ScheduleMainViewModel>(context, listen: false);
-        // viewModel.keywordClearSelection();
+            Provider.of<ScheduleAddMemberViewModel>(context, listen: false);
+        viewModel.memberClearSelection();
         context.pop();
       },
       child: Image.asset(
@@ -109,7 +110,7 @@ class AddMemberPersonal extends StatelessWidget {
                   viewModel.setKeywordCount();
                   logger.d(text);
                   // 4명 입력하면 더 입력 못하도록 막음
-                  if (viewModel.keywords.length >= 4) {
+                  if (viewModel.members.length >= 4) {
                     viewModel.textController.clear();
                     return;
                   }
@@ -164,7 +165,7 @@ class AddMemberPersonal extends StatelessWidget {
                 child: Row(
                   children: [
                     Visibility(
-                      visible: viewModel.keywords.length >= 4,
+                      visible: viewModel.members.length >= 4,
                       child: Text(
                         '참여자는 최대 4명까지 입력이 가능합니다.',
                         style: AppTextStyles.SU_R_12
@@ -178,7 +179,7 @@ class AddMemberPersonal extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: EdgeInsets.only(top: 6.0.h),
-                  child: _keywordList(context, viewModel),
+                  child: _memberList(context, viewModel),
                 ),
               ),
             ],
@@ -188,13 +189,13 @@ class AddMemberPersonal extends StatelessWidget {
     );
   }
 
-  Widget _keywordList(
+  Widget _memberList(
       BuildContext context, ScheduleAddMemberViewModel viewModel) {
     return Wrap(
       // 자동 줄바꿈
       spacing: 4.0, // 좌우 간격
       runSpacing: 4.0, // 상하 간격
-      children: viewModel.keywords
+      children: viewModel.members
           .map((keyword) => _keywordChip(
               keyword,
               AppTextStyles.SU_SB_12.copyWith(color: UsedColor.violet),
@@ -204,9 +205,9 @@ class AddMemberPersonal extends StatelessWidget {
   }
 
   Widget _keywordChip(
-      String keyword, TextStyle textStyle, BuildContext context) {
+      String member, TextStyle textStyle, BuildContext context) {
     double baseWidth = 78.w;
-    int additionalCharacters = keyword.length - 2;
+    int additionalCharacters = member.length - 2;
     double additionalWidth = 10.w;
     double containerWidth =
         baseWidth + (additionalCharacters * additionalWidth);
@@ -226,7 +227,7 @@ class AddMemberPersonal extends StatelessWidget {
             padding: EdgeInsets.only(left: 16.0.w, right: 11.w),
             child: Center(
               child: Text(
-                '#$keyword',
+                '#$member',
                 style: AppTextStyles.SU_SB_12.copyWith(color: UsedColor.violet),
               ),
             ),
@@ -234,7 +235,7 @@ class AddMemberPersonal extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Provider.of<ScheduleAddMemberViewModel>(context, listen: false)
-                  .removeKeyword(keyword);
+                  .removeKeyword(member);
             },
             child: Padding(
               padding: EdgeInsets.only(right: 11.0.w),
@@ -247,6 +248,38 @@ class AddMemberPersonal extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _bottom(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 33.0.w, right: 33.w, bottom: 56.h),
+      child: Consumer2<ScheduleAddMemberViewModel, ScheduleMainViewModel>(
+          builder: (context, scheduleAddMemberViewModel, scheduleMainViewModel,
+              child) {
+        return NextButton(
+          onTap: () async {
+            if (scheduleAddMemberViewModel.memberCheckCompleted) {
+              scheduleMainViewModel.selectedMembers =
+                  List.from(scheduleAddMemberViewModel.members);
+              scheduleAddMemberViewModel.memberClearSelection();
+              context.pop();
+            } else {
+              return;
+            }
+          },
+          height: 56.h,
+          text: '저장',
+          enable: scheduleAddMemberViewModel.memberCheckCompleted,
+          backgroundColor: scheduleAddMemberViewModel.memberCheckCompleted
+              ? UsedColor.button
+              : UsedColor.button_g,
+          textStyle: AppTextStyles.PR_SB_20.copyWith(
+              color: scheduleAddMemberViewModel.memberCheckCompleted
+                  ? Colors.white
+                  : UsedColor.text_2),
+        );
+      }),
     );
   }
 }

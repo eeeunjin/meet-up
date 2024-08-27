@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
@@ -58,8 +60,9 @@ class AddPersonalSchedule extends StatelessWidget {
       onTap: () {
         // 정보 초기화
         final viewModel =
-            Provider.of<MeetCreateViewModel>(context, listen: false);
-        viewModel.locationClearSelection();
+            Provider.of<ScheduleMainViewModel>(context, listen: false);
+        viewModel.backClearSelection();
+
         context.pop(context);
       },
       child: Image.asset(
@@ -139,14 +142,14 @@ class AddPersonalSchedule extends StatelessWidget {
               height: 19.h,
               child: TextField(
                 onChanged: (text) => viewModel.namingContents(text),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
                   border: InputBorder.none,
                   hintText: '일정을 입력해주세요',
-                  hintStyle: TextStyle(color: UsedColor.text_5),
+                  hintStyle: TextStyle(color: UsedColor.line),
                 ),
-                style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_5),
+                style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_1),
               ),
             ),
           ),
@@ -190,7 +193,7 @@ class AddPersonalSchedule extends StatelessWidget {
                     SizedBox(width: 22.w),
                     // 선택된 날짜
                     Text(
-                      '${viewModel.selectedDate.year}. ${viewModel.selectedDate.month}. ${viewModel.selectedDate.day}',
+                      '${viewModel.selectedDate.year}. ${viewModel.selectedDate.month}. ${viewModel.selectedDate.day}. ${DateFormat.E('ko_KR').format(viewModel.selectedDate)}요일',
                       style: AppTextStyles.PR_R_16
                           .copyWith(color: UsedColor.text_1),
                     ),
@@ -301,6 +304,7 @@ class AddPersonalSchedule extends StatelessWidget {
 
   //MARK: - 장소
   Widget _location(BuildContext context) {
+    final viewModel = Provider.of<ScheduleMainViewModel>(context);
     return Padding(
       padding: EdgeInsets.only(left: 21.0.w),
       child: Row(
@@ -322,14 +326,15 @@ class AddPersonalSchedule extends StatelessWidget {
               alignment: Alignment.center,
               height: 19.h,
               child: TextField(
-                decoration: const InputDecoration(
+                controller: viewModel.locationTextController,
+                decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
                   border: InputBorder.none,
                   hintText: '만남 장소를 입력해주세요',
-                  hintStyle: TextStyle(color: UsedColor.text_5),
+                  hintStyle: TextStyle(color: UsedColor.line),
                 ),
-                style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_5),
+                style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_1),
               ),
             ),
           ),
@@ -340,6 +345,7 @@ class AddPersonalSchedule extends StatelessWidget {
 
   //MARK: - 설명
   Widget _detail(BuildContext context) {
+    final viewModel = Provider.of<ScheduleMainViewModel>(context);
     return Padding(
       padding: EdgeInsets.only(left: 21.0.w),
       child: Row(
@@ -357,22 +363,19 @@ class AddPersonalSchedule extends StatelessWidget {
           ),
           SizedBox(width: 22.w),
           Expanded(
-            child: Transform.translate(
-              offset: Offset(0, -4.0.h),
-              child: Container(
-                alignment: Alignment.center,
-                height: 19.h,
-                child: TextField(
-                  decoration: const InputDecoration(
-                    isDense: true,
-                    contentPadding: EdgeInsets.zero,
-                    border: InputBorder.none,
-                    hintText: '만남에 대한 간단한 설명을 작성해 주세요.',
-                    hintStyle: TextStyle(color: UsedColor.text_5),
-                  ),
-                  style:
-                      AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_5),
+            child: Container(
+              alignment: Alignment.center,
+              height: 19.h,
+              child: TextField(
+                controller: viewModel.detailTextController,
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding: EdgeInsets.zero,
+                  border: InputBorder.none,
+                  hintText: '만남에 대한 간단한 설명을 작성해 주세요.',
+                  hintStyle: TextStyle(color: UsedColor.line),
                 ),
+                style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_1),
               ),
             ),
           ),
@@ -381,7 +384,7 @@ class AddPersonalSchedule extends StatelessWidget {
     );
   }
 
-  //MARK: - 참여
+  //MARK: - 참여자 선택
   Widget _member(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 21.0.w),
@@ -415,7 +418,7 @@ class AddPersonalSchedule extends StatelessWidget {
     final viewModel = Provider.of<ScheduleMainViewModel>(context);
     return Consumer<ScheduleMainViewModel>(
         builder: (context, viewmodel, child) {
-      List<String> participants = viewModel.selectedParticipants;
+      List<String> participants = viewModel.selectedMembers;
 
       if (participants.isEmpty) {
         return Text(
@@ -425,8 +428,19 @@ class AddPersonalSchedule extends StatelessWidget {
       } else {
         return Wrap(
           spacing: 8.w,
-          children: participants.map((participants) {
-            return Container();
+          children: participants.map((member) {
+            return Container(
+              padding: EdgeInsets.only(
+                  left: 10.w, right: 9.w, top: 3.h, bottom: 3.h),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.5.r),
+                color: UsedColor.image_card,
+              ),
+              child: Text(
+                member,
+                style: AppTextStyles.SU_M_10.copyWith(color: UsedColor.violet),
+              ),
+            );
           }).toList(),
         );
       }

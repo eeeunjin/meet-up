@@ -165,27 +165,58 @@ class ScheduleMainViewModel with ChangeNotifier {
     return '$period $hour:$minute';
   }
 
+  // MARK: - 장소
+  TextEditingController locationTextController = TextEditingController();
+
+  bool get isLocationCompleted {
+    return locationTextController.text.isNotEmpty;
+  }
+
+  // MARK: - 설명
+  TextEditingController detailTextController = TextEditingController();
+
+  bool get isDetailCompleted {
+    return detailTextController.text.isNotEmpty;
+  }
+
   // MARK: - 참여 인원
-  final List<String> _selectedParticipants = [];
 
-  List<String> get selectedParticipants => _selectedParticipants;
-
-  void addParticipant(String participant) {
-    if (!_selectedParticipants.contains(participant)) {
-      _selectedParticipants.add(participant);
+  void addMembers(String member) {
+    if (!_selectedMembers.contains(member)) {
+      _selectedMembers.add(member);
       notifyListeners();
     }
   }
 
-  void removeParticipant(String participant) {
-    _selectedParticipants.remove(participant);
+  void removeParticipant(String member) {
+    _selectedMembers.remove(member);
     notifyListeners();
   }
 
-  // check
+  // add members
+  List<String> _selectedMembers = [];
+  List<String> get selectedMembers => _selectedMembers;
+
+  set selectedMembers(List<String> members) {
+    _selectedMembers = members;
+    notifyListeners();
+  }
+
+  bool get isMembersCompleted => selectedMembers.isNotEmpty;
+  // MARK: - check
 
   bool get allCheckCompleted {
-    return namingCompleted;
+    return namingCompleted &&
+        isLocationCompleted &&
+        isDetailCompleted &&
+        isMembersCompleted;
+  }
+
+  // MARK: - Reset state
+  void backClearSelection() {
+    locationTextController.clear();
+    detailTextController.clear();
+    _selectedMembers.clear();
   }
 }
 

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:logger/logger.dart';
 import 'package:meet_up/loginFunc.dart';
 import 'package:meet_up/model/good_history_model.dart';
@@ -46,6 +47,7 @@ void main() async {
   ]);
   await initializeFirebase();
   await LoginFunc.autoLogin();
+  await initializeDateFormatting('ko_KR', null);
 
   DateTime currentDate = DateTime.now();
   DateTime birthDate19YearsAgo =
