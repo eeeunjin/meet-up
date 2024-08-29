@@ -230,7 +230,7 @@ class ChatScheduleRegister extends StatelessWidget {
     final viewModel =
         Provider.of<ChatRoomSchduleRegisterViewModel>(context, listen: false);
 
-    // Mark - ExpansionPanel 사용
+    // ExpansionPanel 사용
     return Theme(
       data: Theme.of(context).copyWith(cardColor: Colors.white),
       child: ExpansionPanelList(

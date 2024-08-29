@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:logger/logger.dart';
 import 'package:meet_up/loginFunc.dart';
 import 'package:meet_up/model/good_history_model.dart';
@@ -27,6 +28,8 @@ import 'package:meet_up/view_model/meet/meet_keyword_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_manage_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_user_info_view_model.dart';
 import 'package:meet_up/view_model/profile/profile_view_model.dart';
+import 'package:meet_up/view_model/reflect/reflect_view_model.dart';
+import 'package:meet_up/view_model/schedule/schedule_add_member_view_model.dart';
 import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:meet_up/view_model/setting/setting_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
@@ -45,6 +48,7 @@ void main() async {
   ]);
   await initializeFirebase();
   await LoginFunc.autoLogin();
+  await initializeDateFormatting('ko_KR', null);
 
   DateTime currentDate = DateTime.now();
   DateTime birthDate19YearsAgo =
@@ -89,9 +93,15 @@ void main() async {
         ChangeNotifierProvider(create: (context) => MeetDetailRoomViewModel()),
         ChangeNotifierProvider(create: (context) => MeetBrowseViewModel()),
         ChangeNotifierProvider(create: (context) => MeetFilterViewModel()),
-        ChangeNotifierProvider(create: (context) => ScheduleMainViewModel()),
+        ChangeNotifierProvider(
+            create: (context) => ScheduleMainViewModel(
+                  init: currentDate,
+                  start: oneMonthAgo,
+                  end: twoYearsLater,
+                )),
+        ChangeNotifierProvider(
+            create: (create) => ScheduleAddMemberViewModel()),
         ChangeNotifierProvider(create: (context) => UserViewModel()),
-        ChangeNotifierProvider(create: (context) => ChatViewModel()),
         ChangeNotifierProvider(create: (context) => ChatRoomViewModel()),
         ChangeNotifierProvider(
             create: (context) => ChatRoomSchduleRegisterViewModel(
@@ -106,6 +116,14 @@ void main() async {
             create: (context) => CoinTicketPurchaseHistoryViewModel()),
         ChangeNotifierProvider(create: (context) => SettingViewModel()),
         ChangeNotifierProvider(create: (context) => ProfileViewModel()),
+        ChangeNotifierProvider(
+          create: (context) => ChatViewModel(
+            init: DateTime.now(),
+            start: DateTime(2020, 1, 1),
+            end: DateTime(2025, 12, 31),
+          ),
+        ),
+        ChangeNotifierProvider(create: (context) => ReflectViewModel()),
       ],
       child: MyApp(),
     ),

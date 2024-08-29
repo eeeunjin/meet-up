@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
+import 'package:meet_up/view/reflect/reflect_diary_details.dart';
+import 'package:meet_up/view/reflect/reflect_writing_diary.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 
 class ReflectMain extends StatelessWidget {
@@ -39,10 +41,49 @@ class ReflectMain extends StatelessWidget {
             height: 0.h,
             color: UsedColor.line,
           ),
+          _writingDiary(context),
         ],
       ),
     );
   }
+
+  Widget _writingDiary(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      color: UsedColor.bg_color,
+      child: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const ReflectWritingDiary()),
+            );
+          },
+          child: const Text('일기 쓰기'),
+        ),
+      ),
+    );
+  }
+
+  // Widget _diaryDetails(BuildContext context) {
+  //   return Container(
+  //     padding: EdgeInsets.all(16.w),
+  //     color: UsedColor.bg_color,
+  //     child: Center(
+  //       child: ElevatedButton(
+  //         onPressed: () {
+  //           Navigator.push(
+  //             context,
+  //             MaterialPageRoute(
+  //                 builder: (context) => const ReflectDiaryDetails()),
+  //           );
+  //         },
+  //         child: const Text('일기 상세 보기'),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _main(BuildContext context) {
     return Container();

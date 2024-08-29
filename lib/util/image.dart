@@ -228,4 +228,35 @@ class ImagePath {
 
   static String get chatcheckboxon => 'assets/images/chatcheckbox.png';
   static String get chatcheckboxoff => 'assets/images/chatcheckboxoff.png';
+
+  // MARK: - reflect
+
+  static String get reflect1 => 'assets/images/reflection1.png';
+  static String get reflect1Selected =>
+      'assets/images/reflection1_selected.png';
+  static String get reflect2 => 'assets/images/reflection2.png';
+  static String get reflect2Selected =>
+      'assets/images/reflection2_selected.png';
+  static String get reflect3 => 'assets/images/reflection3.png';
+  static String get reflect3Selected =>
+      'assets/images/reflection3_selected.png';
+  static String get reflect4 => 'assets/images/reflection4.png';
+  static String get reflect4Selected =>
+      'assets/images/reflection4_selected.png';
+  static String get reflect5 => 'assets/images/reflection5.png';
+  static String get reflect5Selected =>
+      'assets/images/reflection5_selected.png';
+
+  static String get reflectDone1 => 'assets/images/reflectdone1.png';
+
+  static String get reflectDone2 => 'assets/images/reflectdone2.png';
+
+  static String get reflectDone3 => 'assets/images/reflectdone3.png';
+
+  static String get reflectDone4 => 'assets/images/reflectdone4.png';
+
+  static String get reflectDone5 => 'assets/images/reflectdone5.png';
+
+  static String get plus => 'assets/images/reflectPlus.png';
+  static String get reflectClose => 'assets/images/reflect_close.png';
 }

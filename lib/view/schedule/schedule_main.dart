@@ -26,18 +26,7 @@ class ScheduleMain extends StatelessWidget {
         ],
       ),
       // 개인 일정 추가 플로팅액션 버튼
-      floatingActionButton: FloatingActionButton(
-        heroTag: null, // 고유 태그 지정 - hero오류
-        onPressed: () {
-          context.goNamed('addPersonalSchedule');
-        },
-        backgroundColor: Colors.black,
-        shape: const CircleBorder(),
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-      ),
+      floatingActionButton: _buildFloatingActionButton(context),
     );
   }
 
@@ -143,5 +132,29 @@ class ScheduleMain extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // MARKL - 플로팅 액션 버튼
+  Widget _buildFloatingActionButton(BuildContext context) {
+    return Consumer<ScheduleMainViewModel>(
+        builder: (context, viewModel, child) {
+      // 개인 만남이 선택 되었을 때
+      if (viewModel.selectedPart == SelectedPart.personal) {
+        return FloatingActionButton(
+          heroTag: null, // 고유 태그 지정 - hero오류
+          onPressed: () {
+            context.goNamed('addPersonalSchedule');
+          },
+          backgroundColor: Colors.black,
+          shape: const CircleBorder(),
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+        );
+      } else {
+        return Container();
+      }
+    });
   }
 }
