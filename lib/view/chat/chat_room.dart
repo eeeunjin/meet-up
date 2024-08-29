@@ -838,6 +838,7 @@ class ChatRoom extends StatelessWidget {
               width: 4.w,
             ),
             _scheduleBox(
+              context,
               chatRoomViewModel: chatRoomViewModel,
               roomScheduleDateText: roomScheduleDateText,
               roomScheduleTime: roomScheduleTime,
@@ -901,6 +902,7 @@ class ChatRoom extends StatelessWidget {
                   height: 4.h,
                 ),
                 _scheduleBox(
+                  context,
                   chatRoomViewModel: chatRoomViewModel,
                   roomScheduleDateText: roomScheduleDateText,
                   roomScheduleTime: roomScheduleTime,
@@ -937,7 +939,8 @@ class ChatRoom extends StatelessWidget {
   }
 
   // MARK: - 일정 박스
-  Widget _scheduleBox({
+  Widget _scheduleBox(
+    BuildContext context, {
     required chatRoomViewModel,
     required roomScheduleDateText,
     required roomScheduleTime,
@@ -1017,9 +1020,15 @@ class ChatRoom extends StatelessWidget {
                 color: UsedColor.charcoal_black,
                 borderRadius: BorderRadius.circular(8.r),
               ),
-              child: Text(
-                '일정 확인하기',
-                style: AppTextStyles.PR_M_12.copyWith(color: Colors.white),
+              child: GestureDetector(
+                onTap: () {
+                  logger.d("일정 확인하기 버튼이 눌렸습니다.");
+                  context.goNamed('chatScheduleCheck');
+                },
+                child: Text(
+                  '일정 확인하기',
+                  style: AppTextStyles.PR_M_12.copyWith(color: Colors.white),
+                ),
               ),
             ),
           ),

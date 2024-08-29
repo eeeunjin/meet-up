@@ -10,9 +10,8 @@ import 'package:meet_up/loginFunc.dart';
 import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/router.dart';
 import 'package:meet_up/service/remote/firebase_options.dart';
-import 'package:meet_up/view/chat/chat_schedule_register.dart';
 import 'package:meet_up/view_model/bot_nav_view_model.dart';
-import 'package:meet_up/view_model/chat/chat_room_schedule_host_view_model.dart';
+import 'package:meet_up/view_model/chat/chat_room_schedule_register_view_model.dart';
 import 'package:meet_up/view_model/chat/chat_room_view_model.dart';
 import 'package:meet_up/view_model/chat/chat_view_model.dart';
 import 'package:meet_up/view_model/coin/coin_buy_view_model.dart';
@@ -95,7 +94,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ChatViewModel()),
         ChangeNotifierProvider(create: (context) => ChatRoomViewModel()),
         ChangeNotifierProvider(
-            create: (context) => ChatRoomSchduleHostViewModel(
+            create: (context) => ChatRoomSchduleRegisterViewModel(
                   init: currentDate,
                   start: oneMonthAgo,
                   end: twoYearsLater,

@@ -45,20 +45,6 @@ class ReflectMain extends StatelessWidget {
   }
 
   Widget _main(BuildContext context) {
-    return Column(
-      children: [
-        GestureDetector(
-          onTap: () {
-            context.goNamed('chatScheduleCheck');
-          },
-          child: Container(
-            width: 100.w,
-            height: 50.h,
-            color: Colors.blue,
-            child: const Center(child: Text('HOSTVIEWTEST')),
-          ),
-        ),
-      ],
-    );
+    return Container();
   }
 }

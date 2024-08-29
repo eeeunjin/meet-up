@@ -344,6 +344,12 @@ final router = GoRouter(
                   parentNavigatorKey: rootNavkey,
                   builder: (context, state) => const ChatScheduleRegister(),
                 ),
+                GoRoute(
+                  path: 'chatScheduleCheck',
+                  name: 'chatScheduleCheck',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) => const ChatScheduleCheck(),
+                ),
               ],
             ),
           ],
@@ -364,17 +370,10 @@ final router = GoRouter(
         ),
         // Reflect
         GoRoute(
-            path: '/ReflectMain',
-            builder: (context, state) => const ReflectMain(),
-            parentNavigatorKey: shellNavkey,
-            routes: [
-              GoRoute(
-                path: 'chatScheduleCheck',
-                name: 'chatScheduleCheck',
-                parentNavigatorKey: rootNavkey,
-                builder: (context, state) => const ChatScheduleCheck(),
-              ),
-            ]),
+          path: '/ReflectMain',
+          builder: (context, state) => const ReflectMain(),
+          parentNavigatorKey: shellNavkey,
+        ),
         // Profile
         GoRoute(
           path: '/profileMain',

@@ -7,12 +7,12 @@ import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/repository/chat_repository.dart';
 import 'package:meet_up/repository/room_repository.dart';
 
-class ChatRoomSchduleHostViewModel with ChangeNotifier {
+class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
   final RoomRepository _roomRepository = RoomRepository();
   final ChatRepository _chatRepository = ChatRepository();
 
   // MARK: - Initializer
-  ChatRoomSchduleHostViewModel({
+  ChatRoomSchduleRegisterViewModel({
     required DateTime init,
     required DateTime start,
     required DateTime end,
