@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:meet_up/model/chat_room_model.dart';
 import 'package:meet_up/model/room_model.dart';
@@ -196,6 +195,49 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
     await _chatRepository.createChat(
       chatModel,
       roomId,
+      'schedule_register',
+    );
+  }
+
+  // MARK: - 일정 삭제
+  Future<void> deleteSchedule({
+    required String roomId,
+    required String scheduleTitle,
+  }) async {
+    // RoomModel 업데이트
+    await _roomRepository.updateRoomDocument(
+      roomId: roomId,
+      data: {
+        'room_schedule': null,
+      },
+    );
+
+    // 기존의 스케줄 chat 삭제 (docId 'schedule_register')
+    await _chatRepository.deleteChat(
+      roomId,
+      'schedule_register',
+    );
+
+    // 알림 삭제 채팅이 존재했다면 삭제
+    await _chatRepository.deleteChat(
+      roomId,
+      "schedule_delete",
+    );
+
+    // ChatModel 추가
+    ChatModel chatModel = ChatModel(
+      uid: '',
+      nickName: '',
+      content: scheduleTitle,
+      date: Timestamp.now(),
+      room_id: roomId,
+      type: 'schedule_delete',
+    );
+
+    await _chatRepository.createChat(
+      chatModel,
+      roomId,
+      "schedule_delete",
     );
   }
 }

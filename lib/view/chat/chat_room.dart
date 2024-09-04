@@ -428,6 +428,9 @@ class ChatRoom extends StatelessWidget {
       case "schedule_register":
         return _scheduleRegister(context,
             isMyChat: isMyChat, chatModel: chatModel);
+      case "schedule_delete":
+        return _scheduleDelete(context,
+            isMyChat: isMyChat, chatModel: chatModel);
       default:
         return Container();
     }
@@ -547,7 +550,6 @@ class ChatRoom extends StatelessWidget {
         sendTime.minute < 10 ? "0${sendTime.minute}" : sendTime.minute;
     final sendTimeString =
         '${sendTime.hour > 12 ? '오후' : '오전'} $sendTimeHour:$sendTimeMinute';
-
     // 다른 사람의 채팅인 경우 해당 유저 정보 불러오기
     UserModel? otherUser;
     if (!isMyChat) {
@@ -938,6 +940,65 @@ class ChatRoom extends StatelessWidget {
     }
   }
 
+  // MARK: - 일정 삭제 알림
+  Widget _scheduleDelete(
+    BuildContext context, {
+    required bool isMyChat,
+    required ChatModel chatModel,
+  }) {
+    // 일정 삭제 view 표시
+    return Container(
+      width: 338.w,
+      height: 79.h,
+      padding: EdgeInsets.only(left: 13.w),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(18.r),
+        color: UsedColor.image_card,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 12.67.h,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 20.w,
+                height: 20.h,
+                child: Image.asset(
+                  ImagePath.chatRoomDeleteScheduleIcon,
+                ),
+              ),
+              SizedBox(width: 6.w),
+              Text(
+                '일정 삭제',
+                style: AppTextStyles.PR_SB_14
+                    .copyWith(color: UsedColor.charcoal_black),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 3.h,
+          ),
+          Text(
+            "방장이 '${chatModel.content}' 일정을 삭제했습니다.",
+            style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+          ),
+          SizedBox(
+            height: 4.h,
+          ),
+          Text(
+            '참석자들의 기존 참석 확인은 무효 처리 됩니다.',
+            style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+          )
+        ],
+      ),
+    );
+  }
+
   // MARK: - 일정 박스
   Widget _scheduleBox(
     BuildContext context, {
@@ -960,7 +1021,7 @@ class ChatRoom extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 17.w),
             child: Text(
-              chatRoomViewModel.roomModel.room_name,
+              chatRoomViewModel.roomModel.room_schedule!["title"],
               style: AppTextStyles.PR_SB_15.copyWith(
                 color: UsedColor.charcoal_black,
               ),
@@ -1215,7 +1276,17 @@ class ChatRoom extends StatelessWidget {
         for (var userModel in chatRoomViewModel.userModels) {
           logger.d("참가자: ${userModel.nickname}");
         }
-        if (chatRoomViewModel.userModels.length == 4) {
+
+        bool isScheduleExist =
+            chatRoomViewModel.roomModel.room_schedule != null;
+
+        if (isScheduleExist) {
+          logger.d("일정이 이미 등록되어 있습니다.");
+        } else {
+          logger.d("등록된 일정이 아직 없습니다.");
+        }
+
+        if (chatRoomViewModel.userModels.length == 4 && !isScheduleExist) {
           context.goNamed('chatScheduleRegister');
         }
       },

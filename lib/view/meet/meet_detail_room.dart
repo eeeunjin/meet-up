@@ -287,7 +287,6 @@ class MeetDetailRoom extends StatelessWidget {
                                 width: 3.0.w,
                               ),
                               Text(
-                                // '(여자 1자리, 남자 1자리 남음)',
                                 meetDetailRoomViewModel.calRestParticipantNum(
                                     userModels: userModels),
                                 style: AppTextStyles.PR_SB_12
@@ -363,11 +362,14 @@ class MeetDetailRoom extends StatelessWidget {
                                           height: 12.h,
                                         ),
                                         SizedBox(
+                                          width: 45.w,
                                           height: 14.h,
                                           child: Text(
                                             userModels[index].nickname,
+                                            textAlign: TextAlign.center,
                                             style: AppTextStyles.PR_SB_12
                                                 .copyWith(color: Colors.black),
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
                                         SizedBox(
@@ -591,7 +593,7 @@ class MeetDetailRoom extends StatelessWidget {
         Provider.of<BottomNavigationBarViewModel>(context, listen: false);
     final chatRoomViewModel =
         Provider.of<ChatRoomViewModel>(context, listen: false);
-        
+
     return Padding(
       padding: EdgeInsets.only(bottom: 56.h, left: 6.w, right: 6.w),
       child: GestureDetector(

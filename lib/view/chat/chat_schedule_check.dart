@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
@@ -10,6 +11,7 @@ import 'package:meet_up/view_model/chat/chat_room_schedule_register_view_model.d
 import 'package:meet_up/view_model/chat/chat_room_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
 class ChatScheduleCheck extends StatelessWidget {
@@ -27,7 +29,7 @@ class ChatScheduleCheck extends StatelessWidget {
             padding: EdgeInsets.only(top: 58.h),
             child: _header(context),
           ),
-          SingleChildScrollView(child: _main(context)),
+          _main(context),
         ],
       ),
     );
@@ -38,7 +40,7 @@ class ChatScheduleCheck extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          header(back: _back(context), title: '일정 등록'),
+          header(back: _back(context), title: '일정 확인'),
           SizedBox(
             height: 16.h,
           ),
@@ -110,6 +112,7 @@ class ChatScheduleCheck extends StatelessWidget {
         _divider(),
         SizedBox(height: 20.h),
         _member(context),
+        SizedBox(height: 35.h),
         _deleteButton(context),
       ],
     );
@@ -318,6 +321,9 @@ class ChatScheduleCheck extends StatelessWidget {
 
   // MARK: - 참석 여부
   Widget _member(BuildContext context) {
+    final chatRoomViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
+    final userModels = chatRoomViewModel.userModels;
     return Column(
       children: [
         Padding(
@@ -338,35 +344,113 @@ class ChatScheduleCheck extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 21.h),
-        //TODO: 방 인원 확인하는 것처럼 해두기
-        // 여기부터 다시 작업 
+        SizedBox(height: 17.h),
+        SizedBox(
+          width: 252.w,
+          height: 97.h,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: userModels.length,
+            separatorBuilder: (context, index) =>
+                SizedBox(width: 24.w), // 간격 조절
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  SizedBox(
+                    width: 45.w,
+                    height: 45.h,
+                    child: (index == 0)
+                        ? Stack(
+                            alignment: Alignment.bottomRight,
+                            children: [
+                              Image.asset(
+                                userModels[index].profile_icon,
+                              ),
+                              Image.asset(
+                                width: 19.w,
+                                height: 19.h,
+                                ImagePath.crownIcon,
+                              ),
+                            ],
+                          )
+                        : Image.asset(
+                            userModels[index].profile_icon,
+                          ),
+                  ),
+                  SizedBox(
+                    height: 12.h,
+                  ),
+                  SizedBox(
+                    width: 45.w,
+                    height: 14.h,
+                    child: Text(
+                      userModels[index].nickname,
+                      textAlign: TextAlign.center,
+                      style:
+                          AppTextStyles.PR_SB_12.copyWith(color: Colors.black),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 8.h,
+                  ),
+                  Container(
+                    width: 45.w,
+                    height: 18.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.5.r),
+                      color: UsedColor.image_card,
+                    ),
+                    child: Center(
+                      child: Text(
+                        userModels[index].gender == 'male' ? '남성' : '여성',
+                        style: AppTextStyles.SU_M_10
+                            .copyWith(color: UsedColor.violet),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
       ],
     );
   }
 
   // MARK: - 일정 삭제 버튼
   Widget _deleteButton(BuildContext context) {
-    final viewModel =
+    final chatRoomViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    bool isOnwer = chatRoomViewModel.userModels[0].nickname ==
+        userViewModel.userModel!.nickname;
+    final chatRoomSchduleRegisterViewModel =
         Provider.of<ChatRoomSchduleRegisterViewModel>(context, listen: false);
 
-    return Padding(
-      padding: EdgeInsets.only(bottom: 56.0.h, left: 51.w),
-      child: NextButton(
-        onTap: () {
-          //TODO: 누를 때, 확인 문구 먼저
-          deleteDialog(context, viewModel);
-        },
-        height: 50.h,
-        width: 291.w,
-        text: '일정 삭제하기',
-      ),
-    );
+    if (!isOnwer) {
+      return const SizedBox();
+    } else {
+      return Padding(
+        padding: EdgeInsets.only(left: 51.w),
+        child: NextButton(
+          onTap: () {
+            //TODO: 누를 때, 확인 문구 먼저
+            deleteDialog(context, chatRoomSchduleRegisterViewModel);
+          },
+          height: 50.h,
+          width: 291.w,
+          text: '일정 삭제하기',
+        ),
+      );
+    }
   }
 
   // MARK: - 일정 삭제 다이얼로그
   void deleteDialog(BuildContext context,
-      ChatRoomSchduleRegisterViewModel ChatRoomSchduleHostViewModel) {
+      ChatRoomSchduleRegisterViewModel chatRoomSchduleRegisterViewModel) {
+    final chatRoomViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
     showGeneralDialog(
       context: context,
       pageBuilder: (BuildContext buildContext, Animation animation,
@@ -416,7 +500,7 @@ class ChatScheduleCheck extends StatelessWidget {
                               overlayColor:
                                   MaterialStatePropertyAll(Colors.transparent)),
                           onPressed: () {
-                            Navigator.of(context).pop();
+                            context.pop();
                           },
                           child: Text(
                             '취소',
@@ -438,7 +522,16 @@ class ChatScheduleCheck extends StatelessWidget {
                           style: const ButtonStyle(
                               overlayColor:
                                   MaterialStatePropertyAll(Colors.transparent)),
-                          onPressed: () {},
+                          onPressed: () async {
+                            await chatRoomSchduleRegisterViewModel
+                                .deleteSchedule(
+                                    roomId: chatRoomViewModel.roomID,
+                                    scheduleTitle: chatRoomViewModel
+                                        .roomModel.room_schedule!['title']);
+                            context.pop();
+                            context.pop();
+                            logger.d("일정 삭제 버튼이 눌렸습니다.");
+                          },
                           child: Text(
                             '삭제하기',
                             style: AppTextStyles.PR_M_14

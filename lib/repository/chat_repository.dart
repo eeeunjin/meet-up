@@ -18,10 +18,35 @@ class ChatRepository {
 
   // MARK: - ChatCRUD
   // Create
-  Future<bool> createChat(ChatModel chatModel, String roomId) async {
-    return await firebaseCRUD.createDocument<ChatModel>(
-      docRef: firebaseRefs.colRefChatRoom.doc(roomId).collection('chats').doc(),
-      data: chatModel,
+  Future<bool> createChat(
+    ChatModel chatModel,
+    String roomId, [
+    String? docId,
+  ]) async {
+    if (docId == null) {
+      return await firebaseCRUD.createDocument<ChatModel>(
+        docRef:
+            firebaseRefs.colRefChatRoom.doc(roomId).collection('chats').doc(),
+        data: chatModel,
+      );
+    } else {
+      return await firebaseCRUD.createDocument<ChatModel>(
+        docRef: firebaseRefs.colRefChatRoom
+            .doc(roomId)
+            .collection('chats')
+            .doc(docId),
+        data: chatModel,
+      );
+    }
+  }
+
+  // delete
+  Future<void> deleteChat(String roomId, String chatId) async {
+    await firebaseCRUD.deleteDocument(
+      docRef: firebaseRefs.colRefChatRoom
+          .doc(roomId)
+          .collection('chats')
+          .doc(chatId),
     );
   }
 
