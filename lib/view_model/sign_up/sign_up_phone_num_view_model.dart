@@ -149,6 +149,7 @@ class SignUpPhoneNumViewModel with ChangeNotifier {
       fixed_ticket_end_date: Timestamp.now(),
       rank: 'Novice',
       notification_settings: [true, true, true, true, true],
+      uid: uid,
     );
 
     // Cloud Firestore에 유저 정보 저장

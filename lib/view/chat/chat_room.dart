@@ -442,6 +442,12 @@ class ChatRoom extends StatelessWidget {
     required bool isMyChat,
     required ChatModel chatModel,
   }) {
+    final chatRoomViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
+    final userModel = chatRoomViewModel.userModels
+        .where((element) => element.uid == chatModel.uid)
+        .first;
+
     return Center(
       child: Container(
         width: 344.w,
@@ -457,7 +463,7 @@ class ChatRoom extends StatelessWidget {
             ),
             SizedBox(width: 4.w),
             Text(
-              chatModel.nickName + chatModel.content,
+              userModel.nickname + chatModel.content,
               style: AppTextStyles.PR_M_11.copyWith(
                 color: UsedColor.text_4,
               ),
@@ -481,6 +487,12 @@ class ChatRoom extends StatelessWidget {
     required bool isMyChat,
     required ChatModel chatModel,
   }) {
+    final chatRoomViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
+    final userModel = chatRoomViewModel.userModels
+        .where((element) => element.uid == chatModel.uid)
+        .first;
+
     return Center(
       child: Container(
         width: 344.w,
@@ -496,7 +508,7 @@ class ChatRoom extends StatelessWidget {
             ),
             SizedBox(width: 4.w),
             Text(
-              chatModel.nickName + chatModel.content,
+              userModel.nickname + chatModel.content,
               style: AppTextStyles.PR_M_11.copyWith(
                 color: UsedColor.text_4,
               ),
@@ -554,13 +566,12 @@ class ChatRoom extends StatelessWidget {
     UserModel? otherUser;
     if (!isMyChat) {
       otherUser = chatRoomViewModel.userModels
-          .where((element) => element.nickname == chatModel.nickName)
+          .where((element) => element.uid == chatModel.uid)
           .first;
     }
 
     // 5. 방장의 채팅인지 확인하는 변수
-    bool isOwnerChat =
-        chatModel.nickName == chatRoomViewModel.userModels[0].nickname;
+    bool isOwnerChat = chatModel.uid == chatRoomViewModel.userModels[0].uid;
 
     if (isMyChat) {
       return SizedBox(
@@ -816,13 +827,12 @@ class ChatRoom extends StatelessWidget {
     UserModel? otherUser;
     if (!isMyChat) {
       otherUser = chatRoomViewModel.userModels
-          .where((element) => element.nickname == chatModel.nickName)
+          .where((element) => element.uid == chatModel.uid)
           .first;
     }
 
     // 3. 방장의 채팅인지 확인하는 변수
-    bool isOwnerChat =
-        chatModel.nickName == chatRoomViewModel.userModels[0].nickname;
+    bool isOwnerChat = chatModel.uid == chatRoomViewModel.userModels[0].uid;
 
     if (isMyChat) {
       return SizedBox(
@@ -1227,7 +1237,6 @@ class ChatRoom extends StatelessWidget {
 
                         final chatModel = ChatModel(
                           uid: userViewModel.uid!,
-                          nickName: userViewModel.userModel?.nickname ?? '',
                           content: message,
                           date: Timestamp.now(),
                           room_id: chatRoomViewModel.roomID,
@@ -1382,7 +1391,6 @@ class ChatRoom extends StatelessWidget {
               // chatModel 추가
               final chatModel = ChatModel(
                 uid: userViewModel.uid!,
-                nickName: userViewModel.userModel?.nickname ?? '',
                 content: " 님이 채팅방을 나갔습니다.",
                 date: Timestamp.now(),
                 room_id: chatRoomViewModel.roomID,

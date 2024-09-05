@@ -179,7 +179,6 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
 
     ChatModel chatModel = ChatModel(
       uid: uid,
-      nickName: nickname,
       content: '',
       date: Timestamp.now(),
       room_id: roomId,
@@ -228,7 +227,6 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
     // ChatModel 추가
     ChatModel chatModel = ChatModel(
       uid: '',
-      nickName: '',
       content: scheduleTitle,
       date: Timestamp.now(),
       room_id: roomId,

@@ -621,7 +621,6 @@ class MeetDetailRoom extends StatelessWidget {
             // 3. 해당 방에 입장 chatModel 생성
             final chatModel = ChatModel(
               uid: userViewModel.uid!,
-              nickName: userViewModel.userModel?.nickname ?? "",
               content: " 님이 채팅방에 입장했습니다.",
               date: Timestamp.now(),
               room_id: meetDetailRoomViewModel.currentRoomModel!.roomId,

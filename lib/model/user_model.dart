@@ -14,6 +14,7 @@ class UserModel {
   List<dynamic> personality_self;
   List<dynamic> interest;
   List<dynamic> purpose;
+  String uid;
 
   // 재화 정보
   int coin;
@@ -52,6 +53,7 @@ class UserModel {
     required this.fixed_ticket_end_date,
     required this.rank,
     required this.notification_settings,
+    required this.uid,
   });
 
   UserModel.fromJson(Map<String, Object?> json)
@@ -76,6 +78,7 @@ class UserModel {
           fixed_ticket_end_date: json["fixed_ticket_end_date"]! as Timestamp,
           rank: json["rank"]! as String,
           notification_settings: json["notification_settings"]! as List<dynamic>,
+          uid: json["uid"]! as String,
         );
 
   Map<String, Object?> toJson() {
@@ -98,6 +101,7 @@ class UserModel {
       'fixed_ticket_end_date': fixed_ticket_end_date,
       'rank': rank,
       'notification_settings': notification_settings,
+      'uid': uid,
     };
   }
 }

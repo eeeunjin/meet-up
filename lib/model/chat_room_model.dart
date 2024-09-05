@@ -31,8 +31,6 @@ class ChatRoomModel {
 class ChatModel {
   // 작성자 uid
   String uid;
-  // 작성자 nickName
-  String nickName;
   // 채팅 내용
   String content;
   // 채팅 작성 일자
@@ -45,7 +43,6 @@ class ChatModel {
 
   ChatModel({
     required this.uid,
-    required this.nickName,
     required this.content,
     required this.date,
     required this.room_id,
@@ -55,7 +52,6 @@ class ChatModel {
   ChatModel.fromJson(Map<String, Object?> json)
       : this(
           uid: json['uid']! as String,
-          nickName: json['nickName']! as String,
           content: json['Content']! as String,
           date: json['date']! as Timestamp,
           room_id: json['room_reference']! as String,
@@ -65,7 +61,6 @@ class ChatModel {
   Map<String, Object?> toJson() {
     return {
       'uid': uid,
-      'nickName': nickName,
       'Content': content,
       'date': date,
       'room_reference': room_id,
