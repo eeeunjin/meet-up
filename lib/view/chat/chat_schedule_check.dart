@@ -290,17 +290,28 @@ class ChatScheduleCheck extends StatelessWidget {
 
   // MARK: - 참석 확인
   Widget _checkButton(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     return Padding(
       padding: EdgeInsets.only(left: 52.0.w),
-      child: Container(
-        width: 287.w,
-        height: 41.h,
-        decoration: BoxDecoration(
-            color: UsedColor.button, borderRadius: BorderRadius.circular(9.r)),
-        child: Center(
-          child: Text(
-            '참석 확인',
-            style: AppTextStyles.PR_SB_18.copyWith(color: Colors.white),
+      child: GestureDetector(
+        onTap: () {
+          // userViewModel.userModel에 UID 프로퍼티 추가하기
+          // room_schedule에 추가해도 어차피 UID가 없으면 비교 자체가 안됨
+          // isOwner 정보 찾을 때도, UID로 비교하는게 더 맞음 -> 방에 들어가 있는 상태로 방장이 닉네임 바꾸면 망함
+          // chatModel 도 nickName을 따로 저장하는게 아니라 uid로 participant에서 찾아서 userModel 불러와서 nickname 쓰도록 바꾸기
+          logger.d(userViewModel.uid!);
+        },
+        child: Container(
+          width: 287.w,
+          height: 41.h,
+          decoration: BoxDecoration(
+              color: UsedColor.button,
+              borderRadius: BorderRadius.circular(9.r)),
+          child: Center(
+            child: Text(
+              '참석 확인',
+              style: AppTextStyles.PR_SB_18.copyWith(color: Colors.white),
+            ),
           ),
         ),
       ),
@@ -324,6 +335,7 @@ class ChatScheduleCheck extends StatelessWidget {
     final chatRoomViewModel =
         Provider.of<ChatRoomViewModel>(context, listen: false);
     final userModels = chatRoomViewModel.userModels;
+
     return Column(
       children: [
         Padding(
@@ -354,6 +366,17 @@ class ChatScheduleCheck extends StatelessWidget {
             separatorBuilder: (context, index) =>
                 SizedBox(width: 24.w), // 간격 조절
             itemBuilder: (context, index) {
+              final participants = chatRoomViewModel.roomModel
+                      .room_schedule!["participants_agree_selected_schedule"]
+                  as List<String>?;
+              // 일정 확인했는지 검사하는 변수
+              bool agree = false;
+              if (participants != null) {
+                if (participants.contains(userModels[index].nickname)) {
+                  agree = true;
+                }
+              }
+
               return Column(
                 children: [
                   SizedBox(
@@ -399,13 +422,14 @@ class ChatScheduleCheck extends StatelessWidget {
                     height: 18.h,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8.5.r),
-                      color: UsedColor.image_card,
+                      color: agree ? UsedColor.button : UsedColor.image_card,
                     ),
                     child: Center(
                       child: Text(
                         userModels[index].gender == 'male' ? '남성' : '여성',
-                        style: AppTextStyles.SU_M_10
-                            .copyWith(color: UsedColor.violet),
+                        style: AppTextStyles.SU_M_10.copyWith(
+                          color: agree ? Colors.white : UsedColor.violet,
+                        ),
                       ),
                     ),
                   ),
