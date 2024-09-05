@@ -137,7 +137,6 @@ class ChatRoomViewModel with ChangeNotifier {
     return days[date.weekday - 1];
   }
 
-
   // 채팅 메시지 전송 함수
   Future<bool> createChatDocument(ChatModel chatModel) async {
     return await _chatRepository.createChat(

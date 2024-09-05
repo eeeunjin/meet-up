@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -83,38 +84,60 @@ class ChatScheduleCheck extends StatelessWidget {
 
   // MARK: - 메인
   Widget _main(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 22.h),
-        _naming(context),
-        SizedBox(height: 22.h),
-        _divider(),
-        SizedBox(height: 20.h),
-        _date(context),
-        SizedBox(height: 21.h),
-        _divider(),
-        SizedBox(height: 20.h),
-        _time(context),
-        SizedBox(height: 21.h),
-        _divider(),
-        SizedBox(height: 20.h),
-        _location(context),
-        SizedBox(height: 20.h),
-        _divider(),
-        SizedBox(height: 20.h),
-        _scheduleCheck(context),
-        SizedBox(height: 20.h),
-        _checkButton(context),
-        SizedBox(height: 20.h),
-        _checkText(context),
-        SizedBox(height: 20.h),
-        _divider(),
-        SizedBox(height: 20.h),
-        _member(context),
-        SizedBox(height: 35.h),
-        _deleteButton(context),
-      ],
+    final chatRoomViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
+
+    return StreamBuilder<DocumentSnapshot>(
+      stream: chatRoomViewModel.roomRef.snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.error != null) {
+          return const Center(
+            child: Text("에러가 발생했습니다."),
+          );
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          if (chatRoomViewModel.userModels.isEmpty) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 22.h),
+            _naming(context),
+            SizedBox(height: 22.h),
+            _divider(),
+            SizedBox(height: 20.h),
+            _date(context),
+            SizedBox(height: 21.h),
+            _divider(),
+            SizedBox(height: 20.h),
+            _time(context),
+            SizedBox(height: 21.h),
+            _divider(),
+            SizedBox(height: 20.h),
+            _location(context),
+            SizedBox(height: 20.h),
+            _divider(),
+            SizedBox(height: 20.h),
+            _scheduleCheck(context),
+            SizedBox(height: 20.h),
+            _checkButton(context),
+            SizedBox(height: 20.h),
+            _checkText(context),
+            SizedBox(height: 20.h),
+            _divider(),
+            SizedBox(height: 20.h),
+            _member(context),
+            SizedBox(height: 35.h),
+            _deleteButton(context),
+          ],
+        );
+      },
     );
   }
 
@@ -290,26 +313,56 @@ class ChatScheduleCheck extends StatelessWidget {
 
   // MARK: - 참석 확인
   Widget _checkButton(BuildContext context) {
+    final chatRoomViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+
+    final roomSchedule =
+        RoomSchedule.fromJson(chatRoomViewModel.roomModel.room_schedule!);
+
+    final participants = roomSchedule.participants_agree_selected_schedule;
+
+    bool agree = false;
+    if (participants != null) {
+      if (participants.contains(userViewModel.userModel!.uid)) {
+        agree = true;
+      }
+    }
+
     return Padding(
       padding: EdgeInsets.only(left: 52.0.w),
       child: GestureDetector(
-        onTap: () {
-          // userViewModel.userModel에 UID 프로퍼티 추가하기
-          // room_schedule에 추가해도 어차피 UID가 없으면 비교 자체가 안됨
-          // isOwner 정보 찾을 때도, UID로 비교하는게 더 맞음 -> 방에 들어가 있는 상태로 방장이 닉네임 바꾸면 망함
-          // chatModel 도 nickName을 따로 저장하는게 아니라 uid로 participant에서 찾아서 userModel 불러와서 nickname 쓰도록 바꾸기
-          logger.d(userViewModel.uid!);
-        },
+        onTap: agree
+            ? () {}
+            : () async {
+                var scheduleAgreeList = chatRoomViewModel.roomModel
+                    .room_schedule!["participants_agree_selected_schedule"];
+                if (scheduleAgreeList == null) {
+                  scheduleAgreeList = [userViewModel.userModel!.uid];
+                } else {
+                  scheduleAgreeList.add(userViewModel.userModel!.uid);
+                }
+
+                var roomSchedule = chatRoomViewModel.roomModel.room_schedule;
+                roomSchedule!["participants_agree_selected_schedule"] =
+                    scheduleAgreeList;
+
+                await chatRoomViewModel.updateRoomData(
+                  roomId: chatRoomViewModel.roomID,
+                  data: {
+                    "room_schedule": roomSchedule,
+                  },
+                );
+              },
         child: Container(
           width: 287.w,
           height: 41.h,
           decoration: BoxDecoration(
-              color: UsedColor.button,
+              color: agree ? UsedColor.grey1 : UsedColor.button,
               borderRadius: BorderRadius.circular(9.r)),
           child: Center(
             child: Text(
-              '참석 확인',
+              agree ? '확정 완료' : '참석 확인',
               style: AppTextStyles.PR_SB_18.copyWith(color: Colors.white),
             ),
           ),
@@ -334,8 +387,13 @@ class ChatScheduleCheck extends StatelessWidget {
   Widget _member(BuildContext context) {
     final chatRoomViewModel =
         Provider.of<ChatRoomViewModel>(context, listen: false);
-    final userModels = chatRoomViewModel.userModels;
 
+    final roomSchedule =
+        RoomSchedule.fromJson(chatRoomViewModel.roomModel.room_schedule!);
+
+    final participants = roomSchedule.participants_agree_selected_schedule;
+
+    final userModels = chatRoomViewModel.userModels;
     return Column(
       children: [
         Padding(
@@ -366,13 +424,10 @@ class ChatScheduleCheck extends StatelessWidget {
             separatorBuilder: (context, index) =>
                 SizedBox(width: 24.w), // 간격 조절
             itemBuilder: (context, index) {
-              final participants = chatRoomViewModel.roomModel
-                      .room_schedule!["participants_agree_selected_schedule"]
-                  as List<String>?;
               // 일정 확인했는지 검사하는 변수
               bool agree = false;
               if (participants != null) {
-                if (participants.contains(userModels[index].nickname)) {
+                if (participants.contains(userModels[index].uid)) {
                   agree = true;
                 }
               }
@@ -426,7 +481,7 @@ class ChatScheduleCheck extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        userModels[index].gender == 'male' ? '남성' : '여성',
+                        agree ? '참석' : '미정',
                         style: AppTextStyles.SU_M_10.copyWith(
                           color: agree ? Colors.white : UsedColor.violet,
                         ),

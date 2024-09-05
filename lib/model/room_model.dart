@@ -119,7 +119,7 @@ class RoomSchedule {
           date: json['date']! as Timestamp,
           location: json['location']! as String,
           participants_agree_selected_schedule:
-              json['particitpants_agree_selected_schedule'] as List<dynamic>?,
+              json['participants_agree_selected_schedule'] as List<dynamic>?,
         );
 
   Map<String, Object?> toJson() {
@@ -127,7 +127,7 @@ class RoomSchedule {
       'title': title,
       'date': date,
       'location': location,
-      'particitpants_agree_selected_schedule':
+      'participants_agree_selected_schedule':
           participants_agree_selected_schedule,
     };
   }
