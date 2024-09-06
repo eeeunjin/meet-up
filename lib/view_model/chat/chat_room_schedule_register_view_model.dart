@@ -174,7 +174,7 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
         ),
       ),
       location: locationController.text,
-      participants_agree_selected_schedule: null,
+      participants_agree_selected_schedule: [],
     );
 
     ChatModel chatModel = ChatModel(
