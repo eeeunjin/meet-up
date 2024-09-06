@@ -81,6 +81,8 @@ class ImagePath {
       "assets/images/chat_room_schedule_write_icon.png";
   static String get chatRoomDeleteScheduleIcon =>
       "assets/images/chat_room_delete_schedule.png";
+  static String get chatRoomScheduleDecideIcon =>
+      "assets/images/chat_room_schedule_decide_icon.png";
 
   // MARK: - bot_nav
   static String get meetOn => 'assets/images/bot_nav_meet_on.png';

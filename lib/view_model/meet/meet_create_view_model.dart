@@ -316,6 +316,7 @@ class MeetCreateViewModel with ChangeNotifier {
       room_creation_date: Timestamp.now(),
       room_owner_reference: _firebaseRefs.colRefUser.doc(uid),
       room_participant_reference: [],
+      isScheduleDecided: false,
     );
     // 방 정보 저장
     final roomDocRef =

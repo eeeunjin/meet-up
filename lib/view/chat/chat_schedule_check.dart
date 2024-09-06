@@ -373,8 +373,7 @@ class ChatScheduleCheck extends StatelessWidget {
 
   // MARK: - 참석 확인 아래 텍스트
   Widget _checkText(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 31.0.w),
+    return Center(
       child: Text(
         '모든 참석자가 참석 확정 버튼을 누르면 일정이 확정됩니다.\n1일 내로  일정 확정이 되지 않으면 방이 사라집니다.\n참석 확정 버튼을 누르면 추후 변경이 불가합니다.',
         style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
@@ -506,22 +505,36 @@ class ChatScheduleCheck extends StatelessWidget {
         userViewModel.userModel!.nickname;
     final chatRoomSchduleRegisterViewModel =
         Provider.of<ChatRoomSchduleRegisterViewModel>(context, listen: false);
+    bool isScheduleDecided = chatRoomViewModel.roomModel.isScheduleDecided;
 
     if (!isOnwer) {
       return const SizedBox();
     } else {
-      return Padding(
-        padding: EdgeInsets.only(left: 51.w),
-        child: NextButton(
-          onTap: () {
-            //TODO: 누를 때, 확인 문구 먼저
-            deleteDialog(context, chatRoomSchduleRegisterViewModel);
-          },
-          height: 50.h,
-          width: 291.w,
-          text: '일정 삭제하기',
-        ),
-      );
+      if (isScheduleDecided) {
+        return Center(
+          child: Column(
+            children: [
+              SizedBox(height: 15.h),
+              Text(
+                "일정이 확정되어 삭제가 불가합니다.",
+                style: AppTextStyles.PR_SB_14.copyWith(color: UsedColor.text_3),
+              ),
+            ],
+          ),
+        );
+      } else {
+        return Center(
+          child: NextButton(
+            onTap: () {
+              //TODO: 누를 때, 확인 문구 먼저
+              deleteDialog(context, chatRoomSchduleRegisterViewModel);
+            },
+            height: 50.h,
+            width: 291.w,
+            text: '일정 삭제하기',
+          ),
+        );
+      }
     }
   }
 
