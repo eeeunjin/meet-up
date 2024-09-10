@@ -90,6 +90,14 @@ class ChatRoom extends StatelessWidget {
                               child: PullDownButton(
                                 routeTheme:
                                     PullDownMenuRouteTheme(width: 200.w),
+                                onCanceled: () {
+                                  // 키보드 내리기
+                                  chatRoomViewModel.setStartEdit(false);
+                                  FocusManager.instance.primaryFocus?.unfocus();
+
+                                  // PullDownMenu 관련 변수 설정
+                                  chatRoomViewModel.setMoreOptionClicked(false);
+                                },
                                 itemBuilder: (context) => [
                                   PullDownMenuItem(
                                     title: '알람 켜기',
@@ -99,8 +107,12 @@ class ChatRoom extends StatelessWidget {
                                       ),
                                     ),
                                     onTap: () {
-                                      logger.d("알람 켜기 버튼 눌림");
+                                      // 키보드 내리기
+                                      chatRoomViewModel.setStartEdit(false);
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
 
+                                      // PullDownMenu 관련 변수 설정
                                       chatRoomViewModel
                                           .setMoreOptionClicked(false);
                                     },
@@ -114,6 +126,11 @@ class ChatRoom extends StatelessWidget {
                                     ),
                                     onTap: () {
                                       logger.d("방 세부 정보 보기 버튼 눌림");
+                                      // 키보드 내리기
+                                      chatRoomViewModel.setStartEdit(false);
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+
                                       meetDetailRoomViewModel
                                           .setCurrentRoomModel(
                                               roomModel:
@@ -137,6 +154,11 @@ class ChatRoom extends StatelessWidget {
                                     ),
                                     onTap: () {
                                       logger.d("방 나가기 버튼 눌림");
+                                      // 키보드 내리기
+                                      chatRoomViewModel.setStartEdit(false);
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+
                                       _showOutRoomDialog(context);
                                       chatRoomViewModel
                                           .setMoreOptionClicked(false);
@@ -157,9 +179,6 @@ class ChatRoom extends StatelessWidget {
                                     height: 28.h,
                                   ),
                                 ),
-                                onCanceled: () {
-                                  chatRoomViewModel.setMoreOptionClicked(false);
-                                },
                               ),
                             ),
                           ],
@@ -1332,7 +1351,7 @@ class ChatRoom extends StatelessWidget {
                           uid: userViewModel.uid!,
                           content: message,
                           date: Timestamp.now(),
-                          room_id: chatRoomViewModel.roomID,
+                          room_reference: chatRoomViewModel.roomID,
                           type: "chat",
                         );
 
@@ -1486,7 +1505,7 @@ class ChatRoom extends StatelessWidget {
                 uid: userViewModel.uid!,
                 content: " 님이 채팅방을 나갔습니다.",
                 date: Timestamp.now(),
-                room_id: chatRoomViewModel.roomID,
+                room_reference: chatRoomViewModel.roomID,
                 type: "exit",
               );
               await chatRoomViewModel.createChatDocument(chatModel);
