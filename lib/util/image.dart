@@ -259,4 +259,6 @@ class ImagePath {
 
   static String get plus => 'assets/images/reflectPlus.png';
   static String get reflectClose => 'assets/images/reflect_close.png';
+
+  static String get reflectDiary => 'assets/images/reflectdiary.png';
 }

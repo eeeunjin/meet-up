@@ -6,32 +6,18 @@ class ReflectViewModel with ChangeNotifier {
   final List<int> completedSelection = [];
   final Map<int, String> _answers = {}; // 답변을 저장할 맵
 
-  final Map<int, TextEditingController> _controllers = {};
-
-  TextEditingController getController(int index) {
-    if (!_controllers.containsKey(index)) {
-      _controllers[index] = TextEditingController();
-    }
-    return _controllers[index]!;
-  }
-
-  // 질문을 제거할 때 컨트롤러도 함께 제거
-  void removeQuestion(int index) {
-    _controllers[index]?.dispose();
-    _controllers.remove(index);
-    _answers.remove(_selectedImages[index]); // 답변도 함께 삭제
-    completedSelection.remove(_selectedImages[index]);
-    _selectedImages.removeAt(index);
+  // 답변 업데이트
+  void updateAnswer(int questionIndex, String answer) {
+    _answers[questionIndex] = answer;
     notifyListeners();
   }
 
-  @override
-  void dispose() {
-    // 모든 컨트롤러를 해제
-    for (var controller in _controllers.values) {
-      controller.dispose();
-    }
-    super.dispose();
+  // 질문을 제거할 때 답변도 함께 제거
+  void removeQuestion(int index) {
+    _answers.remove(_selectedImages[index]);
+    completedSelection.remove(_selectedImages[index]);
+    _selectedImages.removeAt(index);
+    notifyListeners();
   }
 
   List<int> get selectedImages => _selectedImages;
@@ -83,12 +69,6 @@ class ReflectViewModel with ChangeNotifier {
 
   bool canSelectMoreQuestions() {
     return _selectedImages.length < 3;
-  }
-
-  // 답변을 저장
-  void updateAnswer(int questionIndex, String answer) {
-    _answers[questionIndex] = answer;
-    notifyListeners();
   }
 
   // 별점 설정
