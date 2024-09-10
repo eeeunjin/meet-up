@@ -155,6 +155,11 @@ class ChatRoomViewModel with ChangeNotifier {
     );
   }
 
+  // recent message를 chatModel의 type에 따라 반환하는 함수
+  String getRecentMessage(ChatModel chatModel) {
+    return '';
+  }
+
   // 채팅 메시지 스트림 함수
   Stream<QuerySnapshot<Object?>> getChatStream() {
     return _chatRepository.getChatStream(_roomID);

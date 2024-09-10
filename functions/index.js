@@ -30,7 +30,7 @@ onDocumentUpdated("rooms/{roomId}", async (event) => {
       "nickName": "",
       "Content": "",
       "date": Timestamp.now(),
-      "room_reference": "",
+      "room_reference": chatRoomId,
       "type": "schedule_write",
     });
     console.log("일정 추가 가능 채팅이 추가되었습니다.");
@@ -59,7 +59,7 @@ onDocumentUpdated("rooms/{roomId}", async (event) => {
         "nickName": "",
         "Content": "",
         "date": Timestamp.now(),
-        "room_reference": "",
+        "room_reference": chatRoomId,
         "type": "schedule_decide",
       });
       console.log("일정 확정 채팅이 추가되었습니다.");
