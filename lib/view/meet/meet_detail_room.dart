@@ -623,7 +623,7 @@ class MeetDetailRoom extends StatelessWidget {
               uid: userViewModel.uid!,
               content: " 님이 채팅방에 입장했습니다.",
               date: Timestamp.now(),
-              room_id: meetDetailRoomViewModel.currentRoomModel!.roomId,
+              room_reference: meetDetailRoomViewModel.currentRoomModel!.roomId,
               type: "enter",
             );
             await chatRoomViewModel.createChatDocument(chatModel);

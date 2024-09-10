@@ -166,23 +166,14 @@ class ChatMain extends StatelessWidget {
                                   final newMessageCount =
                                       Random().nextInt(18) + 1;
                                   // 테스트 최근 메세지
-                                  final recentMessageList = [
-                                    '안녕하세요 반가워요 ~',
-                                    '그럼 저희 어디서 만날지 부터 정할까요 ??',
-                                    '일정 등록 했어요 ~ 다들 확인 해주세요 !',
-                                    '??',
-                                    'ㅋㅋㅋㅋㅋ 아니에요',
-                                    '네 알겠습니다 !',
-                                  ];
+                                  final recentMessage =
+                                      roomModel.recentMessage;
                                   // 만료 여부
                                   bool timeOver = roomModel.room_creation_date
                                           .toDate()
                                           .add(const Duration(days: 7))
                                           .compareTo(DateTime.now()) <
                                       0;
-                                  final recentMessage = recentMessageList[
-                                      Random()
-                                          .nextInt(recentMessageList.length)];
                                   return Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
@@ -202,12 +193,12 @@ class ChatMain extends StatelessWidget {
                                           // 처음 입장하는 방인 경우
                                           if (myRoomModels[index].isNew) {
                                             // isNew 상태를 false로 변경
-                                            logger.d(
-                                                'uid: ${userViewModel.uid} // roomId: ${myRoomModels[index].room_reference.id}');
                                             await chatViewModel
                                                 .updateMyRoomInfo(
                                               uid: userViewModel.uid!,
-                                              roomId: myRoomModels[index].room_reference.id,
+                                              roomId: myRoomModels[index]
+                                                  .room_reference
+                                                  .id,
                                               data: {'isNew': false},
                                             );
                                             // 온 보딩 화면으로 전환
@@ -268,11 +259,12 @@ class ChatMain extends StatelessWidget {
                                                   ),
                                                   SizedBox(width: 10.w),
                                                   // 알림 설정 상태
-                                                  Container(
-                                                    height: 12.h,
-                                                    width: 12.w,
-                                                    color: UsedColor.text_6,
-                                                  ),
+                                                  // Container(
+                                                  //   height: 12.h,
+                                                  
+                                                  //   width: 12.w,
+                                                  //   color: UsedColor.text_6,
+                                                  // ),
                                                   const Spacer(),
                                                   Text(
                                                     "${roomModel.room_creation_date.toDate().add(const Duration(days: 7)).toString().substring(0, 10).replaceAll('-', '.')} 만료",
@@ -322,33 +314,33 @@ class ChatMain extends StatelessWidget {
                                                   if (recentMessage.length <=
                                                       18)
                                                     SizedBox(width: 8.w),
-                                                  Container(
-                                                    height: 13.h,
-                                                    width: newMessageCount > 10
-                                                        ? 17.w
-                                                        : 13.w,
-                                                    padding: EdgeInsets.only(
-                                                      top: 1.h,
-                                                      right: 0.5.h,
-                                                    ),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                        6.5.r,
-                                                      ),
-                                                      color: UsedColor.main,
-                                                    ),
-                                                    child: Center(
-                                                      child: Text(
-                                                        '$newMessageCount',
-                                                        style: AppTextStyles
-                                                            .PR_SB_10
-                                                            .copyWith(
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
+                                                  // Container(
+                                                  //   height: 13.h,
+                                                  //   width: newMessageCount > 10
+                                                  //       ? 17.w
+                                                  //       : 13.w,
+                                                  //   padding: EdgeInsets.only(
+                                                  //     top: 1.h,
+                                                  //     right: 0.5.h,
+                                                  //   ),
+                                                  //   decoration: BoxDecoration(
+                                                  //     borderRadius:
+                                                  //         BorderRadius.circular(
+                                                  //       6.5.r,
+                                                  //     ),
+                                                  //     color: UsedColor.main,
+                                                  //   ),
+                                                  //   child: Center(
+                                                  //     child: Text(
+                                                  //       '$newMessageCount',
+                                                  //       style: AppTextStyles
+                                                  //           .PR_SB_10
+                                                  //           .copyWith(
+                                                  //         color: Colors.white,
+                                                  //       ),
+                                                  //     ),
+                                                  //   ),
+                                                  // ),
                                                 ],
                                               ),
                                             ],

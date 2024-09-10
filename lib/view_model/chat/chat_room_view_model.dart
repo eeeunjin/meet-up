@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meet_up/model/chat_room_model.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
@@ -116,7 +117,7 @@ class ChatRoomViewModel with ChangeNotifier {
       maxLines: 1,
     )..layout();
 
-    return textPainter.width.toDouble();
+    return (textPainter.width + 2.w).toDouble();
   }
 
   // 스크롤 뷰의 가장 하단으로 움직이는 함수
@@ -139,6 +140,15 @@ class ChatRoomViewModel with ChangeNotifier {
 
   // 채팅 메시지 전송 함수
   Future<bool> createChatDocument(ChatModel chatModel) async {
+    // 해당 room model의 recent message 업데이트
+    await _roomRepository.updateRoomDocument(
+      roomId: chatModel.room_reference,
+      data: {
+        'recentMessage': chatModel.content,
+      },
+    );
+
+    // 새로운 chat model 생성
     return await _chatRepository.createChat(
       chatModel,
       _roomID,

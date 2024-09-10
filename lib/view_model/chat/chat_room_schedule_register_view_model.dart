@@ -181,7 +181,7 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
       uid: uid,
       content: '',
       date: Timestamp.now(),
-      room_id: roomId,
+      room_reference: roomId,
       type: 'schedule_register',
     );
 
@@ -229,7 +229,7 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
       uid: '',
       content: scheduleTitle,
       date: Timestamp.now(),
-      room_id: roomId,
+      room_reference: roomId,
       type: 'schedule_delete',
     );
 

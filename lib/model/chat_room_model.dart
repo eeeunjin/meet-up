@@ -36,7 +36,7 @@ class ChatModel {
   // 채팅 작성 일자
   Timestamp date;
   // 방 레퍼런스
-  String room_id;
+  String room_reference;
   // 타입
   // enter, exit, chat, schedule_write,
   String type;
@@ -45,7 +45,7 @@ class ChatModel {
     required this.uid,
     required this.content,
     required this.date,
-    required this.room_id,
+    required this.room_reference,
     required this.type,
   });
 
@@ -54,7 +54,7 @@ class ChatModel {
           uid: json['uid']! as String,
           content: json['Content']! as String,
           date: json['date']! as Timestamp,
-          room_id: json['room_reference']! as String,
+          room_reference: json['room_reference']! as String,
           type: json['type']! as String,
         );
 
@@ -63,7 +63,7 @@ class ChatModel {
       'uid': uid,
       'Content': content,
       'date': date,
-      'room_reference': room_id,
+      'room_reference': room_reference,
       'type': type,
     };
   }
