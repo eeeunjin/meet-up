@@ -1173,7 +1173,7 @@ class ChatRoom extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 8.0.h),
+          SizedBox(height: 12.h),
           Divider(
             thickness: 0.5.h,
             height: 0.h,
@@ -1182,11 +1182,34 @@ class ChatRoom extends StatelessWidget {
           SizedBox(height: 9.h),
           Padding(
             padding: EdgeInsets.only(left: 17.w),
-            child: Text(
-              '일정 등록이 완료되었습니다!\n참석자들은 일정 확인 후 참석 확인 버튼을\n꼭 눌러 주세요.',
-              style: AppTextStyles.PR_M_10.copyWith(
-                color: UsedColor.text_3,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 12.h,
+                  child: Text(
+                    '일정 등록이 완료되었습니다!.',
+                    style:
+                        AppTextStyles.PR_M_10.copyWith(color: UsedColor.text_3),
+                  ),
+                ),
+                SizedBox(
+                  height: 12.h,
+                  child: Text(
+                    '참석자들은 일정 확인 후 참석 확인 버튼을',
+                    style:
+                        AppTextStyles.PR_M_10.copyWith(color: UsedColor.text_3),
+                  ),
+                ),
+                SizedBox(
+                  height: 12.h,
+                  child: Text(
+                    '꼭 눌러 주세요.',
+                    style:
+                        AppTextStyles.PR_M_10.copyWith(color: UsedColor.text_3),
+                  ),
+                ),
+              ],
             ),
           )
         ],
