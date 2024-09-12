@@ -31,12 +31,12 @@ class BotNavBar extends StatelessWidget {
           resizeToAvoidBottomInset: false, // 키보드 픽셀 over 방지
           body: IndexedStack(
             index: bottomNavViewModel.currentIndex,
-            children: const [
-              MeetMain(),
-              ChatMain(),
+            children: [
+              const MeetMain(),
+              const ChatMain(),
               ScheduleMain(),
-              ReflectMain(),
-              ProfileMain(),
+              const ReflectMain(),
+              const ProfileMain(),
             ],
           ),
           bottomNavigationBar: _bot_nav(context),

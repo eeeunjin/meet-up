@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:meet_up/repository/user_repository.dart';
 
 class ScheduleMainViewModel with ChangeNotifier {
+  final UserRepository _userRepository = UserRepository();
+
   // Main
 
   // meetUp을 기본 페이지로

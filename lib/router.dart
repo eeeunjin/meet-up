@@ -360,7 +360,7 @@ final router = GoRouter(
         //MARK: - Schedule
         GoRoute(
           path: '/scheduleMain',
-          builder: (context, state) => const ScheduleMain(),
+          builder: (context, state) => ScheduleMain(),
           parentNavigatorKey: shellNavkey,
           routes: [
             GoRoute(
