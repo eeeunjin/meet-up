@@ -708,9 +708,9 @@ class MeetCreate extends StatelessWidget {
                       Expanded(
                         child: Text(entry.key,
                             style: isSelected
-                                ? AppTextStyles.PR_M_14
+                                ? AppTextStyles.PR_M_15
                                     .copyWith(color: Colors.black)
-                                : AppTextStyles.PR_R_14
+                                : AppTextStyles.PR_R_15
                                     .copyWith(color: UsedColor.text_5)),
                       ),
                       _responseButton(context, entry.key, true),

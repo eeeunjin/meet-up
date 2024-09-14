@@ -11,17 +11,17 @@ class CoinWidget extends StatelessWidget {
   final bool isFixed;
 
   const CoinWidget({
-    Key? key,
+    super.key,
     required this.coinAmount,
     required this.ticketAmount,
     required this.isFixed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.0.w),
-      height: 24.h,
+      height: 28.h,
       decoration: BoxDecoration(
         color: UsedColor.charcoal_black,
         borderRadius: BorderRadius.circular(19.r),
@@ -30,22 +30,21 @@ class CoinWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // dollar icon
-          Image.asset(ImagePath.coinDollarIcon, width: 10.5.w, height: 10.h),
-          SizedBox(width: 1.2.w),
+          Image.asset(ImagePath.coinDollarIcon, width: 12.5.w, height: 12.h),
+          SizedBox(width: 1.w),
           // 충전된 달러 양
           Text(
             coinAmount.toString(),
-            style: AppTextStyles.PR_R_9.copyWith(color: UsedColor.coin),
+            style: AppTextStyles.PR_R_11.copyWith(color: UsedColor.coin),
           ),
           SizedBox(width: 4.3.w),
           // wallet icon
-          Image.asset(ImagePath.coinWalletIcon,
-              width: 11.5.w, height: 11.5.h),
-          SizedBox(width: 1.18.w),
+          Image.asset(ImagePath.coinWalletIcon, width: 14.w, height: 14.h),
+          SizedBox(width: 1.w),
           // 입장권 개수
           Text(
             ticketAmount.toString(),
-            style: AppTextStyles.PR_R_9.copyWith(color: UsedColor.coin),
+            style: AppTextStyles.PR_R_11.copyWith(color: UsedColor.coin),
           ),
           if (isFixed) SizedBox(width: 3.w),
           // 정기권 여부

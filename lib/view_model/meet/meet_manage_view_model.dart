@@ -156,10 +156,10 @@ class MeetManageViewModel with ChangeNotifier {
 
   // MARK: - Rules
   List<String> get rulesDescriptions => [
-        '만남 시 대화 녹음',
-        '만남 후 앱을 통해 연락처 공유',
-        '아는 지인과 동반 신청',
+        '만남 시 SNS 공유',
+        '만남 시 연락처 공유',
+        '지인과 동반 신청',
         '첫 만남에 2차 이동',
-        '귀가 시 동성과 동행',
+        '저녁 시간대 만남',
       ];
 }

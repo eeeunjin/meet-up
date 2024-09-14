@@ -121,7 +121,8 @@ class MeetFilterViewModel with ChangeNotifier {
   }
 
   bool get isAreaSelectionComplete {
-    return _selectedProvinceInAreaPage.isNotEmpty && _selectedDistrictInAreaPage.isNotEmpty;
+    return _selectedProvinceInAreaPage.isNotEmpty &&
+        _selectedDistrictInAreaPage.isNotEmpty;
   }
 
   void saveAreaFilterInfo() {
@@ -163,11 +164,11 @@ class MeetFilterViewModel with ChangeNotifier {
 
   // MARK: - Rules
   final Map<String, bool> _rulesQuestion = {
-    '만남 시 대화 녹음': false,
-    '만남 후 앱을 통해 연락처 공유': false,
-    '아는 지인과 동반 신청': false,
+    '만남 시 SNS 공유': false,
+    '만남 시 연락처 공유': false,
+    '지인과 동반 신청': false,
     '첫 만남에 2차 이동': false,
-    '귀가 시 동성과 동행': false,
+    '저녁 시간대 만남': false,
   };
 
   Map<String, bool?> get rules => _rulesQuestion;

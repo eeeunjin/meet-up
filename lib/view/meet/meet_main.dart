@@ -164,7 +164,7 @@ class MeetMain extends StatelessWidget {
     );
   }
 
-  // Mark - 만남방 둘러보기
+  // MARK: - 만남방 둘러보기
   Widget _searchMeetList(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -243,6 +243,7 @@ class MeetMain extends StatelessWidget {
     );
   }
 
+  // MARK: - 이벤트 배너
   Widget _event() {
     return SizedBox(
       width: 354.w,

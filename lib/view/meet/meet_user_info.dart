@@ -112,15 +112,15 @@ class MeetUserInfo extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.r),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          SizedBox(height: 27.0.h),
-          Row(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(width: 23.0.w),
-              Stack(
+              SizedBox(height: 27.0.h),
+              Row(
                 children: [
+                  SizedBox(width: 23.0.w),
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -139,77 +139,77 @@ class MeetUserInfo extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Positioned(
-                    top: 15.0.h,
-                    right: 0.w,
-                    child: Container(
-                      width: 27.w,
-                      height: 27.h,
-                      decoration: BoxDecoration(
-                        color: UsedColor.main,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          top: 4.0.h,
-                          right: 4.0.w,
-                          left: 5.0.w,
-                          bottom: 5.0.h,
-                        ),
-                        child: Image.asset(
-                          ImagePath.infoIcon1,
-                          height: 18.h,
-                          width: 18.w,
+                  SizedBox(width: 21.w),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        user.nickname,
+                        style: AppTextStyles.PR_SB_18.copyWith(
+                          color: UsedColor.charcoal_black,
                         ),
                       ),
-                    ),
+                      SizedBox(height: 10.h),
+                      if (!user.isFixedTicket)
+                        Container(
+                          height: 20.h,
+                          width: 104.w,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: UsedColor.image_card,
+                            borderRadius: BorderRadius.circular(9.r),
+                          ),
+                          child: Text(
+                            '정기권 혜택 적용중',
+                            style: AppTextStyles.SU_M_12.copyWith(
+                              color: UsedColor.violet,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                    ],
                   ),
                 ],
               ),
-              SizedBox(width: 21.w),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    user.nickname,
-                    style: AppTextStyles.PR_SB_18.copyWith(
-                      color: UsedColor.charcoal_black,
-                    ),
+              SizedBox(height: 25.h),
+              Divider(
+                thickness: 1.5.h,
+                height: 1.0.h,
+                color: UsedColor.bg_color,
+              ),
+              SizedBox(height: 17.h),
+              Center(
+                child: Text(
+                  '${user.rank} 등급',
+                  style: AppTextStyles.PR_M_16.copyWith(
+                    color: UsedColor.text_1,
                   ),
-                  SizedBox(height: 10.h),
-                  if (!user.isFixedTicket)
-                    Container(
-                      height: 20.h,
-                      width: 104.w,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: UsedColor.image_card,
-                        borderRadius: BorderRadius.circular(9.r),
-                      ),
-                      child: Text(
-                        '정기권 혜택 적용중',
-                        style: AppTextStyles.SU_M_12.copyWith(
-                          color: UsedColor.violet,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                ],
+                ),
               ),
             ],
           ),
-          SizedBox(height: 25.h),
-          Divider(
-            thickness: 1.5.h,
-            height: 1.0.h,
-            color: UsedColor.bg_color,
-          ),
-          SizedBox(height: 17.h),
-          Center(
-            child: Text(
-              '${user.rank} 등급',
-              style: AppTextStyles.PR_M_16.copyWith(
-                color: UsedColor.text_1,
+          Positioned(
+            top: 19.0.h,
+            right: 19.w,
+            child: Container(
+              width: 27.w,
+              height: 27.h,
+              decoration: BoxDecoration(
+                color: UsedColor.main,
+                shape: BoxShape.circle,
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: 4.0.h,
+                  right: 4.0.w,
+                  left: 5.0.w,
+                  bottom: 5.0.h,
+                ),
+                child: Image.asset(
+                  ImagePath.infoIcon1,
+                  height: 18.h,
+                  width: 18.w,
+                ),
               ),
             ),
           ),
