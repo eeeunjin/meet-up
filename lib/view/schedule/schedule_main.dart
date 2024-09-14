@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -53,7 +54,6 @@ class ScheduleMain extends StatelessWidget {
         if (viewModel.selectedScheduleDetail != null) {
           return GestureDetector(
             onTap: () {
-              // ViewModel의 resetScheduleSelection()을 호출하여 리스트로 돌아가기
               viewModel.resetScheduleSelection();
             },
             child: Image.asset(
@@ -363,16 +363,22 @@ class ScheduleMain extends StatelessWidget {
                     SizedBox(height: 32.h),
                     Row(
                       children: [
+                        // 일정 제목
                         Text(
                           '일정 제목',
                           style: AppTextStyles.PR_SB_20
                               .copyWith(color: Colors.black),
                         ),
                         SizedBox(width: 12.w),
-                        Image.asset(
-                          ImagePath.editPencil,
-                          width: 19.w,
-                          height: 19.h,
+                        GestureDetector(
+                          onTap: () {
+                            // 편집
+                          },
+                          child: Image.asset(
+                            ImagePath.editPencil,
+                            width: 19.w,
+                            height: 19.h,
+                          ),
                         )
                       ],
                     ),
@@ -388,28 +394,203 @@ class ScheduleMain extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(top: 20.h, left: 24.w),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                            padding: EdgeInsets.only(
+                              top: 20.h,
+                              left: 24.w,
+                            ),
+                            child: Column(
                               children: [
-                                Container(
-                                  width: 8.w,
-                                  height: 8.h,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: UsedColor.main),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 8.w,
+                                      height: 8.h,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: UsedColor.main),
+                                    ),
+                                    SizedBox(width: 12.w),
+                                    Text(
+                                      '날짜',
+                                      style: AppTextStyles.PR_SB_12
+                                          .copyWith(color: Colors.black),
+                                    ),
+                                    SizedBox(width: 31.w),
+                                    Text(
+                                      '2024.01.06. 화요일',
+                                      style: AppTextStyles.PR_R_12
+                                          .copyWith(color: UsedColor.text_3),
+                                    )
+                                  ],
                                 ),
-                                SizedBox(width: 12.w),
-                                Text(
-                                  '날짜',
-                                  style: AppTextStyles.PR_SB_17
-                                      .copyWith(color: Colors.black),
+                                SizedBox(height: 14.h),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 8.w,
+                                      height: 8.h,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: UsedColor.main),
+                                    ),
+                                    SizedBox(width: 12.w),
+                                    Text(
+                                      '시간',
+                                      style: AppTextStyles.PR_SB_12
+                                          .copyWith(color: Colors.black),
+                                    ),
+                                    SizedBox(width: 31.w),
+                                    Text(
+                                      '오후 7시 30분',
+                                      style: AppTextStyles.PR_R_12
+                                          .copyWith(color: UsedColor.text_3),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(height: 14.h),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 8.w,
+                                      height: 8.h,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: UsedColor.main),
+                                    ),
+                                    SizedBox(width: 12.w),
+                                    Text(
+                                      '장소',
+                                      style: AppTextStyles.PR_SB_12
+                                          .copyWith(color: Colors.black),
+                                    ),
+                                    SizedBox(width: 31.w),
+                                    Text(
+                                      '아름고등학교 체육관 체력 단련실',
+                                      style: AppTextStyles.PR_R_12
+                                          .copyWith(color: UsedColor.text_3),
+                                    )
+                                  ],
                                 ),
                               ],
                             ),
                           )
                         ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 14.h,
+                    ),
+                    Container(
+                      width: 340.w,
+                      height: 84.h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.r),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: 20.h,
+                              left: 24.w,
+                            ),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 8.w,
+                                      height: 8.h,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: UsedColor.main),
+                                    ),
+                                    SizedBox(width: 12.w),
+                                    Text(
+                                      '설명',
+                                      style: AppTextStyles.PR_SB_12
+                                          .copyWith(color: Colors.black),
+                                    ),
+                                    SizedBox(width: 31.w),
+                                    Text(
+                                      '교내 연습 동아리',
+                                      style: AppTextStyles.PR_R_12
+                                          .copyWith(color: UsedColor.text_3),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(height: 14.h),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 8.w,
+                                      height: 8.h,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: UsedColor.main),
+                                    ),
+                                    SizedBox(width: 12.w),
+                                    Text(
+                                      '참여',
+                                      style: AppTextStyles.PR_SB_12
+                                          .copyWith(color: Colors.black),
+                                    ),
+                                    SizedBox(width: 31.w),
+                                    // 참여자 리스트
+                                    Wrap(
+                                      children: [
+                                        Container(
+                                          width: 45.w,
+                                          height: 18.h,
+                                          decoration: BoxDecoration(
+                                            color: UsedColor.image_card,
+                                            borderRadius:
+                                                BorderRadius.circular(8.5.r),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              '홍길동',
+                                              style: AppTextStyles.SU_M_10
+                                                  .copyWith(
+                                                      color: UsedColor.violet),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+                    // 삭제버튼
+                    Container(
+                      width: 327.w,
+                      height: 56.h,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(19.r),
+                          color: Colors.black),
+                      child: Center(
+                        child: Text(
+                          '삭제',
+                          style: AppTextStyles.PR_SB_20
+                              .copyWith(color: Colors.white),
+                        ),
                       ),
                     ),
                   ],
