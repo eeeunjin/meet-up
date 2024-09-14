@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
+import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:provider/provider.dart';
@@ -35,13 +36,37 @@ class ScheduleMain extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          header(title: '일정', back: null),
+          header(title: '일정', back: _back(context)),
           SizedBox(
             height: 30.h,
           ),
           _meetPart(),
         ],
       ),
+    );
+  }
+
+  Widget _back(BuildContext context) {
+    return Consumer<ScheduleMainViewModel>(
+      builder: (context, viewModel, child) {
+        // 스케줄이 선택된 경우에만 뒤로가기 버튼을 표시
+        if (viewModel.selectedScheduleDetail != null) {
+          return GestureDetector(
+            onTap: () {
+              // ViewModel의 resetScheduleSelection()을 호출하여 리스트로 돌아가기
+              viewModel.resetScheduleSelection();
+            },
+            child: Image.asset(
+              ImagePath.back,
+              width: 10.w,
+              height: 20.h,
+            ),
+          );
+        } else {
+          // 스케줄이 선택되지 않았을 경우 빈 위젯을 반환
+          return const SizedBox.shrink();
+        }
+      },
     );
   }
 
@@ -96,6 +121,30 @@ class ScheduleMain extends StatelessWidget {
     );
   }
 
+  // MARK: - 플로팅 액션 버튼
+  Widget _buildFloatingActionButton(BuildContext context) {
+    return Consumer<ScheduleMainViewModel>(
+        builder: (context, viewModel, child) {
+      // 개인 만남이 선택 되었을 때
+      if (viewModel.selectedPart == SelectedPart.personal) {
+        return FloatingActionButton(
+          heroTag: null, // 고유 태그 지정 - hero오류
+          onPressed: () {
+            context.goNamed('addPersonalSchedule');
+          },
+          backgroundColor: Colors.black,
+          shape: const CircleBorder(),
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+        );
+      } else {
+        return Container();
+      }
+    });
+  }
+
   Widget _main(BuildContext context) {
     return Consumer<ScheduleMainViewModel>(
       builder: (context, viewModel, child) {
@@ -129,11 +178,27 @@ class ScheduleMain extends StatelessWidget {
     );
   }
 
-  // 개인 만남 뷰
+  // MARK: - 개인 만남 뷰
   Widget _personalView(BuildContext context) {
     // final scheduleMainViewModel =
     //     Provider.of<ScheduleMainViewModel>(context, listen: false);
     // final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+
+    return Consumer<ScheduleMainViewModel>(
+      builder: (context, viewModel, child) {
+        if (viewModel.selectedScheduleDetail == null) {
+          // 선택된 스케줄이 없을 때, 기본 일정 리스트 뷰를 보여줍니다.
+          return _personalScheduleListView(context);
+        } else {
+          // 선택된 스케줄이 있을 때, 상세 정보를 보여줍니다.
+          return _personalScheduleDetailView(context);
+        }
+      },
+    );
+  }
+
+  // 개인 일정 리스트
+  Widget _personalScheduleListView(BuildContext context) {
     return Container(
       width: double.infinity,
       color: UsedColor.bg_color,
@@ -151,30 +216,6 @@ class ScheduleMain extends StatelessWidget {
     );
   }
 
-  // MARK: - 플로팅 액션 버튼
-  Widget _buildFloatingActionButton(BuildContext context) {
-    return Consumer<ScheduleMainViewModel>(
-        builder: (context, viewModel, child) {
-      // 개인 만남이 선택 되었을 때
-      if (viewModel.selectedPart == SelectedPart.personal) {
-        return FloatingActionButton(
-          heroTag: null, // 고유 태그 지정 - hero오류
-          onPressed: () {
-            context.goNamed('addPersonalSchedule');
-          },
-          backgroundColor: Colors.black,
-          shape: const CircleBorder(),
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-        );
-      } else {
-        return Container();
-      }
-    });
-  }
-
   // MARK: - 개인 스케쥴 Mapping
   Map<String, List<Map<String, String>>> personalScheduleMap = {
     '2024.01.06': [
@@ -190,7 +231,7 @@ class ScheduleMain extends StatelessWidget {
     ],
   };
 
-  //MARK: - 개인 만남 위젯
+  //MARK: - 개인 만남 일정 컨테이너
   Widget _schedulesPersonal(BuildContext context, String date) {
     // final scheduleMainViewModel =
     //     Provider.of<ScheduleMainViewModel>(context, listen: false);
@@ -229,7 +270,9 @@ class ScheduleMain extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () {
                         // 컨테이너 선택 시
-                        context.goNamed('scheduleDetailPage');
+                        Provider.of<ScheduleMainViewModel>(context,
+                                listen: false)
+                            .selectSchedule(date, detail);
                       },
                       child: Container(
                         width: 355.w,
@@ -299,6 +342,83 @@ class ScheduleMain extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  //MARK: - 개인 일정 디테일 뷰
+  Widget _personalScheduleDetailView(BuildContext context) {
+    return Consumer<ScheduleMainViewModel>(
+      builder: (context, viewModel, child) {
+        return Container(
+          padding: const EdgeInsets.all(16.0),
+          width: double.infinity,
+          color: UsedColor.bg_color,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 30.w, right: 26.w),
+                child: Column(
+                  children: [
+                    SizedBox(height: 32.h),
+                    Row(
+                      children: [
+                        Text(
+                          '일정 제목',
+                          style: AppTextStyles.PR_SB_20
+                              .copyWith(color: Colors.black),
+                        ),
+                        SizedBox(width: 12.w),
+                        Image.asset(
+                          ImagePath.editPencil,
+                          width: 19.w,
+                          height: 19.h,
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 28.h),
+                    Container(
+                      width: 340.w,
+                      height: 110.h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.r),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: 20.h, left: 24.w),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 8.w,
+                                  height: 8.h,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: UsedColor.main),
+                                ),
+                                SizedBox(width: 12.w),
+                                Text(
+                                  '날짜',
+                                  style: AppTextStyles.PR_SB_17
+                                      .copyWith(color: Colors.black),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

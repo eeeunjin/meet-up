@@ -129,6 +129,7 @@ class ImagePath {
       'assets/images/schedule_icon_member.png';
 
   static String get downArrow => 'assets/images/down_arrow.png';
+  static String get editPencil => 'assets/images/edit-pencil.png';
 
   // MARK: - userinfo
   static String get infoIcon1 => 'assets/images/info_icon_1.png';

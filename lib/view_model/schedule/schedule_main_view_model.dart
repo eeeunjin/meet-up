@@ -221,6 +221,28 @@ class ScheduleMainViewModel with ChangeNotifier {
     detailTextController.clear();
     _selectedMembers.clear();
   }
+
+  // MARK: - 추가
+  String? _selectedScheduleDate;
+  Map<String, String>? _selectedScheduleDetail;
+
+  String? get selectedScheduleDate => _selectedScheduleDate;
+
+  Map<String, String>? get selectedScheduleDetail => _selectedScheduleDetail;
+
+  // 스케줄 선택
+  void selectSchedule(String date, Map<String, String> detail) {
+    _selectedScheduleDate = date;
+    _selectedScheduleDetail = detail;
+    notifyListeners();
+  }
+
+  // 선택 초기화
+  void resetScheduleSelection() {
+    _selectedScheduleDate = null;
+    _selectedScheduleDetail = null;
+    notifyListeners();
+  }
 }
 
 enum SelectedPart { meetUp, personal }
