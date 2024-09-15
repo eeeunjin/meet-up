@@ -24,6 +24,7 @@ onDocumentUpdated("rooms/{roomId}", async (event) => {
     const chatRoomId = event.params.roomId;
     const chatRoomRef = db.collection("chatRooms").doc(chatRoomId);
     const chatRef = chatRoomRef.collection("chats");
+    const roomRef = db.collection("rooms").doc(chatRoomId);
 
     await chatRef.add({
       "uid": "",
@@ -33,6 +34,12 @@ onDocumentUpdated("rooms/{roomId}", async (event) => {
       "room_reference": "",
       "type": "schedule_write",
     });
+
+    // room 정보 중, recent message 값을 업데이트
+    await roomRef.set({
+      "recentMessage": "일정 등록이 가능합니다 !",
+    }, { merge: true });
+
     console.log("일정 추가 가능 채팅이 추가되었습니다.");
   }
 
@@ -45,6 +52,7 @@ onDocumentUpdated("rooms/{roomId}", async (event) => {
       const chatRoomId = event.params.roomId;
       const chatRoomRef = db.collection("chatRooms").doc(chatRoomId);
       const chatRef = chatRoomRef.collection("chats");
+      const roomRef = db.collection("rooms").doc(chatRoomId);
 
       await chatRef.add({
         "uid": "",
@@ -54,6 +62,11 @@ onDocumentUpdated("rooms/{roomId}", async (event) => {
         "room_reference": "",
         "type": "schedule_decide",
       });
+
+      await roomRef.set({
+        "recentMessage": "일정이 확정되었습니다 !",
+      }, { merge: true });
+
       console.log("일정 확정 채팅이 추가되었습니다.");
     }
   }

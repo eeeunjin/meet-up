@@ -155,6 +155,24 @@ class ChatRoomViewModel with ChangeNotifier {
     );
   }
 
+  // 채팅 메시지 Type에 따라 최근 채팅 메시지를 반환하는 함수
+  String getRecentMessage(ChatModel chatModel, String? nickname) {
+    switch (chatModel.type) {
+      case "chat":
+        return chatModel.content;
+      case "enter":
+        return '"${nickname}" 님이 입장하셨습니다.';
+      case "exit":
+        return '"${nickname}" 님이 퇴장하셨습니다.';
+      case "schedule_register":
+        return '일정을 확인해주세요.';
+      case "schedule_delete":
+        return '기존 일정이 삭제되었습니다.';
+      default:
+        return 'Error Type Message comes';
+    }
+  }
+
   // 채팅 메시지 스트림 함수
   Stream<QuerySnapshot<Object?>> getChatStream() {
     return _chatRepository.getChatStream(_roomID);
