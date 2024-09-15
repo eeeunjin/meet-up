@@ -139,12 +139,13 @@ class ChatRoomViewModel with ChangeNotifier {
   }
 
   // 채팅 메시지 전송 함수
-  Future<bool> createChatDocument(ChatModel chatModel) async {
+  Future<bool> createChatDocument(ChatModel chatModel,
+      [String? nickname]) async {
     // 해당 room model의 recent message 업데이트
     await _roomRepository.updateRoomDocument(
       roomId: chatModel.room_reference,
       data: {
-        'recentMessage': chatModel.content,
+        'recentMessage': getRecentMessage(chatModel, nickname),
       },
     );
 
@@ -161,15 +162,17 @@ class ChatRoomViewModel with ChangeNotifier {
       case "chat":
         return chatModel.content;
       case "enter":
-        return '"${nickname}" 님이 입장하셨습니다.';
+        return '"$nickname" 님이 입장하셨습니다.';
       case "exit":
-        return '"${nickname}" 님이 퇴장하셨습니다.';
+        return '"$nickname" 님이 퇴장하셨습니다.';
       case "schedule_register":
         return '일정을 확인해주세요.';
       case "schedule_delete":
         return '기존 일정이 삭제되었습니다.';
+      case "schedule_decide":
+        return '일정이 확정되었습니다.';
       default:
-        return 'Error Type Message comes';
+        return 'Error Message';
     }
   }
 

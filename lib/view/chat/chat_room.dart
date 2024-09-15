@@ -1508,7 +1508,7 @@ class ChatRoom extends StatelessWidget {
                 room_reference: chatRoomViewModel.roomID,
                 type: "exit",
               );
-              await chatRoomViewModel.createChatDocument(chatModel);
+              await chatRoomViewModel.createChatDocument(chatModel, userViewModel.userModel!.nickname);
 
               // TODO: 만남권 소진 로직 추가 이후 작성
               // Ticket 관련 로직 추가 (사용 가능 횟수 감소)
