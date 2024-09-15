@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/main.dart';
@@ -335,24 +337,7 @@ class ChatScheduleCheck extends StatelessWidget {
         onTap: agree
             ? () {}
             : () async {
-                var scheduleAgreeList = chatRoomViewModel.roomModel
-                    .room_schedule!["participants_agree_selected_schedule"];
-                if (scheduleAgreeList == null) {
-                  scheduleAgreeList = [userViewModel.userModel!.uid];
-                } else {
-                  scheduleAgreeList.add(userViewModel.userModel!.uid);
-                }
-
-                var roomSchedule = chatRoomViewModel.roomModel.room_schedule;
-                roomSchedule!["participants_agree_selected_schedule"] =
-                    scheduleAgreeList;
-
-                await chatRoomViewModel.updateRoomData(
-                  roomId: chatRoomViewModel.roomID,
-                  data: {
-                    "room_schedule": roomSchedule,
-                  },
-                );
+                checkDialog(context);
               },
         child: Container(
           width: 287.w,
@@ -371,14 +356,159 @@ class ChatScheduleCheck extends StatelessWidget {
     );
   }
 
+  // MARK: - 참석 확인 다이얼로그
+  void checkDialog(BuildContext context) {
+    final chatRoomViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (BuildContext buildContext, Animation animation,
+          Animation secondaryAnimation) {
+        return Center(
+          child: Container(
+            width: 245.w,
+            height: 104.h,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 19.h),
+                  child: Text(
+                    '참석을 확정하시겠습니까?',
+                    style: AppTextStyles.PR_M_13.copyWith(
+                        color: Colors.black, decoration: TextDecoration.none),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  '참석 확정을 하시면 추후 변경이 불가합니다.',
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.PR_R_12.copyWith(
+                      color: UsedColor.text_3, decoration: TextDecoration.none),
+                ),
+                SizedBox(height: 12.h),
+                // 구분선
+                Divider(
+                  thickness: 0.5.h,
+                  height: 0.h,
+                  color: UsedColor.line,
+                ),
+                Expanded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          child: TextButton(
+                            style: const ButtonStyle(
+                                overlayColor: MaterialStatePropertyAll(
+                                    Colors.transparent)),
+                            onPressed: () {
+                              context.pop();
+                            },
+                            child: Text(
+                              '취소',
+                              style: AppTextStyles.PR_M_14
+                                  .copyWith(color: UsedColor.charcoal_black),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 0.5.w,
+                        color: UsedColor.line,
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          child: TextButton(
+                            style: const ButtonStyle(
+                                overlayColor: MaterialStatePropertyAll(
+                                    Colors.transparent)),
+                            onPressed: () async {
+                              var scheduleAgreeList =
+                                  chatRoomViewModel.roomModel.room_schedule![
+                                      "participants_agree_selected_schedule"];
+                              if (scheduleAgreeList == null) {
+                                scheduleAgreeList = [
+                                  userViewModel.userModel!.uid
+                                ];
+                              } else {
+                                scheduleAgreeList
+                                    .add(userViewModel.userModel!.uid);
+                              }
+
+                              var roomSchedule =
+                                  chatRoomViewModel.roomModel.room_schedule;
+                              roomSchedule![
+                                      "participants_agree_selected_schedule"] =
+                                  scheduleAgreeList;
+
+                              await chatRoomViewModel.updateRoomData(
+                                roomId: chatRoomViewModel.roomID,
+                                data: {
+                                  "room_schedule": roomSchedule,
+                                },
+                              );
+
+                              context.pop();
+                            },
+                            child: Text(
+                              '확인',
+                              style: AppTextStyles.PR_M_14
+                                  .copyWith(color: UsedColor.charcoal_black),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   // MARK: - 참석 확인 아래 텍스트
   Widget _checkText(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 31.0.w),
-      child: Text(
-        '모든 참석자가 참석 확정 버튼을 누르면 일정이 확정됩니다.\n1일 내로  일정 확정이 되지 않으면 방이 사라집니다.\n참석 확정 버튼을 누르면 추후 변경이 불가합니다.',
-        style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
-        textAlign: TextAlign.center,
+    return Center(
+      child: Column(
+        children: [
+          SizedBox(
+            height: 17.h,
+            child: Text(
+              '모든 참석자가 참석 확정 버튼을 누르면 일정이 확정됩니다.',
+              style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(height: 2.67.h),
+          SizedBox(
+            height: 17.h,
+            child: Text(
+              '1일 내로  일정 확정이 되지 않으면 방이 사라집니다.',
+              style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(height: 2.67.h),
+          SizedBox(
+            height: 17.h,
+            child: Text(
+              '참석 확정 버튼을 누르면 추후 변경이 불가합니다.',
+              style: AppTextStyles.PR_R_14.copyWith(color: UsedColor.text_3),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -506,22 +636,36 @@ class ChatScheduleCheck extends StatelessWidget {
         userViewModel.userModel!.nickname;
     final chatRoomSchduleRegisterViewModel =
         Provider.of<ChatRoomSchduleRegisterViewModel>(context, listen: false);
+    bool isScheduleDecided = chatRoomViewModel.roomModel.isScheduleDecided;
 
     if (!isOnwer) {
       return const SizedBox();
     } else {
-      return Padding(
-        padding: EdgeInsets.only(left: 51.w),
-        child: NextButton(
-          onTap: () {
-            //TODO: 누를 때, 확인 문구 먼저
-            deleteDialog(context, chatRoomSchduleRegisterViewModel);
-          },
-          height: 50.h,
-          width: 291.w,
-          text: '일정 삭제하기',
-        ),
-      );
+      if (isScheduleDecided) {
+        return Center(
+          child: Column(
+            children: [
+              SizedBox(height: 15.h),
+              Text(
+                "일정이 확정되어 삭제가 불가합니다.",
+                style: AppTextStyles.PR_SB_14.copyWith(color: UsedColor.text_3),
+              ),
+            ],
+          ),
+        );
+      } else {
+        return Center(
+          child: NextButton(
+            onTap: () {
+              //TODO: 누를 때, 확인 문구 먼저
+              deleteDialog(context, chatRoomSchduleRegisterViewModel);
+            },
+            height: 50.h,
+            width: 291.w,
+            text: '일정 삭제하기',
+          ),
+        );
+      }
     }
   }
 
@@ -530,10 +674,9 @@ class ChatScheduleCheck extends StatelessWidget {
       ChatRoomSchduleRegisterViewModel chatRoomSchduleRegisterViewModel) {
     final chatRoomViewModel =
         Provider.of<ChatRoomViewModel>(context, listen: false);
-    showGeneralDialog(
+    showCupertinoDialog(
       context: context,
-      pageBuilder: (BuildContext buildContext, Animation animation,
-          Animation secondaryAnimation) {
+      builder: (BuildContext buildContext) {
         return Center(
           child: Container(
             width: 245.w,
@@ -543,10 +686,10 @@ class ChatScheduleCheck extends StatelessWidget {
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 20.h),
+                SizedBox(height: 21.h),
+                SizedBox(
+                  height: 16.h,
                   child: Text(
                     '일정을 삭제하시겠습니까?',
                     style: AppTextStyles.PR_M_13.copyWith(
@@ -554,18 +697,55 @@ class ChatScheduleCheck extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 12.h),
-                Text(
-                  '일정을 삭제하면 참석자들의\n기존 참석 확인은 무효 처리됩니다.\n일정은 하단 일정 등록 버튼을 통해\n방장이 새롭게 등록 가능합니다.',
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.PR_R_12.copyWith(
-                      color: UsedColor.text_3, decoration: TextDecoration.none),
+                SizedBox(
+                  height: 14.h,
+                  child: Text(
+                    '일정을 삭제하면 참석자들의',
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.PR_R_12.copyWith(
+                        color: UsedColor.text_3,
+                        decoration: TextDecoration.none),
+                  ),
+                ),
+                SizedBox(height: 2.h),
+                SizedBox(
+                  height: 14.h,
+                  child: Text(
+                    '기존 참석 확인은 무효 처리됩니다.',
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.PR_R_12.copyWith(
+                        color: UsedColor.text_3,
+                        decoration: TextDecoration.none),
+                  ),
+                ),
+                SizedBox(height: 2.h),
+                SizedBox(
+                  height: 14.h,
+                  child: Text(
+                    '일정은 하단 일정 등록 버튼을 통해',
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.PR_R_12.copyWith(
+                        color: UsedColor.text_3,
+                        decoration: TextDecoration.none),
+                  ),
+                ),
+                SizedBox(height: 2.h),
+                SizedBox(
+                  height: 14.h,
+                  child: Text(
+                    '방장이 새롭게 등록 가능합니다.',
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.PR_R_12.copyWith(
+                        color: UsedColor.text_3,
+                        decoration: TextDecoration.none),
+                  ),
                 ),
                 SizedBox(height: 18.h),
-                // 구분선
+                const Spacer(),
                 Divider(
                   thickness: 0.3.h,
                   height: 0.h,
-                  color: UsedColor.b_line,
+                  color: UsedColor.line,
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -592,7 +772,7 @@ class ChatScheduleCheck extends StatelessWidget {
                     Container(
                       height: 35.h,
                       width: 0.3.w,
-                      color: UsedColor.b_line,
+                      color: UsedColor.line,
                     ),
                     Expanded(
                       child: SizedBox(

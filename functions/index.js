@@ -31,7 +31,7 @@ onDocumentUpdated("rooms/{roomId}", async (event) => {
       "nickName": "",
       "Content": "",
       "date": Timestamp.now(),
-      "room_reference": "",
+      "room_reference": chatRoomId,
       "type": "schedule_write",
     });
 
@@ -44,10 +44,17 @@ onDocumentUpdated("rooms/{roomId}", async (event) => {
   }
 
   // 4명의 인원이 일정을 모두 확정한 경우
-  // 채팅방에 스케줄 확정 알림을 위한 채팅 문서를 추가합니다.
+  // 1. 채팅방에 스케줄 확정 알림을 위한 채팅 문서를 추가
+  // 2. roomModel의 isScheduleDecided 값을 true로 변경
   const isScheduleExist = (before.room_schedule != null);
   if (isScheduleExist) {
-    const isAllScheduleDecided = (before.room_schedule[participants_agree_selected_schedule].length === 3 && after.room_schedule[participants_agree_selected_schedule].length == 4);
+    const beforeSchedule = before.room_schedule;
+    const beforeAgree = beforeSchedule.participants_agree_selected_schedule;
+    const afterSchedule = after.room_schedule;
+    const afterAgree = afterSchedule.participants_agree_selected_schedule;
+
+    const isAllScheduleDecided = (beforeAgree.length === 3 &&
+       afterAgree.length == 4);
     if (isAllScheduleDecided) {
       const chatRoomId = event.params.roomId;
       const chatRoomRef = db.collection("chatRooms").doc(chatRoomId);
@@ -59,7 +66,7 @@ onDocumentUpdated("rooms/{roomId}", async (event) => {
         "nickName": "",
         "Content": "",
         "date": Timestamp.now(),
-        "room_reference": "",
+        "room_reference": chatRoomId,
         "type": "schedule_decide",
       });
 
@@ -68,6 +75,11 @@ onDocumentUpdated("rooms/{roomId}", async (event) => {
       }, { merge: true });
 
       console.log("일정 확정 채팅이 추가되었습니다.");
+
+      await roomRef.update({
+        "isScheduleDecided": true,
+      });
+      console.log("RoomModel의 isScheduleDecided 값이 true로 변경되었습니다.");
     }
   }
 });

@@ -450,6 +450,9 @@ class ChatRoom extends StatelessWidget {
       case "schedule_delete":
         return _scheduleDelete(context,
             isMyChat: isMyChat, chatModel: chatModel);
+      case "schedule_decide":
+        return _scheduleDecide(context,
+            isMyChat: isMyChat, chatModel: chatModel);
       default:
         return Container();
     }
@@ -750,54 +753,57 @@ class ChatRoom extends StatelessWidget {
     required bool isMyChat,
     required ChatModel chatModel,
   }) {
-    return Container(
-      width: 338.w,
-      height: 79.h,
-      padding: EdgeInsets.only(left: 13.w),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18.r),
-        color: UsedColor.image_card,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 7.h,
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              SizedBox(
-                width: 20.w,
-                height: 20.h,
-                child: Image.asset(
-                  ImagePath.chatRoomScheduleWriteIcon,
+    return Padding(
+      padding: EdgeInsets.only(left: 28.w, right: 27.w),
+      child: Container(
+        width: 338.w,
+        height: 79.h,
+        padding: EdgeInsets.only(left: 13.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18.r),
+          color: UsedColor.image_card,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 7.h,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                SizedBox(
+                  width: 20.w,
+                  height: 20.h,
+                  child: Image.asset(
+                    ImagePath.chatRoomScheduleWriteIcon,
+                  ),
                 ),
-              ),
-              SizedBox(width: 6.w),
-              Text(
-                '일정 등록 가능',
-                style: AppTextStyles.PR_SB_14
-                    .copyWith(color: UsedColor.charcoal_black),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 9.h,
-          ),
-          Text(
-            '채팅방에 인원이 모두 들어왔습니다.',
-            style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
-          ),
-          SizedBox(
-            height: 5.h,
-          ),
-          Text(
-            '대화를 나누고, 일정을 등록해 보세요!',
-            style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
-          )
-        ],
+                SizedBox(width: 6.w),
+                Text(
+                  '일정 등록 가능',
+                  style: AppTextStyles.PR_SB_14
+                      .copyWith(color: UsedColor.charcoal_black),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 9.h,
+            ),
+            Text(
+              '채팅방에 인원이 모두 들어왔습니다.',
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            ),
+            SizedBox(
+              height: 5.h,
+            ),
+            Text(
+              '대화를 나누고, 일정을 등록해 보세요!',
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -976,54 +982,118 @@ class ChatRoom extends StatelessWidget {
     required ChatModel chatModel,
   }) {
     // 일정 삭제 view 표시
-    return Container(
-      width: 338.w,
-      height: 79.h,
-      padding: EdgeInsets.only(left: 13.w),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18.r),
-        color: UsedColor.image_card,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 12.67.h,
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 20.w,
-                height: 20.h,
-                child: Image.asset(
-                  ImagePath.chatRoomDeleteScheduleIcon,
+    return Padding(
+      padding: EdgeInsets.only(left: 28.w, right: 27.w),
+      child: Container(
+        width: 338.w,
+        height: 79.h,
+        padding: EdgeInsets.only(left: 13.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18.r),
+          color: UsedColor.image_card,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 12.67.h,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 20.w,
+                  height: 20.h,
+                  child: Image.asset(
+                    ImagePath.chatRoomDeleteScheduleIcon,
+                  ),
                 ),
-              ),
-              SizedBox(width: 6.w),
-              Text(
-                '일정 삭제',
-                style: AppTextStyles.PR_SB_14
-                    .copyWith(color: UsedColor.charcoal_black),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 3.h,
-          ),
-          Text(
-            "방장이 '${chatModel.content}' 일정을 삭제했습니다.",
-            style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
-          ),
-          SizedBox(
-            height: 4.h,
-          ),
-          Text(
-            '참석자들의 기존 참석 확인은 무효 처리 됩니다.',
-            style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
-          )
-        ],
+                SizedBox(width: 6.w),
+                Text(
+                  '일정 삭제',
+                  style: AppTextStyles.PR_SB_14
+                      .copyWith(color: UsedColor.charcoal_black),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 3.h,
+            ),
+            Text(
+              "방장이 '${chatModel.content}' 일정을 삭제했습니다.",
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            ),
+            SizedBox(
+              height: 4.h,
+            ),
+            Text(
+              '참석자들의 기존 참석 확인은 무효 처리 됩니다.',
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  // MARK: - 일정 확정 알림
+  Widget _scheduleDecide(
+    BuildContext context, {
+    required bool isMyChat,
+    required ChatModel chatModel,
+  }) {
+    return Padding(
+      padding: EdgeInsets.only(left: 28.w, right: 27.w),
+      child: Container(
+        width: 393.w,
+        height: 79.h,
+        padding: EdgeInsets.only(left: 13.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18.r),
+          color: UsedColor.image_card,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 12.67.h,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 20.w,
+                  height: 20.h,
+                  child: Image.asset(
+                    ImagePath.chatRoomScheduleDecideIcon,
+                  ),
+                ),
+                SizedBox(width: 6.w),
+                Text(
+                  '일정 확정 완료',
+                  style: AppTextStyles.PR_SB_14
+                      .copyWith(color: UsedColor.charcoal_black),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 3.h,
+            ),
+            Text(
+              "모든 참석자가 참석 의사를 밝혀 일정이 확정되었습니다.",
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            ),
+            SizedBox(
+              height: 4.h,
+            ),
+            Text(
+              '즐거운 만남이 되시길 바랍니다!',
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -1122,7 +1192,7 @@ class ChatRoom extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 8.0.h),
+          SizedBox(height: 12.h),
           Divider(
             thickness: 0.5.h,
             height: 0.h,
@@ -1131,11 +1201,34 @@ class ChatRoom extends StatelessWidget {
           SizedBox(height: 9.h),
           Padding(
             padding: EdgeInsets.only(left: 17.w),
-            child: Text(
-              '일정 등록이 완료되었습니다!\n참석자들은 일정 확인 후 참석 확인 버튼을\n꼭 눌러 주세요.',
-              style: AppTextStyles.PR_M_10.copyWith(
-                color: UsedColor.text_3,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 12.h,
+                  child: Text(
+                    '일정 등록이 완료되었습니다!.',
+                    style:
+                        AppTextStyles.PR_M_10.copyWith(color: UsedColor.text_3),
+                  ),
+                ),
+                SizedBox(
+                  height: 12.h,
+                  child: Text(
+                    '참석자들은 일정 확인 후 참석 확인 버튼을',
+                    style:
+                        AppTextStyles.PR_M_10.copyWith(color: UsedColor.text_3),
+                  ),
+                ),
+                SizedBox(
+                  height: 12.h,
+                  child: Text(
+                    '꼭 눌러 주세요.',
+                    style:
+                        AppTextStyles.PR_M_10.copyWith(color: UsedColor.text_3),
+                  ),
+                ),
+              ],
             ),
           )
         ],
