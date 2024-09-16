@@ -38,7 +38,7 @@ onDocumentUpdated("rooms/{roomId}", async (event) => {
     // room 정보 중, recent message 값을 업데이트
     await roomRef.set({
       "recentMessage": "일정 등록이 가능합니다 !",
-    }, { merge: true });
+    });
 
     console.log("일정 추가 가능 채팅이 추가되었습니다.");
   }
@@ -70,9 +70,9 @@ onDocumentUpdated("rooms/{roomId}", async (event) => {
         "type": "schedule_decide",
       });
 
-      await roomRef.set({
+      await roomRef.update({
         "recentMessage": "일정이 확정되었습니다 !",
-      }, { merge: true });
+      });
 
       console.log("일정 확정 채팅이 추가되었습니다.");
 
