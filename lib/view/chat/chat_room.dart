@@ -90,6 +90,14 @@ class ChatRoom extends StatelessWidget {
                               child: PullDownButton(
                                 routeTheme:
                                     PullDownMenuRouteTheme(width: 200.w),
+                                onCanceled: () {
+                                  // 키보드 내리기
+                                  chatRoomViewModel.setStartEdit(false);
+                                  FocusManager.instance.primaryFocus?.unfocus();
+
+                                  // PullDownMenu 관련 변수 설정
+                                  chatRoomViewModel.setMoreOptionClicked(false);
+                                },
                                 itemBuilder: (context) => [
                                   PullDownMenuItem(
                                     title: '알람 켜기',
@@ -99,8 +107,12 @@ class ChatRoom extends StatelessWidget {
                                       ),
                                     ),
                                     onTap: () {
-                                      logger.d("알람 켜기 버튼 눌림");
+                                      // 키보드 내리기
+                                      chatRoomViewModel.setStartEdit(false);
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
 
+                                      // PullDownMenu 관련 변수 설정
                                       chatRoomViewModel
                                           .setMoreOptionClicked(false);
                                     },
@@ -114,6 +126,11 @@ class ChatRoom extends StatelessWidget {
                                     ),
                                     onTap: () {
                                       logger.d("방 세부 정보 보기 버튼 눌림");
+                                      // 키보드 내리기
+                                      chatRoomViewModel.setStartEdit(false);
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+
                                       meetDetailRoomViewModel
                                           .setCurrentRoomModel(
                                               roomModel:
@@ -137,6 +154,11 @@ class ChatRoom extends StatelessWidget {
                                     ),
                                     onTap: () {
                                       logger.d("방 나가기 버튼 눌림");
+                                      // 키보드 내리기
+                                      chatRoomViewModel.setStartEdit(false);
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+
                                       _showOutRoomDialog(context);
                                       chatRoomViewModel
                                           .setMoreOptionClicked(false);
@@ -157,9 +179,6 @@ class ChatRoom extends StatelessWidget {
                                     height: 28.h,
                                   ),
                                 ),
-                                onCanceled: () {
-                                  chatRoomViewModel.setMoreOptionClicked(false);
-                                },
                               ),
                             ),
                           ],
@@ -1173,7 +1192,7 @@ class ChatRoom extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 8.0.h),
+          SizedBox(height: 12.h),
           Divider(
             thickness: 0.5.h,
             height: 0.h,
@@ -1182,11 +1201,34 @@ class ChatRoom extends StatelessWidget {
           SizedBox(height: 9.h),
           Padding(
             padding: EdgeInsets.only(left: 17.w),
-            child: Text(
-              '일정 등록이 완료되었습니다!\n참석자들은 일정 확인 후 참석 확인 버튼을\n꼭 눌러 주세요.',
-              style: AppTextStyles.PR_M_10.copyWith(
-                color: UsedColor.text_3,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 12.h,
+                  child: Text(
+                    '일정 등록이 완료되었습니다!.',
+                    style:
+                        AppTextStyles.PR_M_10.copyWith(color: UsedColor.text_3),
+                  ),
+                ),
+                SizedBox(
+                  height: 12.h,
+                  child: Text(
+                    '참석자들은 일정 확인 후 참석 확인 버튼을',
+                    style:
+                        AppTextStyles.PR_M_10.copyWith(color: UsedColor.text_3),
+                  ),
+                ),
+                SizedBox(
+                  height: 12.h,
+                  child: Text(
+                    '꼭 눌러 주세요.',
+                    style:
+                        AppTextStyles.PR_M_10.copyWith(color: UsedColor.text_3),
+                  ),
+                ),
+              ],
             ),
           )
         ],
@@ -1309,7 +1351,7 @@ class ChatRoom extends StatelessWidget {
                           uid: userViewModel.uid!,
                           content: message,
                           date: Timestamp.now(),
-                          room_id: chatRoomViewModel.roomID,
+                          room_reference: chatRoomViewModel.roomID,
                           type: "chat",
                         );
 
@@ -1463,10 +1505,10 @@ class ChatRoom extends StatelessWidget {
                 uid: userViewModel.uid!,
                 content: " 님이 채팅방을 나갔습니다.",
                 date: Timestamp.now(),
-                room_id: chatRoomViewModel.roomID,
+                room_reference: chatRoomViewModel.roomID,
                 type: "exit",
               );
-              await chatRoomViewModel.createChatDocument(chatModel);
+              await chatRoomViewModel.createChatDocument(chatModel, userViewModel.userModel!.nickname);
 
               // TODO: 만남권 소진 로직 추가 이후 작성
               // Ticket 관련 로직 추가 (사용 가능 횟수 감소)

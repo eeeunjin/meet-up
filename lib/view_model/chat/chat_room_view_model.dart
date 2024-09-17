@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meet_up/model/chat_room_model.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
@@ -116,7 +117,7 @@ class ChatRoomViewModel with ChangeNotifier {
       maxLines: 1,
     )..layout();
 
-    return textPainter.width.toDouble();
+    return (textPainter.width + 2.w).toDouble();
   }
 
   // 스크롤 뷰의 가장 하단으로 움직이는 함수
@@ -138,11 +139,41 @@ class ChatRoomViewModel with ChangeNotifier {
   }
 
   // 채팅 메시지 전송 함수
-  Future<bool> createChatDocument(ChatModel chatModel) async {
+  Future<bool> createChatDocument(ChatModel chatModel,
+      [String? nickname]) async {
+    // 해당 room model의 recent message 업데이트
+    await _roomRepository.updateRoomDocument(
+      roomId: chatModel.room_reference,
+      data: {
+        'recentMessage': getRecentMessage(chatModel, nickname),
+      },
+    );
+
+    // 새로운 chat model 생성
     return await _chatRepository.createChat(
       chatModel,
       _roomID,
     );
+  }
+
+  // 채팅 메시지 Type에 따라 최근 채팅 메시지를 반환하는 함수
+  String getRecentMessage(ChatModel chatModel, String? nickname) {
+    switch (chatModel.type) {
+      case "chat":
+        return chatModel.content;
+      case "enter":
+        return '"$nickname" 님이 입장하셨습니다.';
+      case "exit":
+        return '"$nickname" 님이 퇴장하셨습니다.';
+      case "schedule_register":
+        return '일정을 확인해주세요.';
+      case "schedule_delete":
+        return '기존 일정이 삭제되었습니다.';
+      case "schedule_decide":
+        return '일정이 확정되었습니다.';
+      default:
+        return 'Error Message';
+    }
   }
 
   // 채팅 메시지 스트림 함수
