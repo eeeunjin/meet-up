@@ -6,12 +6,17 @@ import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/reflect/reflect_writing_diary.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
+import 'package:meet_up/view_model/reflect/reflect_view_model.dart';
+import 'package:provider/provider.dart';
 
 class ReflectMain extends StatelessWidget {
   const ReflectMain({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Provider를 통해 ViewModel을 가져옴
+    final viewModel = Provider.of<ReflectViewModel>(context);
+
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -34,7 +39,7 @@ class ReflectMain extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(height: 28.h),
-                    _myRecordSection(),
+                    _myRecordSection(context),
                     SizedBox(height: 12.h),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -54,7 +59,7 @@ class ReflectMain extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 12.h),
-                    _diaryListContainer(context),
+                    _diaryListContainer(context, viewModel), // ViewModel 전달
                   ],
                 ),
               ),
@@ -83,8 +88,7 @@ class ReflectMain extends StatelessWidget {
     );
   }
 
-//MARK: -  나의 기록
-  Widget _myRecordSection() {
+  Widget _myRecordSection(BuildContext context) {
     return Container(
       width: 340.w,
       height: 130.h,
@@ -95,7 +99,9 @@ class ReflectMain extends StatelessWidget {
         bottom: 20.h,
       ),
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(29.r)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(29.r),
+      ),
       child: Row(
         children: [
           Column(
@@ -107,20 +113,18 @@ class ReflectMain extends StatelessWidget {
                   color: UsedColor.charcoal_black,
                 ),
               ),
-              SizedBox(
-                height: 5.h,
-              ),
+              SizedBox(height: 5.h),
               Text(
                 '00개 작성',
                 style: AppTextStyles.PR_M_14.copyWith(
                   color: UsedColor.text_3,
                 ),
               ),
-              SizedBox(
-                height: 16.h,
-              ),
+              SizedBox(height: 16.h),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  context.goNamed('reflectRecordMore');
+                },
                 child: Text(
                   '더보기 >',
                   style: AppTextStyles.PR_M_14.copyWith(
@@ -141,11 +145,9 @@ class ReflectMain extends StatelessWidget {
     );
   }
 
-//MARK: -  작성 가능한 일기 컨테이너
-  Widget _diaryListContainer(BuildContext context) {
+  Widget _diaryListContainer(BuildContext context, ReflectViewModel viewModel) {
     return Container(
       width: 340.w,
-      // height: 460.h,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(29.r),
@@ -169,7 +171,9 @@ class ReflectMain extends StatelessWidget {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    context.goNamed('reflectDiaryMore');
+                  },
                   child: Text(
                     '더보기 >',
                     style: AppTextStyles.PR_M_14.copyWith(
@@ -185,20 +189,14 @@ class ReflectMain extends StatelessWidget {
             thickness: 0.3.h,
             color: UsedColor.line,
           ),
-          _diaryList(context),
+          _diaryList(context, viewModel),
         ],
       ),
     );
   }
 
-//MARK: -  작성 가능한 일기 리스트
-  Widget _diaryList(BuildContext context) {
-    final diaryEntries = [
-      {'title': '초보 클밍 모임', 'date': '2024.02.07. (수) 오후 7:30'},
-      {'title': '돼지 파티', 'date': '2024.02.09. (금) 오후 7:30'},
-      {'title': '제로부터 시작하는 오타쿠', 'date': '2024.02.07. (수) 오후 7:30'},
-      {'title': '인생 상담', 'date': '2024.02.07. (수) 오후 7:30'},
-    ];
+  Widget _diaryList(BuildContext context, ReflectViewModel viewModel) {
+    final diaryEntries = viewModel.availableEntries; // 작성 가능한 일기 목록으로 수정
 
     return Column(
       children: diaryEntries.asMap().entries.map((entry) {
@@ -225,7 +223,6 @@ class ReflectMain extends StatelessWidget {
     );
   }
 
-//MARK: - 개별 일기 항목
   Widget _diaryEntry({
     required BuildContext context,
     required String title,
@@ -265,31 +262,30 @@ class ReflectMain extends StatelessWidget {
     );
   }
 
-//MARK: -   일기 쓰기 버튼
   Widget _buildWriteDiaryButton(BuildContext context) {
-    return SizedBox(
-      width: 77.w,
-      height: 24.h,
-      child: ElevatedButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const ReflectWritingDiary()),
-          );
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFF1F3FD),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(13.88.r),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ReflectWritingDiary(),
           ),
-          elevation: 0,
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
+        );
+      },
+      child: Container(
+        width: 77.w,
+        height: 24.h,
+        decoration: BoxDecoration(
+          color: const Color(0xFFF1F3FD),
+          borderRadius: BorderRadius.circular(13.88.r),
         ),
-        child: Text(
-          '일기 쓰기',
-          style: AppTextStyles.SU_R_12.copyWith(
-            color: UsedColor.charcoal_black,
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
+        child: Center(
+          child: Text(
+            '일기 쓰기',
+            style: AppTextStyles.SU_R_12.copyWith(
+              color: UsedColor.charcoal_black,
+            ),
           ),
         ),
       ),
