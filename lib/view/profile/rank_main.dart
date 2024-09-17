@@ -141,7 +141,7 @@ class RankMain extends StatelessWidget {
                     Text.rich(
                       TextSpan(
                         text:
-                            '${userViewModel.userModel?.nickname ?? ''} 님의\n이번 달 등급은 ',
+                            '${userViewModel.userModel?.nickname ?? ''} 님의 등급은\n',
                         style: AppTextStyles.PR_R_14
                             .copyWith(color: UsedColor.charcoal_black),
                         children: <TextSpan>[
@@ -152,7 +152,7 @@ class RankMain extends StatelessWidget {
                                 .copyWith(color: UsedColor.charcoal_black),
                           ),
                           TextSpan(
-                            text: '입니다!',
+                            text: ' 입니다!',
                             style: AppTextStyles.PR_R_14
                                 .copyWith(color: UsedColor.charcoal_black),
                           )
@@ -161,7 +161,7 @@ class RankMain extends StatelessWidget {
                     ),
                     SizedBox(height: 12.h),
                     Text(
-                      'Intermediate까지 -점 남았습니다.',
+                      '활발한 햄스터까지 -점 남았습니다.',
                       style: AppTextStyles.PR_R_10
                           .copyWith(color: UsedColor.text_3),
                     )
@@ -171,10 +171,10 @@ class RankMain extends StatelessWidget {
             ],
           ),
           Padding(
-            padding: EdgeInsets.only(left: 71.0.w, top: 16.h),
+            padding: EdgeInsets.only(left: 81.0.w, top: 16.h),
             child: Text(
               '등급 혜택을 확인하고 혜택을 받아보세요!',
-              style: AppTextStyles.PR_R_10.copyWith(color: UsedColor.text_3),
+              style: AppTextStyles.PR_R_10.copyWith(color: UsedColor.button),
             ),
           ),
           // 혜택 받기 버튼
@@ -192,7 +192,7 @@ class RankMain extends StatelessWidget {
                 child: Text(
                   '혜택 받기',
                   style:
-                      AppTextStyles.PR_R_12.copyWith(color: UsedColor.violet),
+                      AppTextStyles.PR_M_13.copyWith(color: UsedColor.violet),
                 ),
               ),
             ),

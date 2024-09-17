@@ -11,7 +11,7 @@ class ProfileViewModel with ChangeNotifier {
   final UserRepository _userRepository = UserRepository();
 
   // MARK: - 등급
-  String _selectedRank = 'Novice';
+  String _selectedRank = '용감한 햄스터';
 
   String get selectedRank => _selectedRank;
 
