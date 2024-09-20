@@ -1,8 +1,10 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/main.dart';
@@ -453,6 +455,12 @@ class ChatRoom extends StatelessWidget {
       case "schedule_decide":
         return _scheduleDecide(context,
             isMyChat: isMyChat, chatModel: chatModel);
+      case "schedule_alarm":
+        return _scheduleAlarm();
+      case "review":
+        return _review(context);
+      case "diary":
+        return _diary(context);
       default:
         return Container();
     }
@@ -1236,6 +1244,192 @@ class ChatRoom extends StatelessWidget {
     );
   }
 
+  // MARK: - 스케줄 하루 전 알림
+  Widget _scheduleAlarm() {
+    return Padding(
+      padding: EdgeInsets.only(left: 28.w, right: 27.w),
+      child: Container(
+        width: 338.w,
+        height: 79.h,
+        padding: EdgeInsets.only(left: 13.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18.r),
+          color: UsedColor.image_card,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 7.h,
+            ),
+            GestureDetector(
+              onTap: () {},
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    width: 20.w,
+                    height: 20.h,
+                    child: Image.asset(
+                      ImagePath.chatRoomOneDayAlarmIcon,
+                    ),
+                  ),
+                  SizedBox(width: 6.w),
+                  Text(
+                    '만남 일정 하루 전!',
+                    style: AppTextStyles.PR_SB_14
+                        .copyWith(color: UsedColor.charcoal_black),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 9.h,
+            ),
+            Text(
+              '만남 일정까지 1일 남았습니다.',
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            ),
+            SizedBox(
+              height: 5.h,
+            ),
+            Text(
+              '내일 만남을 앞두고 있어요. 즐거운 만남 되시길 바랄게요!',
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  // MARK: - 상호평가 작성 알림
+  Widget _review(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final nickname = userViewModel.userModel!.nickname;
+    return Padding(
+      padding: EdgeInsets.only(left: 28.w, right: 27.w),
+      child: Container(
+        width: 338.w,
+        height: 79.h,
+        padding: EdgeInsets.only(left: 13.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18.r),
+          color: UsedColor.image_card,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 7.h,
+            ),
+            GestureDetector(
+              onTap: () {},
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    width: 20.w,
+                    height: 20.h,
+                    child: Image.asset(
+                      ImagePath.chatRoomReviewAfterMeetIcon,
+                    ),
+                  ),
+                  SizedBox(width: 6.w),
+                  Text(
+                    '만남 후기 바로 쓰기',
+                    style: AppTextStyles.PR_SB_14
+                        .copyWith(color: UsedColor.charcoal_black),
+                  ),
+                  const Spacer(),
+                  SizedBox(
+                    width: 5.25.w,
+                    height: 10.25.h,
+                    child: Image.asset(ImagePath.chatRoomNoticeChevronRight),
+                  ),
+                  SizedBox(width: 12.w),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 9.h,
+            ),
+            Text(
+              '$nickname 님! 만남은 즐거우셨나요?',
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            ),
+            SizedBox(
+              height: 5.h,
+            ),
+            Text(
+              '지금 바로 만남 후기를 작성하시면 포인트를 드려요.',
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  // MARK: - 성찰 일기 작성 알림
+  Widget _diary(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 28.w, right: 27.w),
+      child: Container(
+        width: 338.w,
+        height: 65.h,
+        padding: EdgeInsets.only(left: 13.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18.r),
+          color: UsedColor.image_card,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 7.h,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                SizedBox(
+                  width: 20.w,
+                  height: 20.h,
+                  child: Image.asset(
+                    ImagePath.chatRoomScheduleWriteIcon,
+                  ),
+                ),
+                SizedBox(width: 6.w),
+                Text(
+                  '성찰 일기 작성하기',
+                  style: AppTextStyles.PR_SB_14
+                      .copyWith(color: UsedColor.charcoal_black),
+                ),
+                const Spacer(),
+                SizedBox(
+                  width: 5.25.w,
+                  height: 10.25.h,
+                  child: Image.asset(ImagePath.chatRoomNoticeChevronRight),
+                ),
+                SizedBox(width: 12.w),
+              ],
+            ),
+            SizedBox(
+              height: 9.h,
+            ),
+            Text(
+              '오늘 만남에 대한 자기 성찰 시간을 가져 봐요!',
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   // MARK: - 메시지 입력창
   Widget _typeMessageBox(BuildContext context) {
     return Consumer<ChatRoomViewModel>(
@@ -1508,7 +1702,8 @@ class ChatRoom extends StatelessWidget {
                 room_reference: chatRoomViewModel.roomID,
                 type: "exit",
               );
-              await chatRoomViewModel.createChatDocument(chatModel, userViewModel.userModel!.nickname);
+              await chatRoomViewModel.createChatDocument(
+                  chatModel, userViewModel.userModel!.nickname);
 
               // TODO: 만남권 소진 로직 추가 이후 작성
               // Ticket 관련 로직 추가 (사용 가능 횟수 감소)

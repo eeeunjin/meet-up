@@ -83,6 +83,14 @@ class ImagePath {
       "assets/images/chat_room_delete_schedule.png";
   static String get chatRoomScheduleDecideIcon =>
       "assets/images/chat_room_schedule_decide_icon.png";
+  static String get chatRoomOneDayAlarmIcon =>
+      "assets/images/chat_room_one_day_alarm_icon.png";
+  static String get chatRoomReviewAfterMeetIcon =>
+      "assets/images/chat_room_review_after_meet_icon.png";
+  static String get chatRoomWriteMeetDiaryIcon =>
+      "assets/images/chat_room_write_meet_diary_icon.png";
+  static String get chatRoomNoticeChevronRight =>
+      "assets/images/chat_room_notice_chevron_right.png";
 
   // MARK: - bot_nav
   static String get meetOn => 'assets/images/bot_nav_meet_on.png';
