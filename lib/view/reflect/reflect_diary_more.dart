@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
@@ -13,7 +14,6 @@ class ReflectDiaryMore extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Provider를 통해 ViewModel을 가져옴
     final viewModel = Provider.of<ReflectViewModel>(context);
 
     return Scaffold(
@@ -54,8 +54,12 @@ class ReflectDiaryMore extends StatelessWidget {
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.read<ReflectViewModel>().reset();
-        Navigator.of(context).pop();
+        final viewModel = context.read<ReflectViewModel>();
+
+        viewModel.resetSortOrder();
+        viewModel.resetAll();
+
+        context.pop();
       },
       child: Image.asset(
         ImagePath.back,
@@ -65,7 +69,6 @@ class ReflectDiaryMore extends StatelessWidget {
     );
   }
 
-  // MARK:-메인 리스트 부분 - 작성 가능한 일기와 내가 작성한 일기
   Widget _main(BuildContext context, ReflectViewModel viewModel) {
     final availableEntries = viewModel.availableEntries;
 
@@ -75,7 +78,7 @@ class ReflectDiaryMore extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.topRight,
-            child: _buttons(context, viewModel),
+            child: _buttons(context),
           ),
           SizedBox(height: 18.h),
           Column(
@@ -97,7 +100,7 @@ class ReflectDiaryMore extends StatelessWidget {
     );
   }
 
-  // 일기 항목을 감싸는 컨테이너
+  // MARK:-일기 항목
   Widget _diaryEntryContainer(BuildContext context, String title, String date) {
     return Container(
       width: 353.w,
@@ -111,34 +114,40 @@ class ReflectDiaryMore extends StatelessWidget {
     );
   }
 
-  // 최근순 버튼이 들어가는 부분 - 우측 상단에 위치
-  Widget _buttons(BuildContext context, ReflectViewModel viewModel) {
-    return SizedBox(
-      height: 22.h,
-      width: 54.w,
-      child: GestureDetector(
-        onTap: () {
-          viewModel.sortAvailableEntriesByDate();
-        },
-        child: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(11.r),
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-          child: Text(
-            '최근순',
-            style: AppTextStyles.PR_M_12.copyWith(
-              color: UsedColor.violet,
+// MARK:- 버튼
+  Widget _buttons(BuildContext context) {
+    return Consumer<ReflectViewModel>(
+      builder: (context, viewModel, child) {
+        double buttonWidth = viewModel.isSortedByRecent ? 54.w : 64.w;
+
+        return SizedBox(
+          height: 22.h,
+          width: buttonWidth,
+          child: GestureDetector(
+            onTap: () {
+              viewModel.sortAvailableEntriesByDate();
+            },
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(11.r),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+              child: Text(
+                viewModel.isSortedByRecent ? '최근순' : '오래된순',
+                style: AppTextStyles.PR_M_12.copyWith(
+                  color: UsedColor.violet,
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
-  // 개별 일기 항목 위젯
+  // MARK:-개별 일기 항목
   Widget _diaryEntry(BuildContext context, String title, String date) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -166,7 +175,7 @@ class ReflectDiaryMore extends StatelessWidget {
     );
   }
 
-  // 일기 쓰기 버튼
+  // MARK:-일기 쓰기 버튼
   Widget _buildWriteDiaryButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -181,7 +190,7 @@ class ReflectDiaryMore extends StatelessWidget {
         width: 77.w,
         height: 24.h,
         decoration: BoxDecoration(
-          color: const Color(0xFFF1F3FD),
+          color: UsedColor.image_card,
           borderRadius: BorderRadius.circular(13.88.r),
         ),
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),

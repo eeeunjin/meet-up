@@ -6,6 +6,12 @@ class ReflectViewModel with ChangeNotifier {
   final List<int> completedSelection = [];
   final Map<int, String> _answers = {}; // 답변을 저장할 맵
 
+  // 선택된 연/월을 저장할 변수
+  DateTime _selectedDate = DateTime.now(); // 선택된 연/월 저장
+
+  // 선택된 연/월 반환
+  DateTime get selectedDate => _selectedDate;
+
   // 답변 업데이트
   void updateAnswer(int questionIndex, String answer) {
     _answers[questionIndex] = answer;
@@ -99,7 +105,7 @@ class ReflectViewModel with ChangeNotifier {
     return allQuestionsAnswered() && allRatingsCompleted();
   }
 
-// 제목 길이 제한
+  // 제목 길이 제한
   String getLimitedTitle(String title) {
     if (title.length > 16) {
       return title.substring(0, 16);
@@ -107,7 +113,7 @@ class ReflectViewModel with ChangeNotifier {
     return title;
   }
 
-// 작성 가능한 일기 데이터
+  // 작성 가능한 일기 데이터
   final List<Map<String, String>> _availableEntries = [
     {'title': '초보 클밍 모임', 'date': '2024.02.07. (수) 오후 7:30'},
     {'title': '돼지 파티', 'date': '2024.02.09. (금) 오후 7:30'},
@@ -115,9 +121,20 @@ class ReflectViewModel with ChangeNotifier {
     {'title': '인생 상담', 'date': '2024.02.07. (수) 오후 7:30'},
   ];
 
-  List<Map<String, String>> get availableEntries => _availableEntries;
+  List<Map<String, String>> get availableEntries {
+    // 정렬된 상태의 일기를 반환
+    List<Map<String, String>> sortedEntries = List.from(_availableEntries);
+    sortedEntries.sort((a, b) {
+      final dateA = _parseDate(a['date']!);
+      final dateB = _parseDate(b['date']!);
+      return _isSortedByRecent
+          ? dateB.compareTo(dateA) // 최근순 정렬
+          : dateA.compareTo(dateB); // 오래된순 정렬
+    });
+    return sortedEntries;
+  }
 
-// 내가 작성한 일기 데이터
+  // 내가 작성한 일기 데이터
   final List<Map<String, String>> _myDiaryEntries = [
     {
       'title': '16글자 제목을 적어 보겠습니다',
@@ -130,9 +147,45 @@ class ReflectViewModel with ChangeNotifier {
       'date': '2024.02.08. (목) 오전 10:30',
       'content': '오늘은 아침에 산책을 다녀왔다\n날씨가 정말 좋았다.',
     },
+    {
+      'title': '돼지 파티',
+      'date': '2024.05.07. (월) 오후 6:30',
+      'content': '돼지 파티를 했다.'
+    }
   ];
+  // 기본값을 최근순으로 설정
+  bool _isSortedByRecent = true;
+  bool get isSortedByRecent => _isSortedByRecent;
 
+  ReflectViewModel() {
+    _sortByRecent(); // 뷰모델 초기화 시 기본값으로 "최근순" 정렬
+  }
   List<Map<String, String>> get myDiaryEntries => _myDiaryEntries;
+
+  // 연도 변경
+  void selectPreviousYear() {
+    _selectedDate = DateTime(_selectedDate.year - 1, _selectedDate.month);
+    notifyListeners();
+  }
+
+  void selectNextYear() {
+    _selectedDate = DateTime(_selectedDate.year + 1, _selectedDate.month);
+    notifyListeners();
+  }
+
+// 월 선택
+  void selectMonth(int month) {
+    _selectedDate = DateTime(_selectedDate.year, month);
+    notifyListeners();
+  }
+
+// 작성된 일기가 있는 연/월을 확인
+  bool isMonthWritten(int month, int year) {
+    return _myDiaryEntries.any((entry) {
+      DateTime entryDate = _parseDate(entry['date']!);
+      return entryDate.month == month && entryDate.year == year;
+    });
+  }
 
   // 편집 모드 여부
   bool _isEditMode = false;
@@ -150,30 +203,25 @@ class ReflectViewModel with ChangeNotifier {
   }
 
   DateTime _parseDate(String dateStr) {
-    // 날짜 부분과 시간 부분을 분리
     final dateTimePart = dateStr.split(' ');
     final datePart = dateTimePart[0]; // 연.월.일
     final period = dateTimePart[2]; // '오후' or '오전'
     final timePart = dateTimePart[3]; // 시간.분
 
     final dateClean = datePart.split('(')[0];
-
     final dateComponents = dateClean.split('.');
     final year = int.parse(dateComponents[0]);
     final month = int.parse(dateComponents[1]);
     final day = int.parse(dateComponents[2]);
 
-    // 시간 부분을 ':'으로 나눠서 시간과 분을 가져오기
     final timeComponents = timePart.split(':');
     int hour = int.parse(timeComponents[0]);
     final minute = int.parse(timeComponents[1]);
 
-    // '오후'
     if (period == '오후' && hour != 12) {
       hour += 12;
     }
 
-    // '오전'
     if (period == '오전' && hour == 12) {
       hour = 0;
     }
@@ -181,34 +229,130 @@ class ReflectViewModel with ChangeNotifier {
     return DateTime(year, month, day, hour, minute);
   }
 
-  // 날짜 기준으로 작성 가능한 일기 최신순 정렬
+// 작성 가능한 일기 데이터 최신순/오래된순 정렬
   void sortAvailableEntriesByDate() {
-    _availableEntries.sort((a, b) {
-      final dateA = _parseDate(a['date']!);
-      final dateB = _parseDate(b['date']!);
-      return dateB.compareTo(dateA); // 최신순으로 정렬
-    });
+    _isSortedByRecent = !_isSortedByRecent;
     notifyListeners();
   }
 
-  bool _isSortedByRecent = false; // 최근순 정렬 여부
-
-  bool get isSortedByRecent => _isSortedByRecent;
-
-  // 날짜 기준으로 내가 작성한 일기 최신순 정렬
+  // 내가 작성한 일기 데이터를 정렬
   void sortMyDiaryEntriesByDate() {
+    if (_isSortedByRecent) {
+      _sortMyDiaryEntriesByOldest(); // 오래된순으로 정렬
+    } else {
+      _sortMyDiaryEntriesByRecent(); // 최근순으로 정렬
+    }
+    _isSortedByRecent = !_isSortedByRecent;
+    notifyListeners();
+  }
+
+  // 작성 가능한 일기: 최근순 / 오래된순
+  final bool _isAvailableEntriesSortedByRecent = true;
+
+  // 내가 작성한 일기: 최근순 / 오래된순
+  final bool _isMyDiaryEntriesSortedByRecent = true;
+
+  // 내가 작성한 일기 리스트 반환
+  bool get isAvailableEntriesSortedByRecent =>
+      _isAvailableEntriesSortedByRecent;
+  bool get isMyDiaryEntriesSortedByRecent => _isMyDiaryEntriesSortedByRecent;
+
+  // // 작성 가능한 일기 최근순 정렬
+  // void _sortAvailableEntriesByRecent() {
+  //   _availableEntries.sort((a, b) {
+  //     final dateA = _parseDate(a['date']!);
+  //     final dateB = _parseDate(b['date']!);
+  //     return dateB.compareTo(dateA);
+  //   });
+  // }
+
+  // // 작성 가능한 일기 오래된순 정렬
+  // void _sortAvailableEntriesByOldest() {
+  //   _availableEntries.sort((a, b) {
+  //     final dateA = _parseDate(a['date']!);
+  //     final dateB = _parseDate(b['date']!);
+  //     return dateA.compareTo(dateB);
+  //   });
+  // }
+
+  // 내가 작성한 일기 최근순 정렬
+  void _sortMyDiaryEntriesByRecent() {
     _myDiaryEntries.sort((a, b) {
       final dateA = _parseDate(a['date']!);
       final dateB = _parseDate(b['date']!);
-      return dateB.compareTo(dateA); // 최신순으로 정렬
+      return dateB.compareTo(dateA);
     });
-    _isSortedByRecent = true; // 최근순 정렬 상태를 true로 변경
+  }
+
+  // 내가 작성한 일기 오래된순 정렬
+  void _sortMyDiaryEntriesByOldest() {
+    _myDiaryEntries.sort((a, b) {
+      final dateA = _parseDate(a['date']!);
+      final dateB = _parseDate(b['date']!);
+      return dateA.compareTo(dateB);
+    });
+  }
+
+  // 최근순 정렬
+  void _sortByRecent() {
+    _myDiaryEntries.sort((a, b) {
+      final dateA = _parseDate(a['date']!);
+      final dateB = _parseDate(b['date']!);
+      return dateB.compareTo(dateA); // 최근순 정렬
+    });
+  }
+
+  // 필터링된 일기 항목을 반환 (현재 선택된 연월과 정렬 방식에 따라)
+  List<Map<String, String>> get filteredDiaryEntries {
+    List<Map<String, String>> filteredEntries = _myDiaryEntries.where((entry) {
+      DateTime entryDate = _parseDate(entry['date']!);
+      return entryDate.year == _selectedDate.year &&
+          entryDate.month == _selectedDate.month;
+    }).toList();
+
+    // 정렬 방식에 따라 정렬
+    filteredEntries.sort((a, b) {
+      final dateA = _parseDate(a['date']!);
+      final dateB = _parseDate(b['date']!);
+      return _isSortedByRecent
+          ? dateB.compareTo(dateA)
+          : dateA.compareTo(dateB);
+    });
+
+    return filteredEntries;
+  }
+
+  // 정렬 방식을 토글
+  void toggleSortOrder() {
+    _isSortedByRecent = !_isSortedByRecent;
     notifyListeners();
   }
 
   // 최근순 정렬 리셋
   void resetSortOrder() {
-    _isSortedByRecent = false; // 최근순 정렬 상태를 false로 초기화
+    _isSortedByRecent = false;
+    notifyListeners();
+  }
+
+  // 모든 상태를 초기화
+  void resetAll() {
+    _selectedImages.clear();
+    completedSelection.clear();
+    _answers.clear();
+    ratings.fillRange(0, ratings.length, 0);
+    _isEditMode = false;
+    _selectedDate = DateTime.now(); // 날짜를 현재로 초기화
+
+    _isSortedByRecent = true;
+    _sortByRecent(); // 초기 정렬을 최근순으로 설정
+
+    notifyListeners();
+  }
+
+// 정렬 상태만 초기화
+  void resetSortState() {
+    _isSortedByRecent = true; // 기본값을 최근순으로 설정
+    _sortByRecent(); // 최근순으로 정렬
     notifyListeners();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
@@ -20,7 +21,7 @@ class ReflectRecordMore extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.only(top: 58.h),
-            child: _header(context),
+            child: _header(context, viewModel),
           ),
           Expanded(
             child: Container(
@@ -39,17 +40,45 @@ class ReflectRecordMore extends StatelessWidget {
     );
   }
 
-  Widget _header(BuildContext context) {
+  Widget _header(BuildContext context, ReflectViewModel viewModel) {
     return Center(
       child: Column(
         children: [
-          header(title: '일기쓰기', back: _back(context)),
-          SizedBox(
-            height: 14.h,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 24.w),
+                child: _back(context),
+              ),
+              GestureDetector(
+                onTap: () {
+                  _showYearMonthPicker(context, viewModel); // 연월 선택 팝업
+                },
+                child: Row(
+                  children: [
+                    Text(
+                      DateFormat('yyyy년 M월').format(viewModel.selectedDate),
+                      style: AppTextStyles.SU_R_20.copyWith(
+                        color: UsedColor.text_3,
+                      ),
+                    ),
+                    SizedBox(width: 11.5.w),
+                    Image.asset(
+                      ImagePath.reflectArrow,
+                      width: 15.w,
+                      height: 7.5.h,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 20.w),
+            ],
           ),
+          SizedBox(height: 14.h),
           Divider(
             thickness: 0.5.h,
-            height: 0.h,
+            height: 0,
             color: UsedColor.line,
           ),
         ],
@@ -57,13 +86,133 @@ class ReflectRecordMore extends StatelessWidget {
     );
   }
 
+  void _showYearMonthPicker(BuildContext context, ReflectViewModel viewModel) {
+    // 팝업을 열 때 현재 연월을 기본값으로 설정
+    viewModel.selectMonth(DateTime.now().month);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ChangeNotifierProvider.value(
+          value: viewModel,
+          child: Consumer<ReflectViewModel>(
+            builder: (context, viewModel, child) {
+              return Dialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: 30.w,
+                    right: 30.w,
+                    top: 18.h,
+                    bottom: 18.h,
+                  ),
+                  height: 165.h,
+                  width: 245.w,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              viewModel.selectPreviousYear();
+                            },
+                            child: Image.asset(
+                              ImagePath.reflectArrowLeft,
+                              width: 4.5.w,
+                              height: 9.h,
+                            ),
+                          ),
+                          Text(
+                            '${viewModel.selectedDate.year}',
+                            style: AppTextStyles.SU_SB_16.copyWith(
+                              color: UsedColor.charcoal_black,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              viewModel.selectNextYear();
+                            },
+                            child: Image.asset(
+                              ImagePath.reflectArrowRight,
+                              width: 4.5.w,
+                              height: 9.h,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 19.h),
+                      Expanded(
+                        child: GridView.count(
+                          crossAxisCount: 4,
+                          mainAxisSpacing: 16.w,
+                          crossAxisSpacing: 44.h,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: List.generate(12, (index) {
+                            int month = index + 1;
+                            bool isWritten = viewModel.isMonthWritten(
+                                month, viewModel.selectedDate.year);
+
+                            return GestureDetector(
+                              onTap: isWritten
+                                  ? () {
+                                      viewModel.selectMonth(month);
+                                      Navigator.pop(context);
+                                    }
+                                  : null, // 작성되지 않은 월은 클릭 비활성화
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: 23.w,
+                                height: 23.h,
+                                decoration: BoxDecoration(
+                                  color: viewModel.selectedDate.month == month
+                                      ? UsedColor.b_line
+                                      : Colors.transparent,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: FittedBox(
+                                  child: Text(
+                                    '$month',
+                                    style: AppTextStyles.PR_R_16.copyWith(
+                                      color:
+                                          viewModel.selectedDate.month == month
+                                              ? UsedColor.charcoal_black
+                                              : isWritten
+                                                  ? UsedColor.charcoal_black
+                                                  : UsedColor.text_4,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.read<ReflectViewModel>().resetSortOrder(); // 최근순 정렬 상태 리셋
-        if (context.read<ReflectViewModel>().isEditMode) {
-          context.read<ReflectViewModel>().toggleEditMode(); // 편집 모드를 초기 상태로 리셋
-        }
+        final viewModel = context.read<ReflectViewModel>();
+
+        viewModel.resetSortOrder();
+        viewModel.resetAll();
+
         context.pop();
       },
       child: Image.asset(
@@ -75,63 +224,70 @@ class ReflectRecordMore extends StatelessWidget {
   }
 
   // MARK:-버튼
-  Widget _buttons(BuildContext context, ReflectViewModel viewModel) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        SizedBox(
-          height: 22.h,
-          width: 54.w,
-          child: GestureDetector(
-            onTap: () {
-              viewModel.sortMyDiaryEntriesByDate();
-            },
-            child: Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(11.r),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-              child: Text(
-                '최근순',
-                style: AppTextStyles.PR_M_12.copyWith(
-                  color: UsedColor.violet,
+  Widget _buttons(BuildContext context) {
+    return Consumer<ReflectViewModel>(
+      builder: (context, viewModel, child) {
+        double buttonWidth = viewModel.isSortedByRecent ? 54.w : 64.w;
+
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            SizedBox(
+              height: 22.h,
+              width: buttonWidth,
+              child: GestureDetector(
+                onTap: () {
+                  viewModel.sortMyDiaryEntriesByDate();
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(11.r),
+                  ),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                  child: Text(
+                    viewModel.isSortedByRecent ? '최근순' : '오래된순',
+                    style: AppTextStyles.PR_M_12.copyWith(
+                      color: UsedColor.violet,
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-        SizedBox(width: 7.w),
-        SizedBox(
-          height: 22.h,
-          width: 43.w,
-          child: GestureDetector(
-            onTap: () {
-              viewModel.toggleEditMode();
-            },
-            child: Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(11.r),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 4.h),
-              child: Text(
-                viewModel.isEditMode ? '닫기' : '편집',
-                style: AppTextStyles.PR_M_12.copyWith(
-                  color: UsedColor.violet,
+            SizedBox(width: 7.w),
+            SizedBox(
+              height: 22.h,
+              width: 43.w,
+              child: GestureDetector(
+                onTap: () {
+                  viewModel.toggleEditMode();
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(11.r),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 4.h),
+                  child: Text(
+                    viewModel.isEditMode ? '닫기' : '편집',
+                    style: AppTextStyles.PR_M_12.copyWith(
+                      color: UsedColor.violet,
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 
   Widget _main(BuildContext context, ReflectViewModel viewModel) {
-    final myDiaryEntries = viewModel.myDiaryEntries;
+    final filteredDiaryEntries = viewModel.filteredDiaryEntries;
 
     return SingleChildScrollView(
       child: Column(
@@ -139,14 +295,14 @@ class ReflectRecordMore extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.topRight,
-            child: _buttons(context, viewModel),
+            child: _buttons(context),
           ),
           SizedBox(height: 18.h),
           Column(
-            children: myDiaryEntries.asMap().entries.map((entry) {
+            children: filteredDiaryEntries.asMap().entries.map((entry) {
               int index = entry.key;
               var data = entry.value;
-              bool isLast = index == myDiaryEntries.length - 1;
+              bool isLast = index == filteredDiaryEntries.length - 1;
 
               return Column(
                 children: [
@@ -171,7 +327,6 @@ class ReflectRecordMore extends StatelessWidget {
         Container(
           width: 353.w,
           height: 161.h,
-          // margin: EdgeInsets.only(bottom: 20.h),
           padding: EdgeInsets.only(
             left: 6.w,
             right: 6.w,
@@ -279,7 +434,6 @@ class ReflectRecordMore extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // 타이틀
                 Text(
                   '해당 일기를 삭제하시겠습니까?',
                   style: AppTextStyles.PR_M_13.copyWith(
@@ -288,7 +442,6 @@ class ReflectRecordMore extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 8.h),
-                // 설명 텍스트
                 Text(
                   '삭제한 일기는 다시 복구할 수 없습니다.',
                   style: AppTextStyles.PR_R_12.copyWith(
@@ -297,16 +450,14 @@ class ReflectRecordMore extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 12.h),
-                // 버튼들
                 Divider(thickness: 0.5.h, height: 0.h, color: UsedColor.line),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    // 취소 버튼
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.of(context).pop(); // 팝업 닫기
+                          Navigator.of(context).pop();
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 9.h),
@@ -321,18 +472,16 @@ class ReflectRecordMore extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // 중간 구분선
                     Container(
                       width: 0.5.w,
                       height: 35.h,
                       color: UsedColor.line,
                     ),
-                    // 삭제 버튼
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          viewModel.deleteDiaryEntry(index); // 일기 삭제
-                          Navigator.of(context).pop(); // 팝업 닫기
+                          viewModel.deleteDiaryEntry(index);
+                          Navigator.of(context).pop();
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 9.h),

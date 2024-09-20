@@ -360,9 +360,10 @@ final router = GoRouter(
             ),
           ],
         ),
-        // Reflect
+        // MARK:-Reflect
         GoRoute(
-          path: '/ReflectMain',
+          path: '/reflectMain',
+          name: 'reflectMain',
           builder: (context, state) => const ReflectMain(),
           parentNavigatorKey: shellNavkey,
           routes: [

@@ -14,7 +14,6 @@ class ReflectMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Provider를 통해 ViewModel을 가져옴
     final viewModel = Provider.of<ReflectViewModel>(context);
 
     return Scaffold(
@@ -59,7 +58,7 @@ class ReflectMain extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 12.h),
-                    _diaryListContainer(context, viewModel), // ViewModel 전달
+                    _diaryListContainer(context, viewModel),
                   ],
                 ),
               ),
@@ -196,7 +195,7 @@ class ReflectMain extends StatelessWidget {
   }
 
   Widget _diaryList(BuildContext context, ReflectViewModel viewModel) {
-    final diaryEntries = viewModel.availableEntries; // 작성 가능한 일기 목록으로 수정
+    final diaryEntries = viewModel.availableEntries;
 
     return Column(
       children: diaryEntries.asMap().entries.map((entry) {
@@ -276,7 +275,7 @@ class ReflectMain extends StatelessWidget {
         width: 77.w,
         height: 24.h,
         decoration: BoxDecoration(
-          color: const Color(0xFFF1F3FD),
+          color: UsedColor.image_card,
           borderRadius: BorderRadius.circular(13.88.r),
         ),
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),

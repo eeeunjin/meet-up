@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -53,7 +54,10 @@ class ReflectDiaryDetails extends StatelessWidget {
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.pop();
+        context.goNamed('reflectMain');
+        final viewModel = context.read<ReflectViewModel>();
+
+        viewModel.resetAll(); // 모든 상태 초기화
       },
       child: Image.asset(
         ImagePath.back,
@@ -146,7 +150,7 @@ class ReflectDiaryDetails extends StatelessWidget {
                           left: 24.w,
                           right: 24.w,
                         ),
-                        child: _questionAnswerField(
+                        child: _questionAnswerField(context,
                             selectedQuestions[index], index, viewModel),
                       );
                     }),
@@ -199,13 +203,11 @@ class ReflectDiaryDetails extends StatelessWidget {
   }
 
 //MARK: - 질문 답변창
-  Widget _questionAnswerField(
-      String question, int index, ReflectViewModel viewModel) {
+  Widget _questionAnswerField(BuildContext context, String question, int index,
+      ReflectViewModel viewModel) {
     return GestureDetector(
       onTap: () {
-        // 키보드 내리기
-        // ReflectViewModel.setStartEdit(false);
-        // FocusScope.of(context).unfocus();
+        FocusScope.of(context).unfocus();
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -227,8 +229,12 @@ class ReflectDiaryDetails extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 child: TextField(
-                  maxLines: null,
+                  minLines: 1,
+                  maxLines: 7,
                   keyboardType: TextInputType.multiline,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(150), // 최대 150자까지 입력 가능
+                  ],
                   onChanged: (text) => viewModel.updateAnswer(index, text),
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -236,7 +242,7 @@ class ReflectDiaryDetails extends StatelessWidget {
                       top: 18.h,
                       bottom: 18.h,
                       left: 17.w,
-                      right: 17.w,
+                      right: 18.w,
                     ),
                   ),
                   style: AppTextStyles.PR_R_13.copyWith(
