@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -53,12 +54,15 @@ class ReflectDiaryDetails extends StatelessWidget {
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.pop();
+        context.goNamed('reflectMain');
+        final viewModel = context.read<ReflectViewModel>();
+
+        viewModel.resetAll(); // 모든 상태 초기화
       },
       child: Image.asset(
         ImagePath.back,
-        width: 40.w,
-        height: 40.h,
+        width: 10.w,
+        height: 20.h,
       ),
     );
   }
@@ -79,12 +83,6 @@ class ReflectDiaryDetails extends StatelessWidget {
             child: Center(
               child: Container(
                 width: 340.w,
-                padding: EdgeInsets.only(
-                  top: 28.h,
-                  bottom: 28.h,
-                  left: 24.w,
-                  right: 24.w,
-                ),
                 decoration: BoxDecoration(
                   color: UsedColor.image_card,
                   borderRadius: BorderRadius.circular(29.r),
@@ -92,61 +90,108 @@ class ReflectDiaryDetails extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '초보 클럽 모임',
-                              style: AppTextStyles.PR_SB_16.copyWith(
-                                color: UsedColor.charcoal_black,
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            Row(
-                              children: [
-                                Text(
-                                  '2024.02.07.(수) 오후 7:30',
-                                  style: AppTextStyles.PR_M_14.copyWith(
-                                    color: UsedColor.text_3,
-                                  ),
+                    // 첫 번째 섹션 패딩
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: 24.h,
+                        bottom: 24.h,
+                        left: 24.w,
+                        right: 24.w,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '초보 클럽 모임',
+                                style: AppTextStyles.PR_SB_16.copyWith(
+                                  color: UsedColor.charcoal_black,
                                 ),
-                                SizedBox(width: 40.w),
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: Text(
-                                    '만남 상세 보기 >',
-                                    style: AppTextStyles.PR_M_13.copyWith(
-                                      color: UsedColor.text_4,
+                              ),
+                              SizedBox(height: 8.h),
+                              Row(
+                                children: [
+                                  Text(
+                                    '2024.02.07.(수) 오후 7:30',
+                                    style: AppTextStyles.PR_M_14.copyWith(
+                                      color: UsedColor.text_3,
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
+                                  SizedBox(width: 40.w),
+                                  GestureDetector(
+                                    onTap: () {},
+                                    child: Text(
+                                      '만남 상세 보기 >',
+                                      style: AppTextStyles.PR_M_13.copyWith(
+                                        color: UsedColor.text_4,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      thickness: 0.75.h,
+                      height: 0.h,
+                      color: UsedColor.b_line,
                     ),
                     SizedBox(height: 24.h),
-                    const Divider(),
-                    SizedBox(height: 24.h),
-                    // 선택된 질문에 대한 답변
+
+                    // 선택된 질문 섹션
                     ...List.generate(selectedQuestions.length, (index) {
-                      return _questionAnswerField(
-                          selectedQuestions[index], index, viewModel);
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          left: 24.w,
+                          right: 24.w,
+                        ),
+                        child: _questionAnswerField(context,
+                            selectedQuestions[index], index, viewModel),
+                      );
                     }),
+
                     // 질문 추가 버튼 (최대 3개까지 선택 가능)
                     if (selectedQuestions.length < 3) ...[
-                      _addQuestionButton(context),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 24.w,
+                          right: 24.w,
+                        ),
+                        child: _addQuestionButton(context),
+                      ),
                     ],
+
                     SizedBox(height: 24.h),
-                    const Divider(),
+                    Divider(
+                      thickness: 0.75.h,
+                      height: 0.h,
+                      color: UsedColor.b_line,
+                    ),
                     SizedBox(height: 24.h),
-                    _ratingSection(viewModel),
+
+                    // 별점 섹션
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: 24.w,
+                        right: 24.w,
+                      ),
+                      child: _ratingSection(viewModel),
+                    ),
+
                     SizedBox(height: 24.h),
-                    _bottom(viewModel),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: 24.w,
+                        right: 24.w,
+                        bottom: 24.h,
+                      ),
+                      child: _bottom(viewModel),
+                    ),
                   ],
                 ),
               ),
@@ -158,61 +203,70 @@ class ReflectDiaryDetails extends StatelessWidget {
   }
 
 //MARK: - 질문 답변창
-  Widget _questionAnswerField(
-      String question, int index, ReflectViewModel viewModel) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Center(
-          child: Text(
-            question,
-            style: AppTextStyles.PR_SB_16.copyWith(
-              color: UsedColor.charcoal_black,
+  Widget _questionAnswerField(BuildContext context, String question, int index,
+      ReflectViewModel viewModel) {
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Text(
+              question,
+              style: AppTextStyles.PR_SB_16.copyWith(
+                color: UsedColor.charcoal_black,
+              ),
             ),
           ),
-        ),
-        SizedBox(height: 20.h),
-        Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              child: TextField(
-                maxLines: null,
-                keyboardType: TextInputType.multiline,
-                onChanged: (text) => viewModel.updateAnswer(index, text),
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(
-                    top: 18.h,
-                    bottom: 18.h,
-                    left: 17.w,
-                    right: 17.w,
+          SizedBox(height: 20.h),
+          Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: TextField(
+                  minLines: 1,
+                  maxLines: 7,
+                  keyboardType: TextInputType.multiline,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(150), // 최대 150자까지 입력 가능
+                  ],
+                  onChanged: (text) => viewModel.updateAnswer(index, text),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.only(
+                      top: 18.h,
+                      bottom: 18.h,
+                      left: 17.w,
+                      right: 18.w,
+                    ),
+                  ),
+                  style: AppTextStyles.PR_R_13.copyWith(
+                    color: UsedColor.text_5,
                   ),
                 ),
-                style: AppTextStyles.PR_R_13.copyWith(
-                  color: UsedColor.text_5,
+              ),
+              Positioned(
+                top: 6.h,
+                right: 7.w,
+                child: GestureDetector(
+                  onTap: () => viewModel.removeQuestion(index),
+                  child: Image.asset(
+                    ImagePath.reflectClose,
+                    width: 25.w,
+                    height: 25.h,
+                  ),
                 ),
               ),
-            ),
-            Positioned(
-              top: 6.h,
-              right: 7.w,
-              child: GestureDetector(
-                onTap: () => viewModel.removeQuestion(index),
-                child: Image.asset(
-                  ImagePath.reflectClose,
-                  width: 25.w,
-                  height: 25.h,
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 24.h),
-      ],
+            ],
+          ),
+          SizedBox(height: 24.h),
+        ],
+      ),
     );
   }
 

@@ -110,7 +110,7 @@ class ReflectWritingDiary extends StatelessWidget {
       },
     );
   }
-
+//MARK: - 이미지 선택
   Widget _selectOptions(ReflectViewModel viewModel) {
     final List<String> imagePaths = [
       ImagePath.reflect1,
@@ -160,7 +160,7 @@ class ReflectWritingDiary extends StatelessWidget {
       }),
     );
   }
-
+//MARK: - bottom
   Widget _bottom(BuildContext context, ReflectViewModel viewModel) {
     return GestureDetector(
       onTap: viewModel.selectedImages.isNotEmpty
