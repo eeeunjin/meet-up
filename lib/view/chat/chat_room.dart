@@ -456,7 +456,7 @@ class ChatRoom extends StatelessWidget {
         return _scheduleDecide(context,
             isMyChat: isMyChat, chatModel: chatModel);
       case "schedule_alarm":
-        return _scheduleAlarm();
+        return _scheduleAlarm(chatModel.content);
       case "review":
         return _review(context);
       case "diary":
@@ -1065,9 +1065,7 @@ class ChatRoom extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: 12.67.h,
-            ),
+            SizedBox(height: 10.h),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -1087,7 +1085,7 @@ class ChatRoom extends StatelessWidget {
               ],
             ),
             SizedBox(
-              height: 3.h,
+              height: 5.h,
             ),
             Text(
               "모든 참석자가 참석 의사를 밝혀 일정이 확정되었습니다.",
@@ -1245,7 +1243,25 @@ class ChatRoom extends StatelessWidget {
   }
 
   // MARK: - 스케줄 하루 전 알림
-  Widget _scheduleAlarm() {
+  Widget _scheduleAlarm(String day) {
+    String title = "";
+    String content_1 = "";
+    String content_2 = "";
+
+    if (day == "one") {
+      title = "만남 일정 1일 전!";
+      content_1 = "만남 일정까지 1일 남았습니다.";
+      content_2 = "내일 만남을 앞두고 있어요. 즐거운 만남 되시길 바랄게요!";
+    } else if (day == "two") {
+      title = "만남 일정 2일 전!";
+      content_1 = "만남 일정까지 2일 남았습니다.";
+      content_2 = "2일 뒤에 만나요! 준비되셨나요?";
+    } else if (day == "three") {
+      title = "만남 일정 3일 전!";
+      content_1 = "만남 일정까지 3일 남았습니다.";
+      content_2 = "만남이 가능한지 일정을 다시 한번 확인해 주세요!";
+    }
+
     return Padding(
       padding: EdgeInsets.only(left: 28.w, right: 27.w),
       child: Container(
@@ -1261,12 +1277,12 @@ class ChatRoom extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: 7.h,
+              height: 10.h,
             ),
             GestureDetector(
               onTap: () {},
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
                     width: 20.w,
@@ -1277,7 +1293,7 @@ class ChatRoom extends StatelessWidget {
                   ),
                   SizedBox(width: 6.w),
                   Text(
-                    '만남 일정 하루 전!',
+                    title,
                     style: AppTextStyles.PR_SB_14
                         .copyWith(color: UsedColor.charcoal_black),
                   ),
@@ -1285,17 +1301,17 @@ class ChatRoom extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 9.h,
+              height: 5.h,
             ),
             Text(
-              '만남 일정까지 1일 남았습니다.',
+              content_1,
               style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
             ),
             SizedBox(
               height: 5.h,
             ),
             Text(
-              '내일 만남을 앞두고 있어요. 즐거운 만남 되시길 바랄게요!',
+              content_2,
               style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
             )
           ],
@@ -1323,12 +1339,12 @@ class ChatRoom extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: 7.h,
+              height: 10.h,
             ),
             GestureDetector(
               onTap: () {},
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
                     width: 20.w,
@@ -1354,7 +1370,7 @@ class ChatRoom extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 9.h,
+              height: 5.h,
             ),
             Text(
               '$nickname 님! 만남은 즐거우셨나요?',
@@ -1390,10 +1406,10 @@ class ChatRoom extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: 7.h,
+              height: 10.h,
             ),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
                   width: 20.w,
@@ -1418,7 +1434,7 @@ class ChatRoom extends StatelessWidget {
               ],
             ),
             SizedBox(
-              height: 9.h,
+              height: 6.h,
             ),
             Text(
               '오늘 만남에 대한 자기 성찰 시간을 가져 봐요!',

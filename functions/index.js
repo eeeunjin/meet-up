@@ -119,7 +119,8 @@ onDocumentUpdated("rooms/{roomId}", async (event) => {
           "room_reference": chatRoomId,
           "type": "schedule_alarm",
         });
-      } else if (twoDaysBefore > Timestamp.now().toDate()) {
+      } 
+      if (twoDaysBefore > Timestamp.now().toDate()) {
         await chatRef.add({
           "uid": "",
           "nickName": "",
@@ -128,12 +129,13 @@ onDocumentUpdated("rooms/{roomId}", async (event) => {
           "room_reference": chatRoomId,
           "type": "schedule_alarm",
         });
-      } else if (oneDayBefore > Timestamp.now().toDate()) {
+      }
+      if (oneDayBefore > Timestamp.now().toDate()) {
         await chatRef.add({
           "uid": "",
           "nickName": "",
           "Content": "one",
-          "date": Timestamp.fromDate(oneDaysBefore),
+          "date": Timestamp.fromDate(oneDayBefore),
           "room_reference": chatRoomId,
           "type": "schedule_alarm",
         });
