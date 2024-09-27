@@ -39,6 +39,7 @@ import 'package:meet_up/view/reflect/reflect_record_more.dart';
 import 'package:meet_up/view/reflect/reflect_writing_diary.dart';
 import 'package:meet_up/view/schedule/add_member_personal.dart';
 import 'package:meet_up/view/schedule/add_personal_schedule.dart';
+import 'package:meet_up/view/schedule/edit_personal_schedule.dart';
 import 'package:meet_up/view/schedule/schedule_main.dart';
 import 'package:meet_up/view/setting/noticed.dart';
 import 'package:meet_up/view/setting/open_source_license.dart';
@@ -378,6 +379,12 @@ final router = GoRouter(
                     builder: (context, state) => const AddMemberPersonal(),
                   )
                 ]),
+            GoRoute(
+              path: 'editPersonalSchedule',
+              name: 'editPersonalSchedule',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) => const EditPersonalSchedule(),
+            )
           ],
         ),
         //MARK: - Reflect

@@ -373,6 +373,7 @@ class ScheduleMain extends StatelessWidget {
                         GestureDetector(
                           onTap: () {
                             // 편집
+                            context.goNamed('editPersonalSchedule');
                           },
                           child: Image.asset(
                             ImagePath.editPencil,
