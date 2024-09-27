@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -350,7 +351,6 @@ class ScheduleMain extends StatelessWidget {
     return Consumer<ScheduleMainViewModel>(
       builder: (context, viewModel, child) {
         return Container(
-          padding: const EdgeInsets.all(16.0),
           width: double.infinity,
           color: UsedColor.bg_color,
           child: Column(
@@ -577,19 +577,24 @@ class ScheduleMain extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const Spacer(),
+                    SizedBox(
+                      height: 201.h,
+                    ),
                     // 삭제버튼
-                    Container(
-                      width: 327.w,
-                      height: 56.h,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(19.r),
-                          color: Colors.black),
-                      child: Center(
-                        child: Text(
-                          '삭제',
-                          style: AppTextStyles.PR_SB_20
-                              .copyWith(color: Colors.white),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 56.0.h),
+                      child: Container(
+                        width: 327.w,
+                        height: 56.h,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(19.r),
+                            color: Colors.black),
+                        child: Center(
+                          child: Text(
+                            '삭제',
+                            style: AppTextStyles.PR_SB_20
+                                .copyWith(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
