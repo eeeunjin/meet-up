@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -362,6 +361,10 @@ class ChatRoom extends StatelessWidget {
         final chatModelsGroupByDate = <String, List<ChatModel>>{};
         for (var chatModel in chatModels) {
           final date = chatModel.date.toDate();
+          // 예약 메세지를 처리하기 위한 코드 
+          if (date.compareTo(DateTime.now()) > 0) {
+            continue;
+          }
           final dateString = "${date.year}년 ${date.month}월 ${date.day}일";
           if (chatModelsGroupByDate[dateString] == null) {
             chatModelsGroupByDate[dateString] = [];
