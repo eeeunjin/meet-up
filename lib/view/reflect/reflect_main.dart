@@ -264,11 +264,8 @@ class ReflectMain extends StatelessWidget {
   Widget _buildWriteDiaryButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const ReflectWritingDiary(),
-          ),
+        context.goNamed(
+          'reflectWritingDiary',
         );
       },
       child: Container(

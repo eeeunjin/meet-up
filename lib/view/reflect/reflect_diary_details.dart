@@ -17,18 +17,24 @@ class ReflectDiaryDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: 58.h,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                top: 58.h,
+              ),
+              child: _header(context),
             ),
-            child: _header(context),
-          ),
-          Expanded(child: _main(context)),
-        ],
+            Expanded(child: _main(context)),
+          ],
+        ),
       ),
     );
   }
@@ -39,12 +45,7 @@ class ReflectDiaryDetails extends StatelessWidget {
         children: [
           header(title: '일기 쓰기', back: _back(context)),
           SizedBox(
-            height: 16.h,
-          ),
-          Divider(
-            thickness: 0.3.h,
-            height: 0.h,
-            color: UsedColor.line,
+            height: 14.h,
           ),
         ],
       ),
@@ -57,7 +58,7 @@ class ReflectDiaryDetails extends StatelessWidget {
         context.goNamed('reflectMain');
         final viewModel = context.read<ReflectViewModel>();
 
-        viewModel.resetAll(); // 모든 상태 초기화
+        viewModel.resetAll();
       },
       child: Image.asset(
         ImagePath.back,
@@ -75,7 +76,7 @@ class ReflectDiaryDetails extends StatelessWidget {
         return SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(
-              top: 30.h,
+              top: 16.h,
               left: 27.w,
               right: 26.w,
               bottom: 56.h,
@@ -173,6 +174,16 @@ class ReflectDiaryDetails extends StatelessWidget {
                       color: UsedColor.b_line,
                     ),
                     SizedBox(height: 24.h),
+                    Center(
+                      child: Text(
+                        '만남을 되돌아 볼까요?',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.PR_SB_16.copyWith(
+                          color: UsedColor.charcoal_black,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
 
                     // 별점 섹션
                     Padding(
@@ -205,68 +216,63 @@ class ReflectDiaryDetails extends StatelessWidget {
 //MARK: - 질문 답변창
   Widget _questionAnswerField(BuildContext context, String question, int index,
       ReflectViewModel viewModel) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Text(
-              question,
-              style: AppTextStyles.PR_SB_16.copyWith(
-                color: UsedColor.charcoal_black,
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Center(
+          child: Text(
+            question,
+            style: AppTextStyles.PR_SB_16.copyWith(
+              color: UsedColor.charcoal_black,
             ),
           ),
-          SizedBox(height: 20.h),
-          Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16.r),
+        ),
+        SizedBox(height: 20.h),
+        Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              child: TextField(
+                minLines: 1,
+                maxLines: 7,
+                keyboardType: TextInputType.multiline,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(150), // 최대 150자까지 입력 가능
+                ],
+                onChanged: (text) => viewModel.updateAnswer(index, text),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.only(
+                    top: 18.h,
+                    bottom: 18.h,
+                    left: 17.w,
+                    right: 18.w,
+                  ),
                 ),
-                child: TextField(
-                  minLines: 1,
-                  maxLines: 7,
-                  keyboardType: TextInputType.multiline,
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(150), // 최대 150자까지 입력 가능
-                  ],
-                  onChanged: (text) => viewModel.updateAnswer(index, text),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.only(
-                      top: 18.h,
-                      bottom: 18.h,
-                      left: 17.w,
-                      right: 18.w,
-                    ),
-                  ),
-                  style: AppTextStyles.PR_R_13.copyWith(
-                    color: UsedColor.text_5,
-                  ),
+                style: AppTextStyles.PR_R_13.copyWith(
+                  color: UsedColor.text_5,
                 ),
               ),
-              Positioned(
-                top: 6.h,
-                right: 7.w,
-                child: GestureDetector(
-                  onTap: () => viewModel.removeQuestion(index),
-                  child: Image.asset(
-                    ImagePath.reflectClose,
-                    width: 25.w,
-                    height: 25.h,
-                  ),
+            ),
+            Positioned(
+              top: 6.h,
+              right: 7.w,
+              child: GestureDetector(
+                onTap: () => viewModel.removeQuestion(index),
+                child: Image.asset(
+                  ImagePath.reflectClose,
+                  width: 25.w,
+                  height: 25.h,
                 ),
               ),
-            ],
-          ),
-          SizedBox(height: 24.h),
-        ],
-      ),
+            ),
+          ],
+        ),
+        SizedBox(height: 24.h),
+      ],
     );
   }
 

@@ -6,6 +6,15 @@ class ReflectViewModel with ChangeNotifier {
   final List<int> completedSelection = [];
   final Map<int, String> _answers = {}; // 답변을 저장할 맵
 
+  String? _selectedDiaryId;
+
+  String? get selectedDiaryId => _selectedDiaryId;
+
+  void selectDiaryId(String diaryId) {
+    _selectedDiaryId = diaryId;
+    notifyListeners();
+  }
+
   // 선택된 연/월을 저장할 변수
   DateTime _selectedDate = DateTime.now(); // 선택된 연/월 저장
 
@@ -102,6 +111,12 @@ class ReflectViewModel with ChangeNotifier {
 
   // 모든 질문에 답변과 별점이 매겨졌는지 확인
   bool get canSubmit {
+    // 질문이 하나도 선택되지 않은 경우
+    if (_selectedImages.isEmpty) {
+      return allRatingsCompleted(); // 별점이 모두 선택된 경우에만 저장 가능
+    }
+
+    // 질문이 선택된 경우에는 기존 로직을 따름
     return allQuestionsAnswered() && allRatingsCompleted();
   }
 

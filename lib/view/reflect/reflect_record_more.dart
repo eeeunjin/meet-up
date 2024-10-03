@@ -322,92 +322,99 @@ class ReflectRecordMore extends StatelessWidget {
       ReflectViewModel viewModel, int index) {
     String title = viewModel.getLimitedTitle(entry['title'] ?? '');
 
-    return Stack(
-      children: [
-        Container(
-          width: 353.w,
-          height: 161.h,
-          padding: EdgeInsets.only(
-            left: 6.w,
-            right: 6.w,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20.r),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 16.h,
-                  left: 14.w,
-                ),
-                child: Text(
-                  title,
-                  style: AppTextStyles.PR_SB_17.copyWith(
-                    color: UsedColor.charcoal_black,
+    return GestureDetector(
+      onTap: () {
+        context.goNamed(
+          'reflectDiaryView',
+        );
+      },
+      child: Stack(
+        children: [
+          Container(
+            width: 353.w,
+            height: 161.h,
+            padding: EdgeInsets.only(
+              left: 6.w,
+              right: 6.w,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.r),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: 16.h,
+                    left: 14.w,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              SizedBox(
-                height: 8.h,
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: 14.w,
-                ),
-                child: Text(
-                  entry['date'] ?? '',
-                  style: AppTextStyles.PR_M_15.copyWith(
-                    color: UsedColor.text_3,
+                  child: Text(
+                    title,
+                    style: AppTextStyles.PR_SB_17.copyWith(
+                      color: UsedColor.charcoal_black,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 12.h,
-              ),
-              Divider(
-                thickness: 0.75.h,
-                height: 0.h,
-                color: UsedColor.button_g,
-              ),
-              SizedBox(
-                height: 12.h,
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: 14.w,
-                  right: 14.w,
-                  bottom: 16.h,
+                SizedBox(
+                  height: 8.h,
                 ),
-                child: Text(
-                  entry['content'] ?? '',
-                  style: AppTextStyles.PR_M_14.copyWith(
-                    color: UsedColor.line,
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: 14.w,
                   ),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
+                  child: Text(
+                    entry['date'] ?? '',
+                    style: AppTextStyles.PR_M_15.copyWith(
+                      color: UsedColor.text_3,
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
-        if (viewModel.isEditMode)
-          Positioned(
-            top: 20.h,
-            right: 20.w,
-            child: GestureDetector(
-              onTap: () {
-                _showDeleteConfirmationDialog(context, index, viewModel);
-              },
-              child: Image.asset(ImagePath.close,
-                  width: 20.w, height: 20.h, color: UsedColor.line),
+                SizedBox(
+                  height: 12.h,
+                ),
+                Divider(
+                  thickness: 0.75.h,
+                  height: 0.h,
+                  color: UsedColor.button_g,
+                ),
+                SizedBox(
+                  height: 12.h,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: 14.w,
+                    right: 14.w,
+                    bottom: 16.h,
+                  ),
+                  child: Text(
+                    entry['content'] ?? '',
+                    style: AppTextStyles.PR_M_14.copyWith(
+                      color: UsedColor.line,
+                    ),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             ),
           ),
-      ],
+          if (viewModel.isEditMode)
+            Positioned(
+              top: 20.h,
+              right: 20.w,
+              child: GestureDetector(
+                onTap: () {
+                  _showDeleteConfirmationDialog(context, index, viewModel);
+                },
+                child: Image.asset(ImagePath.close,
+                    width: 20.w, height: 20.h, color: UsedColor.line),
+              ),
+            ),
+        ],
+      ),
     );
   }
 

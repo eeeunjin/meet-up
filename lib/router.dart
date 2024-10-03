@@ -34,6 +34,7 @@ import 'package:meet_up/view/profile/profile_notification.dart';
 import 'package:meet_up/view/profile/rank_main.dart';
 import 'package:meet_up/view/reflect/reflect_diary_details.dart';
 import 'package:meet_up/view/reflect/reflect_diary_more.dart';
+import 'package:meet_up/view/reflect/reflect_diary_view.dart';
 import 'package:meet_up/view/reflect/reflect_main.dart';
 import 'package:meet_up/view/reflect/reflect_record_more.dart';
 import 'package:meet_up/view/reflect/reflect_writing_diary.dart';
@@ -398,6 +399,12 @@ final router = GoRouter(
               name: 'reflectDiaryMore',
               parentNavigatorKey: rootNavkey,
               builder: (context, state) => const ReflectDiaryMore(),
+            ),
+            GoRoute(
+              path: 'reflectDiaryView',
+              name: 'reflectDiaryView',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) => const ReflectDiaryView(),
             ),
             GoRoute(
               path: 'reflectWritingDiary',
