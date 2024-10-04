@@ -1,16 +1,24 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:meet_up/main.dart';
+import 'package:meet_up/model/room_model.dart';
+import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/repository/user_repository.dart';
 
 class ScheduleMainViewModel with ChangeNotifier {
   final UserRepository _userRepository = UserRepository();
 
-  // Main
-
-  // meetUp을 기본 페이지로
+  // MARK: - Main
+  // 선택된 탭을 저장하는 변수
   SelectedPart _selectedPart = SelectedPart.meetUp;
 
   SelectedPart get selectedPart => _selectedPart;
+
+  // 불러온 스케줄 정보를 저장하는 변수
+  List<RoomModel>? _ScheduleList;
+
+  List<RoomModel>? get scheduleList => _ScheduleList;
 
   void selectMeetUp() {
     if (_selectedPart != SelectedPart.meetUp) {
@@ -26,221 +34,123 @@ class ScheduleMainViewModel with ChangeNotifier {
     }
   }
 
-  // MARK - 개인 일정 추가
+  void setScheduleList(List<RoomModel> mySchedules) {
+    _ScheduleList = mySchedules;
+  }
 
-  // 일정
-  String _roomNaming = '';
+  // 밋업 일정 정보를 날짜별로 정리 후 반환
+  Map<String, List<RoomModel>> getMeetUpScheduleByDate() {
+    final DateFormat formatter = DateFormat('yyyy.MM.dd EEEE', 'ko_KR');
+    final Map<String, List<RoomModel>> scheduleByDate = {};
 
-  String get roomNaming => _roomNaming;
+    for (final schedule in _ScheduleList!) {
+      if (schedule.room_name.isEmpty) {
+        continue;
+      }
 
-  void namingContents(String newNamingCount) {
-    if (_roomNaming != newNamingCount) {
-      _roomNaming = newNamingCount;
-      notifyListeners();
+      final date = schedule.room_schedule!["date"] as Timestamp;
+      final formattedDate = formatter.format(date.toDate());
+      if (scheduleByDate.containsKey(formattedDate)) {
+        scheduleByDate[formattedDate]!.add(schedule);
+      } else {
+        scheduleByDate[formattedDate] = [schedule];
+      }
     }
+
+    return scheduleByDate;
   }
 
-  // naming check
-  bool get namingCompleted {
-    return _roomNaming.trim().isNotEmpty;
-  }
+  // 개인 일정 정보를 날짜별로 정리 후 반환
+  Map<String, List<RoomModel>> getPersonalScheduleByDate() {
+    final DateFormat formatter = DateFormat('yyyy.MM.dd EEEE', 'ko_KR');
+    final Map<String, List<RoomModel>> scheduleByDate = {};
 
-  DateTime _selectedDate;
-  DateTime get selectedDate => _selectedDate; // 선택된 날짜
-//MARK: - DatePicker
-  bool _isDatePanelExpanded = false;
-  bool get isDatePanelExpanded => _isDatePanelExpanded;
+    for (final schedule in _ScheduleList!) {
+      if (schedule.room_name.isNotEmpty) {
+        continue;
+      }
 
-  final DateTime _start;
-  final DateTime _end;
-
-  ScheduleMainViewModel({
-    required DateTime init,
-    required DateTime start,
-    required DateTime end,
-  })  : _selectedDate = init,
-        _start = start,
-        _end = end,
-        _selectedTime = const TimeOfDay(hour: 19, minute: 30); // 타임 피커 초기화
-
-  DateTime get start => _start;
-  DateTime get end => _end;
-
-  set selectedDate(DateTime newValue) {
-    if (_selectedDate != newValue) {
-      _selectedDate = newValue;
-      notifyListeners();
+      final date = schedule.room_schedule!["date"] as Timestamp;
+      final formattedDate = formatter.format(date.toDate());
+      if (scheduleByDate.containsKey(formattedDate)) {
+        scheduleByDate[formattedDate]!.add(schedule);
+      } else {
+        scheduleByDate[formattedDate] = [schedule];
+      }
     }
+
+    return scheduleByDate;
   }
 
-  void updateDate(DateTime date) {
-    if (_selectedDate != date) {
-      _selectedDate = date;
-      notifyListeners();
+  // user - mySchedule collection stream 정보 가져오기
+  Stream<QuerySnapshot<Object?>> getMyScheduleStream(String uid) {
+    return _userRepository.readMyScheduleCollectionStream(uid: uid);
+  }
+
+  // user 정보 불러오기
+  Future<List<UserModel>> getParticipantInfo() async {
+    List<DocumentReference> docRefs = List.empty(growable: true);
+    // 방장 추가
+    docRefs.add(selectedMeetUpScheduleDetail!.room_owner_reference);
+
+    // 입장한 사람 추가
+    for (DocumentReference docRef
+        in selectedMeetUpScheduleDetail!.room_participant_reference) {
+      docRefs.add(docRef);
     }
-  }
 
-  // 연도 업데이트
-  void updateYear(int year) {
-    if (_selectedDate.year != year) {
-      _selectedDate = DateTime(year, _selectedDate.month, _selectedDate.day);
-      notifyListeners();
+    // 유저 정보 불러오기
+    List<UserModel> userModels = List.empty(growable: true);
+    for (DocumentReference docRef in docRefs) {
+      userModels
+          .add(await _userRepository.readUserDocumentByDocRef(docRef: docRef));
     }
-  }
 
-  // 월 업데이트
-  void updateMonth(int month) {
-    if (_selectedDate.month != month) {
-      _selectedDate = DateTime(_selectedDate.year, month, _selectedDate.day);
-      notifyListeners();
+    for (UserModel userModel in userModels) {
+      logger.d(
+          "userModel.nickname: ${userModel.nickname} / userModel.gender: ${userModel.gender}");
     }
+
+    return userModels;
   }
 
-  // 일 업데이트
-  void updateDay(int day) {
-    if (_selectedDate.day != day) {
-      _selectedDate = DateTime(_selectedDate.year, _selectedDate.month, day);
-      notifyListeners();
-    }
-  }
+  // MARK: - Schedule Selection
+  // 선택된 개인 일정
+  String? _selectedPersonalSchedule;
+  String? get selectedPersonalSchedule => _selectedPersonalSchedule;
 
-  List<int> getYearList() {
-    return List<int>.generate(
-        end.year - start.year + 1, (index) => start.year + index);
-  }
+  RoomModel? _selectedPersonalScheduleDetail;
+  RoomModel? get selectedPersonalScheduleDetail =>
+      _selectedPersonalScheduleDetail;
 
-  List<int> getMonthList() {
-    if (selectedDate.year == end.year) {
-      return List<int>.generate(end.month, (index) => index + 1);
-    } else {
-      return List<int>.generate(12, (index) => index + 1);
-    }
-  }
+  // 선택된 밋업 일정
+  String? _selectedMeetUpSchedule;
+  String? get selectedMeetUpSchedule => _selectedMeetUpSchedule;
 
-  List<int> getDayList() {
-    DateTime lastDateOfMonth =
-        DateTime(selectedDate.year, selectedDate.month + 1, 0);
-    if (selectedDate.year == end.year && selectedDate.month == end.month) {
-      return List<int>.generate(end.day, (index) => index + 1);
-    }
-    return List<int>.generate(lastDateOfMonth.day, (index) => index + 1);
-  }
-
-  // 요일 계산 메서드
-  String getDayOfWeek(DateTime date) {
-    final DateFormat formatter = DateFormat.EEEE('ko');
-    return formatter.format(date);
-  }
-
-  // ExpansionPanel 토글
-  void toggleDatePanel() {
-    _isDatePanelExpanded = !_isDatePanelExpanded; // 상태 반전
-    notifyListeners();
-  }
-
-  // timePicker
-  bool _isTimePanelExpanded = false;
-
-  bool get isTimePanelExpanded => _isTimePanelExpanded;
-
-  // 선택된 시간 초기화
-  TimeOfDay _selectedTime;
-
-  TimeOfDay get selectedTime => _selectedTime;
-
-  // ExpansionPanel 토글
-  void toggleTimePanel() {
-    _isTimePanelExpanded = !_isTimePanelExpanded;
-    notifyListeners();
-  }
-
-  void updateTime(TimeOfDay newTime) {
-    if (_selectedTime != newTime) {
-      _selectedTime = newTime;
-      notifyListeners();
-    }
-  }
-
-  String formatTime(TimeOfDay time) {
-    final hour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
-    final period = time.period == DayPeriod.am ? '오전' : '오후';
-    final minute = time.minute.toString().padLeft(2, '0');
-    return '$period $hour:$minute';
-  }
-
-  // MARK: - 장소
-  TextEditingController locationTextController = TextEditingController();
-
-  bool get isLocationCompleted {
-    return locationTextController.text.isNotEmpty;
-  }
-
-  // MARK: - 설명
-  TextEditingController detailTextController = TextEditingController();
-
-  bool get isDetailCompleted {
-    return detailTextController.text.isNotEmpty;
-  }
-
-  // MARK: - 참여 인원
-
-  void addMembers(String member) {
-    if (!_selectedMembers.contains(member)) {
-      _selectedMembers.add(member);
-      notifyListeners();
-    }
-  }
-
-  void removeParticipant(String member) {
-    _selectedMembers.remove(member);
-    notifyListeners();
-  }
-
-  // add members
-  List<String> _selectedMembers = [];
-  List<String> get selectedMembers => _selectedMembers;
-
-  set selectedMembers(List<String> members) {
-    _selectedMembers = members;
-    notifyListeners();
-  }
-
-  bool get isMembersCompleted => selectedMembers.isNotEmpty;
-  // MARK: - check
-
-  bool get allCheckCompleted {
-    return namingCompleted &&
-        isLocationCompleted &&
-        isDetailCompleted &&
-        isMembersCompleted;
-  }
-
-  // MARK: - Reset state
-  void backClearSelection() {
-    locationTextController.clear();
-    detailTextController.clear();
-    _selectedMembers.clear();
-  }
-
-  // MARK: - 추가
-  String? _selectedScheduleDate;
-  Map<String, String>? _selectedScheduleDetail;
-
-  String? get selectedScheduleDate => _selectedScheduleDate;
-
-  Map<String, String>? get selectedScheduleDetail => _selectedScheduleDetail;
+  RoomModel? _selectedMeetUpScheduleDetail;
+  RoomModel? get selectedMeetUpScheduleDetail => _selectedMeetUpScheduleDetail;
 
   // 스케줄 선택
-  void selectSchedule(String date, Map<String, String> detail) {
-    _selectedScheduleDate = date;
-    _selectedScheduleDetail = detail;
+  void selectSchedule(String date, RoomModel detail, String type) {
+    if (type == 'meetUp') {
+      _selectedMeetUpSchedule = date;
+      _selectedMeetUpScheduleDetail = detail;
+    } else {
+      _selectedPersonalSchedule = date;
+      _selectedPersonalScheduleDetail = detail;
+    }
     notifyListeners();
   }
 
   // 선택 초기화
-  void resetScheduleSelection() {
-    _selectedScheduleDate = null;
-    _selectedScheduleDetail = null;
+  void resetScheduleSelection(String type) {
+    if (type == 'meetUp') {
+      _selectedMeetUpSchedule = null;
+      _selectedMeetUpScheduleDetail = null;
+    } else {
+      _selectedPersonalSchedule = null;
+      _selectedPersonalScheduleDetail = null;
+    }
     notifyListeners();
   }
 }

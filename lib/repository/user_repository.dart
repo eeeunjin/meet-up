@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meet_up/main.dart';
+import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/service/remote/firebase_service.dart';
 
@@ -138,7 +139,7 @@ class UserRepository {
       docRef: myTicketDocumentReference,
       data: data,
     );
-    
+
     return myTicketDocumentReference;
   }
 
@@ -148,7 +149,8 @@ class UserRepository {
     required String uid,
   }) async {
     return await _firebaseService.createDocument<MeetingReviewModel>(
-      docRef: _firebaseRefs.colRefUser.doc(uid).collection("meetingReviews").doc(),
+      docRef:
+          _firebaseRefs.colRefUser.doc(uid).collection("meetingReviews").doc(),
       data: data,
     );
   }
@@ -170,9 +172,18 @@ class UserRepository {
     required String meetingReviewId,
   }) async {
     return await _firebaseService.readDocument<MeetingReviewModel>(
-        docRef: _firebaseRefs.colRefUser.doc(uid)
+        docRef: _firebaseRefs.colRefUser
+            .doc(uid)
             .collection("meetingReviews")
             .doc(meetingReviewId));
+  }
+
+  // MARK: - MySchedule CRUD
+  Stream<QuerySnapshot<Object?>> readMyScheduleCollectionStream(
+      {required String uid}) {
+    return _firebaseService.readCollectionStream<RoomModel>(
+      colRef: _firebaseRefs.colRefUser.doc(uid).collection("mySchedule"),
+    );
   }
 
   // MARK: - Auth Functions

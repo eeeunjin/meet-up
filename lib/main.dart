@@ -31,6 +31,7 @@ import 'package:meet_up/view_model/meet/meet_user_info_view_model.dart';
 import 'package:meet_up/view_model/profile/profile_view_model.dart';
 import 'package:meet_up/view_model/reflect/reflect_view_model.dart';
 import 'package:meet_up/view_model/schedule/schedule_add_member_view_model.dart';
+import 'package:meet_up/view_model/schedule/schedule_add_personal_schdule_view_model.dart';
 import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:meet_up/view_model/setting/setting_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
@@ -94,12 +95,14 @@ void main() async {
         ChangeNotifierProvider(create: (context) => MeetDetailRoomViewModel()),
         ChangeNotifierProvider(create: (context) => MeetBrowseViewModel()),
         ChangeNotifierProvider(create: (context) => MeetFilterViewModel()),
+        ChangeNotifierProvider(create: (context) => ScheduleMainViewModel()),
         ChangeNotifierProvider(
-            create: (context) => ScheduleMainViewModel(
-                  init: currentDate,
-                  start: oneMonthAgo,
-                  end: twoYearsLater,
-                )),
+          create: (context) => ScheduleAddPersonalScheduleViewModel(
+            init: currentDate,
+            start: oneMonthAgo,
+            end: twoYearsLater,
+          ),
+        ),
         ChangeNotifierProvider(
             create: (create) => ScheduleAddMemberViewModel()),
         ChangeNotifierProvider(create: (context) => UserViewModel()),

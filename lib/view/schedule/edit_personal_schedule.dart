@@ -9,7 +9,7 @@ import 'package:meet_up/view/widget/personal_schedule_date_picker_widget.dart';
 import 'package:meet_up/view/widget/personal_schedule_time_picker_widget.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
-import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
+import 'package:meet_up/view_model/schedule/schedule_add_personal_schdule_view_model.dart';
 import 'package:provider/provider.dart';
 
 class EditPersonalSchedule extends StatelessWidget {
@@ -56,7 +56,7 @@ class EditPersonalSchedule extends StatelessWidget {
       onTap: () {
         // 정보 초기화
         final viewModel =
-            Provider.of<ScheduleMainViewModel>(context, listen: false);
+            Provider.of<ScheduleAddPersonalScheduleViewModel>(context, listen: false);
         viewModel.backClearSelection();
 
         context.pop(context);
@@ -114,7 +114,7 @@ class EditPersonalSchedule extends StatelessWidget {
 
   //MARK: - 일정
   Widget _naming(BuildContext context) {
-    final viewModel = Provider.of<ScheduleMainViewModel>(context);
+    final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
 
     return Padding(
       padding: EdgeInsets.only(left: 23.0.w),
@@ -157,7 +157,7 @@ class EditPersonalSchedule extends StatelessWidget {
   //MARK: - 날짜
   Widget _date(BuildContext context) {
     final viewModel =
-        Provider.of<ScheduleMainViewModel>(context, listen: false);
+        Provider.of<ScheduleAddPersonalScheduleViewModel>(context, listen: false);
 
     // ExpansionPanel 사용
     return Theme(
@@ -219,7 +219,7 @@ class EditPersonalSchedule extends StatelessWidget {
               ),
             ),
             isExpanded:
-                Provider.of<ScheduleMainViewModel>(context).isDatePanelExpanded,
+                Provider.of<ScheduleAddPersonalScheduleViewModel>(context).isDatePanelExpanded,
           ),
         ],
       ),
@@ -229,7 +229,7 @@ class EditPersonalSchedule extends StatelessWidget {
   // MARK: - 시간
   Widget _time(BuildContext context) {
     final viewModel =
-        Provider.of<ScheduleMainViewModel>(context, listen: false);
+        Provider.of<ScheduleAddPersonalScheduleViewModel>(context, listen: false);
 
     // Mark - ExpansionPanel 사용
     return Theme(
@@ -291,7 +291,7 @@ class EditPersonalSchedule extends StatelessWidget {
               ),
             ),
             isExpanded:
-                Provider.of<ScheduleMainViewModel>(context).isTimePanelExpanded,
+                Provider.of<ScheduleAddPersonalScheduleViewModel>(context).isTimePanelExpanded,
           ),
         ],
       ),
@@ -300,7 +300,7 @@ class EditPersonalSchedule extends StatelessWidget {
 
   //MARK: - 장소
   Widget _location(BuildContext context) {
-    final viewModel = Provider.of<ScheduleMainViewModel>(context);
+    final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
     return Padding(
       padding: EdgeInsets.only(left: 21.0.w),
       child: Row(
@@ -341,7 +341,7 @@ class EditPersonalSchedule extends StatelessWidget {
 
   //MARK: - 설명
   Widget _detail(BuildContext context) {
-    final viewModel = Provider.of<ScheduleMainViewModel>(context);
+    final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
     return Padding(
       padding: EdgeInsets.only(left: 21.0.w),
       child: Row(
@@ -411,9 +411,8 @@ class EditPersonalSchedule extends StatelessWidget {
   }
 
   Widget _selectedMembers(BuildContext context) {
-    final viewModel = Provider.of<ScheduleMainViewModel>(context);
-    return Consumer<ScheduleMainViewModel>(
-        builder: (context, viewmodel, child) {
+    return Consumer<ScheduleAddPersonalScheduleViewModel>(
+        builder: (context, viewModel, child) {
       List<String> participants = viewModel.selectedMembers;
 
       if (participants.isEmpty) {
@@ -445,7 +444,7 @@ class EditPersonalSchedule extends StatelessWidget {
 
 //MARK: - 저장
   Widget _bottom(BuildContext context) {
-    return Consumer<ScheduleMainViewModel>(
+    return Consumer<ScheduleAddPersonalScheduleViewModel>(
         builder: (context, viewModel, child) {
       return Padding(
         padding: EdgeInsets.only(bottom: 56.0.h, left: 33.w, right: 33.w),
