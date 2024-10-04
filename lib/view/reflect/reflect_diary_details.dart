@@ -55,7 +55,9 @@ class ReflectDiaryDetails extends StatelessWidget {
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.goNamed('reflectMain');
+        context.pop();
+        context.pop();
+        // context.goNamed('reflectMain');
         final viewModel = context.read<ReflectViewModel>();
 
         viewModel.resetAll();
