@@ -12,8 +12,8 @@ import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:provider/provider.dart';
 
-class AddPersonalSchedule extends StatelessWidget {
-  const AddPersonalSchedule({super.key});
+class EditPersonalSchedule extends StatelessWidget {
+  const EditPersonalSchedule({super.key});
 
   @override
   Widget build(BuildContext context) {

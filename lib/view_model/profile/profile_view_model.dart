@@ -128,7 +128,7 @@ class ProfileViewModel with ChangeNotifier {
         _selectedIconPath = ImagePath.hamSelect;
         break;
       case "aengmu":
-        _selectedIconPath = ImagePath.annumSelect;
+        _selectedIconPath = ImagePath.aengmuSelect;
         break;
     }
   }

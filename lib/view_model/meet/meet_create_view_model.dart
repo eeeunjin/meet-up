@@ -317,12 +317,12 @@ class MeetCreateViewModel with ChangeNotifier {
       room_owner_reference: _firebaseRefs.colRefUser.doc(uid),
       room_participant_reference: [],
       isScheduleDecided: false,
-      recentMessage:'',
+      room_meeting_review: [],
+      recentMessage: '방이 생성되었습니다.',
     );
-    // 방 정보 저장
+    // 방 정보 저장 
     final roomDocRef =
         await _roomRepository.createRoomDocument(data: roomModel);
-    // DocumentReference roomDocRef = await createRoom(roomModel);
 
     // 유저 정보에 자신이 만든 방 정보 추가
     // 유저의 방 정보 생성
@@ -331,7 +331,7 @@ class MeetCreateViewModel with ChangeNotifier {
       isNew: true,
       room_reference: roomDocRef,
     );
-    
+
     // 유저의 방 정보 저장
     await _userRepository.createMyRoomDocument(
       data: myRoomModel,

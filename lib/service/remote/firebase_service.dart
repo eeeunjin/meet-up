@@ -299,6 +299,10 @@ class FirebaseCRUD {
           ChatModel chat = data as ChatModel;
           await docRef.set(chat.toJson());
           return true;
+        } else if (T == MeetingReviewModel) {
+          MeetingReviewModel meetingReview = data as MeetingReviewModel;
+          await docRef.set(meetingReview.toJson());
+          return true;
         } else {
           // 지정하지 않은 모델인 경우 에러 반환
           throw Exception("Unsupported document type.");

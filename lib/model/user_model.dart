@@ -77,7 +77,8 @@ class UserModel {
           isFixedTicket: json["isFixedTicket"]! as bool,
           fixed_ticket_end_date: json["fixed_ticket_end_date"]! as Timestamp,
           rank: json["rank"]! as String,
-          notification_settings: json["notification_settings"]! as List<dynamic>,
+          notification_settings:
+              json["notification_settings"]! as List<dynamic>,
           uid: json["uid"]! as String,
         );
 
@@ -156,6 +157,45 @@ class MyTicketModel {
       "number_of_times_available": number_of_times_available,
       "isUsed": isUsed,
       "roomReference": roomReference,
+    };
+  }
+}
+
+class MeetingReviewModel {
+  String senderUID;
+  String roomTitle;
+  int rating;
+  List<dynamic> chosenChips;
+  String comment;
+  Timestamp date;
+
+  MeetingReviewModel({
+    required this.senderUID,
+    required this.roomTitle,
+    required this.rating,
+    required this.chosenChips,
+    required this.comment,
+    required this.date,
+  });
+
+  MeetingReviewModel.fromJson(Map<String, Object?> json)
+      : this(
+          senderUID: json["senderUID"]! as String,
+          roomTitle: json["roomTitle"]! as String,
+          rating: json["rating"]! as int,
+          chosenChips: json["chosenChips"]! as List<dynamic>,
+          comment: json["comment"]! as String,
+          date: json["date"]! as Timestamp,
+        );
+
+  Map<String, Object?> toJson() {
+    return {
+      "senderUID": senderUID,
+      "roomTitle": roomTitle,
+      "rating": rating,
+      "chosenChips": chosenChips,
+      "comment": comment,
+      "date": date,
     };
   }
 }

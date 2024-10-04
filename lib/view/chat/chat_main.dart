@@ -10,7 +10,6 @@ import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/view_model/chat/chat_room_view_model.dart';
-import 'package:meet_up/view/chat/chat_meeting_review.dart';
 import 'package:meet_up/view_model/chat/chat_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
@@ -40,7 +39,6 @@ class ChatMain extends StatelessWidget {
               child: _main(context),
             ),
           ),
-          _meetingReview(context),
         ],
       ),
     );
@@ -61,25 +59,6 @@ class ChatMain extends StatelessWidget {
             color: UsedColor.line,
           ),
         ],
-      ),
-    );
-  }
-
-  // MARK: - 만남 후기
-  Widget _meetingReview(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      color: UsedColor.bg_color,
-      child: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ChatMeetingReview()),
-            );
-          },
-          child: const Text('만남 후기 보내기'),
-        ),
       ),
     );
   }
@@ -166,8 +145,7 @@ class ChatMain extends StatelessWidget {
                                   final newMessageCount =
                                       Random().nextInt(18) + 1;
                                   // 테스트 최근 메세지
-                                  final recentMessage =
-                                      roomModel.recentMessage;
+                                  final recentMessage = roomModel.recentMessage;
                                   // 만료 여부
                                   bool timeOver = roomModel.room_creation_date
                                           .toDate()
@@ -225,9 +203,12 @@ class ChatMain extends StatelessWidget {
                                                 height: 17.h,
                                               ),
                                               Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
                                                 children: [
                                                   SizedBox(width: 20.w),
                                                   SizedBox(
+                                                    height: 19.h,
                                                     width: 92.w,
                                                     child: Text(
                                                       roomModel.room_name,
@@ -241,27 +222,34 @@ class ChatMain extends StatelessWidget {
                                                           TextOverflow.ellipsis,
                                                     ),
                                                   ),
-                                                  SizedBox(width: 2.w),
-                                                  Text(
-                                                    "${roomModel.room_participant_reference.length + 1}",
-                                                    style: AppTextStyles
-                                                        .PR_SB_13
-                                                        .copyWith(
-                                                            color: UsedColor
-                                                                .violet),
+                                                  SizedBox(width: 10.w),
+                                                  SizedBox(
+                                                    height: 16.h,
+                                                    child: Text(
+                                                      "${roomModel.room_participant_reference.length + 1}",
+                                                      style: AppTextStyles
+                                                          .PR_SB_13
+                                                          .copyWith(
+                                                              color: UsedColor
+                                                                  .violet),
+                                                    ),
                                                   ),
-                                                  Text(
-                                                    "/4명",
-                                                    style: AppTextStyles.PR_M_12
-                                                        .copyWith(
-                                                            color: UsedColor
-                                                                .text_5),
+                                                  SizedBox(
+                                                    height: 14.h,
+                                                    child: Text(
+                                                      "/4명",
+                                                      style: AppTextStyles
+                                                          .PR_M_12
+                                                          .copyWith(
+                                                              color: UsedColor
+                                                                  .text_5),
+                                                    ),
                                                   ),
                                                   SizedBox(width: 10.w),
                                                   // 알림 설정 상태
                                                   // Container(
                                                   //   height: 12.h,
-                                                  
+
                                                   //   width: 12.w,
                                                   //   color: UsedColor.text_6,
                                                   // ),
@@ -286,6 +274,7 @@ class ChatMain extends StatelessWidget {
                                                   SizedBox(width: 20.w),
                                                   recentMessage.length > 18
                                                       ? SizedBox(
+                                                          height: 17.h,
                                                           width: 186.w,
                                                           child: Text(
                                                             recentMessage,

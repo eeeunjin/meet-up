@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:meet_up/loginFunc.dart';
 import 'package:meet_up/main.dart';
 import 'package:meet_up/view/chat/chat_main.dart';
+import 'package:meet_up/view/chat/chat_meeting_review.dart';
 import 'package:meet_up/view/chat/chat_notification_onboarding.dart';
 import 'package:meet_up/view/chat/chat_room.dart';
 import 'package:meet_up/view/chat/chat_schedule_register.dart';
@@ -40,6 +41,7 @@ import 'package:meet_up/view/reflect/reflect_record_more.dart';
 import 'package:meet_up/view/reflect/reflect_writing_diary.dart';
 import 'package:meet_up/view/schedule/add_member_personal.dart';
 import 'package:meet_up/view/schedule/add_personal_schedule.dart';
+import 'package:meet_up/view/schedule/edit_personal_schedule.dart';
 import 'package:meet_up/view/schedule/schedule_main.dart';
 import 'package:meet_up/view/setting/noticed.dart';
 import 'package:meet_up/view/setting/open_source_license.dart';
@@ -75,14 +77,13 @@ final router = GoRouter(
         bottomNavigationBar: const BotNavBar(),
       ),
       routes: [
-        // Meet
+        // MARK: - Meet
         GoRoute(
           // path: '.', // ShellRoute에서 현재 경로 나타낼 때 . 을 사용
           path: '/meetMain',
           parentNavigatorKey: shellNavkey,
           builder: (context, state) => const MeetMain(),
           routes: [
-            //MARK: - Meet
             GoRoute(
               path: 'coinMain',
               name: 'coinMainFromMeetMain',
@@ -306,7 +307,7 @@ final router = GoRouter(
             ),
           ],
         ),
-        // Chat
+        // MARK: - Chat
         GoRoute(
           path: '/chatMain',
           builder: (context, state) => const ChatMain(),
@@ -356,11 +357,17 @@ final router = GoRouter(
                   parentNavigatorKey: rootNavkey,
                   builder: (context, state) => const ChatScheduleCheck(),
                 ),
+                GoRoute(
+                  path: 'chatMeetingReview',
+                  name: 'chatMeetingReview',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) => ChatMeetingReview(),
+                )
               ],
             ),
           ],
         ),
-        //MARK: - Schedule
+        // MARK: - Schedule
         GoRoute(
           path: '/scheduleMain',
           builder: (context, state) => ScheduleMain(),
@@ -379,9 +386,15 @@ final router = GoRouter(
                     builder: (context, state) => const AddMemberPersonal(),
                   )
                 ]),
+            GoRoute(
+              path: 'editPersonalSchedule',
+              name: 'editPersonalSchedule',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) => const EditPersonalSchedule(),
+            )
           ],
         ),
-        //MARK: - Reflect
+        // MARK: - Reflect
         GoRoute(
           path: '/reflectMain',
           name: 'reflectMain',
@@ -422,13 +435,7 @@ final router = GoRouter(
             ),
           ],
         ),
-        // Reflect
-        GoRoute(
-          path: '/ReflectMain',
-          builder: (context, state) => const ReflectMain(),
-          parentNavigatorKey: shellNavkey,
-        ),
-        // Profile
+        // MARK: - Profile
         GoRoute(
           path: '/profileMain',
           builder: (context, state) => const ProfileMain(),

@@ -177,7 +177,7 @@ class SignUpDetailViewModel with ChangeNotifier {
       case "piggy_deselect.png":
         return ImagePath.piggySelect;
       case "aengmu_deselect.png":
-        return ImagePath.annumSelect;
+        return ImagePath.aengmuSelect;
       case "ham_deselect.png":
         return ImagePath.hamSelect;
       case "fedro_deselect.png":

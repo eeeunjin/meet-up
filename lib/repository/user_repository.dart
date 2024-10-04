@@ -142,8 +142,40 @@ class UserRepository {
     return myTicketDocumentReference;
   }
 
-  // MARK: - Auth Functions
+  // MARK: - MeetingReviewModel CRUD
+  Future<bool> createMeetingReviewDocument({
+    required MeetingReviewModel data,
+    required String uid,
+  }) async {
+    return await _firebaseService.createDocument<MeetingReviewModel>(
+      docRef: _firebaseRefs.colRefUser.doc(uid).collection("meetingReviews").doc(),
+      data: data,
+    );
+  }
 
+  Future<List<MeetingReviewModel>> readMeetingReviewCollection(
+      {required String uid}) async {
+    return await _firebaseService.readCollection<MeetingReviewModel>(
+        colRef: _firebaseRefs.colRefUser.doc(uid).collection("meetingReviews"));
+  }
+
+  Stream<QuerySnapshot<Object?>> readMeetingReviewCollectionStream(
+      {required String uid}) {
+    return _firebaseService.readCollectionStream<MeetingReviewModel>(
+        colRef: _firebaseRefs.colRefUser.doc(uid).collection("meetingReviews"));
+  }
+
+  Future<MeetingReviewModel> readMeetingReviewDocument({
+    required String uid,
+    required String meetingReviewId,
+  }) async {
+    return await _firebaseService.readDocument<MeetingReviewModel>(
+        docRef: _firebaseRefs.colRefUser.doc(uid)
+            .collection("meetingReviews")
+            .doc(meetingReviewId));
+  }
+
+  // MARK: - Auth Functions
   /// 전화번호 인증을 위한 메서드
   Future<bool> verifyPhoneNumber({
     required String phoneNumber,
