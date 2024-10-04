@@ -715,7 +715,7 @@ class ProfileEdit extends StatelessWidget {
                                   GestureDetector(
                                     onTap: () =>
                                         profileViewModel.setChangedIconPath(
-                                            ImagePath.annumSelect),
+                                            ImagePath.aengmuSelect),
                                     child: Container(
                                       width: 72.w,
                                       height: 72.h,
@@ -723,7 +723,7 @@ class ProfileEdit extends StatelessWidget {
                                         shape: BoxShape.circle,
                                         border:
                                             profileViewModel.changedIconPath ==
-                                                    ImagePath.annumSelect
+                                                    ImagePath.aengmuSelect
                                                 ? Border.all(
                                                     color: UsedColor.b_line,
                                                     width: 2.5.w)
@@ -731,8 +731,8 @@ class ProfileEdit extends StatelessWidget {
                                       ),
                                       child: Image.asset(
                                         profileViewModel.changedIconPath ==
-                                                ImagePath.annumSelect
-                                            ? ImagePath.annumSelect
+                                                ImagePath.aengmuSelect
+                                            ? ImagePath.aengmuSelect
                                             : ImagePath.aengmuDeselect,
                                       ),
                                     ),

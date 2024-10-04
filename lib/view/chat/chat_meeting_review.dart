@@ -1,15 +1,15 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/main.dart';
+import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/image.dart';
+import 'package:meet_up/view_model/chat/chat_room_meeting_review_view_model.dart';
+import 'package:meet_up/view_model/chat/chat_room_view_model.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
-import 'package:meet_up/view_model/chat/chat_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 
 class ChatMeetingReview extends StatelessWidget {
@@ -19,28 +19,44 @@ class ChatMeetingReview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final chatRoomViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
+    final chatRoomMeetingReviewViewModel =
+        Provider.of<ChatRoomMeetingReviewViewModel>(context, listen: true);
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final userModels = chatRoomMeetingReviewViewModel.userModels!;
+    final roomModel = chatRoomViewModel.roomModel;
+    final firstMemberReview = roomModel.room_meeting_review
+        .contains("${userViewModel.uid!}_${userModels[0].uid}");
+    final secondMemberReview = roomModel.room_meeting_review
+        .contains("${userViewModel.uid!}_${userModels[1].uid}");
+    final thirdMemberReview = roomModel.room_meeting_review
+        .contains("${userViewModel.uid!}_${userModels[2].uid}");
+
     return Scaffold(
       body: Column(
         children: [
           Padding(
-            padding: Platform.isIOS
-                ? EdgeInsets.only(top: 44.h)
-                : EdgeInsets.only(top: 58.h),
+            padding: EdgeInsets.only(top: 58.h),
             child: _header(context),
           ),
           Expanded(
             child: PageView(
               controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
               onPageChanged: (int page) {
-                Provider.of<ChatViewModel>(context, listen: false).resetData();
-                Provider.of<ChatViewModel>(context, listen: false).nextPage();
+                chatRoomMeetingReviewViewModel.resetData();
+                chatRoomMeetingReviewViewModel.setPage(page);
               },
               children: [
-                _reviewPage(context, '닉네임1', '초보 클빙 모임', ImagePath.cogySelect),
-                _reviewPage(context, '닉네임2', '초보 클빙 모임', ImagePath.piggySelect),
-                _reviewPage(context, '닉네임3', '초보 클빙 모임', ImagePath.annumSelect),
-                _finalPage(context),
+                firstMemberReview
+                    ? _sendCompletePage(context, userModels[0].nickname)
+                    : _reviewPage(context, userModels[0], roomModel.room_name),
+                secondMemberReview
+                    ? _sendCompletePage(context, userModels[1].nickname)
+                    : _reviewPage(context, userModels[1], roomModel.room_name),
+                thirdMemberReview
+                    ? _sendCompletePage(context, userModels[2].nickname)
+                    : _reviewPage(context, userModels[2], roomModel.room_name),
               ],
             ),
           ),
@@ -49,38 +65,42 @@ class ChatMeetingReview extends StatelessWidget {
     );
   }
 
-  Widget _reviewPage(BuildContext context, String nickname, String group,
-      String profileImage) {
+  Widget _reviewPage(BuildContext context, UserModel userModel, String group) {
     return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.only(
-          top: 12.h,
-          left: 27.w,
-          right: 26.w,
-          bottom: 28.h,
-        ),
-        child: Center(
-          child: Container(
-            width: 340.w,
-            // height: 708.h,
-            padding: EdgeInsets.only(top: 12.h),
-            decoration: BoxDecoration(
-              color: UsedColor.image_card,
-              borderRadius: BorderRadius.circular(29.r),
-            ),
-            child: Column(
-              children: [
-                _indicator(),
-                _userInfo(nickname, group, profileImage),
-                Divider(
-                  thickness: 0.7,
-                  color: UsedColor.b_line,
-                ),
-                _ratingSection(context),
-                _feedbackSection(context),
-                _commentSection(context),
-                _submitButton(context),
-              ],
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: 12.h,
+            left: 27.w,
+            right: 26.w,
+            bottom: 28.h,
+          ),
+          child: Center(
+            child: Container(
+              width: 340.w,
+              height: 708.h,
+              padding: EdgeInsets.only(top: 12.h),
+              decoration: BoxDecoration(
+                color: UsedColor.image_card,
+                borderRadius: BorderRadius.circular(29.r),
+              ),
+              child: Column(
+                children: [
+                  _indicator(),
+                  _userInfo(userModel.nickname, group, userModel.profile_icon),
+                  Divider(
+                    thickness: 0.75.h,
+                    color: UsedColor.b_line,
+                  ),
+                  _ratingSection(context),
+                  _feedbackSection(context),
+                  _commentSection(context),
+                  _submitButton(context),
+                ],
+              ),
             ),
           ),
         ),
@@ -88,9 +108,10 @@ class ChatMeetingReview extends StatelessWidget {
     );
   }
 
-  Widget _finalPage(BuildContext context) {
+  Widget _sendCompletePage(BuildContext context, String nickname) {
     return Padding(
       padding: EdgeInsets.only(
+        top: 12.h,
         left: 27.w,
         right: 26.w,
         bottom: 28.h,
@@ -107,14 +128,14 @@ class ChatMeetingReview extends StatelessWidget {
             children: [
               SizedBox(height: 195.h),
               Text(
-                '후기가 모두에게 전송되었습니다.',
+                '만남 후기가 전송되었습니다.',
                 style: AppTextStyles.PR_B_18.copyWith(
                   color: UsedColor.charcoal_black,
                 ),
               ),
               SizedBox(height: 16.h),
               Text(
-                '소중한 후기를 남겨 주셔서 감사합니다.\n(닉네임4) 님에게 60point가 지급될 예정입니다.',
+                '소중한 후기를 남겨 주셔서 감사합니다.\n 20 coin 이 지급되었습니다. \n\nTo. "$nickname" 님',
                 textAlign: TextAlign.center,
                 style: AppTextStyles.PR_R_14.copyWith(
                   color: UsedColor.text_1,
@@ -144,7 +165,7 @@ class ChatMeetingReview extends StatelessWidget {
   }
 
   Widget _indicator() {
-    return Consumer<ChatViewModel>(
+    return Consumer<ChatRoomMeetingReviewViewModel>(
       builder: (context, viewModel, child) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -179,13 +200,16 @@ class ChatMeetingReview extends StatelessWidget {
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Provider.of<ChatViewModel>(context, listen: false).resetData();
+        Provider.of<ChatRoomMeetingReviewViewModel>(context, listen: false)
+            .resetData();
         context.pop();
       },
-      child: Image.asset(
-        ImagePath.close,
-        width: 40.w,
-        height: 40.h,
+      child: SizedBox(
+        width: 30.w,
+        height: 30.h,
+        child: Image.asset(
+          ImagePath.close,
+        ),
       ),
     );
   }
@@ -194,10 +218,10 @@ class ChatMeetingReview extends StatelessWidget {
     return Column(
       children: [
         SizedBox(height: 12.h),
-        Image.asset(
-          profileImage,
-          width: 80.w,
-          height: 80.h,
+        SizedBox(
+          height: 70.h,
+          width: 70.w,
+          child: Image.asset(profileImage),
         ),
         SizedBox(height: 8.h),
         Text(
@@ -219,12 +243,13 @@ class ChatMeetingReview extends StatelessWidget {
   }
 
   Widget _ratingSection(BuildContext context) {
-    return Consumer<ChatViewModel>(builder: (context, viewModel, child) {
+    return Consumer<ChatRoomMeetingReviewViewModel>(
+        builder: (context, viewModel, child) {
       return Column(
         children: [
           SizedBox(height: 12.h),
           Text(
-            '‘닉네임’님과(와) 만남은 어떠셨나요?',
+            '‘${viewModel.userModels![viewModel.currentPage].nickname}’님과(와) 만남은 어떠셨나요?',
             style: AppTextStyles.PR_SB_15.copyWith(
               color: UsedColor.charcoal_black,
             ),
@@ -275,11 +300,12 @@ class ChatMeetingReview extends StatelessWidget {
       '불순한 목적',
     ];
 
-    return Consumer<ChatViewModel>(builder: (context, viewModel, child) {
+    return Consumer<ChatRoomMeetingReviewViewModel>(
+        builder: (context, chatViewModel, child) {
       String questionText = '어떤 점이 좋으셨나요?';
       List<String> imageNames = positiveLabels;
 
-      if (viewModel.rating > 0 && viewModel.rating < 3) {
+      if (chatViewModel.rating > 0 && chatViewModel.rating < 3) {
         questionText = '어떤 점이 아쉬우셨나요?';
         imageNames = negativeLabels;
       }
@@ -304,19 +330,28 @@ class ChatMeetingReview extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.h),
-          Padding(
-            padding: EdgeInsets.only(left: 59.w, right: 59.w),
-            child: Wrap(
-              spacing: 24.w,
-              runSpacing: 12.h,
-              alignment: WrapAlignment.center,
-              children: viewModel.images
-                  .asMap()
-                  .entries
-                  .map((entry) =>
-                      _imageChip(viewModel, entry.value, imageNames[entry.key]))
-                  .toList(),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              for (int i = 0; i < 3; i++) ...[
+                _imageChip(
+                    chatViewModel, chatViewModel.images[i], imageNames[i]),
+                if (i != 2) SizedBox(width: 24.w),
+              ],
+            ],
+          ),
+          SizedBox(
+            height: 11.89.h,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              for (int i = 3; i < 6; i++) ...[
+                _imageChip(
+                    chatViewModel, chatViewModel.images[i], imageNames[i]),
+                if (i != 5) SizedBox(width: 24.w),
+              ],
+            ],
           ),
           SizedBox(height: 20.h),
         ],
@@ -324,7 +359,8 @@ class ChatMeetingReview extends StatelessWidget {
     });
   }
 
-  Widget _imageChip(ChatViewModel viewModel, String imageName, String label) {
+  Widget _imageChip(ChatRoomMeetingReviewViewModel viewModel, String imageName,
+      String label) {
     bool isSelected = viewModel.isSelected(imageName);
     return Align(
       alignment: Alignment.center,
@@ -337,19 +373,19 @@ class ChatMeetingReview extends StatelessWidget {
             child: Container(
               width: 58.w,
               height: 58.h,
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: isSelected ? UsedColor.button : Colors.white,
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: 33.w,
+                height: 33.h,
                 child: Image.asset(
-                    isSelected
-                        ? ImagePath.chatReviewSelected(imageName)
-                        : ImagePath.chatReview(imageName),
-                    width: 33.w,
-                    height: 33.h,
-                    fit: BoxFit.contain),
+                  isSelected
+                      ? ImagePath.chatReviewSelected(imageName)
+                      : ImagePath.chatReview(imageName),
+                ),
               ),
             ),
           ),
@@ -367,13 +403,13 @@ class ChatMeetingReview extends StatelessWidget {
   }
 
   Widget _commentSection(BuildContext context) {
-    return Consumer<ChatViewModel>(
+    return Consumer<ChatRoomMeetingReviewViewModel>(
       builder: (context, viewModel, child) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              '‘닉네임’님은 어떤 사람이었나요?',
+              '‘${viewModel.userModels![viewModel.currentPage].nickname}’님은 어떤 사람이었나요?',
               style: AppTextStyles.PR_SB_15.copyWith(
                 color: UsedColor.charcoal_black,
               ),
@@ -408,7 +444,6 @@ class ChatMeetingReview extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(height: 16.h)
           ],
         );
       },
@@ -417,42 +452,51 @@ class ChatMeetingReview extends StatelessWidget {
 
   // Submit Button
   Widget _submitButton(BuildContext context) {
-    return Consumer<ChatViewModel>(
+    final chatRoomViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    return Consumer<ChatRoomMeetingReviewViewModel>(
       builder: (context, viewModel, child) {
         return Column(
           children: [
+            SizedBox(height: 16.h),
             SizedBox(
               height: 35.h,
               width: 154.w,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: UsedColor.button,
+              child: TextButton(
+                onPressed: viewModel.isReviewComplete
+                    ? () async {
+                        final roomId = chatRoomViewModel.roomID;
+                        final myUID = userViewModel.uid!;
+                        final otherUID =
+                            viewModel.userModels![viewModel.currentPage].uid;
+
+                        await viewModel.sendMeetingReview(
+                          roomId,
+                          myUID,
+                          otherUID,
+                          chatRoomViewModel.roomName,
+                        );
+                      }
+                    : () {},
+                style: TextButton.styleFrom(
+                  backgroundColor: viewModel.isReviewComplete
+                      ? UsedColor.button
+                      : UsedColor.button_g,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(21.r),
                   ),
-                  padding:
-                      EdgeInsets.symmetric(vertical: 9.h, horizontal: 50.w),
                 ),
-                onPressed: viewModel.isReviewComplete
-                    ? () {
-                        if (viewModel.currentPage < 3) {
-                          _pageController.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeIn,
-                          );
-                          viewModel.nextPage();
-                        }
-                      }
-                    : () {},
                 child: Text(
                   '전송하기',
                   style: AppTextStyles.PR_SB_15.copyWith(
-                    color: Colors.white,
+                    color: viewModel.isReviewComplete
+                        ? Colors.white
+                        : UsedColor.text_2,
                   ),
                 ),
               ),
             ),
-            SizedBox(height: 24.h),
           ],
         );
       },

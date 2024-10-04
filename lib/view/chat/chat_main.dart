@@ -10,7 +10,6 @@ import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/view_model/chat/chat_room_view_model.dart';
-import 'package:meet_up/view/chat/chat_meeting_review.dart';
 import 'package:meet_up/view_model/chat/chat_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
@@ -40,7 +39,6 @@ class ChatMain extends StatelessWidget {
               child: _main(context),
             ),
           ),
-          _meetingReview(context),
         ],
       ),
     );
@@ -61,25 +59,6 @@ class ChatMain extends StatelessWidget {
             color: UsedColor.line,
           ),
         ],
-      ),
-    );
-  }
-
-  // MARK: - 만남 후기
-  Widget _meetingReview(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      color: UsedColor.bg_color,
-      child: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ChatMeetingReview()),
-            );
-          },
-          child: const Text('만남 후기 보내기'),
-        ),
       ),
     );
   }

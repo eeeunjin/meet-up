@@ -16,7 +16,7 @@ class ImagePath {
 
   static String get cogySelect => 'assets/images/cogy_select.png';
   static String get piggySelect => 'assets/images/piggy_select.png';
-  static String get annumSelect => 'assets/images/aengmu_select.png';
+  static String get aengmuSelect => 'assets/images/aengmu_select.png';
   static String get hamSelect => 'assets/images/ham_select.png';
   static String get fedroSelect => 'assets/images/fedro_select.png';
   static String get cogyDeselect => 'assets/images/cogy_deselect.png';
