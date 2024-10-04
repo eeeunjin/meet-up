@@ -50,13 +50,14 @@ onDocumentUpdated("rooms/{roomId}", async (event) => {
   if (beforeScheduleExist) {
     const afterScheduleExist = (after.room_schedule != null);
     if (!afterScheduleExist) {
-      // 일정이 삭제된 경우에 대한 경우 처리
+      // TODO: 일정이 삭제된 경우에 대한 경우 처리
       // roomModel의 isScheduleDecided 값을 false로 변경
       // room 정보 중, recent message 값을 업데이트
       // 해당 채팅방의 스케줄 관련 채팅 문서를 삭제
       // 해당 채팅방의 3,2,1일전 알림 채팅 문서를 삭제
       // 해당 채팅방의 상호평가 알림 채팅 문서를 삭제
       // 해당 채팅방의 일기쓰기 알림 채팅 문서를 삭제
+      // 유저들의 schedule document 삭제
 
       return;
     }
@@ -164,6 +165,15 @@ onDocumentUpdated("rooms/{roomId}", async (event) => {
         "room_reference": chatRoomId,
         "type": "diary",
       });
+
+      // 각자 인원들에게 일정 관련 알림 추가
+      var userUIDs = afterSchedule.participants_agree_selected_schedule;
+      for (uid of userUIDs) {
+        var userRef = db.collection("users").doc(uid);
+        var myScheduleRef = userRef.collection("mySchedule").doc(chatRoomId);
+        // myScheduleRef에 after data를 document로 추가 (RoomModel 자체를 Schedule 정보로 사용)
+        await myScheduleRef.set(after);
+      }
     }
   }
 });
