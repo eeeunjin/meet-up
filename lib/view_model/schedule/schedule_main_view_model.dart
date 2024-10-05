@@ -47,8 +47,12 @@ class ScheduleMainViewModel with ChangeNotifier {
       if (schedule.room_name.isEmpty) {
         continue;
       }
-
       final date = schedule.room_schedule!["date"] as Timestamp;
+
+      if (date.toDate().isBefore(DateTime.now())) {
+        continue;
+      }
+
       final formattedDate = formatter.format(date.toDate());
       if (scheduleByDate.containsKey(formattedDate)) {
         scheduleByDate[formattedDate]!.add(schedule);
@@ -71,6 +75,10 @@ class ScheduleMainViewModel with ChangeNotifier {
       }
 
       final date = schedule.room_schedule!["date"] as Timestamp;
+
+      if (date.toDate().isBefore(DateTime.now())) {
+        continue;
+      }
       final formattedDate = formatter.format(date.toDate());
       if (scheduleByDate.containsKey(formattedDate)) {
         scheduleByDate[formattedDate]!.add(schedule);
@@ -152,6 +160,14 @@ class ScheduleMainViewModel with ChangeNotifier {
       _selectedPersonalScheduleDetail = null;
     }
     notifyListeners();
+  }
+
+  // 선택된 개인 일정 삭제
+  Future<void> deletePersonalSchedule(String uid, String scheduleId) async {
+    await _userRepository.deleteMyScheduleData(
+      uid: uid,
+      scheduleId: scheduleId,
+    );
   }
 }
 

@@ -183,8 +183,13 @@ class UserRepository {
     required RoomModel data,
     required String uid,
   }) async {
+    final title = data.room_schedule!["title"] as String;
+    final date = data.room_schedule!["date"] as Timestamp;
+    final docId = title + date.toDate().toString();
+
     return await _firebaseService.createDocument<RoomModel>(
-      docRef: _firebaseRefs.colRefUser.doc(uid).collection("mySchedule").doc(),
+      docRef:
+          _firebaseRefs.colRefUser.doc(uid).collection("mySchedule").doc(docId),
       data: data,
     );
   }
@@ -194,6 +199,17 @@ class UserRepository {
     return _firebaseService.readCollectionStream<RoomModel>(
       colRef: _firebaseRefs.colRefUser.doc(uid).collection("mySchedule"),
     );
+  }
+
+  Future<bool> deleteMyScheduleData({
+    required String uid,
+    required String scheduleId,
+  }) async {
+    DocumentReference myScheduleDocumentReference = _firebaseRefs.colRefUser
+        .doc(uid)
+        .collection("mySchedule")
+        .doc(scheduleId);
+    return _firebaseService.deleteDocument(docRef: myScheduleDocumentReference);
   }
 
   // MARK: - Auth Functions

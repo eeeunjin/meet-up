@@ -170,7 +170,11 @@ onDocumentUpdated("rooms/{roomId}", async (event) => {
       var userUIDs = afterSchedule.participants_agree_selected_schedule;
       for (uid of userUIDs) {
         var userRef = db.collection("users").doc(uid);
-        var myScheduleRef = userRef.collection("mySchedule").doc(chatRoomId);
+        var title = afterSchedule.title;
+        var date = afterSchedule.date.toDate();
+        var docID = title + date.toString();
+
+        var myScheduleRef = userRef.collection("mySchedule").doc(docID);
         // myScheduleRef에 after data를 document로 추가 (RoomModel 자체를 Schedule 정보로 사용)
         await myScheduleRef.set(after);
       }
