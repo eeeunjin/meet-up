@@ -60,7 +60,7 @@ class AddPersonalSchedule extends StatelessWidget {
         final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(
             context,
             listen: false);
-        viewModel.backClearSelection();
+        viewModel.clearAllState();
 
         context.pop(context);
       },
@@ -139,7 +139,8 @@ class AddPersonalSchedule extends StatelessWidget {
               alignment: Alignment.center,
               height: 19.h,
               child: TextField(
-                onChanged: (text) => viewModel.namingContents(text),
+                controller: viewModel.namingController,
+                onChanged: (value) => viewModel.notify(),
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
@@ -328,6 +329,7 @@ class AddPersonalSchedule extends StatelessWidget {
               height: 19.h,
               child: TextField(
                 controller: viewModel.locationTextController,
+                onChanged: (value) => viewModel.notify(),
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
@@ -370,6 +372,7 @@ class AddPersonalSchedule extends StatelessWidget {
               height: 19.h,
               child: TextField(
                 controller: viewModel.detailTextController,
+                onChanged: (value) => viewModel.notify(),
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
@@ -460,6 +463,7 @@ class AddPersonalSchedule extends StatelessWidget {
             if (!viewModel.allCheckCompleted) return;
             logger.d('저장 버튼이 눌려졌습니다.');
             await viewModel.savePersonalSchedule(myUID: userViewModel.uid!);
+            viewModel.clearAllState();
             context.pop(context);
           },
           height: 56.h,

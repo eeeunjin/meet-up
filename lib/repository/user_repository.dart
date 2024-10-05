@@ -212,6 +212,21 @@ class UserRepository {
     return _firebaseService.deleteDocument(docRef: myScheduleDocumentReference);
   }
 
+  Future<bool> updateMyScheduleDocument({
+    required RoomModel data,
+    required String uid,
+  }) async {
+    final title = data.room_schedule!["title"] as String;
+    final date = data.room_schedule!["date"] as Timestamp;
+    final docId = title + date.toDate().toString();
+
+    return await _firebaseService.updateDocument(
+      docRef:
+          _firebaseRefs.colRefUser.doc(uid).collection("mySchedule").doc(docId),
+      data: data.toJson(),
+    );
+  }
+
   // MARK: - Auth Functions
   /// 전화번호 인증을 위한 메서드
   Future<bool> verifyPhoneNumber({

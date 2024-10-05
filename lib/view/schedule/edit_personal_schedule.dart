@@ -11,6 +11,7 @@ import 'package:meet_up/view/widget/personal_schedule_time_picker_widget.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/schedule/schedule_add_personal_schdule_view_model.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
 class EditPersonalSchedule extends StatelessWidget {
@@ -27,18 +28,18 @@ class EditPersonalSchedule extends StatelessWidget {
             padding: EdgeInsets.only(top: 58.h),
             child: _header(context),
           ),
-          _main(context),
+          Expanded(child: _main(context)),
         ],
       ),
     );
   }
 
-// header
+  // header
   Widget _header(BuildContext context) {
     return Center(
       child: Column(
         children: [
-          header(back: _back(context), title: '개인 일정 추가'),
+          header(back: _back(context), title: '개인 일정 수정'),
           SizedBox(
             height: 16.h,
           ),
@@ -56,9 +57,10 @@ class EditPersonalSchedule extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // 정보 초기화
-        final viewModel =
-            Provider.of<ScheduleAddPersonalScheduleViewModel>(context, listen: false);
-        viewModel.backClearSelection();
+        final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(
+            context,
+            listen: false);
+        viewModel.clearAllState();
 
         context.pop(context);
       },
@@ -81,41 +83,40 @@ class EditPersonalSchedule extends StatelessWidget {
 
   //MARK: - 메인
   Widget _main(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          SizedBox(height: 22.h),
-          _naming(context),
-          SizedBox(height: 22.h),
-          _divider(),
-          SizedBox(height: 10.h),
-          _date(context),
-          SizedBox(height: 10.h),
-          _divider(),
-          SizedBox(height: 10.h),
-          _time(context),
-          SizedBox(height: 10.h),
-          _divider(),
-          SizedBox(height: 20.h),
-          _location(context),
-          SizedBox(height: 20.h),
-          _divider(),
-          SizedBox(height: 20.h),
-          _detail(context),
-          SizedBox(height: 18.h),
-          _divider(),
-          SizedBox(height: 18.h),
-          _member(context),
-          SizedBox(height: 104.h),
-          _bottom(context),
-        ],
-      ),
+    return Column(
+      children: [
+        SizedBox(height: 22.h),
+        _naming(context),
+        SizedBox(height: 22.h),
+        _divider(),
+        SizedBox(height: 10.h),
+        _date(context),
+        SizedBox(height: 10.h),
+        _divider(),
+        SizedBox(height: 10.h),
+        _time(context),
+        SizedBox(height: 10.h),
+        _divider(),
+        SizedBox(height: 20.h),
+        _location(context),
+        SizedBox(height: 20.h),
+        _divider(),
+        SizedBox(height: 20.h),
+        _detail(context),
+        SizedBox(height: 18.h),
+        _divider(),
+        SizedBox(height: 18.h),
+        _member(context),
+        const Spacer(),
+        _bottom(context),
+      ],
     );
   }
 
   //MARK: - 일정
   Widget _naming(BuildContext context) {
-    final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
+    final viewModel =
+        Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
 
     return Padding(
       padding: EdgeInsets.only(left: 23.0.w),
@@ -138,7 +139,8 @@ class EditPersonalSchedule extends StatelessWidget {
               alignment: Alignment.center,
               height: 19.h,
               child: TextField(
-                onChanged: (text) => viewModel.namingContents(text),
+                controller: viewModel.namingController,
+                onChanged: (value) => viewModel.notify(),
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
@@ -157,8 +159,8 @@ class EditPersonalSchedule extends StatelessWidget {
 
   //MARK: - 날짜
   Widget _date(BuildContext context) {
-    final viewModel =
-        Provider.of<ScheduleAddPersonalScheduleViewModel>(context, listen: false);
+    final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(context,
+        listen: false);
 
     // ExpansionPanel 사용
     return Theme(
@@ -220,7 +222,8 @@ class EditPersonalSchedule extends StatelessWidget {
               ),
             ),
             isExpanded:
-                Provider.of<ScheduleAddPersonalScheduleViewModel>(context).isDatePanelExpanded,
+                Provider.of<ScheduleAddPersonalScheduleViewModel>(context)
+                    .isDatePanelExpanded,
           ),
         ],
       ),
@@ -229,8 +232,8 @@ class EditPersonalSchedule extends StatelessWidget {
 
   // MARK: - 시간
   Widget _time(BuildContext context) {
-    final viewModel =
-        Provider.of<ScheduleAddPersonalScheduleViewModel>(context, listen: false);
+    final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(context,
+        listen: false);
 
     // Mark - ExpansionPanel 사용
     return Theme(
@@ -292,7 +295,8 @@ class EditPersonalSchedule extends StatelessWidget {
               ),
             ),
             isExpanded:
-                Provider.of<ScheduleAddPersonalScheduleViewModel>(context).isTimePanelExpanded,
+                Provider.of<ScheduleAddPersonalScheduleViewModel>(context)
+                    .isTimePanelExpanded,
           ),
         ],
       ),
@@ -301,7 +305,8 @@ class EditPersonalSchedule extends StatelessWidget {
 
   //MARK: - 장소
   Widget _location(BuildContext context) {
-    final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
+    final viewModel =
+        Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
     return Padding(
       padding: EdgeInsets.only(left: 21.0.w),
       child: Row(
@@ -324,6 +329,7 @@ class EditPersonalSchedule extends StatelessWidget {
               height: 19.h,
               child: TextField(
                 controller: viewModel.locationTextController,
+                onChanged: (value) => viewModel.notify(),
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
@@ -342,7 +348,8 @@ class EditPersonalSchedule extends StatelessWidget {
 
   //MARK: - 설명
   Widget _detail(BuildContext context) {
-    final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
+    final viewModel =
+        Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
     return Padding(
       padding: EdgeInsets.only(left: 21.0.w),
       child: Row(
@@ -365,6 +372,7 @@ class EditPersonalSchedule extends StatelessWidget {
               height: 19.h,
               child: TextField(
                 controller: viewModel.detailTextController,
+                onChanged: (value) => viewModel.notify(),
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
@@ -447,22 +455,25 @@ class EditPersonalSchedule extends StatelessWidget {
   Widget _bottom(BuildContext context) {
     return Consumer<ScheduleAddPersonalScheduleViewModel>(
         builder: (context, viewModel, child) {
+      bool canModify = viewModel.allCheckCompleted && viewModel.isChanged;
       return Padding(
         padding: EdgeInsets.only(bottom: 56.0.h, left: 33.w, right: 33.w),
         child: NextButton(
           onTap: () async {
-            if (!viewModel.allCheckCompleted) return;
+            if (!canModify) return;
+            // 데이터 수정
+            final userVieWModel =
+                Provider.of<UserViewModel>(context, listen: false);
+            await viewModel.updatePersonalSchedule(myUID: userVieWModel.uid!);
+            context.pop();
           },
           height: 56.h,
           width: 327.w,
           text: '저장',
-          enable: viewModel.allCheckCompleted,
-          backgroundColor: viewModel.allCheckCompleted
-              ? UsedColor.button
-              : UsedColor.button_g,
+          enable: canModify,
+          backgroundColor: canModify ? UsedColor.button : UsedColor.button_g,
           textStyle: TextStyle(
-            color:
-                viewModel.allCheckCompleted ? Colors.white : UsedColor.text_2,
+            color: canModify ? Colors.white : UsedColor.text_2,
             fontSize: 20.sp,
           ),
         ),

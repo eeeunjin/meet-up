@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:meet_up/main.dart';
 import 'package:meet_up/model/room_model.dart';
@@ -21,20 +22,11 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
         _selectedTime = const TimeOfDay(hour: 19, minute: 30);
 
   // MARK: - 일정
-  String _roomNaming = '';
-
-  String get roomNaming => _roomNaming;
-
-  void namingContents(String newNamingCount) {
-    if (_roomNaming != newNamingCount) {
-      _roomNaming = newNamingCount;
-      notifyListeners();
-    }
-  }
+  TextEditingController namingController = TextEditingController();
 
   // naming check
   bool get namingCompleted {
-    return _roomNaming.trim().isNotEmpty;
+    return namingController.text.trim().isNotEmpty;
   }
 
   // MARK: - 날짜
@@ -201,17 +193,21 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
   }
 
   // MARK: - 상태 초기화
-  void backClearSelection() {
+  void clearAllState() {
+    namingController.clear();
+    _selectedDate = DateTime.now();
+    _selectedTime = const TimeOfDay(hour: 19, minute: 30);
     locationTextController.clear();
     detailTextController.clear();
     _selectedMembers.clear();
+    _originalRoomModel = null;
   }
 
   // MARK: - 개인 일정 저장
   Future<void> savePersonalSchedule({required String myUID}) async {
     // 개인 일정 저장
     logger.d(
-        '일정: $_roomNaming\n날짜: $_selectedDate\n시간: $_selectedTime\n장소: ${locationTextController.text}\n설명: ${detailTextController.text}\n참여 인원: $_selectedMembers');
+        '일정: ${namingController.text}\n날짜: $_selectedDate\n시간: $_selectedTime\n장소: ${locationTextController.text}\n설명: ${detailTextController.text}\n참여 인원: $_selectedMembers');
 
     // _selectedDate, _selectedTime -> Timestamp
     final date = DateTime(
@@ -226,7 +222,7 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
 
     // RoomModel 생성
     final roomSchedule = RoomSchedule(
-      title: _roomNaming,
+      title: namingController.text,
       date: dateByTimestamp,
       location: locationTextController.text,
       participants_agree_selected_schedule: [],
@@ -253,5 +249,91 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
     );
 
     await _userRepository.createMyScheduleDocument(data: roomModel, uid: myUID);
+  }
+
+  // MARK: - 개인 일정 수정
+  // 수정 시, 기존 데이터 불러오기
+  RoomModel? _originalRoomModel;
+
+  List<String> get originalMembers {
+    return List.from(_originalRoomModel!.room_participant_reference);
+  }
+
+  void loadExistingData(RoomModel roomModel) {
+    _originalRoomModel = roomModel;
+    namingController.text = roomModel.room_schedule!["title"] as String;
+    _selectedDate = (roomModel.room_schedule!["date"] as Timestamp).toDate();
+    _selectedTime = TimeOfDay.fromDateTime(_selectedDate);
+    locationTextController.text =
+        roomModel.room_schedule!["location"] as String;
+    detailTextController.text = roomModel.room_description;
+    _selectedMembers = List<String>.from(roomModel.room_participant_reference);
+  }
+
+  // 처음이랑 달라진게 있는지 체크
+  bool get isChanged {
+    return _originalRoomModel == null
+        ? false
+        : namingController.text !=
+                _originalRoomModel!.room_schedule!["title"] ||
+            _selectedDate !=
+                (_originalRoomModel!.room_schedule!["date"] as Timestamp)
+                    .toDate() ||
+            locationTextController.text !=
+                _originalRoomModel!.room_schedule!["location"] ||
+            detailTextController.text != _originalRoomModel!.room_description ||
+            !(_selectedMembers.toSet().containsAll(originalMembers) &&
+                originalMembers.toSet().containsAll(_selectedMembers));
+  }
+
+  Future<void> updatePersonalSchedule({required String myUID}) async {
+    // 개인 일정 저장
+    logger.d(
+        '일정: ${namingController.text}\n날짜: $_selectedDate\n시간: $_selectedTime\n장소: ${locationTextController.text}\n설명: ${detailTextController.text}\n참여 인원: $_selectedMembers');
+
+    // _selectedDate, _selectedTime -> Timestamp
+    final date = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+      _selectedTime.hour,
+      _selectedTime.minute,
+    );
+
+    Timestamp dateByTimestamp = Timestamp.fromDate(date);
+
+    // RoomModel 생성
+    final roomSchedule = RoomSchedule(
+      title: namingController.text,
+      date: dateByTimestamp,
+      location: locationTextController.text,
+      participants_agree_selected_schedule: [],
+    );
+
+    final RoomModel roomModel = RoomModel(
+      room_name: "",
+      room_category: "",
+      room_category_detail: "",
+      room_region_province: "",
+      room_region_district: "",
+      room_keyword: [],
+      room_description: detailTextController.text,
+      room_age: [],
+      room_gender_ratio: "",
+      room_rules: [],
+      room_creation_date: Timestamp.now(),
+      room_owner_reference: _firebaseRefs.colRefUser.doc(myUID),
+      room_participant_reference: selectedMembers,
+      isScheduleDecided: true,
+      room_meeting_review: [],
+      recentMessage: "",
+      room_schedule: roomSchedule.toJson(),
+    );
+
+    await _userRepository.updateMyScheduleDocument(data: roomModel, uid: myUID);
+  }
+
+  void notify() {
+    notifyListeners();
   }
 }
