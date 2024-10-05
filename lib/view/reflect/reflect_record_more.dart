@@ -87,8 +87,13 @@ class ReflectRecordMore extends StatelessWidget {
   }
 
   void _showYearMonthPicker(BuildContext context, ReflectViewModel viewModel) {
-    // 팝업을 열 때 현재 연월을 기본값으로 설정
-    viewModel.selectMonth(DateTime.now().month);
+    // // 현재 연도와 선택된 연도가 다르거나, 현재 월과 선택된 월이 다를 경우에만 현재 연월로 초기화
+    // DateTime now = DateTime.now();
+    // if (viewModel.selectedDate.year != now.year ||
+    //     viewModel.selectedDate.month != now.month) {
+    //   viewModel.selectMonth(now.month);
+    //   viewModel.selectYear(now.year);
+    // }
 
     showDialog(
       context: context,
@@ -116,6 +121,7 @@ class ReflectRecordMore extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
+                      // 연도 선택을 위한 상단 부분
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -148,6 +154,8 @@ class ReflectRecordMore extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 19.h),
+
+                      // 월 선택을 위한 그리드
                       Expanded(
                         child: GridView.count(
                           crossAxisCount: 4,
