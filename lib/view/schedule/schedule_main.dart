@@ -8,6 +8,7 @@ import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
+import 'package:meet_up/view_model/bot_nav_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
@@ -69,16 +70,28 @@ class ScheduleMain extends StatelessWidget {
 
   // MARK: - header
   Widget _header(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          header(title: '일정', back: _back(context)),
-          SizedBox(
-            height: 30.h,
+    return Consumer<ScheduleMainViewModel>(
+      builder: (context, viewModel, child) {
+        final currentPart = viewModel.selectedPart;
+        bool isInDetail = false;
+        if (currentPart == SelectedPart.meetUp) {
+          isInDetail = viewModel.selectedMeetUpScheduleDetail != null;
+        } else {
+          isInDetail = viewModel.selectedPersonalScheduleDetail != null;
+        }
+
+        return Center(
+          child: Column(
+            children: [
+              isInDetail
+                  ? header(title: '일정', back: _back(context))
+                  : header(title: '일정', back: null),
+              SizedBox(height: 30.h),
+              _meetPart(),
+            ],
           ),
-          _meetPart(),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -174,7 +187,8 @@ class ScheduleMain extends StatelessWidget {
     return Consumer<ScheduleMainViewModel>(
         builder: (context, viewModel, child) {
       // 개인 만남이 선택 되었을 때
-      if (viewModel.selectedPart == SelectedPart.personal) {
+      if (viewModel.selectedPart == SelectedPart.personal &&
+          viewModel.selectedPersonalScheduleDetail == null) {
         return FloatingActionButton(
           heroTag: null, // 고유 태그 지정 - hero오류
           onPressed: () {
@@ -195,32 +209,37 @@ class ScheduleMain extends StatelessWidget {
 
   // MARK: - 메인
   Widget _main(BuildContext context) {
-    return Consumer<ScheduleMainViewModel>(
-      builder: (context, viewModel, child) {
-        if (viewModel.selectedPart == SelectedPart.meetUp) {
-          return _meetUpView(context);
-        } else {
-          return _personalView(
-            context,
-          );
-        }
-      },
-    );
+    final viewModel = Provider.of<ScheduleMainViewModel>(context, listen: true);
+
+    if (viewModel.selectedPart == SelectedPart.meetUp) {
+      return _meetUpView(context);
+    } else {
+      return _personalView(
+        context,
+      );
+    }
   }
 
   // MARK: - 밋업 만남 뷰
   Widget _meetUpView(BuildContext context) {
-    return Consumer<ScheduleMainViewModel>(
-      builder: (context, viewModel, child) {
-        if (viewModel.selectedMeetUpScheduleDetail == null) {
-          // 선택된 스케줄이 없을 때, 기본 일정 리스트 뷰를 보여줍니다.
-          return _meetUpScheduleListView(context);
-        } else {
-          // 선택된 스케줄이 있을 때, 상세 정보를 보여줍니다.
-          return _meetUpScheduleDetailView(context);
-        }
-      },
-    );
+    final scheduleMainViewModel =
+        Provider.of<ScheduleMainViewModel>(context, listen: false);
+    final botNavViewModel =
+        Provider.of<BottomNavigationBarViewModel>(context, listen: false);
+
+    if (scheduleMainViewModel.selectedMeetUpScheduleDetail == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        botNavViewModel.setIsHidden(false);
+      });
+      // 선택된 스케줄이 없을 때, 기본 일정 리스트 뷰를 보여줍니다.
+      return _meetUpScheduleListView(context);
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        botNavViewModel.setIsHidden(true);
+      });
+      // 선택된 스케줄이 있을 때, 상세 정보를 보여줍니다.
+      return _meetUpScheduleDetailView(context);
+    }
   }
 
   // MARK: - 밋업 일정 리스트
@@ -249,7 +268,7 @@ class ScheduleMain extends StatelessWidget {
     } else {
       final scheduleMap = scheduleMainViewModel.getMeetUpScheduleByDate();
       // 최신 순으로 정렬
-      final dates = scheduleMap.keys.toList()..sort((a, b) => b.compareTo(a));
+      final dates = scheduleMap.keys.toList()..sort((a, b) => a.compareTo(b));
 
       return Container(
         width: double.infinity,
@@ -551,17 +570,24 @@ class ScheduleMain extends StatelessWidget {
 
   // MARK: - 개인 만남 뷰
   Widget _personalView(BuildContext context) {
-    return Consumer<ScheduleMainViewModel>(
-      builder: (context, viewModel, child) {
-        if (viewModel.selectedPersonalScheduleDetail == null) {
-          // 선택된 스케줄이 없을 때, 기본 일정 리스트 뷰를 보여줍니다.
-          return _personalScheduleListView(context);
-        } else {
-          // 선택된 스케줄이 있을 때, 상세 정보를 보여줍니다.
-          return _personalScheduleDetailView(context);
-        }
-      },
-    );
+    final scheduleMainViewModel =
+        Provider.of<ScheduleMainViewModel>(context, listen: false);
+    final botNavViewModel =
+        Provider.of<BottomNavigationBarViewModel>(context, listen: false);
+
+    if (scheduleMainViewModel.selectedPersonalScheduleDetail == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        botNavViewModel.setIsHidden(false);
+      });
+      // 선택된 스케줄이 없을 때, 기본 일정 리스트 뷰를 보여줍니다.
+      return _personalScheduleListView(context);
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        botNavViewModel.setIsHidden(true);
+      });
+      // 선택된 스케줄이 있을 때, 상세 정보를 보여줍니다.
+      return _personalScheduleDetailView(context);
+    }
   }
 
   // MARK: - 개인 일정 리스트
@@ -590,7 +616,7 @@ class ScheduleMain extends StatelessWidget {
     } else {
       final scheduleMap = scheduleMainViewModel.getPersonalScheduleByDate();
       // 최신 순으로 정렬
-      final dates = scheduleMap.keys.toList()..sort((a, b) => b.compareTo(a));
+      final dates = scheduleMap.keys.toList()..sort((a, b) => a.compareTo(b));
 
       return Container(
         width: double.infinity,
@@ -614,258 +640,275 @@ class ScheduleMain extends StatelessWidget {
   Widget _personalScheduleDetailView(BuildContext context) {
     return Consumer<ScheduleMainViewModel>(
       builder: (context, viewModel, child) {
+        final title =
+            viewModel.selectedPersonalScheduleDetail!.room_schedule!['title'];
+        final location = viewModel
+            .selectedPersonalScheduleDetail!.room_schedule!['location'];
+        // 한국 기준 날짜 및 시간 포맷
+        final dateFormatter = DateFormat('yyyy.MM.dd. EEEE', 'ko_KR');
+        final timeFormatter = DateFormat('a h시 mm분', 'ko_KR');
+        DateTime scheduleDate = viewModel
+            .selectedPersonalScheduleDetail!.room_schedule!['date']
+            .toDate();
+        String date = dateFormatter.format(scheduleDate);
+        String time = timeFormatter
+            .format(scheduleDate)
+            .replaceFirst('AM', '오전')
+            .replaceFirst('PM', '오후');
+
+        String content =
+            viewModel.selectedPersonalScheduleDetail!.room_description;
+
+        List<dynamic> memberList = viewModel
+            .selectedPersonalScheduleDetail!.room_participant_reference;
+
         return Container(
+          height: double.infinity,
           width: double.infinity,
           color: UsedColor.bg_color,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: EdgeInsets.only(left: 30.w, right: 26.w),
+              SizedBox(height: 32.h),
+              Row(
+                children: [
+                  // 일정 제목
+                  SizedBox(
+                    width: 30.w,
+                  ),
+                  Text(
+                    title,
+                    style: AppTextStyles.PR_SB_20.copyWith(color: Colors.black),
+                  ),
+                  SizedBox(width: 12.w),
+                  GestureDetector(
+                    onTap: () {
+                      // 편집
+                      context.goNamed('editPersonalSchedule');
+                    },
+                    child: Image.asset(
+                      ImagePath.editPencil,
+                      width: 19.w,
+                      height: 19.h,
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(height: 28.h),
+              Container(
+                width: 340.w,
+                height: 110.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.r),
+                  color: Colors.white,
+                ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 32.h),
-                    Row(
-                      children: [
-                        // 일정 제목
-                        Text(
-                          '일정 제목',
-                          style: AppTextStyles.PR_SB_20
-                              .copyWith(color: Colors.black),
-                        ),
-                        SizedBox(width: 12.w),
-                        GestureDetector(
-                          onTap: () {
-                            // 편집
-                            context.goNamed('editPersonalSchedule');
-                          },
-                          child: Image.asset(
-                            ImagePath.editPencil,
-                            width: 19.w,
-                            height: 19.h,
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 28.h),
-                    Container(
-                      width: 340.w,
-                      height: 110.h,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.r),
-                        color: Colors.white,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(
-                              top: 20.h,
-                              left: 24.w,
-                            ),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 8.w,
-                                      height: 8.h,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: UsedColor.main),
-                                    ),
-                                    SizedBox(width: 12.w),
-                                    Text(
-                                      '날짜',
-                                      style: AppTextStyles.PR_SB_12
-                                          .copyWith(color: Colors.black),
-                                    ),
-                                    SizedBox(width: 31.w),
-                                    Text(
-                                      '2024.01.06. 화요일',
-                                      style: AppTextStyles.PR_R_12
-                                          .copyWith(color: UsedColor.text_3),
-                                    )
-                                  ],
-                                ),
-                                SizedBox(height: 14.h),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 8.w,
-                                      height: 8.h,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: UsedColor.main),
-                                    ),
-                                    SizedBox(width: 12.w),
-                                    Text(
-                                      '시간',
-                                      style: AppTextStyles.PR_SB_12
-                                          .copyWith(color: Colors.black),
-                                    ),
-                                    SizedBox(width: 31.w),
-                                    Text(
-                                      '오후 7시 30분',
-                                      style: AppTextStyles.PR_R_12
-                                          .copyWith(color: UsedColor.text_3),
-                                    )
-                                  ],
-                                ),
-                                SizedBox(height: 14.h),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 8.w,
-                                      height: 8.h,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: UsedColor.main),
-                                    ),
-                                    SizedBox(width: 12.w),
-                                    Text(
-                                      '장소',
-                                      style: AppTextStyles.PR_SB_12
-                                          .copyWith(color: Colors.black),
-                                    ),
-                                    SizedBox(width: 31.w),
-                                    Text(
-                                      '아름고등학교 체육관 체력 단련실',
-                                      style: AppTextStyles.PR_R_12
-                                          .copyWith(color: UsedColor.text_3),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 14.h,
-                    ),
-                    Container(
-                      width: 340.w,
-                      height: 84.h,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.r),
-                        color: Colors.white,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(
-                              top: 20.h,
-                              left: 24.w,
-                            ),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 8.w,
-                                      height: 8.h,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: UsedColor.main),
-                                    ),
-                                    SizedBox(width: 12.w),
-                                    Text(
-                                      '설명',
-                                      style: AppTextStyles.PR_SB_12
-                                          .copyWith(color: Colors.black),
-                                    ),
-                                    SizedBox(width: 31.w),
-                                    Text(
-                                      '교내 연습 동아리',
-                                      style: AppTextStyles.PR_R_12
-                                          .copyWith(color: UsedColor.text_3),
-                                    )
-                                  ],
-                                ),
-                                SizedBox(height: 14.h),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 8.w,
-                                      height: 8.h,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: UsedColor.main),
-                                    ),
-                                    SizedBox(width: 12.w),
-                                    Text(
-                                      '참여',
-                                      style: AppTextStyles.PR_SB_12
-                                          .copyWith(color: Colors.black),
-                                    ),
-                                    SizedBox(width: 31.w),
-                                    // 참여자 리스트
-                                    Wrap(
-                                      children: [
-                                        Container(
-                                          width: 45.w,
-                                          height: 18.h,
-                                          decoration: BoxDecoration(
-                                            color: UsedColor.image_card,
-                                            borderRadius:
-                                                BorderRadius.circular(8.5.r),
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              '홍길동',
-                                              style: AppTextStyles.SU_M_10
-                                                  .copyWith(
-                                                      color: UsedColor.violet),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 201.h,
-                    ),
-                    // 삭제버튼
                     Padding(
-                      padding: EdgeInsets.only(bottom: 56.0.h),
-                      child: Container(
-                        width: 327.w,
-                        height: 56.h,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(19.r),
-                            color: Colors.black),
-                        child: Center(
-                          child: Text(
-                            '삭제',
-                            style: AppTextStyles.PR_SB_20
-                                .copyWith(color: Colors.white),
-                          ),
-                        ),
+                      padding: EdgeInsets.only(
+                        top: 20.h,
+                        left: 24.w,
                       ),
-                    ),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 8.w,
+                                height: 8.h,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: UsedColor.main),
+                              ),
+                              SizedBox(width: 12.w),
+                              Text(
+                                '날짜',
+                                style: AppTextStyles.PR_SB_12
+                                    .copyWith(color: Colors.black),
+                              ),
+                              SizedBox(width: 31.w),
+                              Text(
+                                date,
+                                style: AppTextStyles.PR_R_12
+                                    .copyWith(color: UsedColor.text_3),
+                              )
+                            ],
+                          ),
+                          SizedBox(height: 14.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 8.w,
+                                height: 8.h,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: UsedColor.main),
+                              ),
+                              SizedBox(width: 12.w),
+                              Text(
+                                '시간',
+                                style: AppTextStyles.PR_SB_12
+                                    .copyWith(color: Colors.black),
+                              ),
+                              SizedBox(width: 31.w),
+                              Text(
+                                time,
+                                style: AppTextStyles.PR_R_12
+                                    .copyWith(color: UsedColor.text_3),
+                              )
+                            ],
+                          ),
+                          SizedBox(height: 14.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 8.w,
+                                height: 8.h,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: UsedColor.main),
+                              ),
+                              SizedBox(width: 12.w),
+                              Text(
+                                '장소',
+                                style: AppTextStyles.PR_SB_12
+                                    .copyWith(color: Colors.black),
+                              ),
+                              SizedBox(width: 31.w),
+                              Text(
+                                location,
+                                style: AppTextStyles.PR_R_12
+                                    .copyWith(color: UsedColor.text_3),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
               ),
+              SizedBox(
+                height: 14.h,
+              ),
+              Container(
+                width: 340.w,
+                height: 84.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.r),
+                  color: Colors.white,
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    top: 20.h,
+                    left: 24.w,
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 8.w,
+                            height: 8.h,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle, color: UsedColor.main),
+                          ),
+                          SizedBox(width: 12.w),
+                          Text(
+                            '설명',
+                            style: AppTextStyles.PR_SB_12
+                                .copyWith(color: Colors.black),
+                          ),
+                          SizedBox(width: 31.w),
+                          Text(
+                            content,
+                            style: AppTextStyles.PR_R_12
+                                .copyWith(color: UsedColor.text_3),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 14.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 8.w,
+                            height: 8.h,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle, color: UsedColor.main),
+                          ),
+                          SizedBox(width: 12.w),
+                          Text(
+                            '참여',
+                            style: AppTextStyles.PR_SB_12
+                                .copyWith(color: Colors.black),
+                          ),
+                          SizedBox(width: 31.w),
+                          // 참여자 리스트
+                          Row(
+                            children: memberList
+                                .map(
+                                  (member) => Row(
+                                    children: [
+                                      Wrap(
+                                        children: [
+                                          Container(
+                                            width: 45.w,
+                                            height: 18.h,
+                                            decoration: BoxDecoration(
+                                              color: UsedColor.image_card,
+                                              borderRadius:
+                                                  BorderRadius.circular(8.5.r),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                member,
+                                                style: AppTextStyles.SU_M_10
+                                                    .copyWith(
+                                                        color:
+                                                            UsedColor.violet),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(width: 8.w),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // 삭제버튼
+              Expanded(child: Container()),
+              Container(
+                width: 327.w,
+                height: 56.h,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(19.r),
+                    color: Colors.black),
+                child: Center(
+                  child: Text(
+                    '삭제',
+                    style: AppTextStyles.PR_SB_20.copyWith(color: Colors.white),
+                  ),
+                ),
+              ),
+              SizedBox(height: 56.h),
             ],
           ),
         );
@@ -977,6 +1020,7 @@ class ScheduleMain extends StatelessWidget {
                   );
                 }).toList(),
               ),
+              SizedBox(height: 20.24.h),
             ],
           ),
         ),

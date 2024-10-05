@@ -179,6 +179,16 @@ class UserRepository {
   }
 
   // MARK: - MySchedule CRUD
+  Future<bool> createMyScheduleDocument({
+    required RoomModel data,
+    required String uid,
+  }) async {
+    return await _firebaseService.createDocument<RoomModel>(
+      docRef: _firebaseRefs.colRefUser.doc(uid).collection("mySchedule").doc(),
+      data: data,
+    );
+  }
+
   Stream<QuerySnapshot<Object?>> readMyScheduleCollectionStream(
       {required String uid}) {
     return _firebaseService.readCollectionStream<RoomModel>(

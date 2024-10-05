@@ -4,6 +4,14 @@ class BottomNavigationBarViewModel with ChangeNotifier {
   int _index = 0; // 초기값 meet으로 설정
   final List<int> _history = [0]; // meet 인덱스
 
+  bool _isHidden = false;
+  bool get isHidden => _isHidden;
+
+  void setIsHidden(bool isHidden) {
+    _isHidden = isHidden;
+    notifyListeners();
+  }
+
   int get currentIndex => _index;
 
   void changeIndex(int index) {

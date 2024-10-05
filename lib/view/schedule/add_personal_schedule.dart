@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
@@ -10,6 +11,7 @@ import 'package:meet_up/view/widget/personal_schedule_time_picker_widget.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/schedule/schedule_add_personal_schdule_view_model.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
 class AddPersonalSchedule extends StatelessWidget {
@@ -448,6 +450,7 @@ class AddPersonalSchedule extends StatelessWidget {
 
 //MARK: - 저장
   Widget _bottom(BuildContext context) {
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     return Consumer<ScheduleAddPersonalScheduleViewModel>(
         builder: (context, viewModel, child) {
       return Padding(
@@ -455,6 +458,9 @@ class AddPersonalSchedule extends StatelessWidget {
         child: NextButton(
           onTap: () async {
             if (!viewModel.allCheckCompleted) return;
+            logger.d('저장 버튼이 눌려졌습니다.');
+            await viewModel.savePersonalSchedule(myUID: userViewModel.uid!);
+            context.pop(context);
           },
           height: 56.h,
           width: 327.w,

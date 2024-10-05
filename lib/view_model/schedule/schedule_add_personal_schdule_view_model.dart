@@ -1,8 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:meet_up/main.dart';
+import 'package:meet_up/model/room_model.dart';
+import 'package:meet_up/repository/user_repository.dart';
+import 'package:meet_up/service/remote/firebase_service.dart';
 
 class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
-   // 타임 피커 초기화
+  final FirebaseRefs _firebaseRefs = FirebaseRefs();
+  final UserRepository _userRepository = UserRepository();
+
+  // 타임 피커 초기화
   ScheduleAddPersonalScheduleViewModel({
     required DateTime init,
     required DateTime start,
@@ -12,7 +20,7 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
         _end = end,
         _selectedTime = const TimeOfDay(hour: 19, minute: 30);
 
-  // 일정
+  // MARK: - 일정
   String _roomNaming = '';
 
   String get roomNaming => _roomNaming;
@@ -29,7 +37,7 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
     return _roomNaming.trim().isNotEmpty;
   }
 
-  // 선택된 날짜
+  // MARK: - 날짜
   DateTime _selectedDate;
   DateTime get selectedDate => _selectedDate;
 
@@ -116,7 +124,7 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  // timePicker
+  // MARK: - 시간
   bool _isTimePanelExpanded = false;
 
   bool get isTimePanelExpanded => _isTimePanelExpanded;
@@ -146,21 +154,21 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
     return '$period $hour:$minute';
   }
 
-  // 장소
+  // MARK: - 장소
   TextEditingController locationTextController = TextEditingController();
 
   bool get isLocationCompleted {
     return locationTextController.text.isNotEmpty;
   }
 
-  // 설명
+  // MARK: - 설명
   TextEditingController detailTextController = TextEditingController();
 
   bool get isDetailCompleted {
     return detailTextController.text.isNotEmpty;
   }
 
-  // 참여 인원
+  // MARK: - 참여 인원
   void addMembers(String member) {
     if (!_selectedMembers.contains(member)) {
       _selectedMembers.add(member);
@@ -183,8 +191,8 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
   }
 
   bool get isMembersCompleted => selectedMembers.isNotEmpty;
-  // MARK: - check
 
+  // MARK: - 입력 사항 체크
   bool get allCheckCompleted {
     return namingCompleted &&
         isLocationCompleted &&
@@ -192,10 +200,58 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
         isMembersCompleted;
   }
 
-  // MARK: - Reset state
+  // MARK: - 상태 초기화
   void backClearSelection() {
     locationTextController.clear();
     detailTextController.clear();
     _selectedMembers.clear();
+  }
+
+  // MARK: - 개인 일정 저장
+  Future<void> savePersonalSchedule({required String myUID}) async {
+    // 개인 일정 저장
+    logger.d(
+        '일정: $_roomNaming\n날짜: $_selectedDate\n시간: $_selectedTime\n장소: ${locationTextController.text}\n설명: ${detailTextController.text}\n참여 인원: $_selectedMembers');
+
+    // _selectedDate, _selectedTime -> Timestamp
+    final date = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+      _selectedTime.hour,
+      _selectedTime.minute,
+    );
+
+    Timestamp dateByTimestamp = Timestamp.fromDate(date);
+
+    // RoomModel 생성
+    final roomSchedule = RoomSchedule(
+      title: _roomNaming,
+      date: dateByTimestamp,
+      location: locationTextController.text,
+      participants_agree_selected_schedule: [],
+    );
+
+    final RoomModel roomModel = RoomModel(
+      room_name: "",
+      room_category: "",
+      room_category_detail: "",
+      room_region_province: "",
+      room_region_district: "",
+      room_keyword: [],
+      room_description: detailTextController.text,
+      room_age: [],
+      room_gender_ratio: "",
+      room_rules: [],
+      room_creation_date: Timestamp.now(),
+      room_owner_reference: _firebaseRefs.colRefUser.doc(myUID),
+      room_participant_reference: selectedMembers,
+      isScheduleDecided: true,
+      room_meeting_review: [],
+      recentMessage: "",
+      room_schedule: roomSchedule.toJson(),
+    );
+
+    await _userRepository.createMyScheduleDocument(data: roomModel, uid: myUID);
   }
 }
