@@ -6,13 +6,13 @@ import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/util/color.dart';
-import 'package:meet_up/view/reflect/reflect_diary_details.dart';
+import 'package:meet_up/view/reflect/reflect_write_diary.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/reflect/reflect_view_model.dart';
 import 'package:provider/provider.dart';
 
-class ReflectWritingDiary extends StatelessWidget {
-  const ReflectWritingDiary({super.key});
+class ReflectSelectDiaryQuestion extends StatelessWidget {
+  const ReflectSelectDiaryQuestion({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,9 @@ class ReflectWritingDiary extends StatelessWidget {
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.read<ReflectViewModel>().reset();
+        final viewModel = Provider.of<ReflectViewModel>(context, listen: false);
+
+        viewModel.reset();
         context.pop();
       },
       child: Image.asset(
@@ -110,6 +112,7 @@ class ReflectWritingDiary extends StatelessWidget {
       },
     );
   }
+
 //MARK: - 이미지 선택
   Widget _selectOptions(ReflectViewModel viewModel) {
     final List<String> imagePaths = [
@@ -160,13 +163,14 @@ class ReflectWritingDiary extends StatelessWidget {
       }),
     );
   }
+
 //MARK: - bottom
   Widget _bottom(BuildContext context, ReflectViewModel viewModel) {
     return GestureDetector(
       onTap: viewModel.selectedImages.isNotEmpty
           ? () {
               viewModel.markAsCompleted();
-              context.goNamed('reflectDiaryDetails');
+              context.goNamed('reflectWriteDiary');
             }
           : null,
       child: Container(

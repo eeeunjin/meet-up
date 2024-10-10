@@ -7,13 +7,13 @@ import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/util/color.dart';
-import 'package:meet_up/view/reflect/reflect_writing_diary.dart';
+import 'package:meet_up/view/reflect/reflect_select_diary_question.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/reflect/reflect_view_model.dart';
 import 'package:provider/provider.dart';
 
-class ReflectDiaryView extends StatelessWidget {
-  const ReflectDiaryView({super.key});
+class ReflectDiaryDetails extends StatelessWidget {
+  const ReflectDiaryDetails({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,6 @@ class ReflectDiaryView extends StatelessWidget {
   }
 
   Widget _main(BuildContext context) {
-    // 샘플 데이터로 직접 입력한 일기 내용과 질문 리스트
     const String meetingTitle = '초보 클럽 모임';
     const String meetingDate = '2024.02.07.(수) 오후 7:30';
     final List<String> selectedQuestions = [
@@ -87,7 +86,6 @@ class ReflectDiaryView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 첫 번째 섹션 패딩
                 Padding(
                   padding: EdgeInsets.only(
                     top: 24.h,
@@ -139,8 +137,6 @@ class ReflectDiaryView extends StatelessWidget {
                   color: UsedColor.b_line,
                 ),
                 SizedBox(height: 24.h),
-
-                // 선택된 질문 섹션
                 ...List.generate(selectedQuestions.length, (index) {
                   return Padding(
                     padding: EdgeInsets.only(
@@ -154,7 +150,6 @@ class ReflectDiaryView extends StatelessWidget {
                     ),
                   );
                 }),
-
                 Center(
                   child: Text(
                     '만남을 되돌아 볼까요?',
@@ -165,7 +160,6 @@ class ReflectDiaryView extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20.h),
-                // 별점 섹션
                 Padding(
                   padding: EdgeInsets.only(
                     left: 24.w,
@@ -173,7 +167,6 @@ class ReflectDiaryView extends StatelessWidget {
                   ),
                   child: _ratingSection(),
                 ),
-
                 SizedBox(height: 24.h),
               ],
             ),
@@ -216,7 +209,7 @@ class ReflectDiaryView extends StatelessWidget {
               answer,
               style: AppTextStyles.PR_R_13.copyWith(
                 color: UsedColor.text_5,
-                height: 1 + (4.h / 13.h),
+                height: 4.h,
               ),
             ),
           ),
@@ -236,7 +229,7 @@ class ReflectDiaryView extends StatelessWidget {
       {'유익했나요?': 5},
       {'목적을 달성했나요?': 4},
     ];
-    const totalRating = 4.5; // 총점
+    const totalRating = 4.5;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

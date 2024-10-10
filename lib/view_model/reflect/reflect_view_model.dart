@@ -15,11 +15,42 @@ class ReflectViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  // 선택된 연/월을 저장할 변수
   DateTime _selectedDate = DateTime.now(); // 선택된 연/월 저장
+  DateTime _displayedDate = DateTime.now(); // 팝업에서 표시용 연/월 저장
 
-  // 선택된 연/월 반환
   DateTime get selectedDate => _selectedDate;
+  DateTime get displayedDate => _displayedDate;
+
+  // 연도와 월을 표시용으로 초기화 (팝업 열릴 때)
+  void initializeDisplayedDate() {
+    _displayedDate = _selectedDate;
+  }
+
+  void confirmSelectedDate() {
+    _selectedDate = _displayedDate;
+    notifyListeners();
+  }
+
+  void updateDiaryList() {
+    notifyListeners();
+  }
+
+  // 연도 변경 (표시용)
+  void selectPreviousYear() {
+    _displayedDate = DateTime(_displayedDate.year - 1, _displayedDate.month);
+    notifyListeners();
+  }
+
+  void selectNextYear() {
+    _displayedDate = DateTime(_displayedDate.year + 1, _displayedDate.month);
+    notifyListeners();
+  }
+
+  // 월 선택 (표시용)
+  void selectMonth(int month) {
+    _displayedDate = DateTime(_displayedDate.year, month);
+    confirmSelectedDate(); // 월 선택 후 즉시 반영
+  }
 
   // 답변 업데이트
   void updateAnswer(int questionIndex, String answer) {
@@ -177,23 +208,6 @@ class ReflectViewModel with ChangeNotifier {
   }
   List<Map<String, String>> get myDiaryEntries => _myDiaryEntries;
 
-  // 연도 변경
-  void selectPreviousYear() {
-    _selectedDate = DateTime(_selectedDate.year - 1, _selectedDate.month);
-    notifyListeners();
-  }
-
-  void selectNextYear() {
-    _selectedDate = DateTime(_selectedDate.year + 1, _selectedDate.month);
-    notifyListeners();
-  }
-
-// 월 선택
-  void selectMonth(int month) {
-    _selectedDate = DateTime(_selectedDate.year, month);
-    notifyListeners();
-  }
-
 // 작성된 일기가 있는 연/월을 확인
   bool isMonthWritten(int month, int year) {
     return _myDiaryEntries.any((entry) {
@@ -271,24 +285,6 @@ class ReflectViewModel with ChangeNotifier {
   bool get isAvailableEntriesSortedByRecent =>
       _isAvailableEntriesSortedByRecent;
   bool get isMyDiaryEntriesSortedByRecent => _isMyDiaryEntriesSortedByRecent;
-
-  // // 작성 가능한 일기 최근순 정렬
-  // void _sortAvailableEntriesByRecent() {
-  //   _availableEntries.sort((a, b) {
-  //     final dateA = _parseDate(a['date']!);
-  //     final dateB = _parseDate(b['date']!);
-  //     return dateB.compareTo(dateA);
-  //   });
-  // }
-
-  // // 작성 가능한 일기 오래된순 정렬
-  // void _sortAvailableEntriesByOldest() {
-  //   _availableEntries.sort((a, b) {
-  //     final dateA = _parseDate(a['date']!);
-  //     final dateB = _parseDate(b['date']!);
-  //     return dateA.compareTo(dateB);
-  //   });
-  // }
 
   // 내가 작성한 일기 최근순 정렬
   void _sortMyDiaryEntriesByRecent() {

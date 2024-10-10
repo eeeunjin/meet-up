@@ -33,12 +33,12 @@ import 'package:meet_up/view/profile/profile_edit.dart';
 import 'package:meet_up/view/profile/profile_main.dart';
 import 'package:meet_up/view/profile/profile_notification.dart';
 import 'package:meet_up/view/profile/rank_main.dart';
-import 'package:meet_up/view/reflect/reflect_diary_details.dart';
+import 'package:meet_up/view/reflect/reflect_write_diary.dart';
 import 'package:meet_up/view/reflect/reflect_diary_more.dart';
 import 'package:meet_up/view/reflect/reflect_diary_view.dart';
 import 'package:meet_up/view/reflect/reflect_main.dart';
 import 'package:meet_up/view/reflect/reflect_record_more.dart';
-import 'package:meet_up/view/reflect/reflect_writing_diary.dart';
+import 'package:meet_up/view/reflect/reflect_select_diary_question.dart';
 import 'package:meet_up/view/schedule/add_member_personal.dart';
 import 'package:meet_up/view/schedule/add_personal_schedule.dart';
 import 'package:meet_up/view/schedule/edit_personal_schedule.dart';
@@ -414,22 +414,22 @@ final router = GoRouter(
               builder: (context, state) => const ReflectDiaryMore(),
             ),
             GoRoute(
-              path: 'reflectDiaryView',
-              name: 'reflectDiaryView',
+              path: 'reflectDiaryDetails',
+              name: 'reflectDiaryDetails',
               parentNavigatorKey: rootNavkey,
-              builder: (context, state) => const ReflectDiaryView(),
+              builder: (context, state) => const ReflectDiaryDetails(),
             ),
             GoRoute(
-              path: 'reflectWritingDiary',
-              name: 'reflectWritingDiary',
+              path: 'reflectSelectDiaryQuestion',
+              name: 'reflectSelectDiaryQuestion',
               parentNavigatorKey: rootNavkey,
-              builder: (context, state) => const ReflectWritingDiary(),
+              builder: (context, state) => const ReflectSelectDiaryQuestion(),
               routes: [
                 GoRoute(
-                  path: 'reflectDiaryDetails',
-                  name: 'reflectDiaryDetails',
+                  path: 'reflectWriteDiary',
+                  name: 'reflectWriteDiary',
                   parentNavigatorKey: rootNavkey,
-                  builder: (context, state) => const ReflectDiaryDetails(),
+                  builder: (context, state) => const ReflectWriteDiary(),
                 ),
               ],
             ),

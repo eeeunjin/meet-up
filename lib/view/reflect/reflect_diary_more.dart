@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
-import 'package:meet_up/view/reflect/reflect_writing_diary.dart';
+import 'package:meet_up/view/reflect/reflect_select_diary_question.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/reflect/reflect_view_model.dart';
 import 'package:provider/provider.dart';
@@ -54,7 +54,7 @@ class ReflectDiaryMore extends StatelessWidget {
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        final viewModel = context.read<ReflectViewModel>();
+        final viewModel = Provider.of<ReflectViewModel>(context, listen: false);
 
         viewModel.resetSortOrder();
         viewModel.resetAll();
@@ -180,7 +180,7 @@ class ReflectDiaryMore extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         context.goNamed(
-          'reflectWritingDiary',
+          'reflectSelectDiaryQuestion',
         );
       },
       child: Container(
