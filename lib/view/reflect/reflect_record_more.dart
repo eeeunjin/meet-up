@@ -88,7 +88,7 @@ class ReflectRecordMore extends StatelessWidget {
 
 // MARK:-달력 팝업
   void _showYearMonthPicker(BuildContext context, ReflectViewModel viewModel) {
-    viewModel.initializeDisplayedDate(); // 팝업 열릴 때 초기화
+    viewModel.initializeDisplayedDate(); // 팝업 열릴 때 선택된 연월 유지
 
     showDialog(
       context: context,
@@ -131,7 +131,7 @@ class ReflectRecordMore extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '${viewModel.selectedDate.year}', // 표시되는 연도
+                            '${viewModel.displayedDate.year}', // 표시되는 연도
                             style: AppTextStyles.SU_SB_16.copyWith(
                               color: UsedColor.charcoal_black,
                             ),
@@ -176,9 +176,9 @@ class ReflectRecordMore extends StatelessWidget {
                                 height: 23.h,
                                 decoration: BoxDecoration(
                                   color:
-                                      viewModel.selectedDate.month == month &&
-                                              viewModel.selectedDate.year ==
-                                                  viewModel.displayedDate.year
+                                      viewModel.displayedDate.month == month &&
+                                              viewModel.displayedDate.year ==
+                                                  viewModel.selectedDate.year
                                           ? UsedColor.b_line
                                           : Colors.transparent,
                                   shape: BoxShape.circle,
@@ -187,10 +187,10 @@ class ReflectRecordMore extends StatelessWidget {
                                   child: Text(
                                     '$month',
                                     style: AppTextStyles.PR_R_16.copyWith(
-                                      color: viewModel.selectedDate.month ==
+                                      color: viewModel.displayedDate.month ==
                                                   month &&
-                                              viewModel.selectedDate.year ==
-                                                  viewModel.displayedDate.year
+                                              viewModel.displayedDate.year ==
+                                                  viewModel.selectedDate.year
                                           ? UsedColor.charcoal_black
                                           : isWritten
                                               ? UsedColor.charcoal_black
