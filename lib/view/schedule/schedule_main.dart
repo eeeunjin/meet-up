@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/color.dart';
@@ -907,7 +909,7 @@ class ScheduleMain extends StatelessWidget {
                 onTap: () {
                   // TODO: 삭제 기능 구현
                   // AlertDialog로 삭제 여부 확인
-                  _showDeleteDialog(context);
+                  _showDeleteScheduleDialog(context);
                 },
                 child: Container(
                   width: 327.w,
@@ -932,113 +934,56 @@ class ScheduleMain extends StatelessWidget {
     );
   }
 
-  // MARK: - 삭제 다이얼로그
-  void _showDeleteDialog(BuildContext context) {
+  // MARK: - 개인 스케쥴 삭제 다이얼로그
+  void _showDeleteScheduleDialog(BuildContext context) {
     final scheduleMainViewModel =
         Provider.of<ScheduleMainViewModel>(context, listen: false);
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
 
-    showDialog(
+    showCupertinoDialog(
       context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.r),
+      builder: (context) => CupertinoAlertDialog(
+        title: Text(
+          "해당 일정을 삭제하시겠습니까?",
+          style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
+        ),
+        content: Container(
+          alignment: Alignment.bottomCenter,
+          height: 20.h,
+          child: Text(
+            "삭제한 일정은 다시 복구할 수 없습니다.",
+            style: AppTextStyles.PR_R_12.copyWith(color: UsedColor.text_3),
           ),
-          child: Container(
-            width: 245.w,
-            height: 109.h,
-            padding: EdgeInsets.only(
-              top: 19.h,
+        ),
+        actions: [
+          CupertinoDialogAction(
+            child: Text(
+              "취소",
+              style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
             ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16.r),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '해당 일정을 삭제하시겠습니까?',
-                  style: AppTextStyles.PR_M_13.copyWith(
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 8.h),
-                Text(
-                  '삭제한 일정은 다시 복구할 수 없습니다.',
-                  style: AppTextStyles.PR_R_12.copyWith(
-                    color: UsedColor.line,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 12.h),
-                Divider(thickness: 0.5.h, height: 0.h, color: UsedColor.line),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          context.pop();
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 9.h),
-                          child: Center(
-                            child: Text(
-                              '취소',
-                              style: AppTextStyles.PR_M_14.copyWith(
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 0.5.w,
-                      height: 35.h,
-                      color: UsedColor.line,
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () async {
-                          // 삭제
-
-                          // 해당 일정 삭제
-                          await scheduleMainViewModel.deletePersonalSchedule(
-                              userViewModel.uid!,
-                              scheduleMainViewModel
-                                  .selectedPersonalScheduleDetail!.room_name);
-
-                          // 다이얼로그 닫기
-                          context.pop();
-
-                          // 뒤로 돌아가기
-                          scheduleMainViewModel
-                              .resetScheduleSelection('personal');
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 9.h),
-                          child: Center(
-                            child: Text(
-                              '삭제',
-                              style: AppTextStyles.PR_M_14.copyWith(
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+            onPressed: () {
+              context.pop();
+            },
           ),
-        );
-      },
+          CupertinoDialogAction(
+            child: Text(
+              "삭제",
+              style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
+            ),
+            onPressed: () async {
+              logger.d("일정 삭제 버튼이 눌렸습니다.");
+              await scheduleMainViewModel.deletePersonalSchedule(
+                userViewModel.uid!,
+                scheduleMainViewModel.selectedPersonalScheduleDetail!.room_name,
+              );
+              while (context.canPop()) {
+                context.pop();
+              }
+              scheduleMainViewModel.resetScheduleSelection('personal');
+            },
+          ),
+        ],
+      ),
     );
   }
 
