@@ -44,7 +44,8 @@ class ScheduleMainViewModel with ChangeNotifier {
     final Map<String, List<RoomModel>> scheduleByDate = {};
 
     for (final schedule in _ScheduleList!) {
-      if (schedule.room_name.isEmpty) {
+      // 개인 일정은 제외
+      if (schedule.room_category.isEmpty) {
         continue;
       }
       final date = schedule.room_schedule!["date"] as Timestamp;
@@ -70,7 +71,8 @@ class ScheduleMainViewModel with ChangeNotifier {
     final Map<String, List<RoomModel>> scheduleByDate = {};
 
     for (final schedule in _ScheduleList!) {
-      if (schedule.room_name.isNotEmpty) {
+      // 밋업 일정은 제외
+      if (schedule.room_category.isNotEmpty) {
         continue;
       }
 
@@ -124,27 +126,19 @@ class ScheduleMainViewModel with ChangeNotifier {
 
   // MARK: - Schedule Selection
   // 선택된 개인 일정
-  String? _selectedPersonalSchedule;
-  String? get selectedPersonalSchedule => _selectedPersonalSchedule;
-
   RoomModel? _selectedPersonalScheduleDetail;
   RoomModel? get selectedPersonalScheduleDetail =>
       _selectedPersonalScheduleDetail;
 
   // 선택된 밋업 일정
-  String? _selectedMeetUpSchedule;
-  String? get selectedMeetUpSchedule => _selectedMeetUpSchedule;
-
   RoomModel? _selectedMeetUpScheduleDetail;
   RoomModel? get selectedMeetUpScheduleDetail => _selectedMeetUpScheduleDetail;
 
   // 스케줄 선택
-  void selectSchedule(String date, RoomModel detail, String type) {
+  void selectSchedule(RoomModel detail, String type) {
     if (type == 'meetUp') {
-      _selectedMeetUpSchedule = date;
       _selectedMeetUpScheduleDetail = detail;
     } else {
-      _selectedPersonalSchedule = date;
       _selectedPersonalScheduleDetail = detail;
     }
     notifyListeners();
@@ -153,10 +147,8 @@ class ScheduleMainViewModel with ChangeNotifier {
   // 선택 초기화
   void resetScheduleSelection(String type) {
     if (type == 'meetUp') {
-      _selectedMeetUpSchedule = null;
       _selectedMeetUpScheduleDetail = null;
     } else {
-      _selectedPersonalSchedule = null;
       _selectedPersonalScheduleDetail = null;
     }
     notifyListeners();

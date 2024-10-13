@@ -41,6 +41,12 @@ class ChatRoom extends StatelessWidget {
           );
         }
 
+        if (!snapshot.hasData || snapshot.data!.data() == null) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
         if (snapshot.connectionState == ConnectionState.waiting) {
           if (chatRoomViewModel.userModels.isEmpty) {
             return const Center(

@@ -1079,8 +1079,7 @@ class ScheduleMain extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () {
                         // 컨테이너 선택 시
-                        scheduleMainViewModel.selectSchedule(
-                            date, detail, type);
+                        scheduleMainViewModel.selectSchedule(detail, type);
                       },
                       child: Container(
                         width: 355.w,

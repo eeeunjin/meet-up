@@ -110,7 +110,7 @@ class AddPersonalSchedule extends StatelessWidget {
         const Spacer(),
         _bottom(context),
       ],
-    );
+    );  
   }
 
   //MARK: - 일정

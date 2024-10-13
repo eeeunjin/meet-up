@@ -370,7 +370,7 @@ final router = GoRouter(
         // MARK: - Schedule
         GoRoute(
           path: '/scheduleMain',
-          builder: (context, state) => ScheduleMain(),
+          builder: (context, state) => const ScheduleMain(),
           parentNavigatorKey: shellNavkey,
           routes: [
             GoRoute(
@@ -391,6 +391,14 @@ final router = GoRouter(
               name: 'editPersonalSchedule',
               parentNavigatorKey: rootNavkey,
               builder: (context, state) => const EditPersonalSchedule(),
+              routes: [
+                GoRoute(
+                  path: 'editMemberPersonal',
+                  name: 'editMemberPersonal',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) => const AddMemberPersonal(),
+                ),
+              ],
             )
           ],
         ),

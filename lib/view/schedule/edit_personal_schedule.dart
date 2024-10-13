@@ -412,7 +412,7 @@ class EditPersonalSchedule extends StatelessWidget {
           GestureDetector(
               onTap: () {
                 // 참여자 선택 페이지로 이동
-                context.goNamed('addMemberPersonal');
+                context.goNamed('editMemberPersonal');
               },
               child: _selectedMembers(context)),
         ],
@@ -454,6 +454,7 @@ class EditPersonalSchedule extends StatelessWidget {
 
 //MARK: - 저장
   Widget _bottom(BuildContext context) {
+    final scheduleMainViewModel = Provider.of<ScheduleMainViewModel>(context);
     return Consumer<ScheduleAddPersonalScheduleViewModel>(
         builder: (context, viewModel, child) {
       bool canModify = viewModel.allCheckCompleted && viewModel.isChanged;
@@ -467,10 +468,14 @@ class EditPersonalSchedule extends StatelessWidget {
                 Provider.of<UserViewModel>(context, listen: false);
             final scheduleMainViewModel =
                 Provider.of<ScheduleMainViewModel>(context, listen: false);
-            await viewModel.updatePersonalSchedule(
+
+            final selectedSchedule = await viewModel.updatePersonalSchedule(
                 myUID: userVieWModel.uid!,
                 myScheduleId: scheduleMainViewModel
                     .selectedPersonalScheduleDetail!.room_name);
+
+            scheduleMainViewModel.selectSchedule(selectedSchedule, 'personal');
+
             context.pop();
           },
           height: 56.h,

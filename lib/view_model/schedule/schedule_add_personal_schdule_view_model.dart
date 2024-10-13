@@ -272,27 +272,34 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
 
   // 처음이랑 달라진게 있는지 체크
   bool get isChanged {
+    bool isNameChanged = namingController.text !=
+        _originalRoomModel!.room_schedule!["title"] as String;
+    bool isDateChanged = _selectedDate !=
+        (_originalRoomModel!.room_schedule!["date"] as Timestamp).toDate();
+    bool isTimeChanged = _selectedTime !=
+        TimeOfDay.fromDateTime(
+            (_originalRoomModel!.room_schedule!["date"] as Timestamp).toDate());
+    bool isLocationChanged = locationTextController.text !=
+        _originalRoomModel!.room_schedule!["location"] as String;
+    bool isDetailChanged =
+        detailTextController.text != _originalRoomModel!.room_description;
+    bool isMembersChanged =
+        !(_selectedMembers.toSet().containsAll(originalMembers) &&
+            originalMembers.toSet().containsAll(_selectedMembers));
+
     return _originalRoomModel == null
         ? false
-        : namingController.text !=
-                _originalRoomModel!.room_schedule!["title"] ||
-            _selectedDate !=
-                (_originalRoomModel!.room_schedule!["date"] as Timestamp)
-                    .toDate() ||
-            locationTextController.text !=
-                _originalRoomModel!.room_schedule!["location"] ||
-            detailTextController.text != _originalRoomModel!.room_description ||
-            !(_selectedMembers.toSet().containsAll(originalMembers) &&
-                originalMembers.toSet().containsAll(_selectedMembers));
+        : isNameChanged ||
+            isDateChanged ||
+            isTimeChanged ||
+            isLocationChanged ||
+            isDetailChanged ||
+            isMembersChanged;
   }
 
-  Future<void> updatePersonalSchedule(
+  Future<RoomModel> updatePersonalSchedule(
       {required String myUID, required String myScheduleId}) async {
     // 개인 일정 저장
-    logger.d(
-        '일정: ${namingController.text}\n날짜: $_selectedDate\n시간: $_selectedTime\n장소: ${locationTextController.text}\n설명: ${detailTextController.text}\n참여 인원: $_selectedMembers');
-
-    // _selectedDate, _selectedTime -> Timestamp
     final date = DateTime(
       _selectedDate.year,
       _selectedDate.month,
@@ -332,6 +339,8 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
     );
 
     await _userRepository.updateMyScheduleDocument(data: roomModel, uid: myUID);
+
+    return roomModel;
   }
 
   void notify() {
