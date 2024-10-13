@@ -28,7 +28,7 @@ class AddPersonalSchedule extends StatelessWidget {
             padding: EdgeInsets.only(top: 58.h),
             child: _header(context),
           ),
-          Expanded(child: _main(context)),
+          _main(context),
         ],
       ),
     );
@@ -83,34 +83,46 @@ class AddPersonalSchedule extends StatelessWidget {
 
   //MARK: - 메인
   Widget _main(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(height: 22.h),
-        _naming(context),
-        SizedBox(height: 22.h),
-        _divider(),
-        SizedBox(height: 10.h),
-        _date(context),
-        SizedBox(height: 10.h),
-        _divider(),
-        SizedBox(height: 10.h),
-        _time(context),
-        SizedBox(height: 10.h),
-        _divider(),
-        SizedBox(height: 20.h),
-        _location(context),
-        SizedBox(height: 20.h),
-        _divider(),
-        SizedBox(height: 20.h),
-        _detail(context),
-        SizedBox(height: 18.h),
-        _divider(),
-        SizedBox(height: 18.h),
-        _member(context),
-        const Spacer(),
-        _bottom(context),
-      ],
-    );  
+    return Expanded(
+      child: Column(
+        children: [
+          SizedBox(
+            // 전체 화면 높이 - 189.h
+            height: 1.sh - 220.h,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 22.h),
+                  _naming(context),
+                  SizedBox(height: 22.h),
+                  _divider(),
+                  SizedBox(height: 5.h),
+                  _date(context),
+                  SizedBox(height: 5.h),
+                  _divider(),
+                  SizedBox(height: 5.h),
+                  _time(context),
+                  SizedBox(height: 5.h),
+                  _divider(),
+                  SizedBox(height: 22.h),
+                  _location(context),
+                  SizedBox(height: 22.h),
+                  _divider(),
+                  SizedBox(height: 22.h),
+                  _detail(context),
+                  SizedBox(height: 22.h),
+                  _divider(),
+                  SizedBox(height: 22.h),
+                  _member(context),
+                ],
+              ),
+            ),
+          ),
+          const Spacer(),
+          _bottom(context),
+        ],
+      ),
+    );
   }
 
   //MARK: - 일정
@@ -427,7 +439,7 @@ class AddPersonalSchedule extends StatelessWidget {
       if (participants.isEmpty) {
         return Text(
           '인원 및 참여자 정보를 입력해주세요.',
-          style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_5),
+          style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.line),
         );
       } else {
         return Wrap(
