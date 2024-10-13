@@ -1005,18 +1005,12 @@ class ScheduleMain extends StatelessWidget {
                       child: GestureDetector(
                         onTap: () async {
                           // 삭제
-                          final title = scheduleMainViewModel
-                              .selectedPersonalScheduleDetail!
-                              .room_schedule!['title'];
-                          final date = scheduleMainViewModel
-                              .selectedPersonalScheduleDetail!
-                              .room_schedule!['date']
-                              .toDate();
-                          final scheduleUID = title + date.toString();
 
                           // 해당 일정 삭제
                           await scheduleMainViewModel.deletePersonalSchedule(
-                              userViewModel.uid!, scheduleUID);
+                              userViewModel.uid!,
+                              scheduleMainViewModel
+                                  .selectedPersonalScheduleDetail!.room_name);
 
                           // 다이얼로그 닫기
                           context.pop();

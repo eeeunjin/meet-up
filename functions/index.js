@@ -170,13 +170,16 @@ onDocumentUpdated("rooms/{roomId}", async (event) => {
       var userUIDs = afterSchedule.participants_agree_selected_schedule;
       for (uid of userUIDs) {
         var userRef = db.collection("users").doc(uid);
-        var title = afterSchedule.title;
-        var date = afterSchedule.date.toDate();
-        var docID = title + date.toString();
-
         var myScheduleRef = userRef.collection("mySchedule").doc(docID);
+
+        // roomScheduleData에 after data를 복사
+        var roomScheduleData = after;
+
+        // room_name 필드에 myScheduleRef의 docID를 추가
+        roomScheduleData["room_name"] = myScheduleRef.id;
+
         // myScheduleRef에 after data를 document로 추가 (RoomModel 자체를 Schedule 정보로 사용)
-        await myScheduleRef.set(after);
+        await myScheduleRef.set(roomScheduleData);
       }
     }
   }

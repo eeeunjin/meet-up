@@ -183,13 +183,14 @@ class UserRepository {
     required RoomModel data,
     required String uid,
   }) async {
-    final title = data.room_schedule!["title"] as String;
-    final date = data.room_schedule!["date"] as Timestamp;
-    final docId = title + date.toDate().toString();
+    final myScheduleRef =
+        _firebaseRefs.colRefUser.doc(uid).collection("mySchedule").doc();
+    final myScheduleId = myScheduleRef.id;
+
+    data.room_name = myScheduleId;
 
     return await _firebaseService.createDocument<RoomModel>(
-      docRef:
-          _firebaseRefs.colRefUser.doc(uid).collection("mySchedule").doc(docId),
+      docRef: myScheduleRef,
       data: data,
     );
   }
@@ -216,13 +217,11 @@ class UserRepository {
     required RoomModel data,
     required String uid,
   }) async {
-    final title = data.room_schedule!["title"] as String;
-    final date = data.room_schedule!["date"] as Timestamp;
-    final docId = title + date.toDate().toString();
-
     return await _firebaseService.updateDocument(
-      docRef:
-          _firebaseRefs.colRefUser.doc(uid).collection("mySchedule").doc(docId),
+      docRef: _firebaseRefs.colRefUser
+          .doc(uid)
+          .collection("mySchedule")
+          .doc(data.room_name),
       data: data.toJson(),
     );
   }

@@ -11,6 +11,7 @@ import 'package:meet_up/view/widget/personal_schedule_time_picker_widget.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/schedule/schedule_add_personal_schdule_view_model.dart';
+import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -464,7 +465,12 @@ class EditPersonalSchedule extends StatelessWidget {
             // 데이터 수정
             final userVieWModel =
                 Provider.of<UserViewModel>(context, listen: false);
-            await viewModel.updatePersonalSchedule(myUID: userVieWModel.uid!);
+            final scheduleMainViewModel =
+                Provider.of<ScheduleMainViewModel>(context, listen: false);
+            await viewModel.updatePersonalSchedule(
+                myUID: userVieWModel.uid!,
+                myScheduleId: scheduleMainViewModel
+                    .selectedPersonalScheduleDetail!.room_name);
             context.pop();
           },
           height: 56.h,

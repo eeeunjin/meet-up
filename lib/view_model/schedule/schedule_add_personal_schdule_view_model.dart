@@ -286,7 +286,8 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
                 originalMembers.toSet().containsAll(_selectedMembers));
   }
 
-  Future<void> updatePersonalSchedule({required String myUID}) async {
+  Future<void> updatePersonalSchedule(
+      {required String myUID, required String myScheduleId}) async {
     // 개인 일정 저장
     logger.d(
         '일정: ${namingController.text}\n날짜: $_selectedDate\n시간: $_selectedTime\n장소: ${locationTextController.text}\n설명: ${detailTextController.text}\n참여 인원: $_selectedMembers');
@@ -311,7 +312,7 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
     );
 
     final RoomModel roomModel = RoomModel(
-      room_name: "",
+      room_name: myScheduleId,
       room_category: "",
       room_category_detail: "",
       room_region_province: "",
