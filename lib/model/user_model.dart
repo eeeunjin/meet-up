@@ -134,33 +134,6 @@ class MyRoomModel {
   }
 }
 
-class MyTicketModel {
-  int number_of_times_available;
-  bool isUsed;
-  DocumentReference? roomReference;
-
-  MyTicketModel({
-    required this.number_of_times_available,
-    required this.isUsed,
-    required this.roomReference,
-  });
-
-  MyTicketModel.fromJson(Map<String, Object?> json)
-      : this(
-          number_of_times_available: json["number_of_times_available"]! as int,
-          isUsed: json["isUsed"]! as bool,
-          roomReference: json["roomReference"]! as DocumentReference,
-        );
-
-  Map<String, Object?> toJson() {
-    return {
-      "number_of_times_available": number_of_times_available,
-      "isUsed": isUsed,
-      "roomReference": roomReference,
-    };
-  }
-}
-
 class MeetingReviewModel {
   String senderUID;
   String roomTitle;

@@ -12,10 +12,11 @@ const db = getFirestore();
 
 exports.sendScheduleMessage =
   onDocumentUpdated("rooms/{roomId}", async (event) => {
+    // 불러온 데이터의 docID
+    const roomId = event.params.roomId;
+    // 변경 전 데이터와 변경 후 데이터
     const before = event.data.before.data();
     const after = event.data.after.data();
-    console.log("before: ", before.room_participant_reference.length);
-    console.log("after: ", after.room_participant_reference.length);
 
     // 채팅방 참여자가 2명에서 3명으로 변경되었을 때 (방장 포함 4명이 한 방에 들어온 경우)
     // 채팅방에 스케줄 확정 알림을 위한 채팅 문서를 추가합니다.
@@ -43,7 +44,7 @@ exports.sendScheduleMessage =
       console.log("일정 추가 가능 채팅이 추가되었습니다.");
     }
 
-    // 4명의 인원이 일정을 모두 확정한 경우
+    // 4명의 인원이 일정을 확정한 경우 & 확정된 일정이 삭제된 경우
     // 1. 채팅방에 스케줄 확정 알림을 위한 채팅 문서를 추가
     // 2. roomModel의 isScheduleDecided 값을 true로 변경
     const beforeScheduleExist = (before.room_schedule != null);
@@ -170,7 +171,7 @@ exports.sendScheduleMessage =
         var userUIDs = afterSchedule.participants_agree_selected_schedule;
         for (uid of userUIDs) {
           var userRef = db.collection("users").doc(uid);
-          var myScheduleRef = userRef.collection("mySchedule").doc();
+          var myScheduleRef = userRef.collection("mySchedule").doc(roomId);
 
           // roomScheduleData에 after data를 복사
           var roomScheduleData = after;

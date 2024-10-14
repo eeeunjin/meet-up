@@ -127,22 +127,6 @@ class UserRepository {
     return _firebaseService.deleteDocument(docRef: myRoomDocumentReference);
   }
 
-  // MARK: - MyTicketModel CRUD
-  Future<DocumentReference> createMyTicketDocument({
-    required MyTicketModel data,
-    required String uid,
-  }) async {
-    DocumentReference myTicketDocumentReference =
-        _firebaseRefs.colRefUser.doc(uid).collection("myTickets").doc();
-
-    await _firebaseService.createDocument<MyTicketModel>(
-      docRef: myTicketDocumentReference,
-      data: data,
-    );
-
-    return myTicketDocumentReference;
-  }
-
   // MARK: - MeetingReviewModel CRUD
   Future<bool> createMeetingReviewDocument({
     required MeetingReviewModel data,
