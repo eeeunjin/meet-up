@@ -29,8 +29,9 @@ exports.sendScheduleMessage =
 
       await chatRef.add({
         "uid": "",
-        "nickName": "",
-        "Content": "",
+        "nickname": "",
+        "profile_icon": "",
+        "content": "",
         "date": Timestamp.now(),
         "room_reference": chatRoomId,
         "type": "schedule_write",
@@ -81,8 +82,9 @@ exports.sendScheduleMessage =
         // 일정 확정 알림 문구 추가
         await chatRef.add({
           "uid": "",
-          "nickName": "",
-          "Content": "",
+          "nickname": "",
+          "profile_icon": "",
+          "content": "",
           "date": Timestamp.now(),
           "room_reference": chatRoomId,
           "type": "schedule_decide",
@@ -115,8 +117,9 @@ exports.sendScheduleMessage =
         if (threeDaysBefore > Timestamp.now().toDate()) {
           await chatRef.add({
             "uid": "",
-            "nickName": "",
-            "Content": "three",
+            "nickname": "",
+            "profile_icon": "",
+            "content": "three",
             "date": Timestamp.fromDate(threeDaysBefore),
             "room_reference": chatRoomId,
             "type": "schedule_alarm",
@@ -125,8 +128,9 @@ exports.sendScheduleMessage =
         if (twoDaysBefore > Timestamp.now().toDate()) {
           await chatRef.add({
             "uid": "",
-            "nickName": "",
-            "Content": "two",
+            "nickname": "",
+            "profile_icon": "",
+            "content": "two",
             "date": Timestamp.fromDate(twoDaysBefore),
             "room_reference": chatRoomId,
             "type": "schedule_alarm",
@@ -135,8 +139,9 @@ exports.sendScheduleMessage =
         if (oneDayBefore > Timestamp.now().toDate()) {
           await chatRef.add({
             "uid": "",
-            "nickName": "",
-            "Content": "one",
+            "nickname": "",
+            "profile_icon": "",
+            "content": "one",
             "date": Timestamp.fromDate(oneDayBefore),
             "room_reference": chatRoomId,
             "type": "schedule_alarm",
@@ -150,8 +155,9 @@ exports.sendScheduleMessage =
         // 상호 평가 알림 추가
         await chatRef.add({
           "uid": "",
-          "nickName": "",
-          "Content": "",
+          "nickname": "",
+          "profile_icon": "",
+          "content": "",
           "date": Timestamp.fromDate(afterTwoHours),
           "room_reference": chatRoomId,
           "type": "review",
@@ -160,8 +166,9 @@ exports.sendScheduleMessage =
         // 일기 쓰기 알림 추가
         await chatRef.add({
           "uid": "",
-          "nickName": "",
-          "Content": "",
+          "nickname": "",
+          "profile_icon": "",
+          "content": "",
           "date": Timestamp.fromDate(afterTwoHours),
           "room_reference": chatRoomId,
           "type": "diary",

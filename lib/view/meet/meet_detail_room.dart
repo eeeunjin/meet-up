@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/main.dart';
@@ -621,6 +620,8 @@ class MeetDetailRoom extends StatelessWidget {
             // 3. 해당 방에 입장 chatModel 생성
             final chatModel = ChatModel(
               uid: userViewModel.uid!,
+              nickname: userViewModel.userModel!.nickname,
+              profile_icon: userViewModel.userModel!.profile_icon,
               content: " 님이 채팅방에 입장했습니다.",
               date: Timestamp.now(),
               room_reference: meetDetailRoomViewModel.currentRoomModel!.roomId,

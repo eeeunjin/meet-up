@@ -22,6 +22,7 @@ class RoomModel {
   bool isScheduleDecided;
   List<dynamic> room_meeting_review;
   String recentMessage; // 가장 최근 메시지
+  bool isRoomDeleted;
 
   RoomModel({
     this.roomId = '',
@@ -42,6 +43,7 @@ class RoomModel {
     required this.isScheduleDecided,
     required this.room_meeting_review,
     required this.recentMessage,
+    required this.isRoomDeleted,
   });
 
   RoomModel clone() {
@@ -64,6 +66,7 @@ class RoomModel {
       isScheduleDecided: isScheduleDecided,
       room_meeting_review: room_meeting_review,
       recentMessage: recentMessage,
+      isRoomDeleted: isRoomDeleted,
     );
   }
 
@@ -89,6 +92,7 @@ class RoomModel {
           isScheduleDecided: json['isScheduleDecided']! as bool,
           room_meeting_review: json['room_meeting_review']! as List<dynamic>,
           recentMessage: json['recentMessage']! as String,
+          isRoomDeleted: json['isRoomDeleted']! as bool,
         );
 
   Map<String, Object?> toJson() {
@@ -111,6 +115,7 @@ class RoomModel {
       'isScheduleDecided': isScheduleDecided,
       'room_meeting_review': room_meeting_review,
       'recentMessage': recentMessage,
+      'isRoomDeleted': isRoomDeleted,
     };
   }
 }

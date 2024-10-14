@@ -179,6 +179,8 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
 
     ChatModel chatModel = ChatModel(
       uid: uid,
+      nickname: '',
+      profile_icon: '',
       content: '',
       date: Timestamp.now(),
       room_reference: roomId,
@@ -203,6 +205,8 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
   Future<void> deleteSchedule({
     required String roomId,
     required String scheduleTitle,
+    required String type,
+    String? nickname,
   }) async {
     // RoomModel 업데이트
     await _roomRepository.updateRoomDocument(
@@ -221,22 +225,26 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
     // 알림 삭제 채팅이 존재했다면 삭제
     await _chatRepository.deleteChat(
       roomId,
-      "schedule_delete",
+      "schedule_delete_by_owner",
     );
 
     // ChatModel 추가
     ChatModel chatModel = ChatModel(
       uid: '',
+      nickname: type == 'owner' ? '' : nickname!,
+      profile_icon: '',
       content: scheduleTitle,
       date: Timestamp.now(),
       room_reference: roomId,
-      type: 'schedule_delete',
+      type: type == 'owner'
+          ? 'schedule_delete_by_owner'
+          : 'schedule_delete_by_participant',
     );
 
     await _chatRepository.createChat(
       chatModel,
       roomId,
-      "schedule_delete",
+      "schedule_delete_by_owner",
     );
   }
 }

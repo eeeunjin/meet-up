@@ -319,6 +319,7 @@ class MeetCreateViewModel with ChangeNotifier {
       isScheduleDecided: false,
       room_meeting_review: [],
       recentMessage: '방이 생성되었습니다.',
+      isRoomDeleted: false,
     );
     // 방 정보 저장 
     final roomDocRef =

@@ -167,10 +167,14 @@ class ChatRoomViewModel with ChangeNotifier {
         return '"$nickname" 님이 퇴장하셨습니다.';
       case "schedule_register":
         return '일정을 확인해주세요.';
-      case "schedule_delete":
+      case "schedule_delete_by_owner":
         return '기존 일정이 삭제되었습니다.';
+      case "schedule_delete_by_participant":
+        return '기존 일정이 파기되었습니다.';  
       case "schedule_decide":
         return '일정이 확정되었습니다.';
+      case "owner_exit":
+        return '방장이 퇴장하여 방이 삭제되었습니다.';
       default:
         return 'Error Message';
     }
@@ -191,6 +195,17 @@ class ChatRoomViewModel with ChangeNotifier {
   Future<void> updateRoomData(
       {required String roomId, required Map<String, dynamic> data}) async {
     await _roomRepository.updateRoomDocument(roomId: roomId, data: data);
+  }
+
+  // mySchedule 정보 삭제
+  Future<void> deleteMySchedule({
+    required String uid,
+    required String scheduleId,
+  }) async {
+    await _userRepository.deleteMyScheduleData(
+      uid: uid,
+      scheduleId: scheduleId,
+    );
   }
 
   // 상태 초기화 함수

@@ -246,6 +246,7 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
       room_meeting_review: [],
       recentMessage: "",
       room_schedule: roomSchedule.toJson(),
+      isRoomDeleted: false,
     );
 
     await _userRepository.createMyScheduleDocument(data: roomModel, uid: myUID);
@@ -336,6 +337,7 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
       room_meeting_review: [],
       recentMessage: "",
       room_schedule: roomSchedule.toJson(),
+      isRoomDeleted: false,
     );
 
     await _userRepository.updateMyScheduleDocument(data: roomModel, uid: myUID);
