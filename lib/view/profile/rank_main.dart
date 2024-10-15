@@ -133,33 +133,25 @@ class RankMain extends StatelessWidget {
               SizedBox(width: 16.w),
               // 텍스트
               Padding(
-                padding: EdgeInsets.only(top: 44.0.h),
+                padding: EdgeInsets.only(top: 36.0.h),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text.rich(
-                      TextSpan(
-                        text:
-                            '${userViewModel.userModel?.nickname ?? ''} 님의 등급은\n',
-                        style: AppTextStyles.PR_R_14
-                            .copyWith(color: UsedColor.charcoal_black),
-                        children: <TextSpan>[
-                          TextSpan(
-                            // 해당 등급
-                            text: 'Novice',
-                            style: AppTextStyles.PR_SB_14
-                                .copyWith(color: UsedColor.charcoal_black),
-                          ),
-                          TextSpan(
-                            text: ' 입니다!',
-                            style: AppTextStyles.PR_R_14
-                                .copyWith(color: UsedColor.charcoal_black),
-                          )
-                        ],
-                      ),
+                    // 사용자 등급
+                    Text(
+                      '용감한',
+                      style: AppTextStyles.PR_M_13
+                          .copyWith(color: UsedColor.text_5),
                     ),
-                    SizedBox(height: 12.h),
+                    SizedBox(height: 4.h),
+                    // 사용자 이름
+                    Text(
+                      userViewModel.userModel?.nickname ?? '',
+                      style: AppTextStyles.PR_SB_18
+                          .copyWith(color: UsedColor.charcoal_black),
+                    ),
+                    SizedBox(height: 16.h),
                     Text(
                       '활발한 햄스터까지 -점 남았습니다.',
                       style: AppTextStyles.PR_R_10
