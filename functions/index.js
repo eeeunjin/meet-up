@@ -38,7 +38,7 @@ exports.sendScheduleMessage =
       });
 
       // room 정보 중, recent message 값을 업데이트
-      await roomRef.set({
+      await roomRef.update({
         "recentMessage": "일정 등록이 가능합니다 !",
       });
 

@@ -358,6 +358,8 @@ class ChatRoom extends StatelessWidget {
         }
 
         final chatListDocs = snapshot.data!.docs;
+
+        logger.d('여기1');
         // chatListDocs의 정보를 ChatModel로 변환
         final chatModels = chatListDocs
             .map((chatDoc) =>
@@ -453,23 +455,20 @@ class ChatRoom extends StatelessWidget {
       case "chat":
         return _chat(context, isMyChat: isMyChat, chatModel: chatModel);
       case "enter":
-        return _enter(context, isMyChat: isMyChat, chatModel: chatModel);
+        return _enter(context, chatModel: chatModel);
       case "exit":
-        return _exit(context, isMyChat: isMyChat, chatModel: chatModel);
+        return _exit(context, chatModel: chatModel);
       case "schedule_write":
-        return _scheduleWrite(context,
-            isMyChat: isMyChat, chatModel: chatModel);
+        return _scheduleWrite(context, chatModel: chatModel);
       case "schedule_register":
         return _scheduleRegister(context,
             isMyChat: isMyChat, chatModel: chatModel);
       case "schedule_delete_by_owner":
-        return _scheduleDeleteByOwner(context,
-            isMyChat: isMyChat, chatModel: chatModel);
+        return _scheduleDeleteByOwner(context, chatModel: chatModel);
       case "schedule_delete_by_participant":
         return Container();
       case "schedule_decide":
-        return _scheduleDecide(context,
-            isMyChat: isMyChat, chatModel: chatModel);
+        return _scheduleDecide(context, chatModel: chatModel);
       case "schedule_alarm":
         return _scheduleAlarm(chatModel.content);
       case "review":
@@ -486,7 +485,6 @@ class ChatRoom extends StatelessWidget {
   // MARK: - 채팅방 입장
   Widget _enter(
     BuildContext context, {
-    required bool isMyChat,
     required ChatModel chatModel,
   }) {
     return Center(
@@ -525,7 +523,6 @@ class ChatRoom extends StatelessWidget {
   // MARK: - 채팅방 퇴장
   Widget _exit(
     BuildContext context, {
-    required bool isMyChat,
     required ChatModel chatModel,
   }) {
     return Center(
@@ -767,7 +764,6 @@ class ChatRoom extends StatelessWidget {
   // MARK: - 일정 작성 가능 알림
   Widget _scheduleWrite(
     BuildContext context, {
-    required bool isMyChat,
     required ChatModel chatModel,
   }) {
     return Padding(
@@ -995,7 +991,6 @@ class ChatRoom extends StatelessWidget {
   // MARK: - 일정 삭제 알림
   Widget _scheduleDeleteByOwner(
     BuildContext context, {
-    required bool isMyChat,
     required ChatModel chatModel,
   }) {
     // 일정 삭제 view 표시
@@ -1057,7 +1052,6 @@ class ChatRoom extends StatelessWidget {
   // MARK: - 일정 확정 알림
   Widget _scheduleDecide(
     BuildContext context, {
-    required bool isMyChat,
     required ChatModel chatModel,
   }) {
     return Padding(
