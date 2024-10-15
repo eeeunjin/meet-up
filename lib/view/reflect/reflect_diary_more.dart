@@ -72,6 +72,10 @@ class ReflectDiaryMore extends StatelessWidget {
   Widget _main(BuildContext context, ReflectViewModel viewModel) {
     final availableEntries = viewModel.availableEntries;
 
+    if (availableEntries.isEmpty) {
+      return _emptyStateMode(); // 일기가 없을 때 빈 상태 화면 표시
+    }
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,6 +98,38 @@ class ReflectDiaryMore extends StatelessWidget {
                 ],
               );
             }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _emptyStateMode() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(height: 229.h),
+          Image.asset(
+            ImagePath.reflectNoneDiary,
+            width: 50.w,
+            height: 50.h,
+          ),
+          SizedBox(height: 16.h),
+          Text(
+            '작성 가능한 일기가 없습니다.',
+            style: AppTextStyles.PR_R_17.copyWith(
+              color: UsedColor.text_2,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            '만남을 가진 후 일기를 작성해 보세요!',
+            style: AppTextStyles.PR_R_16.copyWith(
+              color: UsedColor.text_5,
+            ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),

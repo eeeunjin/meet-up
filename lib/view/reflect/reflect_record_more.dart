@@ -88,126 +88,107 @@ class ReflectRecordMore extends StatelessWidget {
 
 // MARK:-달력 팝업
   void _showYearMonthPicker(BuildContext context, ReflectViewModel viewModel) {
-    viewModel.initializeDisplayedDate(); // 팝업 열릴 때 선택된 연월 유지
+    viewModel.initializeDisplayedDate();
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return ChangeNotifierProvider.value(
-          value: viewModel,
-          child: Consumer<ReflectViewModel>(
-            builder: (context, viewModel, child) {
-              return Dialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Container(
-                  padding: EdgeInsets.only(
-                    left: 30.w,
-                    right: 30.w,
-                    top: 18.h,
-                    bottom: 18.h,
-                  ),
-                  height: 165.h,
-                  width: 245.w,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Column(
-                    children: [
-                      // 연도 변경
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              viewModel.selectPreviousYear(); // 이전 연도로 이동
-                            },
-                            child: Image.asset(
-                              ImagePath.reflectArrowLeft,
-                              width: 4.5.w,
-                              height: 9.h,
-                            ),
-                          ),
-                          Text(
-                            '${viewModel.displayedDate.year}', // 표시되는 연도
-                            style: AppTextStyles.SU_SB_16.copyWith(
-                              color: UsedColor.charcoal_black,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              viewModel.selectNextYear(); // 다음 연도로 이동
-                            },
-                            child: Image.asset(
-                              ImagePath.reflectArrowRight,
-                              width: 4.5.w,
-                              height: 9.h,
-                            ),
-                          ),
-                        ],
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 18.h),
+            height: 165.h,
+            width: 245.w,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: viewModel.selectPreviousYear,
+                      child: Image.asset(
+                        ImagePath.reflectArrowLeft,
+                        width: 4.5.w,
+                        height: 9.h,
                       ),
-                      SizedBox(height: 19.h),
+                    ),
+                    Text(
+                      '${viewModel.displayedDate.year}',
+                      style: AppTextStyles.SU_SB_16.copyWith(
+                        color: UsedColor.charcoal_black,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: viewModel.selectNextYear,
+                      child: Image.asset(
+                        ImagePath.reflectArrowRight,
+                        width: 4.5.w,
+                        height: 9.h,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 19.h),
 
-                      // 월 선택
-                      Expanded(
-                        child: GridView.count(
-                          crossAxisCount: 4,
-                          mainAxisSpacing: 16.w,
-                          crossAxisSpacing: 44.h,
-                          physics: const NeverScrollableScrollPhysics(),
-                          children: List.generate(12, (index) {
-                            int month = index + 1;
-                            bool isWritten = viewModel.isMonthWritten(
-                                month, viewModel.displayedDate.year);
+                // 월 선택 UI
+                Expanded(
+                  child: GridView.count(
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 16.h,
+                    crossAxisSpacing: 44.w,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: List.generate(12, (index) {
+                      int month = index + 1;
+                      bool isWritten = viewModel.isMonthWritten(
+                          month, viewModel.displayedDate.year);
 
-                            return GestureDetector(
-                              onTap: isWritten
-                                  ? () {
-                                      viewModel.selectMonth(month);
-                                      viewModel.confirmSelectedDate();
-                                      Navigator.pop(context);
-                                    }
-                                  : null,
-                              child: Container(
-                                alignment: Alignment.center,
-                                width: 23.w,
-                                height: 23.h,
-                                decoration: BoxDecoration(
-                                  color:
-                                      viewModel.displayedDate.month == month &&
-                                              viewModel.displayedDate.year ==
-                                                  viewModel.selectedDate.year
-                                          ? UsedColor.b_line
-                                          : Colors.transparent,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: FittedBox(
-                                  child: Text(
-                                    '$month',
-                                    style: AppTextStyles.PR_R_16.copyWith(
-                                      color: viewModel.displayedDate.month ==
-                                                  month &&
-                                              viewModel.displayedDate.year ==
-                                                  viewModel.selectedDate.year
-                                          ? UsedColor.charcoal_black
-                                          : isWritten
-                                              ? UsedColor.charcoal_black
-                                              : UsedColor.text_4,
-                                    ),
-                                  ),
-                                ),
+                      return GestureDetector(
+                        onTap: isWritten
+                            ? () {
+                                viewModel.selectMonth(month);
+                                viewModel.confirmSelectedDate();
+                                Navigator.pop(context);
+                              }
+                            : null,
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: 23.w,
+                          height: 23.h,
+                          decoration: BoxDecoration(
+                            color: viewModel.displayedDate.month == month &&
+                                    viewModel.displayedDate.year ==
+                                        viewModel.selectedDate.year
+                                ? UsedColor.b_line
+                                : Colors.transparent,
+                            shape: BoxShape.circle,
+                          ),
+                          child: FittedBox(
+                            child: Text(
+                              '$month',
+                              style: AppTextStyles.PR_R_16.copyWith(
+                                color: viewModel.displayedDate.month == month &&
+                                        viewModel.displayedDate.year ==
+                                            viewModel.selectedDate.year
+                                    ? UsedColor.charcoal_black
+                                    : isWritten
+                                        ? UsedColor.charcoal_black
+                                        : UsedColor.text_4,
                               ),
-                            );
-                          }),
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                      );
+                    }),
                   ),
                 ),
-              );
-            },
+              ],
+            ),
           ),
         );
       },
@@ -310,9 +291,7 @@ class ReflectRecordMore extends StatelessWidget {
 
           // 일기가 없을 때 빈 상태 화면 표시
           if (filteredDiaryEntries.isEmpty)
-            viewModel.isEditMode
-                ? _emptyStateEditMode() // 편집 모드의 빈 상태 화면
-                : _emptyStateNormalMode() // 일반 모드의 빈 상태 화면
+            _emptyStateMode(viewModel)
           else
             // 일기가 있는 경우, 일기 목록을 보여줌
             Column(
@@ -334,14 +313,14 @@ class ReflectRecordMore extends StatelessWidget {
     );
   }
 
-// 작성된 일기가 없는 상태 (편집 모드)
-  Widget _emptyStateNormalMode() {
+// 작성된 일기가 없는 상태
+  Widget _emptyStateMode(ReflectViewModel viewModel) {
     return Center(
       child: Column(
         children: [
           SizedBox(height: 243.h),
           Image.asset(
-            ImagePath.reflectNoneDiaryEdit,
+            ImagePath.reflectNoneDiaryRecord,
             width: 50.w,
             height: 50.h,
           ),
@@ -349,38 +328,6 @@ class ReflectRecordMore extends StatelessWidget {
           Text(
             '아직 작성한 일기가 없어요.',
             style: AppTextStyles.PR_R_17.copyWith(
-              color: UsedColor.text_5,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
-
-// 작성된 일기가 없는 상태 (닫기 모드)
-  Widget _emptyStateEditMode() {
-    return Center(
-      child: Column(
-        children: [
-          SizedBox(height: 229.h),
-          Image.asset(
-            ImagePath.reflectNoneDiaryClose,
-            width: 50.w,
-            height: 50.h,
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            '작성 가능한 일기가 없습니다.',
-            style: AppTextStyles.PR_R_17.copyWith(
-              color: UsedColor.text_2,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            '만남을 가진 후 일기를 작성해 보세요!',
-            style: AppTextStyles.PR_R_16.copyWith(
               color: UsedColor.text_5,
             ),
             textAlign: TextAlign.center,

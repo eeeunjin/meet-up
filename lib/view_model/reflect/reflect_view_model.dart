@@ -7,19 +7,17 @@ class ReflectViewModel with ChangeNotifier {
   final Map<int, String> _answers = {}; // 답변을 저장할 맵
 
   String? _selectedDiaryId;
+  DateTime _selectedDate = DateTime.now(); // 선택된 연/월 저장
+  DateTime _displayedDate = DateTime.now(); // 팝업에서 표시용 연/월 저장
 
   String? get selectedDiaryId => _selectedDiaryId;
+  DateTime get selectedDate => _selectedDate;
+  DateTime get displayedDate => _displayedDate;
 
   void selectDiaryId(String diaryId) {
     _selectedDiaryId = diaryId;
     notifyListeners();
   }
-
-  DateTime _selectedDate = DateTime.now(); // 선택된 연/월 저장
-  DateTime _displayedDate = DateTime.now(); // 팝업에서 표시용 연/월 저장
-
-  DateTime get selectedDate => _selectedDate;
-  DateTime get displayedDate => _displayedDate;
 
   // 연도와 월을 표시용으로 초기화 (팝업 열릴 때)
   void initializeDisplayedDate() {
@@ -28,11 +26,7 @@ class ReflectViewModel with ChangeNotifier {
 
   void confirmSelectedDate() {
     _selectedDate = _displayedDate;
-    notifyListeners();
-  }
-
-  void updateDiaryList() {
-    notifyListeners();
+    updateDiaryList();
   }
 
   // 연도 변경 (표시용)
@@ -49,7 +43,30 @@ class ReflectViewModel with ChangeNotifier {
   // 월 선택 (표시용)
   void selectMonth(int month) {
     _displayedDate = DateTime(_displayedDate.year, month);
-    confirmSelectedDate(); // 월 선택 후 즉시 반영
+    notifyListeners();
+  }
+
+  // 다이어리 목록 갱신
+  void updateDiaryList() {
+    notifyListeners();
+  }
+
+  // 작성된 일기가 있는 연/월을 확인
+  bool isMonthWritten(int month, int year) {
+    // _myDiaryEntries가 null이 아닌지 확인
+    if (_myDiaryEntries.isEmpty) {
+      return false;
+    }
+
+    return _myDiaryEntries.any((entry) {
+      try {
+        DateTime entryDate = _parseDate(entry['date']!);
+        return entryDate.month == month && entryDate.year == year;
+      } catch (e) {
+        print('날짜 파싱 오류: $e');
+        return false;
+      }
+    });
   }
 
   // 답변 업데이트
@@ -207,14 +224,6 @@ class ReflectViewModel with ChangeNotifier {
     _sortByRecent(); // 뷰모델 초기화 시 기본값으로 "최근순" 정렬
   }
   List<Map<String, String>> get myDiaryEntries => _myDiaryEntries;
-
-// 작성된 일기가 있는 연/월을 확인
-  bool isMonthWritten(int month, int year) {
-    return _myDiaryEntries.any((entry) {
-      DateTime entryDate = _parseDate(entry['date']!);
-      return entryDate.month == month && entryDate.year == year;
-    });
-  }
 
   // 편집 모드 여부
   bool _isEditMode = false;
