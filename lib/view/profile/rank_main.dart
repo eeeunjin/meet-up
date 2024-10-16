@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -170,21 +171,26 @@ class RankMain extends StatelessWidget {
             ),
           ),
           // 혜택 받기 버튼
-          // TODO : - 바텀 간격 1픽셀 over 20- > 19로 해둠
           Padding(
             padding: EdgeInsets.only(left: 25.0.w, bottom: 19.h, top: 8.h),
-            child: Container(
-              width: 288.w,
-              height: 40.h,
-              decoration: BoxDecoration(
-                color: UsedColor.image_card,
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              child: Center(
-                child: Text(
-                  '혜택 받기',
-                  style:
-                      AppTextStyles.PR_M_13.copyWith(color: UsedColor.violet),
+            child: GestureDetector(
+              // 혜택 받기 버튼 -> 만남권 지급 다이얼로그
+              onTap: () {
+                benefitDialog(context);
+              },
+              child: Container(
+                width: 288.w,
+                height: 40.h,
+                decoration: BoxDecoration(
+                  color: UsedColor.image_card,
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: Center(
+                  child: Text(
+                    '혜택 받기',
+                    style:
+                        AppTextStyles.PR_M_13.copyWith(color: UsedColor.violet),
+                  ),
                 ),
               ),
             ),
@@ -435,6 +441,7 @@ class RankMain extends StatelessWidget {
                                 ),
                               ],
                             ),
+                            SizedBox(height: 12.h),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -516,5 +523,61 @@ class RankMain extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  // MARK: 만남권 지급 다이얼로그
+  void benefitDialog(BuildContext context) {
+    showGeneralDialog(
+        context: context,
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              width: 245.w,
+              height: 95.h,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16.0.r),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 21.0.h),
+                    child: Text(
+                      '만남권 1개가 지급되었습니다.',
+                      style: AppTextStyles.PR_M_13.copyWith(
+                        color: UsedColor.charcoal_black,
+                        decoration: TextDecoration.none, // 밑줄 제거
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 0.3.h,
+                    width: 245.w,
+                    color: UsedColor.b_line,
+                  ),
+                  SizedBox(
+                    height: 35.h,
+                    child: TextButton(
+                      // !: -잉크 효과 이상해서 없애둠
+                      style: const ButtonStyle(
+                          overlayColor:
+                              MaterialStatePropertyAll(Colors.transparent)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        '확인',
+                        style: AppTextStyles.PR_M_14
+                            .copyWith(color: UsedColor.charcoal_black),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
