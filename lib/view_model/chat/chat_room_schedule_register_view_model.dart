@@ -216,6 +216,7 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
         "room_participant_reference": participants,
         "isScheduleDecided": false,
         "room_schedule": null,
+        "isRoomDeleted": (type == 'owner'),
       };
     } else {
       data = {
@@ -253,7 +254,11 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
     await _chatRepository.createChat(
       chatModel,
       roomId,
-      "schedule_delete_by_owner",
+      (type == 'owner')
+          ? (participants != null)
+              ? 'schedule_delete_by_owner_out'
+              : 'schedule_delete_by_owner'
+          : 'schedule_delete_by_participant',
     );
 
     // RoomModel 업데이트

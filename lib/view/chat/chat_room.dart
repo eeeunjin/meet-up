@@ -465,9 +465,11 @@ class ChatRoom extends StatelessWidget {
       case "schedule_delete_by_owner":
         return _scheduleDeleteByOwner(context, chatModel: chatModel);
       case "schedule_delete_by_owner_out":
-        return _scheduleDeleteByOwnerOut(context, chatModel: chatModel);
+        return _scheduleDeleteByOut(context,
+            chatModel: chatModel, isOwner: true);
       case "schedule_delete_by_participant":
-        return _scheduleDeleteByParticipant(context, chatModel: chatModel);
+        return _scheduleDeleteByOut(context,
+            chatModel: chatModel, isOwner: false);
       case "schedule_decide":
         return _scheduleDecide(context, chatModel: chatModel);
       case "schedule_alarm":
@@ -477,7 +479,7 @@ class ChatRoom extends StatelessWidget {
       case "diary":
         return _diary(context);
       case "owner_exit":
-        return Container();
+        return _ownerExit(context, chatModel: chatModel);
       default:
         return Container();
     }
@@ -1050,71 +1052,11 @@ class ChatRoom extends StatelessWidget {
     );
   }
 
-  // MARK: - 일정 삭제 알림 (방장 퇴장)
-  Widget _scheduleDeleteByOwnerOut(
+  // MARK: - 일정 파기 알림 (참가자, 방장 퇴장)
+  Widget _scheduleDeleteByOut(
     BuildContext context, {
     required ChatModel chatModel,
-  }) {
-    // 일정 삭제 view 표시
-    return Padding(
-      padding: EdgeInsets.only(left: 28.w, right: 27.w),
-      child: Container(
-        width: 338.w,
-        height: 79.h,
-        padding: EdgeInsets.only(left: 13.w),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(18.r),
-          color: UsedColor.image_card,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 12.67.h,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 20.w,
-                  height: 20.h,
-                  child: Image.asset(
-                    ImagePath.chatRoomDeleteScheduleIcon,
-                  ),
-                ),
-                SizedBox(width: 6.w),
-                Text(
-                  '채팅방 삭제 안내',
-                  style: AppTextStyles.PR_SB_14
-                      .copyWith(color: UsedColor.charcoal_black),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 3.h,
-            ),
-            Text(
-              "(${chatModel.nickname})(방장) 님이 채팅방을 나가셨습니다.",
-              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
-            ),
-            SizedBox(
-              height: 4.h,
-            ),
-            Text(
-              '해당 채팅방은 자동으로 삭제될 예정입니다.',
-              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  // MARK: - 일정 삭제 알림 (참가자 퇴장)
-  Widget _scheduleDeleteByParticipant(
-    BuildContext context, {
-    required ChatModel chatModel,
+    required bool isOwner,
   }) {
     // 일정 삭제 view 표시
     return Padding(
@@ -1156,7 +1098,9 @@ class ChatRoom extends StatelessWidget {
               height: 3.h,
             ),
             Text(
-              "'${chatModel.nickname}' 님이 채팅방을 나가셨습니다.",
+              isOwner
+                  ? "(${chatModel.nickname})(방장) 님이 채팅방을 나가셨습니다."
+                  : "(${chatModel.nickname}) 님이 채팅방을 나가셨습니다.",
               style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
             ),
             SizedBox(
@@ -1164,6 +1108,66 @@ class ChatRoom extends StatelessWidget {
             ),
             Text(
               '이탈로 인해 등록된 일정이 파기됩니다.',
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  // MARK: - 방장 퇴장으로 인한 방 삭제 알림
+  Widget _ownerExit(
+    BuildContext context, {
+    required ChatModel chatModel,
+  }) {
+    return Padding(
+      padding: EdgeInsets.only(left: 28.w, right: 27.w),
+      child: Container(
+        width: 338.w,
+        height: 79.h,
+        padding: EdgeInsets.only(left: 13.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18.r),
+          color: UsedColor.image_card,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 12.67.h,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 20.w,
+                  height: 20.h,
+                  child: Image.asset(
+                    ImagePath.chatRoomScheduleWriteIcon,
+                  ),
+                ),
+                SizedBox(width: 6.w),
+                Text(
+                  '채팅방 삭제 안내',
+                  style: AppTextStyles.PR_SB_14
+                      .copyWith(color: UsedColor.charcoal_black),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 3.h,
+            ),
+            Text(
+              "(${chatModel.nickname})(방장) 님이 채팅방을 나가셨습니다.",
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            ),
+            SizedBox(
+              height: 4.h,
+            ),
+            Text(
+              '해당 채팅방은 자동으로 삭제될 예정입니다.',
               style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
             )
           ],
@@ -1855,7 +1859,7 @@ class ChatRoom extends StatelessWidget {
 
               if (isOwner) {
                 logger.d("방장이 채팅방을 나간 경우");
-                // chatRooms/room doc/ChatModel 추가 (방장 퇴장으로 인한 방 삭제 알림)
+                // chatRooms/room doc/ChatModel 추가 (방장 퇴장 알림)
                 await chatRoomViewModel.createChatDocument(
                   roomOutChatModel,
                   userViewModel.userModel!.nickname,
@@ -1871,7 +1875,7 @@ class ChatRoom extends StatelessWidget {
                 await chatRoomViewModel.createChatDocument(
                   ChatModel(
                     uid: "",
-                    nickname: "",
+                    nickname: userViewModel.userModel!.nickname,
                     profile_icon: "",
                     content: "",
                     date: Timestamp.now(),
