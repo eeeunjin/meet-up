@@ -169,8 +169,10 @@ class ChatRoomViewModel with ChangeNotifier {
         return '일정을 확인해주세요.';
       case "schedule_delete_by_owner":
         return '기존 일정이 삭제되었습니다.';
+      case "schedule_delete_by_owner_out":
+        return '방장 퇴장으로 인해 방이 삭제되었습니다.';
       case "schedule_delete_by_participant":
-        return '기존 일정이 파기되었습니다.';  
+        return '기존 일정이 파기되었습니다.';
       case "schedule_decide":
         return '일정이 확정되었습니다.';
       case "owner_exit":

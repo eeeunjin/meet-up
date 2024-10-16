@@ -207,14 +207,21 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
     required String scheduleTitle,
     required String type,
     String? nickname,
+    List<dynamic>? participants,
   }) async {
-    // RoomModel 업데이트
-    await _roomRepository.updateRoomDocument(
-      roomId: roomId,
-      data: {
+    Map<String, dynamic> data;
+
+    if (participants != null) {
+      data = {
+        "room_participant_reference": participants,
+        "isScheduleDecided": false,
+        "room_schedule": null,
+      };
+    } else {
+      data = {
         'room_schedule': null,
-      },
-    );
+      };
+    }
 
     // 기존의 스케줄 chat 삭제 (docId 'schedule_register')
     await _chatRepository.deleteChat(
@@ -237,7 +244,9 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
       date: Timestamp.now(),
       room_reference: roomId,
       type: type == 'owner'
-          ? 'schedule_delete_by_owner'
+          ? (participants != null)
+              ? 'schedule_delete_by_owner_out'
+              : 'schedule_delete_by_owner'
           : 'schedule_delete_by_participant',
     );
 
@@ -245,6 +254,12 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
       chatModel,
       roomId,
       "schedule_delete_by_owner",
+    );
+
+    // RoomModel 업데이트
+    await _roomRepository.updateRoomDocument(
+      roomId: roomId,
+      data: data,
     );
   }
 }
