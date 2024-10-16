@@ -345,8 +345,8 @@ class ChatMain extends StatelessWidget {
                         child: Center(
                           child: Text(
                             '입장 중인 채팅 방이 없습니다.',
-                            style: AppTextStyles.PR_R_13.copyWith(
-                              color: UsedColor.text_3,
+                            style: AppTextStyles.PR_R_15.copyWith(
+                              color: UsedColor.text_2,
                             ),
                           ),
                         ),

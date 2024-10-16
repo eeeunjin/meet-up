@@ -1,16 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/main.dart';
 import 'package:meet_up/model/chat_room_model.dart';
+import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
+import 'package:meet_up/repository/room_repository.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/bot_nav_view_model.dart';
 import 'package:meet_up/view_model/chat/chat_room_view_model.dart';
+import 'package:meet_up/view_model/coin/ticket_buy_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/meet/meet_manage_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_detail_room_view_model.dart';
@@ -595,10 +599,6 @@ class MeetDetailRoom extends StatelessWidget {
     final meetDetailRoomViewModel =
         Provider.of<MeetDetailRoomViewModel>(context, listen: false);
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-    final botNavBarViewModel =
-        Provider.of<BottomNavigationBarViewModel>(context, listen: false);
-    final chatRoomViewModel =
-        Provider.of<ChatRoomViewModel>(context, listen: false);
 
     return Padding(
       padding: EdgeInsets.only(bottom: 56.h, left: 6.w, right: 6.w),
@@ -610,46 +610,53 @@ class MeetDetailRoom extends StatelessWidget {
             // 삭제가 완료 되면 뒤로 가기
             if (context.mounted) context.pop();
           } else {
-            logger.d('참여하기 버튼이 눌렸습니다.');
-            // 1. 해당 room 정보 update
-            await meetDetailRoomViewModel.updateRoomInfo(
-                myUid: userViewModel.uid!,
-                participants: meetDetailRoomViewModel
-                    .currentRoomModel!.room_participant_reference,
-                roomId: meetDetailRoomViewModel.currentRoomModel!.roomId);
+            // 조건 검사
+            // 만남권 개수 검사
+            bool isTicketEnough = userViewModel.userModel!.ticket >= 1;
 
-            // 2. myRoom에 참여한 방 정보 추가
-            await meetDetailRoomViewModel.addMyRoomInfo(
-              myUid: userViewModel.uid!,
-              roomId: meetDetailRoomViewModel.currentRoomModel!.roomId,
-            );
+            // 인원 검사
+            String myGender = userViewModel.userModel!.gender;
+            int manNum = meetDetailRoomViewModel.currentRoomModelUserModels!
+                .where((element) => element.gender == 'male')
+                .length;
+            int womanNum = meetDetailRoomViewModel.currentRoomModelUserModels!
+                .where((element) => element.gender == 'female')
+                .length;
+            String roomGenderRatio =
+                meetDetailRoomViewModel.currentRoomModel!.room_gender_ratio;
+            bool isRoomGenderRatioFull = false;
 
-            // 3. 해당 방에 입장 chatModel 생성
-            final chatModel = ChatModel(
-              uid: userViewModel.uid!,
-              nickname: userViewModel.userModel!.nickname,
-              profile_icon: userViewModel.userModel!.profile_icon,
-              content: " 님이 채팅방에 입장했습니다.",
-              date: Timestamp.now(),
-              room_reference: meetDetailRoomViewModel.currentRoomModel!.roomId,
-              type: "enter",
-            );
-
-            // chat을 생성할 때, chatRoomViewModel의 roomID를 설정해줘야 함
-            chatRoomViewModel
-                .setRoomID(meetDetailRoomViewModel.currentRoomModel!.roomId);
-            await chatRoomViewModel.createChatDocument(
-                chatModel, userViewModel.userModel!.nickname);
-
-            // 4. 이전에 들어온 탭 전부 pop
-            if (context.mounted) {
-              while (context.canPop()) {
-                context.pop();
+            if (roomGenderRatio == '남성 2명 + 여성 2명') {
+              if (myGender == "male") {
+                isRoomGenderRatioFull = manNum >= 2;
+              } else {
+                isRoomGenderRatioFull = womanNum >= 2;
+              }
+            } else if (roomGenderRatio == '남성 4명') {
+              if (myGender == 'female') {
+                isRoomGenderRatioFull = true;
+              }
+            } else if (roomGenderRatio == '여성 4명') {
+              if (myGender == 'male') {
+                isRoomGenderRatioFull = true;
               }
             }
 
-            // 5. 채팅 탭으로 이동
-            botNavBarViewModel.changeIndex(1);
+            // 만남권이 없는 경우
+            if (!isTicketEnough) {
+              _showNotPassedDialog(context, isTicketNotEough: true);
+              return;
+            }
+
+            // 성비가 맞지 않는 경우
+            if (isRoomGenderRatioFull) {
+              _showNotPassedDialog(context, isTicketNotEough: false);
+              return;
+            }
+
+            // 조건을 통과한 경우
+            // 입장권을 소비하여 방에 참여할건지 묻는 alert 띄우기
+            _showEnterRoomDialog(context);
           }
         },
         child: Container(
@@ -665,6 +672,157 @@ class MeetDetailRoom extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  // MARK: - 채팅방 입장 alert
+  void _showEnterRoomDialog(BuildContext context) {
+    final meetDetailRoomViewModel =
+        Provider.of<MeetDetailRoomViewModel>(context, listen: false);
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final chatRoomViewModel =
+        Provider.of<ChatRoomViewModel>(context, listen: false);
+    final botNavBarViewModel =
+        Provider.of<BottomNavigationBarViewModel>(context, listen: false);
+    final ticketBuyViewModel =
+        Provider.of<TicketBuyViewModel>(context, listen: false);
+
+    showCupertinoDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: Text(
+          "해당 방에 입장하시겠습니까?",
+          style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
+        ),
+        content: Container(
+          alignment: Alignment.bottomCenter,
+          height: 20.h,
+          child: Text(
+            "방에 입장하면 1개의 만남권이 사용됩니다.",
+            style: AppTextStyles.PR_R_12.copyWith(color: UsedColor.text_3),
+          ),
+        ),
+        actions: [
+          CupertinoDialogAction(
+            child: Text(
+              "취소",
+              style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
+            ),
+            onPressed: () {
+              context.pop();
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text(
+              "입장",
+              style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
+            ),
+            onPressed: () async {
+              // 1. 해당 room 정보 update
+              await meetDetailRoomViewModel.updateRoomInfo(
+                  myUid: userViewModel.uid!,
+                  participants: meetDetailRoomViewModel
+                      .currentRoomModel!.room_participant_reference,
+                  roomId: meetDetailRoomViewModel.currentRoomModel!.roomId);
+
+              // 2. myRoom에 참여한 방 정보 추가
+              await meetDetailRoomViewModel.addMyRoomInfo(
+                myUid: userViewModel.uid!,
+                roomId: meetDetailRoomViewModel.currentRoomModel!.roomId,
+              );
+
+              // 3. 해당 방에 입장 chatModel 생성
+              final chatModel = ChatModel(
+                uid: userViewModel.uid!,
+                nickname: userViewModel.userModel!.nickname,
+                profile_icon: userViewModel.userModel!.profile_icon,
+                content: " 님이 채팅방에 입장했습니다.",
+                date: Timestamp.now(),
+                room_reference:
+                    meetDetailRoomViewModel.currentRoomModel!.roomId,
+                type: "enter",
+              );
+
+              // chat을 생성할 때, chatRoomViewModel의 roomID를 설정해줘야 함
+              chatRoomViewModel
+                  .setRoomID(meetDetailRoomViewModel.currentRoomModel!.roomId);
+              await chatRoomViewModel.createChatDocument(
+                  chatModel, userViewModel.userModel!.nickname);
+
+              // 4. 유저 만남권 개수 정보 업데이트
+              await userViewModel.updateUserInfo(
+                data: {'ticket': userViewModel.userModel!.ticket - 1},
+              );
+
+              // 5. GoodHistoryModel 생성
+              final goodHistoryModel = GoodHistoryModel(
+                  gh_type: GoodHistoryType.ticket.name,
+                  gh_type_transaction: GoodHistoryTypeOfTransaction.use.name,
+                  gh_uid: userViewModel.uid!,
+                  gh_result_coin: userViewModel.userModel!.coin,
+                  gh_result_ticket: userViewModel.userModel!.ticket - 1,
+                  gh_change_coin_amount: 0,
+                  gh_change_ticket_amount: -1,
+                  gh_product_id: '',
+                  gh_change_date: Timestamp.now());
+
+              await ticketBuyViewModel.createGoodHistory(
+                goodHistoryModel: goodHistoryModel,
+              );
+
+              // 6. 이전에 들어온 탭 전부 pop
+              if (context.mounted) {
+                while (context.canPop()) {
+                  context.pop();
+                }
+              }
+
+              // 5. 채팅 탭으로 이동
+              botNavBarViewModel.changeIndex(1);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  // MARK: - 조건 검사 alert
+  void _showNotPassedDialog(
+    BuildContext context, {
+    required bool isTicketNotEough,
+  }) {
+    showCupertinoDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: Column(
+          children: [
+            Text(
+              isTicketNotEough ? "소지하신 만남권이 부족하여" : "성비 별 자리가 부족하여",
+              style: AppTextStyles.PR_SB_15
+                  .copyWith(color: UsedColor.charcoal_black),
+            ),
+            SizedBox(
+              height: 3.h,
+            ),
+            Text(
+              isTicketNotEough ? "입장이 불가합니다." : "입장이 불가합니다.",
+              style: AppTextStyles.PR_SB_15
+                  .copyWith(color: UsedColor.charcoal_black),
+            )
+          ],
+        ),
+        actions: [
+          CupertinoDialogAction(
+            child: Text(
+              "확인",
+              style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
+            ),
+            onPressed: () {
+              context.pop();
+            },
+          ),
+        ],
       ),
     );
   }

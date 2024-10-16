@@ -10,6 +10,7 @@ class MeetDetailRoomViewModel with ChangeNotifier {
   final UserRepository _userRepository = UserRepository();
   final RoomRepository _roomRepository = RoomRepository();
   RoomModel? currentRoomModel; // 현재 방 모델
+  List<UserModel>? currentRoomModelUserModels; // 현재 방 모델의 유저들
   bool? isMyRoom;
   bool? isChatRoom;
 
@@ -79,6 +80,8 @@ class MeetDetailRoomViewModel with ChangeNotifier {
       logger.d(
           "userModel.nickname: ${userModel.nickname} / userModel.gender: ${userModel.gender}");
     }
+
+    currentRoomModelUserModels = userModels;
 
     return userModels;
   }
