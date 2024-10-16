@@ -215,7 +215,7 @@ class RankMain extends StatelessWidget {
                   .copyWith(color: UsedColor.charcoal_black),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 4.0.w, top: 12.h, bottom: 20.h),
+              padding: EdgeInsets.only(left: 4.0.w, top: 12.h, bottom: 26.h),
               child: Row(
                 children: [
                   Container(width: 12.w, height: 12.w, color: UsedColor.main),
@@ -236,51 +236,51 @@ class RankMain extends StatelessWidget {
                 _rankTier(
                   context: context,
                   viewModel: viewModel,
-                  rank: 'Master',
+                  rank: '전설적인',
                   imagePathOn: ImagePath.rankMasterOn,
                   imagePathOff: ImagePath.rankMasterOff,
                   width: 48.w,
-                  height: 236.h,
+                  height: 210.h,
                 ),
                 SizedBox(width: 20.w),
                 _rankTier(
                   context: context,
                   viewModel: viewModel,
-                  rank: 'Advanced',
+                  rank: '적극적인',
                   imagePathOn: ImagePath.rankAdvancedOn,
                   imagePathOff: ImagePath.rankAdvancedOff,
                   width: 48.w,
-                  height: 190.h,
+                  height: 188.h,
                 ),
                 SizedBox(width: 20.w),
                 _rankTier(
                   context: context,
                   viewModel: viewModel,
-                  rank: 'Intermediate',
+                  rank: '활발한',
                   imagePathOn: ImagePath.rankIntermediateOn,
                   imagePathOff: ImagePath.rankIntermediateOff,
                   width: 48.w,
-                  height: 135.h,
+                  height: 152.h,
                 ),
                 SizedBox(width: 20.w),
                 _rankTier(
                   context: context,
                   viewModel: viewModel,
-                  rank: 'Novice',
+                  rank: '용감한',
                   imagePathOn: ImagePath.rankNoviceOn,
                   imagePathOff: ImagePath.rankNoviceOff,
                   width: 48.w,
-                  height: 74.h,
+                  height: 120.h,
                 ),
                 SizedBox(width: 20.w),
                 _rankTier(
                   context: context,
                   viewModel: viewModel,
-                  rank: 'Beginner',
+                  rank: '수줍은',
                   imagePathOn: ImagePath.rankBeginnerOn,
                   imagePathOff: ImagePath.rankBeginnerOff,
                   width: 48.w,
-                  height: 45.h,
+                  height: 88.h,
                 ),
               ],
             ),
@@ -496,6 +496,7 @@ class RankMain extends StatelessWidget {
     );
   }
 
+  // MARK: - 랭크 티어 위젯
   Widget _rankTier({
     required BuildContext context,
     required ProfileViewModel viewModel,
@@ -517,7 +518,7 @@ class RankMain extends StatelessWidget {
             padding: EdgeInsets.only(top: 4.0.h, left: 4.w, right: 4.w),
             child: Text(
               rank,
-              style: AppTextStyles.PR_R_10.copyWith(color: UsedColor.text_3),
+              style: AppTextStyles.PR_R_13.copyWith(color: UsedColor.text_3),
             ),
           ),
         ],
