@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -133,33 +134,25 @@ class RankMain extends StatelessWidget {
               SizedBox(width: 16.w),
               // 텍스트
               Padding(
-                padding: EdgeInsets.only(top: 44.0.h),
+                padding: EdgeInsets.only(top: 36.0.h),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text.rich(
-                      TextSpan(
-                        text:
-                            '${userViewModel.userModel?.nickname ?? ''} 님의 등급은\n',
-                        style: AppTextStyles.PR_R_14
-                            .copyWith(color: UsedColor.charcoal_black),
-                        children: <TextSpan>[
-                          TextSpan(
-                            // 해당 등급
-                            text: 'Novice',
-                            style: AppTextStyles.PR_SB_14
-                                .copyWith(color: UsedColor.charcoal_black),
-                          ),
-                          TextSpan(
-                            text: ' 입니다!',
-                            style: AppTextStyles.PR_R_14
-                                .copyWith(color: UsedColor.charcoal_black),
-                          )
-                        ],
-                      ),
+                    // 사용자 등급
+                    Text(
+                      '용감한',
+                      style: AppTextStyles.PR_M_13
+                          .copyWith(color: UsedColor.text_5),
                     ),
-                    SizedBox(height: 12.h),
+                    SizedBox(height: 4.h),
+                    // 사용자 이름
+                    Text(
+                      userViewModel.userModel?.nickname ?? '',
+                      style: AppTextStyles.PR_SB_18
+                          .copyWith(color: UsedColor.charcoal_black),
+                    ),
+                    SizedBox(height: 16.h),
                     Text(
                       '활발한 햄스터까지 -점 남았습니다.',
                       style: AppTextStyles.PR_R_10
@@ -178,21 +171,26 @@ class RankMain extends StatelessWidget {
             ),
           ),
           // 혜택 받기 버튼
-          // TODO : - 바텀 간격 1픽셀 over 20- > 19로 해둠
           Padding(
             padding: EdgeInsets.only(left: 25.0.w, bottom: 19.h, top: 8.h),
-            child: Container(
-              width: 288.w,
-              height: 40.h,
-              decoration: BoxDecoration(
-                color: UsedColor.image_card,
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              child: Center(
-                child: Text(
-                  '혜택 받기',
-                  style:
-                      AppTextStyles.PR_M_13.copyWith(color: UsedColor.violet),
+            child: GestureDetector(
+              // 혜택 받기 버튼 -> 만남권 지급 다이얼로그
+              onTap: () {
+                benefitDialog(context);
+              },
+              child: Container(
+                width: 288.w,
+                height: 40.h,
+                decoration: BoxDecoration(
+                  color: UsedColor.image_card,
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: Center(
+                  child: Text(
+                    '혜택 받기',
+                    style:
+                        AppTextStyles.PR_M_13.copyWith(color: UsedColor.violet),
+                  ),
                 ),
               ),
             ),
@@ -217,7 +215,7 @@ class RankMain extends StatelessWidget {
                   .copyWith(color: UsedColor.charcoal_black),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 4.0.w, top: 12.h, bottom: 20.h),
+              padding: EdgeInsets.only(left: 4.0.w, top: 12.h, bottom: 26.h),
               child: Row(
                 children: [
                   Container(width: 12.w, height: 12.w, color: UsedColor.main),
@@ -238,51 +236,51 @@ class RankMain extends StatelessWidget {
                 _rankTier(
                   context: context,
                   viewModel: viewModel,
-                  rank: 'Master',
+                  rank: '전설적인',
                   imagePathOn: ImagePath.rankMasterOn,
                   imagePathOff: ImagePath.rankMasterOff,
                   width: 48.w,
-                  height: 236.h,
+                  height: 210.h,
                 ),
                 SizedBox(width: 20.w),
                 _rankTier(
                   context: context,
                   viewModel: viewModel,
-                  rank: 'Advanced',
+                  rank: '적극적인',
                   imagePathOn: ImagePath.rankAdvancedOn,
                   imagePathOff: ImagePath.rankAdvancedOff,
                   width: 48.w,
-                  height: 190.h,
+                  height: 188.h,
                 ),
                 SizedBox(width: 20.w),
                 _rankTier(
                   context: context,
                   viewModel: viewModel,
-                  rank: 'Intermediate',
+                  rank: '활발한',
                   imagePathOn: ImagePath.rankIntermediateOn,
                   imagePathOff: ImagePath.rankIntermediateOff,
                   width: 48.w,
-                  height: 135.h,
+                  height: 152.h,
                 ),
                 SizedBox(width: 20.w),
                 _rankTier(
                   context: context,
                   viewModel: viewModel,
-                  rank: 'Novice',
+                  rank: '용감한',
                   imagePathOn: ImagePath.rankNoviceOn,
                   imagePathOff: ImagePath.rankNoviceOff,
                   width: 48.w,
-                  height: 74.h,
+                  height: 120.h,
                 ),
                 SizedBox(width: 20.w),
                 _rankTier(
                   context: context,
                   viewModel: viewModel,
-                  rank: 'Beginner',
+                  rank: '수줍은',
                   imagePathOn: ImagePath.rankBeginnerOn,
                   imagePathOff: ImagePath.rankBeginnerOff,
                   width: 48.w,
-                  height: 45.h,
+                  height: 88.h,
                 ),
               ],
             ),
@@ -443,6 +441,7 @@ class RankMain extends StatelessWidget {
                                 ),
                               ],
                             ),
+                            SizedBox(height: 12.h),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -497,6 +496,7 @@ class RankMain extends StatelessWidget {
     );
   }
 
+  // MARK: - 랭크 티어 위젯
   Widget _rankTier({
     required BuildContext context,
     required ProfileViewModel viewModel,
@@ -518,11 +518,67 @@ class RankMain extends StatelessWidget {
             padding: EdgeInsets.only(top: 4.0.h, left: 4.w, right: 4.w),
             child: Text(
               rank,
-              style: AppTextStyles.PR_R_10.copyWith(color: UsedColor.text_3),
+              style: AppTextStyles.PR_R_13.copyWith(color: UsedColor.text_3),
             ),
           ),
         ],
       ),
     );
+  }
+
+  // MARK: 만남권 지급 다이얼로그
+  void benefitDialog(BuildContext context) {
+    showGeneralDialog(
+        context: context,
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              width: 245.w,
+              height: 95.h,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16.0.r),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 21.0.h),
+                    child: Text(
+                      '만남권 1개가 지급되었습니다.',
+                      style: AppTextStyles.PR_M_13.copyWith(
+                        color: UsedColor.charcoal_black,
+                        decoration: TextDecoration.none, // 밑줄 제거
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 0.3.h,
+                    width: 245.w,
+                    color: UsedColor.b_line,
+                  ),
+                  SizedBox(
+                    height: 35.h,
+                    child: TextButton(
+                      // !: -잉크 효과 이상해서 없애둠
+                      style: const ButtonStyle(
+                          overlayColor:
+                              MaterialStatePropertyAll(Colors.transparent)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        '확인',
+                        style: AppTextStyles.PR_M_14
+                            .copyWith(color: UsedColor.charcoal_black),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
