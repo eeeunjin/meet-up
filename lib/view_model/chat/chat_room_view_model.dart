@@ -69,7 +69,10 @@ class ChatRoomViewModel with ChangeNotifier {
 
   Future<void> setUserModels() async {
     final userRefs = List.from(roomModel.room_participant_reference);
-    userRefs.insert(0, roomModel.room_owner_reference);
+
+    if (!roomModel.isRoomDeleted) {
+      userRefs.insert(0, roomModel.room_owner_reference);
+    }
 
     List<UserModel> newUserModels = [];
 

@@ -56,8 +56,11 @@ class MeetDetailRoomViewModel with ChangeNotifier {
   // MARK: - 상세정보 불러오면서 참여자 정보 가져오는 함수
   Future<List<UserModel>> getParticipantInfo() async {
     List<DocumentReference> docRefs = List.empty(growable: true);
-    // 방장 추가
-    docRefs.add(currentRoomModel!.room_owner_reference);
+
+    if (!currentRoomModel!.isRoomDeleted) {
+      // 방장 추가
+      docRefs.add(currentRoomModel!.room_owner_reference);
+    }
 
     // 입장한 사람 추가
     for (DocumentReference docRef

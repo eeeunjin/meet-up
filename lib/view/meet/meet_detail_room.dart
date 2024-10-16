@@ -273,7 +273,10 @@ class MeetDetailRoom extends StatelessWidget {
                                 width: 7.w,
                               ),
                               Text(
-                                "${meetDetailRoomViewModel.currentRoomModel!.room_participant_reference.length + 1}",
+                                (meetDetailRoomViewModel
+                                        .currentRoomModel!.isRoomDeleted)
+                                    ? "${meetDetailRoomViewModel.currentRoomModel!.room_participant_reference.length}"
+                                    : "${meetDetailRoomViewModel.currentRoomModel!.room_participant_reference.length + 1}",
                                 style: AppTextStyles.PR_SB_12
                                     .copyWith(color: UsedColor.violet),
                               ),
@@ -336,7 +339,11 @@ class MeetDetailRoom extends StatelessWidget {
                                         SizedBox(
                                           width: 45.w,
                                           height: 45.h,
-                                          child: (index == 0)
+                                          child: (userModels[index].uid ==
+                                                  meetDetailRoomViewModel
+                                                      .currentRoomModel!
+                                                      .room_owner_reference
+                                                      .id)
                                               ? Stack(
                                                   alignment:
                                                       Alignment.bottomRight,

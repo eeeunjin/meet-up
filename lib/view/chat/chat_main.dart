@@ -226,7 +226,9 @@ class ChatMain extends StatelessWidget {
                                                   SizedBox(
                                                     height: 16.h,
                                                     child: Text(
-                                                      "${roomModel.room_participant_reference.length + 1}",
+                                                      roomModel.isRoomDeleted
+                                                          ? "${roomModel.room_participant_reference.length}"
+                                                          : "${roomModel.room_participant_reference.length + 1}",
                                                       style: AppTextStyles
                                                           .PR_SB_13
                                                           .copyWith(
@@ -246,13 +248,6 @@ class ChatMain extends StatelessWidget {
                                                     ),
                                                   ),
                                                   SizedBox(width: 10.w),
-                                                  // 알림 설정 상태
-                                                  // Container(
-                                                  //   height: 12.h,
-
-                                                  //   width: 12.w,
-                                                  //   color: UsedColor.text_6,
-                                                  // ),
                                                   const Spacer(),
                                                   Text(
                                                     "${roomModel.room_creation_date.toDate().add(const Duration(days: 7)).toString().substring(0, 10).replaceAll('-', '.')} 만료",

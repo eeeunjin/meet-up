@@ -1611,8 +1611,8 @@ class ChatRoom extends StatelessWidget {
         // 방장인지 확인하는 변수
         final userViewModel =
             Provider.of<UserViewModel>(context, listen: false);
-        final isOwner = chatRoomViewModel.userModels[0].nickname ==
-            (userViewModel.userModel?.nickname ?? '');
+        final isOwner = chatRoomViewModel.roomModel.room_owner_reference.id ==
+            userViewModel.uid;
         double typeContainerWidth = chatRoomViewModel.startEdit ? 296.w : 357.w;
         double typeContainerWidthEnd =
             isOwner ? typeContainerWidth - 52.w : typeContainerWidth;
@@ -1649,6 +1649,9 @@ class ChatRoom extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.only(top: 4.h),
                           child: TextField(
+                            enabled: chatRoomViewModel.roomModel.isRoomDeleted
+                                ? false
+                                : true,
                             textAlignVertical: TextAlignVertical.top,
                             cursorColor: UsedColor.main,
                             // cursorHeight: 18.h,
@@ -1679,7 +1682,10 @@ class ChatRoom extends StatelessWidget {
                                         ? 10.h
                                         : 4.h,
                               ),
-                              hintText: '메시지를 입력해주세요',
+                              hintText:
+                                  chatRoomViewModel.roomModel.isRoomDeleted
+                                      ? '메시지를 입력할 수 없습니다'
+                                      : '메시지를 입력해주세요',
                               hintStyle: AppTextStyles.PR_R_13
                                   .copyWith(color: UsedColor.text_3),
                               border: InputBorder.none,
@@ -1901,7 +1907,6 @@ class ChatRoom extends StatelessWidget {
                   chatRoomViewModel.updateRoomData(
                     roomId: chatRoomViewModel.roomID,
                     data: {
-                      "room_participant_reference": participantRefs,
                       "isRoomDeleted": true,
                     },
                   );
