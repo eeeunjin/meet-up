@@ -627,7 +627,12 @@ class MeetDetailRoom extends StatelessWidget {
               room_reference: meetDetailRoomViewModel.currentRoomModel!.roomId,
               type: "enter",
             );
-            await chatRoomViewModel.createChatDocument(chatModel, userViewModel.userModel!.nickname);
+
+            // chat을 생성할 때, chatRoomViewModel의 roomID를 설정해줘야 함
+            chatRoomViewModel
+                .setRoomID(meetDetailRoomViewModel.currentRoomModel!.roomId);
+            await chatRoomViewModel.createChatDocument(
+                chatModel, userViewModel.userModel!.nickname);
 
             // 4. 이전에 들어온 탭 전부 pop
             if (context.mounted) {
