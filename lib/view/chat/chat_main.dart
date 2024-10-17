@@ -152,6 +152,12 @@ class ChatMain extends StatelessWidget {
                                           .add(const Duration(days: 7))
                                           .compareTo(DateTime.now()) <
                                       0;
+                                  String participantLength = (roomModel
+                                              .room_participant_reference
+                                              .length +
+                                          (roomModel.isOwnerExit ? 0 : 1))
+                                      .toString();
+
                                   return Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
@@ -224,9 +230,7 @@ class ChatMain extends StatelessWidget {
                                                   SizedBox(
                                                     height: 16.h,
                                                     child: Text(
-                                                      roomModel.isRoomDeleted
-                                                          ? "${roomModel.room_participant_reference.length}"
-                                                          : "${roomModel.room_participant_reference.length + 1}",
+                                                      participantLength,
                                                       style: AppTextStyles
                                                           .PR_SB_13
                                                           .copyWith(

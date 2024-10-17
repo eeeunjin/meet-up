@@ -275,10 +275,7 @@ class MeetDetailRoom extends StatelessWidget {
                                 width: 7.w,
                               ),
                               Text(
-                                (meetDetailRoomViewModel
-                                        .currentRoomModel!.isRoomDeleted)
-                                    ? "${meetDetailRoomViewModel.currentRoomModel!.room_participant_reference.length}"
-                                    : "${meetDetailRoomViewModel.currentRoomModel!.room_participant_reference.length + 1}",
+                                "${userModels.length}",
                                 style: AppTextStyles.PR_SB_12
                                     .copyWith(color: UsedColor.violet),
                               ),

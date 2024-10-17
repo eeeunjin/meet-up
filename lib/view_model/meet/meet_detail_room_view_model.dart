@@ -39,7 +39,7 @@ class MeetDetailRoomViewModel with ChangeNotifier {
   Future<List<UserModel>> getParticipantInfo() async {
     List<DocumentReference> docRefs = List.empty(growable: true);
 
-    if (!currentRoomModel!.isRoomDeleted) {
+    if (!currentRoomModel!.isOwnerExit) {
       // 방장 추가
       docRefs.add(currentRoomModel!.room_owner_reference);
     }

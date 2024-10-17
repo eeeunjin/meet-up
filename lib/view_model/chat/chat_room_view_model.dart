@@ -32,6 +32,10 @@ class ChatRoomViewModel with ChangeNotifier {
   final List<UserModel> _userModels = [];
   List<UserModel> get userModels => _userModels;
 
+  // 스케쥴에 참가한 인원 정보
+  final List<UserModel> _scheduleUserModels = [];
+  List<UserModel> get scheduleUserModels => _scheduleUserModels;
+
   // 방 owner UID
   UserModel get ownerUID => _userModels[0];
 
@@ -67,7 +71,7 @@ class ChatRoomViewModel with ChangeNotifier {
     _roomModel = value;
   }
 
-  Future<void> setUserModels() async {
+  Future<void> setUserModels({required bool isScheduleEnd}) async {
     final userRefs = List.from(roomModel.room_participant_reference);
 
     if (!roomModel.isRoomDeleted) {
@@ -84,6 +88,22 @@ class ChatRoomViewModel with ChangeNotifier {
 
     _userModels.clear();
     _userModels.addAll(newUserModels);
+
+    if (isScheduleEnd) {
+      final scheduleUserRefIds = List.from(
+          roomModel.room_schedule!["participants_agree_selected_schedule"]);
+
+      List<UserModel> newScheduleUserModels = [];
+
+      for (String userRefId in scheduleUserRefIds) {
+        UserModel userModel =
+            await _userRepository.readUserDocument(uid: userRefId);
+        newScheduleUserModels.add(userModel);
+      }
+
+      _scheduleUserModels.clear();
+      _scheduleUserModels.addAll(newScheduleUserModels);
+    }
   }
 
   void setStartEdit(bool value) {
@@ -216,8 +236,12 @@ class ChatRoomViewModel with ChangeNotifier {
   // 상태 초기화 함수
   void resetState() {
     _roomID = '';
+    _roomModel = null;
+    _roomRef = null;
+    _userModels.clear();
     _messageController.clear();
     _startEdit = false;
     _lineNum = 1;
+    _moreOptionClicked = false;
   }
 }

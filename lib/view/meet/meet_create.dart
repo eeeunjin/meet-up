@@ -1047,6 +1047,9 @@ class MeetCreate extends StatelessWidget {
                       await ticketBuyViewModel.createGoodHistory(
                           goodHistoryModel: goodHistoryModel);
 
+                      // meetCreateViewModel 초기화
+                      viewModel.backClearSelection();
+
                       // 첫 화면으로 이동 후, 채팅 탭으로 이동
                       while (context.canPop()) {
                         context.pop();

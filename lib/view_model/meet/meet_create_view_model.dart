@@ -320,6 +320,7 @@ class MeetCreateViewModel with ChangeNotifier {
       room_meeting_review: [],
       recentMessage: '방이 생성되었습니다.',
       isRoomDeleted: false,
+      isOwnerExit: false,
     );
     // 방 정보 저장 
     final roomDocRef =

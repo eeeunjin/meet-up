@@ -23,6 +23,7 @@ class RoomModel {
   List<dynamic> room_meeting_review;
   String recentMessage; // 가장 최근 메시지
   bool isRoomDeleted;
+  bool isOwnerExit;
 
   RoomModel({
     this.roomId = '',
@@ -44,6 +45,7 @@ class RoomModel {
     required this.room_meeting_review,
     required this.recentMessage,
     required this.isRoomDeleted,
+    this.isOwnerExit = false,
   });
 
   RoomModel clone() {
@@ -67,6 +69,7 @@ class RoomModel {
       room_meeting_review: room_meeting_review,
       recentMessage: recentMessage,
       isRoomDeleted: isRoomDeleted,
+      isOwnerExit: isOwnerExit,
     );
   }
 
@@ -93,6 +96,7 @@ class RoomModel {
           room_meeting_review: json['room_meeting_review']! as List<dynamic>,
           recentMessage: json['recentMessage']! as String,
           isRoomDeleted: json['isRoomDeleted']! as bool,
+          isOwnerExit: json['isOwnerExit']! as bool,
         );
 
   Map<String, Object?> toJson() {
@@ -116,6 +120,7 @@ class RoomModel {
       'room_meeting_review': room_meeting_review,
       'recentMessage': recentMessage,
       'isRoomDeleted': isRoomDeleted,
+      'isOwnerExit': isOwnerExit,
     };
   }
 }
