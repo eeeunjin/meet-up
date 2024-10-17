@@ -13,6 +13,7 @@ import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/bot_nav_view_model.dart';
+import 'package:meet_up/view_model/chat/chat_room_schedule_register_view_model.dart';
 import 'package:meet_up/view_model/chat/chat_room_view_model.dart';
 import 'package:meet_up/view_model/coin/ticket_buy_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
@@ -605,10 +606,7 @@ class MeetDetailRoom extends StatelessWidget {
       child: GestureDetector(
         onTap: () async {
           if (meetDetailRoomViewModel.isMyRoom!) {
-            // 삭제 or 참여 요청 버튼
-            await meetDetailRoomViewModel.deleteRoom(myUid: userViewModel.uid!);
-            // 삭제가 완료 되면 뒤로 가기
-            if (context.mounted) context.pop();
+            _showDeleteRoomDialog(context);
           } else {
             // 조건 검사
             // 만남권 개수 검사
@@ -820,6 +818,146 @@ class MeetDetailRoom extends StatelessWidget {
             ),
             onPressed: () {
               context.pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  // MARK: - 채팅방 삭제 alert
+  void _showDeleteRoomDialog(BuildContext context) {
+    showCupertinoDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: Text(
+          "해당 방을 삭제하시겠습니까?",
+          style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
+        ),
+        content: Container(
+          alignment: Alignment.center,
+          height: 40.h,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 10.0.h,
+              ),
+              Text(
+                "만남 방과 채팅 방이 모두 삭제 됩니다.",
+                style: AppTextStyles.PR_R_12.copyWith(color: UsedColor.text_3),
+              ),
+              SizedBox(
+                height: 4.0.h,
+              ),
+              Text(
+                "일정이 확정된 경우 제재가 가해질 수 있습니다.",
+                style: AppTextStyles.PR_R_12.copyWith(color: UsedColor.text_3),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          CupertinoDialogAction(
+            child: Text(
+              "취소",
+              style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
+            ),
+            onPressed: () {
+              context.pop();
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text(
+              "삭제",
+              style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
+            ),
+            onPressed: () async {
+              logger.d("방 삭제 버튼 눌림");
+              final meetDetailRoomViewModel =
+                  Provider.of<MeetDetailRoomViewModel>(context, listen: false);
+              final chatRoomViewModel =
+                  Provider.of<ChatRoomViewModel>(context, listen: false);
+              final userViewModel =
+                  Provider.of<UserViewModel>(context, listen: false);
+              final chatRoomSchduleRegisterViewModel =
+                  Provider.of<ChatRoomSchduleRegisterViewModel>(context,
+                      listen: false);
+
+              final myRoomModel = meetDetailRoomViewModel.currentRoomModel!;
+              final userModels =
+                  meetDetailRoomViewModel.currentRoomModelUserModels;
+
+              bool isScheduleDecided = myRoomModel.isScheduleDecided;
+
+              // chat을 create할 때, chatRoomViewModel의 roomID를 설정해줘야 함
+              chatRoomViewModel.setRoomID(myRoomModel.roomId);
+
+              // chatRooms/room doc/ChatModel 추가 (방장 퇴장 알림)
+              await chatRoomViewModel.createChatDocument(
+                ChatModel(
+                  uid: userViewModel.uid!,
+                  nickname: userViewModel.userModel!.nickname,
+                  profile_icon: userViewModel.userModel!.profile_icon,
+                  content: " 님이 채팅방을 나갔습니다.",
+                  date: Timestamp.now(),
+                  room_reference: myRoomModel.roomId,
+                  type: "exit",
+                ),
+                userViewModel.userModel!.nickname,
+              );
+
+              // users/user doc/MyRoomModel 삭제 (방장)
+              await chatRoomViewModel.deleteMyRoom(
+                uid: userViewModel.uid!,
+                roomId: myRoomModel.roomId,
+              );
+
+              if (isScheduleDecided) {
+                // chatRooms/room doc/ChatModel 추가 (일정 삭제 알림)
+                await chatRoomSchduleRegisterViewModel.deleteSchedule(
+                  roomId: myRoomModel.roomId,
+                  scheduleTitle: myRoomModel.room_schedule!["title"],
+                  type: "owner",
+                  nickname: userViewModel.userModel!.nickname,
+                  participants: [""],
+                );
+
+                // users/user docs/myScheduleModel 삭제 (참여자 모두)
+                for (var userModel in userModels!) {
+                  await chatRoomViewModel.deleteMySchedule(
+                    uid: userModel.uid,
+                    scheduleId: myRoomModel.roomId,
+                  );
+                }
+              } else {
+                // rooms/room docs/roomModel 참여자 정보 update
+                chatRoomViewModel.updateRoomData(
+                  roomId: myRoomModel.roomId,
+                  data: {
+                    "isRoomDeleted": true,
+                  },
+                );
+              }
+
+              // chatRooms/room doc/ChatModel 추가 (방장 퇴장으로 인한 방 삭제 알림)
+              await chatRoomViewModel.createChatDocument(
+                ChatModel(
+                  uid: "",
+                  nickname: userViewModel.userModel!.nickname,
+                  profile_icon: "",
+                  content: "",
+                  date: Timestamp.now(),
+                  room_reference: myRoomModel.roomId,
+                  type: "owner_exit",
+                ),
+              );
+
+              // 만남권 환불 x
+              // 채팅방 나가기
+              if (context.mounted) {
+                context.pop();
+                context.pop();
+              }
             },
           ),
         ],

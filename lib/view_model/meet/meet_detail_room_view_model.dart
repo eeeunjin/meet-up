@@ -33,25 +33,6 @@ class MeetDetailRoomViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteRoom({required String myUid}) async {
-    logger.d("채팅 방 만들어지고, 채팅 방 삭제되는 로직도 들어와야 함");
-
-    // Room Collection 에서 해당 정보 삭제
-    try {
-      await _roomRepository.deleteRoomData(roomId: currentRoomModel!.roomId);
-
-      // 해당 유저의 myRoom Collection 에서 해당 정보 삭제
-      await _userRepository.deleteMyRoomData(
-          uid: myUid, roomId: currentRoomModel!.roomId);
-
-      logger.d("안전하게 방 정보가 삭제되었습니다.");
-    } catch (e) {
-      logger.e("방 삭제 중 에러가 발생하였습니다. $e");
-    }
-
-    return;
-  }
-
   List<bool> get roomRules => currentRoomModel?.room_rules.cast<bool>() ?? [];
 
   // MARK: - 상세정보 불러오면서 참여자 정보 가져오는 함수

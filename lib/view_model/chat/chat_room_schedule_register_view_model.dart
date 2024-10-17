@@ -212,12 +212,19 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
     Map<String, dynamic> data;
 
     if (participants != null) {
-      data = {
-        "room_participant_reference": participants,
-        "isScheduleDecided": false,
-        "room_schedule": null,
-        "isRoomDeleted": (type == 'owner'),
-      };
+      if (type == 'owner') {
+        data = {
+          "isScheduleDecided": false,
+          "room_schedule": null,
+          "isRoomDeleted": true,
+        };
+      } else {
+        data = {
+          "room_participant_reference": participants,
+          "isScheduleDecided": false,
+          "room_schedule": null,
+        };
+      }
     } else {
       data = {
         'room_schedule': null,
