@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/model/good_history_model.dart';
@@ -110,17 +112,11 @@ class MeetCreate extends StatelessWidget {
         _naming(context),
         SizedBox(height: 31.h),
         _divider(),
-        SizedBox(height: 33.h),
         _category(context),
-        SizedBox(height: 33.h),
         _divider(),
-        SizedBox(height: 33.h),
         _location(context),
-        SizedBox(height: 33.h),
         _divider(),
-        SizedBox(height: 33.h),
         _keyword(context),
-        SizedBox(height: 33.h),
         _divider(),
         SizedBox(height: 32.31.h),
         _detail(context),
@@ -211,7 +207,7 @@ class MeetCreate extends StatelessWidget {
     );
   }
 
-  // MARK - 카테고리
+  // MARK: - 카테고리
   Widget _category(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w),
@@ -243,16 +239,21 @@ class MeetCreate extends StatelessWidget {
           ),
           _selectedCategory(context),
           const Spacer(),
-          Padding(
-            padding: EdgeInsets.only(right: 26.0.w),
-            child: GestureDetector(
-              onTap: () {
-                context.goNamed('meetCategory');
-              },
-              child: SizedBox(
-                  width: 9.w,
-                  height: 17.h,
-                  child: Image.asset(ImagePath.nextArrow)),
+          GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+              context.goNamed('meetCategory');
+            },
+            child: Container(
+              width: 66.w,
+              height: 83.h,
+              alignment: Alignment.center,
+              color: Colors.transparent,
+              child: Image.asset(
+                ImagePath.nextArrow,
+                width: 9.w,
+                height: 17.h,
+              ),
             ),
           ),
         ],
@@ -278,7 +279,7 @@ class MeetCreate extends StatelessWidget {
     );
   }
 
-  // MARK - 지역
+  // MARK: - 지역
   Widget _location(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w),
@@ -306,12 +307,16 @@ class MeetCreate extends StatelessWidget {
           SizedBox(width: 41.w),
           _selectedLocation(context),
           const Spacer(),
-          Padding(
-            padding: EdgeInsets.only(right: 26.0.w),
-            child: GestureDetector(
-              onTap: () {
-                context.goNamed('meetLocation');
-              },
+          GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+              context.goNamed('meetLocation');
+            },
+            child: Container(
+              width: 66.w,
+              height: 83.h,
+              alignment: Alignment.center,
+              color: Colors.transparent,
               child: Image.asset(
                 ImagePath.nextArrow,
                 width: 9.w,
@@ -371,16 +376,21 @@ class MeetCreate extends StatelessWidget {
           // 선택한 키워드 보이도록
           _selectedKeywords(context),
           const Spacer(),
-          Padding(
-            padding: EdgeInsets.only(right: 26.0.w),
-            child: GestureDetector(
-              onTap: () {
-                context.goNamed('meetKeyWord');
-              },
-              child: SizedBox(
-                  width: 9.w,
-                  height: 17.w,
-                  child: Image.asset(ImagePath.nextArrow)),
+          GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+              context.goNamed('meetKeyWord');
+            },
+            child: Container(
+              width: 66.w,
+              height: 83.h,
+              alignment: Alignment.center,
+              color: Colors.transparent,
+              child: Image.asset(
+                ImagePath.nextArrow,
+                width: 9.w,
+                height: 17.h,
+              ),
             ),
           ),
         ],
@@ -397,7 +407,7 @@ class MeetCreate extends StatelessWidget {
           resultString += '#$keyword ';
         }
         return SizedBox(
-          width: 200.w,
+          width: 190.w,
           child: Text(
             resultString,
             style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),

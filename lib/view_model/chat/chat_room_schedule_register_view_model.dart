@@ -225,6 +225,7 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
           "isScheduleDecided": false,
           "room_schedule": null,
           "isRoomDeleted": false,
+          "room_creation_date": Timestamp.now(),
         };
       }
     } else {

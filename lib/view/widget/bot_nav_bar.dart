@@ -18,35 +18,28 @@ class BotNavBar extends StatelessWidget {
   const BotNavBar({super.key});
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      // 뒤로가기
-      canPop: true,
-      onPopInvoked: (didPop) {
-        // 로직구현
-      },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false, // 키보드 픽셀 over 방지
-        body: Selector<BottomNavigationBarViewModel, int>(
-          builder: (context, value, child) {
-            return IndexedStack(
-              index: value,
-              children: const [
-                MeetMain(),
-                ChatMain(),
-                ScheduleMain(),
-                ReflectMain(),
-                ProfileMain(),
-              ],
-            );
-          },
-          selector: (context, viewModel) => viewModel.currentIndex,
-        ),
-        bottomNavigationBar: Selector<BottomNavigationBarViewModel, bool>(
-          builder: (context, value, child) {
-            return value ? const SizedBox.shrink() : botNavBar(context);
-          },
-          selector: (context, viewModel) => viewModel.isHidden,
-        ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false, // 키보드 픽셀 over 방지
+      body: Selector<BottomNavigationBarViewModel, int>(
+        builder: (context, value, child) {
+          return IndexedStack(
+            index: value,
+            children: const [
+              MeetMain(),
+              ChatMain(),
+              ScheduleMain(),
+              ReflectMain(),
+              ProfileMain(),
+            ],
+          );
+        },
+        selector: (context, viewModel) => viewModel.currentIndex,
+      ),
+      bottomNavigationBar: Selector<BottomNavigationBarViewModel, bool>(
+        builder: (context, value, child) {
+          return value ? const SizedBox.shrink() : botNavBar(context);
+        },
+        selector: (context, viewModel) => viewModel.isHidden,
       ),
     );
   }

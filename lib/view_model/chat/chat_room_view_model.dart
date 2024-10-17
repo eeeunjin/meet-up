@@ -74,7 +74,7 @@ class ChatRoomViewModel with ChangeNotifier {
   Future<void> setUserModels({required bool isScheduleEnd}) async {
     final userRefs = List.from(roomModel.room_participant_reference);
 
-    if (!roomModel.isRoomDeleted) {
+    if (!roomModel.isOwnerExit) {
       userRefs.insert(0, roomModel.room_owner_reference);
     }
 
@@ -200,6 +200,8 @@ class ChatRoomViewModel with ChangeNotifier {
         return '일정이 확정되었습니다.';
       case "owner_exit":
         return '방장이 퇴장하여 방이 삭제되었습니다.';
+      case "time_over":
+        return '방의 기한이 만료되어 방이 삭제되었습니다.';
       default:
         return 'Error Message';
     }

@@ -142,16 +142,33 @@ class ChatMain extends StatelessWidget {
                                       snapshot.data!.data()
                                           as Map<String, dynamic>);
                                   // 테스트 메세지 카운트
-                                  final newMessageCount =
-                                      Random().nextInt(18) + 1;
+                                  // final newMessageCount =
+                                  //     Random().nextInt(18) + 1;
                                   // 테스트 최근 메세지
-                                  final recentMessage = roomModel.recentMessage;
+                                  final recentMessage = roomModel.recentMessage
+                                      .replaceAll("\n", " ");
                                   // 만료 여부
                                   bool timeOver = roomModel.room_creation_date
                                           .toDate()
                                           .add(const Duration(days: 7))
                                           .compareTo(DateTime.now()) <
                                       0;
+                                  // 일정 확정 여부
+                                  bool isScheduleDecided =
+                                      roomModel.isScheduleDecided;
+                                  // 만남 일정
+                                  bool isOwnerExit = roomModel.isOwnerExit;
+                                  bool isRoomDeleted = roomModel.isRoomDeleted;
+                                  bool isRoomEnd = isScheduleDecided &&
+                                      roomModel.room_schedule!["date"]
+                                          .toDate()
+                                          .isBefore(DateTime.now());
+
+                                  Timestamp roomSchedule = Timestamp.now();
+                                  if (isScheduleDecided) {
+                                    roomSchedule = roomModel
+                                        .room_schedule!["date"] as Timestamp;
+                                  }
                                   String participantLength = (roomModel
                                               .room_participant_reference
                                               .length +
@@ -184,8 +201,10 @@ class ChatMain extends StatelessWidget {
                                               data: {'isNew': false},
                                             );
                                             // 온 보딩 화면으로 전환
-                                            context.goNamed(
-                                                'first_enter_onboarding');
+                                            if (context.mounted) {
+                                              context.goNamed(
+                                                  'first_enter_onboarding');
+                                            }
                                           }
                                           // 처음 입장하는 방이 아닌 경우
                                           else {
@@ -194,7 +213,7 @@ class ChatMain extends StatelessWidget {
                                           }
                                         },
                                         child: Container(
-                                          height: 80.h,
+                                          height: 90.h,
                                           width: 345.w,
                                           decoration: BoxDecoration(
                                             borderRadius:
@@ -202,31 +221,17 @@ class ChatMain extends StatelessWidget {
                                             color: Colors.white,
                                           ),
                                           child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               SizedBox(
-                                                height: 17.h,
+                                                height: 12.h,
                                               ),
                                               Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
                                                 children: [
-                                                  SizedBox(width: 20.w),
                                                   SizedBox(
-                                                    height: 19.h,
-                                                    width: 92.w,
-                                                    child: Text(
-                                                      roomModel.room_name,
-                                                      style: AppTextStyles
-                                                          .PR_SB_16
-                                                          .copyWith(
-                                                        color: UsedColor
-                                                            .charcoal_black,
-                                                      ),
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
+                                                    width: 20.w,
                                                   ),
-                                                  SizedBox(width: 10.w),
                                                   SizedBox(
                                                     height: 16.h,
                                                     child: Text(
@@ -249,22 +254,63 @@ class ChatMain extends StatelessWidget {
                                                                   .text_5),
                                                     ),
                                                   ),
-                                                  SizedBox(width: 10.w),
                                                   const Spacer(),
                                                   Text(
-                                                    "${roomModel.room_creation_date.toDate().add(const Duration(days: 7)).toString().substring(0, 10).replaceAll('-', '.')} 만료",
+                                                    isScheduleDecided
+                                                        ? isRoomEnd
+                                                            ? "${roomSchedule.toDate().toString().substring(0, 10).replaceAll('-', '.')} 만남 완료"
+                                                            : isOwnerExit
+                                                                ? "삭제됨"
+                                                                : "${roomSchedule.toDate().toString().substring(0, 10).replaceAll('-', '.')} 만남 예정"
+                                                        : isOwnerExit
+                                                            ? "삭제됨"
+                                                            : "${roomModel.room_creation_date.toDate().add(const Duration(days: 7)).toString().substring(0, 10).replaceAll('-', '.')} 만료",
                                                     style: AppTextStyles.PR_M_11
                                                         .copyWith(
                                                       color: timeOver
                                                           ? UsedColor.red
-                                                          : UsedColor.text_3,
+                                                          : isScheduleDecided
+                                                              ? isOwnerExit
+                                                                  ? UsedColor
+                                                                      .red
+                                                                  : UsedColor
+                                                                      .main
+                                                              : isOwnerExit
+                                                                  ? UsedColor
+                                                                      .red
+                                                                  : UsedColor
+                                                                      .text_3,
                                                     ),
                                                   ),
-                                                  SizedBox(width: 19.w),
+                                                  SizedBox(width: 20.w),
+                                                ],
+                                              ),
+                                              SizedBox(height: 7.h),
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  SizedBox(width: 20.w),
+                                                  SizedBox(
+                                                    height: 19.h,
+                                                    width: 290.w,
+                                                    child: Text(
+                                                      roomModel.room_name,
+                                                      style: AppTextStyles
+                                                          .PR_SB_16
+                                                          .copyWith(
+                                                        color: UsedColor
+                                                            .charcoal_black,
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 20.w),
                                                 ],
                                               ),
                                               SizedBox(
-                                                height: 8.h,
+                                                height: 6.h,
                                               ),
                                               Row(
                                                 children: [
@@ -272,7 +318,7 @@ class ChatMain extends StatelessWidget {
                                                   recentMessage.length > 18
                                                       ? SizedBox(
                                                           height: 17.h,
-                                                          width: 186.w,
+                                                          width: 280.w,
                                                           child: Text(
                                                             recentMessage,
                                                             style: AppTextStyles
@@ -300,33 +346,6 @@ class ChatMain extends StatelessWidget {
                                                   if (recentMessage.length <=
                                                       18)
                                                     SizedBox(width: 8.w),
-                                                  // Container(
-                                                  //   height: 13.h,
-                                                  //   width: newMessageCount > 10
-                                                  //       ? 17.w
-                                                  //       : 13.w,
-                                                  //   padding: EdgeInsets.only(
-                                                  //     top: 1.h,
-                                                  //     right: 0.5.h,
-                                                  //   ),
-                                                  //   decoration: BoxDecoration(
-                                                  //     borderRadius:
-                                                  //         BorderRadius.circular(
-                                                  //       6.5.r,
-                                                  //     ),
-                                                  //     color: UsedColor.main,
-                                                  //   ),
-                                                  //   child: Center(
-                                                  //     child: Text(
-                                                  //       '$newMessageCount',
-                                                  //       style: AppTextStyles
-                                                  //           .PR_SB_10
-                                                  //           .copyWith(
-                                                  //         color: Colors.white,
-                                                  //       ),
-                                                  //     ),
-                                                  //   ),
-                                                  // ),
                                                 ],
                                               ),
                                             ],

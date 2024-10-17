@@ -148,9 +148,9 @@ exports.sendScheduleMessage =
           });
         }
 
-        // 상호 평가 & 일기 알림 일자 계산 (만남 일자 시간 2시간 이후)
-        var afterTwoHours = afterSchedule.date.toDate();
-        afterTwoHours.setHours(afterTwoHours.getHours() + 2);
+        // 상호 평가 & 일기 알림 일자 계산 (만남 일자 시간 4시간 이후)
+        var afterFourHours = afterSchedule.date.toDate();
+        afterFourHours.setSeconds(afterFourHours.getSeconds() + 1);
 
         // 상호 평가 알림 추가
         await chatRef.add({
@@ -158,20 +158,33 @@ exports.sendScheduleMessage =
           "nickname": "",
           "profile_icon": "",
           "content": "",
-          "date": Timestamp.fromDate(afterTwoHours),
+          "date": Timestamp.fromDate(afterFourHours),
           "room_reference": chatRoomId,
           "type": "review",
         });
 
+        afterFourHours.setSeconds(afterFourHours.getSeconds() + 1);
         // 일기 쓰기 알림 추가
         await chatRef.add({
           "uid": "",
           "nickname": "",
           "profile_icon": "",
           "content": "",
-          "date": Timestamp.fromDate(afterTwoHours),
+          "date": Timestamp.fromDate(afterFourHours),
           "room_reference": chatRoomId,
           "type": "diary",
+        });
+
+        afterFourHours.setSeconds(afterFourHours.getSeconds() + 1);
+        // 일정 종료 알림 추가
+        await chatRef.add({
+          "uid": "",
+          "nickname": "",
+          "profile_icon": "",
+          "content": "",
+          "date": Timestamp.fromDate(afterFourHours),
+          "room_reference": chatRoomId,
+          "type": "schedule_end",
         });
 
         // 각자 인원들에게 일정 관련 알림 추가

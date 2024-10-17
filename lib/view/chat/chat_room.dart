@@ -61,6 +61,35 @@ class ChatRoom extends StatelessWidget {
             RoomModel.fromJson(snapshot.data!.data() as Map<String, dynamic>));
         chatRoomViewModel.setRoomID(chatRoomViewModel.roomRef.id);
 
+        bool isTimeOver = chatRoomViewModel.roomModel.room_creation_date
+            .toDate()
+            .add(const Duration(days: 7))
+            .isBefore(DateTime.now());
+
+        if (isTimeOver &&
+            !chatRoomViewModel.roomModel.isRoomDeleted &&
+            !chatRoomViewModel.roomModel.isScheduleDecided) {
+          final chatModel = ChatModel(
+            uid: "",
+            nickname: "",
+            profile_icon: "",
+            content: "",
+            date: Timestamp.now(),
+            room_reference: chatRoomViewModel.roomID,
+            type: "time_over",
+          );
+
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            await chatRoomViewModel
+                .updateRoomData(roomId: chatRoomViewModel.roomID, data: {
+              "isRoomDeleted": true,
+            });
+            await chatRoomViewModel.createChatDocument(
+              chatModel,
+            );
+          });
+        }
+
         bool isScheduleEnd =
             chatRoomViewModel.roomModel.room_schedule != null &&
                 chatRoomViewModel.roomModel.isScheduleDecided &&
@@ -489,6 +518,10 @@ class ChatRoom extends StatelessWidget {
         return _diary(context);
       case "owner_exit":
         return _ownerExit(context, chatModel: chatModel);
+      case "time_over":
+        return _timeOver(context, chatModel: chatModel);
+      case "schedule_end":
+        return _scheduleEnd(context, chatModel: chatModel);
       default:
         return Container();
     }
@@ -1606,6 +1639,120 @@ class ChatRoom extends StatelessWidget {
     );
   }
 
+  // MARK: - 기한 만료로 인한 채팅방 삭제 알림
+  Widget _timeOver(BuildContext context, {required ChatModel chatModel}) {
+    return Padding(
+      padding: EdgeInsets.only(left: 28.w, right: 27.w),
+      child: Container(
+        width: 338.w,
+        height: 79.h,
+        padding: EdgeInsets.only(left: 13.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18.r),
+          color: UsedColor.image_card,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 12.67.h,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 20.w,
+                  height: 20.h,
+                  child: Image.asset(
+                    ImagePath.chatRoomScheduleWriteIcon,
+                  ),
+                ),
+                SizedBox(width: 6.w),
+                Text(
+                  '채팅방 삭제 안내',
+                  style: AppTextStyles.PR_SB_14
+                      .copyWith(color: UsedColor.charcoal_black),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 5.h,
+            ),
+            Text(
+              "해당 채팅 방은 기한 만료로 인해 삭제되었습니다.",
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            ),
+            SizedBox(
+              height: 4.h,
+            ),
+            Text(
+              '만남방 퇴장 시, 모든 인원의 만남권이 환불됩니다.',
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  // MARK: - 만남 완료 알림
+  Widget _scheduleEnd(BuildContext context, {required ChatModel chatModel}) {
+    return Padding(
+      padding: EdgeInsets.only(left: 28.w, right: 27.w),
+      child: Container(
+        width: 338.w,
+        height: 79.h,
+        padding: EdgeInsets.only(left: 13.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18.r),
+          color: UsedColor.image_card,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 12.67.h,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 20.w,
+                  height: 20.h,
+                  child: Image.asset(
+                    ImagePath.chatRoomScheduleWriteIcon,
+                  ),
+                ),
+                SizedBox(width: 6.w),
+                Text(
+                  '만남 완료 안내',
+                  style: AppTextStyles.PR_SB_14
+                      .copyWith(color: UsedColor.charcoal_black),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 5.h,
+            ),
+            Text(
+              "채팅 방은 하루 뒤 자동으로 삭제됩니다.",
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            ),
+            SizedBox(
+              height: 4.h,
+            ),
+            Text(
+              '만남이 즐거우셨나요? 만남 후기 작성을 잊지 마세요 :)',
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   // MARK: - 메시지 입력창
   Widget _typeMessageBox(BuildContext context) {
     return Consumer<ChatRoomViewModel>(
@@ -1625,14 +1772,13 @@ class ChatRoom extends StatelessWidget {
         double typeContainerWidthEnd =
             isOwner ? typeContainerWidth - 52.w : typeContainerWidth;
 
-        bool isScheduleEnd =
-            chatRoomViewModel.roomModel.room_schedule != null &&
-                chatRoomViewModel.roomModel.isScheduleDecided &&
-                chatRoomViewModel.roomModel.room_schedule!["date"]
-                    .toDate()
-                    .isBefore(
-                      DateTime.now(),
-                    );
+        bool isScheduleEndAfterOneDay = chatRoomViewModel
+            .roomModel.room_schedule!["date"]
+            .toDate()
+            .add(const Duration(days: 1))
+            .isBefore(
+              DateTime.now(),
+            );
 
         return SizedBox(
           height:
@@ -1668,7 +1814,7 @@ class ChatRoom extends StatelessWidget {
                           child: TextField(
                             enabled:
                                 chatRoomViewModel.roomModel.isRoomDeleted ||
-                                        isScheduleEnd
+                                        isScheduleEndAfterOneDay
                                     ? false
                                     : true,
                             textAlignVertical: TextAlignVertical.top,
@@ -1703,7 +1849,7 @@ class ChatRoom extends StatelessWidget {
                               ),
                               hintText:
                                   chatRoomViewModel.roomModel.isRoomDeleted ||
-                                          isScheduleEnd
+                                          isScheduleEndAfterOneDay
                                       ? '메시지를 입력할 수 없습니다'
                                       : '메시지를 입력해주세요',
                               hintStyle: AppTextStyles.PR_R_13
@@ -1836,6 +1982,13 @@ class ChatRoom extends StatelessWidget {
         chatRoomViewModel.roomModel.room_schedule!["date"].toDate().isBefore(
               DateTime.now(),
             );
+
+    // 방이 만들어지고 7일이 지난 경우
+    bool isTimeOver = chatRoomViewModel.roomModel.room_creation_date
+            .toDate()
+            .add(const Duration(days: 7))
+            .isBefore(DateTime.now()) &&
+        !isScheduleDecided;
 
     // 상호 평가 작성 여부 확인
     bool isReviewWritten = (chatRoomViewModel.roomModel.room_meeting_review
@@ -2022,7 +2175,7 @@ class ChatRoom extends StatelessWidget {
                 }
 
                 // chatRooms/room doc/ChatModel 추가 (방장 퇴장으로 인한 방 삭제 알림)
-                if (!isScheduleEnd) {
+                if (!isScheduleEnd && !isTimeOver) {
                   await chatRoomViewModel.createChatDocument(
                     ChatModel(
                       uid: "",
@@ -2034,6 +2187,28 @@ class ChatRoom extends StatelessWidget {
                       type: "owner_exit",
                     ),
                   );
+                }
+
+                if (isTimeOver) {
+                  // 만남권 환불
+                  await userViewModel.updateUserInfo(
+                    data: {"ticket": userViewModel.userModel!.ticket + 1},
+                  );
+
+                  final goodHistoryModel = GoodHistoryModel(
+                      gh_type: GoodHistoryType.ticket.name,
+                      gh_type_transaction:
+                          GoodHistoryTypeOfTransaction.refund.name,
+                      gh_uid: userViewModel.uid!,
+                      gh_result_coin: userViewModel.userModel!.coin,
+                      gh_result_ticket: userViewModel.userModel!.ticket,
+                      gh_change_coin_amount: 0,
+                      gh_change_ticket_amount: 1,
+                      gh_product_id: '',
+                      gh_change_date: Timestamp.now());
+
+                  await ticketBuyViewModel.createGoodHistory(
+                      goodHistoryModel: goodHistoryModel);
                 }
 
                 // 만남권 환불 x
