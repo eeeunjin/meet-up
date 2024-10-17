@@ -223,6 +223,7 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
           "room_participant_reference": participants,
           "isScheduleDecided": false,
           "room_schedule": null,
+          "isRoomDeleted": false,
         };
       }
     } else {
@@ -273,5 +274,16 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
       roomId: roomId,
       data: data,
     );
+  }
+
+  // MARK: - 상태 초기화
+  void resetState() {
+    scheduleNameController.clear();
+    _selectedDate = DateTime.now();
+    _selectedTime = const TimeOfDay(hour: 19, minute: 30);
+    _isDatePanelExpanded = false;
+    _isTimePanelExpanded = false;
+    locationController.clear();
+    notifyListeners();
   }
 }

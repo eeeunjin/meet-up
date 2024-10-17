@@ -57,11 +57,6 @@ class MeetDetailRoomViewModel with ChangeNotifier {
           .add(await _userRepository.readUserDocumentByDocRef(docRef: docRef));
     }
 
-    for (UserModel userModel in userModels) {
-      logger.d(
-          "userModel.nickname: ${userModel.nickname} / userModel.gender: ${userModel.gender}");
-    }
-
     currentRoomModelUserModels = userModels;
 
     return userModels;
@@ -78,8 +73,6 @@ class MeetDetailRoomViewModel with ChangeNotifier {
         womanCount += 1;
       }
     }
-
-    logger.d("성비: ${currentRoomModel!.room_gender_ratio}");
 
     switch (currentRoomModel!.room_gender_ratio) {
       case "남성 4명":

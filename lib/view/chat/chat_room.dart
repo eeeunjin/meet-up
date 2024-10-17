@@ -1764,17 +1764,11 @@ class ChatRoom extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        for (var userModel in chatRoomViewModel.userModels) {
-          logger.d("참가자: ${userModel.nickname}");
-        }
-
         bool isScheduleExist =
             chatRoomViewModel.roomModel.room_schedule != null;
 
         if (isScheduleExist) {
           logger.d("일정이 이미 등록되어 있습니다.");
-        } else {
-          logger.d("등록된 일정이 아직 없습니다.");
         }
 
         if (chatRoomViewModel.userModels.length == 4 && !isScheduleExist) {
@@ -1800,7 +1794,6 @@ class ChatRoom extends StatelessWidget {
 
   // MARK: - 채팅방 나가기
   void _showOutRoomDialog(BuildContext context) {
-    logger.d("채팅방 나가기 다이얼로그 출력");
     final chatRoomViewModel =
         Provider.of<ChatRoomViewModel>(context, listen: false);
     final chatRoomSchduleRegisterViewModel =
@@ -2004,7 +1997,7 @@ class ChatRoom extends StatelessWidget {
                           GoodHistoryTypeOfTransaction.refund.name,
                       gh_uid: userViewModel.uid!,
                       gh_result_coin: userViewModel.userModel!.coin,
-                      gh_result_ticket: userViewModel.userModel!.ticket + 1,
+                      gh_result_ticket: userViewModel.userModel!.ticket,
                       gh_change_coin_amount: 0,
                       gh_change_ticket_amount: 1,
                       gh_product_id: '',

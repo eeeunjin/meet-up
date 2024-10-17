@@ -26,7 +26,6 @@ class TicketBuyViewModel with ChangeNotifier {
   Future<void> createGoodHistory(
       {required GoodHistoryModel goodHistoryModel}) async {
     await _goodHistoryRepository.createGoodHistory(goodHistoryModel);
-    logger.d('[TicketBuyViewModel] good history created');
   }
 
   void resetState() {

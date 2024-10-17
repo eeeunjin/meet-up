@@ -604,7 +604,6 @@ final router = GoRouter(
       parentNavigatorKey: rootNavkey,
       pageBuilder: (context, state) {
         // logger.d("GoRoute Path Location: ${state.fullPath}");
-        logger.d("여기는 오나");
         if (LoginFunc.isLogined) {
           // logger.d("로그인 상태 확인: 로그인 상태입니다.");
           return const NoTransitionPage(child: BotNavBar());

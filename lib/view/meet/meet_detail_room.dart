@@ -35,9 +35,6 @@ class MeetDetailRoom extends StatelessWidget {
       roomModel: meetDetailRoomViewModel.currentRoomModel!,
     );
 
-    logger.d(
-        "${decodedRoomModel.room_name}의 room id는 [${decodedRoomModel.roomId}] 입니다 ~");
-
     String ageString = decodedRoomModel.room_age.join(", "); // 나이 리스트를 문자열로 결합
 
     return Scaffold(
@@ -759,7 +756,7 @@ class MeetDetailRoom extends StatelessWidget {
                   gh_type_transaction: GoodHistoryTypeOfTransaction.use.name,
                   gh_uid: userViewModel.uid!,
                   gh_result_coin: userViewModel.userModel!.coin,
-                  gh_result_ticket: userViewModel.userModel!.ticket - 1,
+                  gh_result_ticket: userViewModel.userModel!.ticket,
                   gh_change_coin_amount: 0,
                   gh_change_ticket_amount: -1,
                   gh_product_id: '',

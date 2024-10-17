@@ -159,8 +159,6 @@ class ChatMain extends StatelessWidget {
                                     children: [
                                       GestureDetector(
                                         onTap: () async {
-                                          logger.d(
-                                              roomModelDocumentList[index].id);
                                           // 입장 하는 방의 상태 값 초기화
                                           chatRoomViewModel.resetState();
 

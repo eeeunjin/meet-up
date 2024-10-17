@@ -382,8 +382,6 @@ class MeetBrowseMain extends StatelessWidget {
                 meetDetailRoomViewModel.setCurrentRoomModel(roomModel: room);
                 meetDetailRoomViewModel.setIsMyRoom(isMyRoom: false);
                 meetDetailRoomViewModel.setIsChatRoom(isChatRoom: false);
-                logger.d(
-                    "room category: ${room.room_category} && room sub Category : ${room.room_category_detail}");
                 context.goNamed('meetDetailRoom_browse');
               },
               child: Container(

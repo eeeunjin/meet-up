@@ -19,17 +19,29 @@ class AddPersonalSchedule extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false, // 채팅 overflow 방지
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 58.h),
-            child: _header(context),
-          ),
-          _main(context),
-        ],
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        // 정보 초기화
+        final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(
+            context,
+            listen: false);
+        viewModel.clearAllState();
+
+        context.pop(context);
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false, // 채팅 overflow 방지
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 58.h),
+              child: _header(context),
+            ),
+            _main(context),
+          ],
+        ),
       ),
     );
   }
