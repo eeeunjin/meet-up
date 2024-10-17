@@ -10,8 +10,7 @@ class UserModel {
   String gender;
   Map<String, dynamic> region;
   String job;
-  List<dynamic> personality_relationship;
-  List<dynamic> personality_self;
+  List<dynamic> personality;
   List<dynamic> interest;
   List<dynamic> purpose;
   String uid;
@@ -41,8 +40,7 @@ class UserModel {
     required this.gender,
     required this.region,
     required this.job,
-    required this.personality_relationship,
-    required this.personality_self,
+    required this.personality,
     required this.interest,
     required this.purpose,
     required this.phone_number,
@@ -65,9 +63,7 @@ class UserModel {
           gender: json['gender']! as String,
           region: json['region']! as Map<String, dynamic>,
           job: json['job']! as String,
-          personality_relationship:
-              json["personality_relationship"]! as List<dynamic>,
-          personality_self: json["personality_self"]! as List<dynamic>,
+          personality: json["personality"]! as List<dynamic>,
           interest: json["interest"]! as List<dynamic>,
           purpose: json["purpose"]! as List<dynamic>,
           phone_number: json["phone_number"]! as String,
@@ -90,8 +86,7 @@ class UserModel {
       'gender': gender,
       'region': region,
       'job': job,
-      'personality_relationship': personality_relationship,
-      'personality_self': personality_self,
+      'personality': personality,
       'interest': interest,
       'purpose': purpose,
       'phone_number': phone_number,

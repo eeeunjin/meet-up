@@ -687,6 +687,7 @@ final router = GoRouter(
             ),
           ],
         ),
+
       ],
     ),
   ],

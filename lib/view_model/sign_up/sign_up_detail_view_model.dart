@@ -207,33 +207,16 @@ class SignUpDetailViewModel with ChangeNotifier {
     }
   }
 
-  bool get areBothSectionsCompleted {
-    return areThreeRelationshipKeywordsSelected &&
-        areThreeLifestyleKeywordsSelected;
+  // personality
+  List<String> selectedPersonalityKeywords = [];
+
+  void selectPersonalityKeyword(String keyword) {
+    _selectKeyword(keyword, selectedPersonalityKeywords);
   }
 
-  // relationship
-  List<String> selectedRelationshipKeywords = [];
-
-  void selectRelationshipKeyword(String keyword) {
-    _selectKeyword(keyword, selectedRelationshipKeywords);
-  }
-
-  // relationship_check
-  bool get areThreeRelationshipKeywordsSelected {
-    return selectedRelationshipKeywords.length == 3;
-  }
-
-  // lifestyle
-  List<String> selectedLifestyleKeywords = [];
-
-  void selectLifestyleKeyword(String keyword) {
-    _selectKeyword(keyword, selectedLifestyleKeywords);
-  }
-
-  // lifestyle_check
-  bool get areThreeLifestyleKeywordsSelected {
-    return selectedLifestyleKeywords.length == 3;
+  // personality_check
+  bool get areThreePersonalityKeywordsSelected {
+    return selectedPersonalityKeywords.length == 3;
   }
 
   // MARK: - Page 4
@@ -331,8 +314,7 @@ class SignUpDetailViewModel with ChangeNotifier {
         "district": selectedDistrict,
       },
       "job": selectedAffiliation.name,
-      "personality_relationship": selectedRelationshipKeywords,
-      "personality_self": selectedLifestyleKeywords,
+      "personality": selectedPersonalityKeywords,
       "interest": selectedInterestedKeywords,
       "purpose": selectedPurposeKeywords,
       "accepted_policies": [
