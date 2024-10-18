@@ -11,7 +11,6 @@ import 'package:meet_up/view/widget/schedule_time_picker_widget.dart';
 import 'package:meet_up/view_model/chat/chat_room_schedule_register_view_model.dart';
 import 'package:meet_up/view_model/chat/chat_room_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
-import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
 import 'package:provider/provider.dart';
 
 class ChatScheduleRegister extends StatelessWidget {
@@ -20,22 +19,33 @@ class ChatScheduleRegister extends StatelessWidget {
   // MARK: - 빌드
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false, // 채팅 overflow 방지
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 58.h),
-            child: _header(context),
-          ),
-          _main(context),
-          const Spacer(),
-          Padding(
-            padding: EdgeInsets.only(left: 33.0.w, right: 33.w, bottom: 56.h),
-            child: _bottom(context),
-          ),
-        ],
+    logger.d('ChatScheduleRegister build');
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        final chatRoomSchduleRegisterViewModel =
+            Provider.of<ChatRoomSchduleRegisterViewModel>(context,
+                listen: false);
+        chatRoomSchduleRegisterViewModel.resetState();
+        context.pop();
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false, // 채팅 overflow 방지
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 58.h),
+              child: _header(context),
+            ),
+            _main(context),
+            const Spacer(),
+            Padding(
+              padding: EdgeInsets.only(left: 33.0.w, right: 33.w, bottom: 56.h),
+              child: _bottom(context),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -63,10 +73,10 @@ class ChatScheduleRegister extends StatelessWidget {
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // 정보 초기화
-        final viewModel =
-            Provider.of<MeetCreateViewModel>(context, listen: false);
-        viewModel.locationClearSelection();
+        final chatRoomSchduleRegisterViewModel =
+            Provider.of<ChatRoomSchduleRegisterViewModel>(context,
+                listen: false);
+        chatRoomSchduleRegisterViewModel.resetState();
         context.pop();
       },
       child: Image.asset(

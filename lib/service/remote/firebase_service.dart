@@ -123,21 +123,23 @@ class FirebaseCRUD {
     final firebaseRefs = FirebaseRefs();
     if (limit == null) {
       if (T == RoomModel) {
-        if (filterInfo == null) {
+        if (filterInfo == null && myUID != null) {
           return colRef
               .where("room_owner_reference",
-                  isNotEqualTo: firebaseRefs.colRefUser.doc(myUID!))
+                  isNotEqualTo: firebaseRefs.colRefUser.doc(myUID))
               .orderBy("room_owner_reference")
               .snapshots();
-        } else {
+        } else if (filterInfo != null && myUID != null) {
           return createFilterQuery(
             filterInfo: filterInfo,
             colRef: colRef,
           )
               .where("room_owner_reference",
-                  isNotEqualTo: firebaseRefs.colRefUser.doc(myUID!))
+                  isNotEqualTo: firebaseRefs.colRefUser.doc(myUID))
               .orderBy("room_owner_reference")
               .snapshots();
+        } else {
+          return colRef.snapshots();
         }
       } else {
         return colRef.snapshots();
@@ -278,10 +280,6 @@ class FirebaseCRUD {
         } else if (T == MyRoomModel) {
           MyRoomModel myRoom = data as MyRoomModel;
           await docRef.set(myRoom.toJson());
-          return true;
-        } else if (T == MyTicketModel) {
-          MyTicketModel myTicket = data as MyTicketModel;
-          await docRef.set(myTicket.toJson());
           return true;
         } else if (T == RoomModel) {
           RoomModel myEnterRequest = data as RoomModel;

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -31,6 +32,13 @@ class MeetMain extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         heroTag: null, // 고유 태그 지정 - hero오류
         onPressed: () {
+          // 만남권이 없는 경우 처리
+          final userViewModel =
+              Provider.of<UserViewModel>(context, listen: false);
+          if (userViewModel.userModel?.ticket == 0) {
+            _showNotPassedDialog(context, isTicketNotEough: true);
+            return;
+          }
           context.goNamed('meetCreate');
         },
         backgroundColor: Colors.black,
@@ -39,6 +47,46 @@ class MeetMain extends StatelessWidget {
           Icons.add,
           color: Colors.white,
         ),
+      ),
+    );
+  }
+
+  // MARK: - 조건 검사 alert
+  void _showNotPassedDialog(
+    BuildContext context, {
+    required bool isTicketNotEough,
+  }) {
+    showCupertinoDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: Column(
+          children: [
+            Text(
+              isTicketNotEough ? "소지하신 만남권이 부족하여" : "성비 별 자리가 부족하여",
+              style: AppTextStyles.PR_SB_15
+                  .copyWith(color: UsedColor.charcoal_black),
+            ),
+            SizedBox(
+              height: 3.h,
+            ),
+            Text(
+              "만남 방을 개설할 수 없습니다.",
+              style: AppTextStyles.PR_SB_15
+                  .copyWith(color: UsedColor.charcoal_black),
+            )
+          ],
+        ),
+        actions: [
+          CupertinoDialogAction(
+            child: Text(
+              "확인",
+              style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
+            ),
+            onPressed: () {
+              context.pop();
+            },
+          ),
+        ],
       ),
     );
   }
@@ -85,7 +133,7 @@ class MeetMain extends StatelessWidget {
     );
   }
 
-  // Mark - 내가 만든 만남방
+  // MARK: - 내가 만든 만남방
   Widget _manageMeetList(BuildContext context) {
     return GestureDetector(
       onTap: () {

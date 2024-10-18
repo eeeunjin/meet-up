@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:meet_up/main.dart';
 import 'package:meet_up/model/room_model.dart';
+import 'package:meet_up/service/remote/firebase_service.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
@@ -18,6 +19,7 @@ import 'package:provider/provider.dart';
 class MeetBrowseMain extends StatelessWidget {
   const MeetBrowseMain({super.key});
 
+  // MARK: - 빌드
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +39,7 @@ class MeetBrowseMain extends StatelessWidget {
     );
   }
 
-  // header
+  // MARK: - 헤더
   Widget _header(BuildContext context) {
     return Center(
       child: Column(
@@ -51,6 +53,7 @@ class MeetBrowseMain extends StatelessWidget {
     );
   }
 
+  // MARK: - 뒤로가기
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -64,6 +67,7 @@ class MeetBrowseMain extends StatelessWidget {
     );
   }
 
+  // MARK: - 구분선
   Widget _divider() {
     return Divider(
       thickness: 0.3.h,
@@ -72,6 +76,7 @@ class MeetBrowseMain extends StatelessWidget {
     );
   }
 
+  // MARK: - 메인
   Widget _main(BuildContext context) {
     return Container(
       color: Colors.white,
@@ -97,6 +102,7 @@ class MeetBrowseMain extends StatelessWidget {
     );
   }
 
+  // MARK: - 검색
   Widget _search(BuildContext context) {
     final meetBrowseViewModel = Provider.of<MeetBrowseViewModel>(context);
     return Container(
@@ -154,6 +160,7 @@ class MeetBrowseMain extends StatelessWidget {
     );
   }
 
+  // MARK: - 필터
   Widget _filter(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 24.0.w),
@@ -227,6 +234,7 @@ class MeetBrowseMain extends StatelessWidget {
     );
   }
 
+  // MARK: - 필터 버튼
   Widget _filterButton(BuildContext context,
       {required Widget content,
       required Color borderColor,
@@ -247,6 +255,7 @@ class MeetBrowseMain extends StatelessWidget {
     );
   }
 
+  // MARK: - 필터 컨테이너
   Widget _filterContainer(BuildContext context, String filterText,
       Color borderColor, Color backgroundColor) {
     return Container(
@@ -270,6 +279,7 @@ class MeetBrowseMain extends StatelessWidget {
     );
   }
 
+  //
   Widget _meetingRoom(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context);
     final meetFilterViewModel =
@@ -310,6 +320,17 @@ class MeetBrowseMain extends StatelessWidget {
               .contains(meetBrowseViewModel.searchTextEditingControlller.text));
         }
 
+        // 삭제된 방 제외
+        rooms.removeWhere((element) => element.isRoomDeleted);
+
+        // 방 참가인원이 4명인 방 제외
+        rooms.removeWhere(
+            (element) => element.room_participant_reference.length + 1 == 4);
+
+        // 내가 이미 속한 방 제외
+        rooms.removeWhere((element) => element.room_participant_reference
+            .contains(FirebaseRefs().colRefUser.doc(userViewModel.uid)));
+
         if (rooms.isEmpty && !meetBrowseViewModel.isFilterApplied) {
           return Center(
             child: Text(
@@ -329,6 +350,7 @@ class MeetBrowseMain extends StatelessWidget {
             ),
           );
         }
+
         return ListView.builder(
           itemCount: rooms.length + 1,
           padding: EdgeInsets.only(
@@ -360,8 +382,6 @@ class MeetBrowseMain extends StatelessWidget {
                 meetDetailRoomViewModel.setCurrentRoomModel(roomModel: room);
                 meetDetailRoomViewModel.setIsMyRoom(isMyRoom: false);
                 meetDetailRoomViewModel.setIsChatRoom(isChatRoom: false);
-                logger.d(
-                    "room category: ${room.room_category} && room sub Category : ${room.room_category_detail}");
                 context.goNamed('meetDetailRoom_browse');
               },
               child: Container(

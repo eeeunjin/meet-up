@@ -1,11 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:meet_up/main.dart';
+import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/chat/chat_room_meeting_review_view_model.dart';
 import 'package:meet_up/view_model/chat/chat_room_view_model.dart';
+import 'package:meet_up/view_model/coin/ticket_buy_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:meet_up/util/color.dart';
@@ -455,6 +457,8 @@ class ChatMeetingReview extends StatelessWidget {
     final chatRoomViewModel =
         Provider.of<ChatRoomViewModel>(context, listen: false);
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final ticketBuyViewModel =
+        Provider.of<TicketBuyViewModel>(context, listen: false);
     return Consumer<ChatRoomMeetingReviewViewModel>(
       builder: (context, viewModel, child) {
         return Column(
@@ -471,11 +475,34 @@ class ChatMeetingReview extends StatelessWidget {
                         final otherUID =
                             viewModel.userModels![viewModel.currentPage].uid;
 
+                        // Send Meeting Review
                         await viewModel.sendMeetingReview(
                           roomId,
                           myUID,
                           otherUID,
                           chatRoomViewModel.roomName,
+                        );
+
+                        // 유저에게 코인 지급
+                        await userViewModel.updateUserInfo(data: {
+                          'coin': userViewModel.userModel!.coin + 20,
+                        });
+
+                        // 영수증 발행
+                        final goodHistoryModel = GoodHistoryModel(
+                            gh_type: GoodHistoryType.coin.name,
+                            gh_type_transaction:
+                                GoodHistoryTypeOfTransaction.obtain.name,
+                            gh_uid: userViewModel.uid!,
+                            gh_result_coin: userViewModel.userModel!.coin,
+                            gh_result_ticket: userViewModel.userModel!.ticket,
+                            gh_change_coin_amount: 20,
+                            gh_change_ticket_amount: 0,
+                            gh_product_id: '',
+                            gh_change_date: Timestamp.now());
+
+                        await ticketBuyViewModel.createGoodHistory(
+                          goodHistoryModel: goodHistoryModel,
                         );
                       }
                     : () {},

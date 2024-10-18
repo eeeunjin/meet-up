@@ -91,11 +91,11 @@ class MeetCreateViewModel with ChangeNotifier {
 
   // rules
   final Map<String, bool> _rulesQuestion = {
-    '만남 시 대화 녹음': false,
-    '만남 후 앱을 통해 연락처 공유': false,
-    '아는 지인과 동반 신청': false,
+    '만남 시 SNS 공유': false,
+    '만남 시 연락처 공유': false,
+    '지인과 동반 신청': false,
     '첫 만남에 2차 이동': false,
-    '귀가 시 동성과 동행': false,
+    '저녁 시간대 만남': false,
   };
 
   Map<String, bool> get rules => _rulesQuestion;
@@ -319,8 +319,10 @@ class MeetCreateViewModel with ChangeNotifier {
       isScheduleDecided: false,
       room_meeting_review: [],
       recentMessage: '방이 생성되었습니다.',
+      isRoomDeleted: false,
+      isOwnerExit: false,
     );
-    // 방 정보 저장 
+    // 방 정보 저장
     final roomDocRef =
         await _roomRepository.createRoomDocument(data: roomModel);
 

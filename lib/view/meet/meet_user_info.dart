@@ -282,7 +282,7 @@ class MeetUserInfo extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              for (var trait in user.personality_self) ...[
+              for (var trait in user.personality) ...[
                 _personalityChip(trait),
                 SizedBox(
                   width: 8.0.w,

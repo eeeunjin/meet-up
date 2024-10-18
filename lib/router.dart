@@ -371,7 +371,7 @@ final router = GoRouter(
         // MARK: - Schedule
         GoRoute(
           path: '/scheduleMain',
-          builder: (context, state) => ScheduleMain(),
+          builder: (context, state) => const ScheduleMain(),
           parentNavigatorKey: shellNavkey,
           routes: [
             GoRoute(
@@ -392,6 +392,14 @@ final router = GoRouter(
               name: 'editPersonalSchedule',
               parentNavigatorKey: rootNavkey,
               builder: (context, state) => const EditPersonalSchedule(),
+              routes: [
+                GoRoute(
+                  path: 'editMemberPersonal',
+                  name: 'editMemberPersonal',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) => const AddMemberPersonal(),
+                ),
+              ],
             )
           ],
         ),
@@ -603,7 +611,6 @@ final router = GoRouter(
       parentNavigatorKey: rootNavkey,
       pageBuilder: (context, state) {
         // logger.d("GoRoute Path Location: ${state.fullPath}");
-        logger.d("여기는 오나");
         if (LoginFunc.isLogined) {
           // logger.d("로그인 상태 확인: 로그인 상태입니다.");
           return const NoTransitionPage(child: BotNavBar());
@@ -687,6 +694,7 @@ final router = GoRouter(
             ),
           ],
         ),
+
       ],
     ),
   ],

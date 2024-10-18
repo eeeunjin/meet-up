@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meet_up/main.dart';
+import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/service/remote/firebase_service.dart';
 
@@ -126,29 +127,14 @@ class UserRepository {
     return _firebaseService.deleteDocument(docRef: myRoomDocumentReference);
   }
 
-  // MARK: - MyTicketModel CRUD
-  Future<DocumentReference> createMyTicketDocument({
-    required MyTicketModel data,
-    required String uid,
-  }) async {
-    DocumentReference myTicketDocumentReference =
-        _firebaseRefs.colRefUser.doc(uid).collection("myTickets").doc();
-
-    await _firebaseService.createDocument<MyTicketModel>(
-      docRef: myTicketDocumentReference,
-      data: data,
-    );
-    
-    return myTicketDocumentReference;
-  }
-
   // MARK: - MeetingReviewModel CRUD
   Future<bool> createMeetingReviewDocument({
     required MeetingReviewModel data,
     required String uid,
   }) async {
     return await _firebaseService.createDocument<MeetingReviewModel>(
-      docRef: _firebaseRefs.colRefUser.doc(uid).collection("meetingReviews").doc(),
+      docRef:
+          _firebaseRefs.colRefUser.doc(uid).collection("meetingReviews").doc(),
       data: data,
     );
   }
@@ -170,9 +156,58 @@ class UserRepository {
     required String meetingReviewId,
   }) async {
     return await _firebaseService.readDocument<MeetingReviewModel>(
-        docRef: _firebaseRefs.colRefUser.doc(uid)
+        docRef: _firebaseRefs.colRefUser
+            .doc(uid)
             .collection("meetingReviews")
             .doc(meetingReviewId));
+  }
+
+  // MARK: - MySchedule CRUD
+  Future<bool> createMyScheduleDocument({
+    required RoomModel data,
+    required String uid,
+  }) async {
+    final myScheduleRef =
+        _firebaseRefs.colRefUser.doc(uid).collection("mySchedule").doc();
+    final myScheduleId = myScheduleRef.id;
+
+    data.room_name = myScheduleId;
+
+    return await _firebaseService.createDocument<RoomModel>(
+      docRef: myScheduleRef,
+      data: data,
+    );
+  }
+
+  Stream<QuerySnapshot<Object?>> readMyScheduleCollectionStream(
+      {required String uid}) {
+    return _firebaseService.readCollectionStream<RoomModel>(
+      colRef: _firebaseRefs.colRefUser.doc(uid).collection("mySchedule"),
+    );
+  }
+
+  Future<bool> deleteMyScheduleData({
+    required String uid,
+    required String scheduleId,
+  }) async {
+    DocumentReference myScheduleDocumentReference = _firebaseRefs.colRefUser
+        .doc(uid)
+        .collection("mySchedule")
+        .doc(scheduleId);
+    return _firebaseService.deleteDocument(docRef: myScheduleDocumentReference);
+  }
+
+  Future<bool> updateMyScheduleDocument({
+    required RoomModel data,
+    required String uid,
+  }) async {
+    return await _firebaseService.updateDocument(
+      docRef: _firebaseRefs.colRefUser
+          .doc(uid)
+          .collection("mySchedule")
+          .doc(data.room_name),
+      data: data.toJson(),
+    );
   }
 
   // MARK: - Auth Functions

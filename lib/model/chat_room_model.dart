@@ -31,6 +31,10 @@ class ChatRoomModel {
 class ChatModel {
   // 작성자 uid
   String uid;
+  // 닉네임
+  String nickname;
+  // 프로필 사진
+  String profile_icon;
   // 채팅 내용
   String content;
   // 채팅 작성 일자
@@ -43,6 +47,8 @@ class ChatModel {
 
   ChatModel({
     required this.uid,
+    required this.nickname,
+    required this.profile_icon,
     required this.content,
     required this.date,
     required this.room_reference,
@@ -52,7 +58,9 @@ class ChatModel {
   ChatModel.fromJson(Map<String, Object?> json)
       : this(
           uid: json['uid']! as String,
-          content: json['Content']! as String,
+          nickname: json['nickname']! as String,
+          profile_icon: json['profile_icon']! as String,
+          content: json['content']! as String,
           date: json['date']! as Timestamp,
           room_reference: json['room_reference']! as String,
           type: json['type']! as String,
@@ -61,7 +69,9 @@ class ChatModel {
   Map<String, Object?> toJson() {
     return {
       'uid': uid,
-      'Content': content,
+      'nickname': nickname,
+      'profile_icon': profile_icon,
+      'content': content,
       'date': date,
       'room_reference': room_reference,
       'type': type,

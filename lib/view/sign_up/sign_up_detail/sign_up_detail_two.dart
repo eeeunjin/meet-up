@@ -239,11 +239,12 @@ Widget _buildProfileImage(BuildContext context, String imagePath) {
       child: Container(
         width: 100.w,
         height: 100.h,
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           border: isSelected
               ? Border.all(
                   color: UsedColor.b_line_2,
-                  width: 2.5.h,
+                  width: 3.h,
                 )
               : Border.all(
                   color: Colors.white,
@@ -254,7 +255,6 @@ Widget _buildProfileImage(BuildContext context, String imagePath) {
           isSelected ? signUpDetailViewModel.getIconPath() : imagePath,
           width: 100.w,
           height: 100.h,
-          fit: BoxFit.cover,
         ),
       ),
     ),

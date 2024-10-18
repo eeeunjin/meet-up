@@ -10,7 +10,6 @@ class GoodHistoryModel {
   int gh_result_ticket;
   int gh_change_coin_amount;
   int gh_change_ticket_amount;
-  List<dynamic> gh_ticket_references;
   String gh_product_id;
   Timestamp gh_change_date;
 
@@ -22,7 +21,6 @@ class GoodHistoryModel {
     required this.gh_result_ticket,
     required this.gh_change_coin_amount,
     required this.gh_change_ticket_amount,
-    required this.gh_ticket_references,
     required this.gh_product_id,
     required this.gh_change_date,
   });
@@ -36,7 +34,6 @@ class GoodHistoryModel {
           gh_result_ticket: json['gh_result_ticket']! as int,
           gh_change_coin_amount: json['gh_change_coin_amount']! as int,
           gh_change_ticket_amount: json['gh_change_ticket_amount']! as int,
-          gh_ticket_references: json['gh_ticket_references']! as List<dynamic>,
           gh_product_id: json['product_id']! as String,
           gh_change_date: json["gh_change_date"]! as Timestamp,
         );
@@ -50,7 +47,6 @@ class GoodHistoryModel {
       'gh_result_ticket': gh_result_ticket,
       'gh_change_coin_amount': gh_change_coin_amount,
       'gh_change_ticket_amount': gh_change_ticket_amount,
-      'gh_ticket_references': gh_ticket_references,
       'product_id': gh_product_id,
       'gh_change_date': gh_change_date,
     };

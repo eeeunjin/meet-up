@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
@@ -9,7 +10,8 @@ import 'package:meet_up/view/widget/personal_schedule_date_picker_widget.dart';
 import 'package:meet_up/view/widget/personal_schedule_time_picker_widget.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
-import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
+import 'package:meet_up/view_model/schedule/schedule_add_personal_schdule_view_model.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
 class AddPersonalSchedule extends StatelessWidget {
@@ -17,17 +19,29 @@ class AddPersonalSchedule extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false, // 채팅 overflow 방지
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 58.h),
-            child: _header(context),
-          ),
-          _main(context),
-        ],
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        // 정보 초기화
+        final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(
+            context,
+            listen: false);
+        viewModel.clearAllState();
+
+        context.pop(context);
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false, // 채팅 overflow 방지
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 58.h),
+              child: _header(context),
+            ),
+            _main(context),
+          ],
+        ),
       ),
     );
   }
@@ -55,9 +69,10 @@ class AddPersonalSchedule extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // 정보 초기화
-        final viewModel =
-            Provider.of<ScheduleMainViewModel>(context, listen: false);
-        viewModel.backClearSelection();
+        final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(
+            context,
+            listen: false);
+        viewModel.clearAllState();
 
         context.pop(context);
       },
@@ -80,32 +95,42 @@ class AddPersonalSchedule extends StatelessWidget {
 
   //MARK: - 메인
   Widget _main(BuildContext context) {
-    return SingleChildScrollView(
+    return Expanded(
       child: Column(
         children: [
-          SizedBox(height: 22.h),
-          _naming(context),
-          SizedBox(height: 22.h),
-          _divider(),
-          SizedBox(height: 10.h),
-          _date(context),
-          SizedBox(height: 10.h),
-          _divider(),
-          SizedBox(height: 10.h),
-          _time(context),
-          SizedBox(height: 10.h),
-          _divider(),
-          SizedBox(height: 20.h),
-          _location(context),
-          SizedBox(height: 20.h),
-          _divider(),
-          SizedBox(height: 20.h),
-          _detail(context),
-          SizedBox(height: 18.h),
-          _divider(),
-          SizedBox(height: 18.h),
-          _member(context),
-          SizedBox(height: 104.h),
+          SizedBox(
+            // 전체 화면 높이 - 189.h
+            height: 1.sh - 220.h,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 22.h),
+                  _naming(context),
+                  SizedBox(height: 22.h),
+                  _divider(),
+                  SizedBox(height: 5.h),
+                  _date(context),
+                  SizedBox(height: 5.h),
+                  _divider(),
+                  SizedBox(height: 5.h),
+                  _time(context),
+                  SizedBox(height: 5.h),
+                  _divider(),
+                  SizedBox(height: 22.h),
+                  _location(context),
+                  SizedBox(height: 22.h),
+                  _divider(),
+                  SizedBox(height: 22.h),
+                  _detail(context),
+                  SizedBox(height: 22.h),
+                  _divider(),
+                  SizedBox(height: 22.h),
+                  _member(context),
+                ],
+              ),
+            ),
+          ),
+          const Spacer(),
           _bottom(context),
         ],
       ),
@@ -114,7 +139,8 @@ class AddPersonalSchedule extends StatelessWidget {
 
   //MARK: - 일정
   Widget _naming(BuildContext context) {
-    final viewModel = Provider.of<ScheduleMainViewModel>(context);
+    final viewModel =
+        Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
 
     return Padding(
       padding: EdgeInsets.only(left: 23.0.w),
@@ -137,7 +163,8 @@ class AddPersonalSchedule extends StatelessWidget {
               alignment: Alignment.center,
               height: 19.h,
               child: TextField(
-                onChanged: (text) => viewModel.namingContents(text),
+                controller: viewModel.namingController,
+                onChanged: (value) => viewModel.notify(),
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
@@ -156,8 +183,8 @@ class AddPersonalSchedule extends StatelessWidget {
 
   //MARK: - 날짜
   Widget _date(BuildContext context) {
-    final viewModel =
-        Provider.of<ScheduleMainViewModel>(context, listen: false);
+    final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(context,
+        listen: false);
 
     // ExpansionPanel 사용
     return Theme(
@@ -219,7 +246,8 @@ class AddPersonalSchedule extends StatelessWidget {
               ),
             ),
             isExpanded:
-                Provider.of<ScheduleMainViewModel>(context).isDatePanelExpanded,
+                Provider.of<ScheduleAddPersonalScheduleViewModel>(context)
+                    .isDatePanelExpanded,
           ),
         ],
       ),
@@ -228,8 +256,8 @@ class AddPersonalSchedule extends StatelessWidget {
 
   // MARK: - 시간
   Widget _time(BuildContext context) {
-    final viewModel =
-        Provider.of<ScheduleMainViewModel>(context, listen: false);
+    final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(context,
+        listen: false);
 
     // Mark - ExpansionPanel 사용
     return Theme(
@@ -291,7 +319,8 @@ class AddPersonalSchedule extends StatelessWidget {
               ),
             ),
             isExpanded:
-                Provider.of<ScheduleMainViewModel>(context).isTimePanelExpanded,
+                Provider.of<ScheduleAddPersonalScheduleViewModel>(context)
+                    .isTimePanelExpanded,
           ),
         ],
       ),
@@ -300,7 +329,8 @@ class AddPersonalSchedule extends StatelessWidget {
 
   //MARK: - 장소
   Widget _location(BuildContext context) {
-    final viewModel = Provider.of<ScheduleMainViewModel>(context);
+    final viewModel =
+        Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
     return Padding(
       padding: EdgeInsets.only(left: 21.0.w),
       child: Row(
@@ -323,6 +353,7 @@ class AddPersonalSchedule extends StatelessWidget {
               height: 19.h,
               child: TextField(
                 controller: viewModel.locationTextController,
+                onChanged: (value) => viewModel.notify(),
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
@@ -341,7 +372,8 @@ class AddPersonalSchedule extends StatelessWidget {
 
   //MARK: - 설명
   Widget _detail(BuildContext context) {
-    final viewModel = Provider.of<ScheduleMainViewModel>(context);
+    final viewModel =
+        Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
     return Padding(
       padding: EdgeInsets.only(left: 21.0.w),
       child: Row(
@@ -364,6 +396,7 @@ class AddPersonalSchedule extends StatelessWidget {
               height: 19.h,
               child: TextField(
                 controller: viewModel.detailTextController,
+                onChanged: (value) => viewModel.notify(),
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
@@ -411,15 +444,14 @@ class AddPersonalSchedule extends StatelessWidget {
   }
 
   Widget _selectedMembers(BuildContext context) {
-    final viewModel = Provider.of<ScheduleMainViewModel>(context);
-    return Consumer<ScheduleMainViewModel>(
-        builder: (context, viewmodel, child) {
+    return Consumer<ScheduleAddPersonalScheduleViewModel>(
+        builder: (context, viewModel, child) {
       List<String> participants = viewModel.selectedMembers;
 
       if (participants.isEmpty) {
         return Text(
           '인원 및 참여자 정보를 입력해주세요.',
-          style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_5),
+          style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.line),
         );
       } else {
         return Wrap(
@@ -445,13 +477,18 @@ class AddPersonalSchedule extends StatelessWidget {
 
 //MARK: - 저장
   Widget _bottom(BuildContext context) {
-    return Consumer<ScheduleMainViewModel>(
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    return Consumer<ScheduleAddPersonalScheduleViewModel>(
         builder: (context, viewModel, child) {
       return Padding(
         padding: EdgeInsets.only(bottom: 56.0.h, left: 33.w, right: 33.w),
         child: NextButton(
           onTap: () async {
             if (!viewModel.allCheckCompleted) return;
+            logger.d('저장 버튼이 눌려졌습니다.');
+            await viewModel.savePersonalSchedule(myUID: userViewModel.uid!);
+            viewModel.clearAllState();
+            context.pop(context);
           },
           height: 56.h,
           width: 327.w,

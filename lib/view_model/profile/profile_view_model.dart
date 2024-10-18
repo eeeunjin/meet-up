@@ -68,11 +68,8 @@ class ProfileViewModel with ChangeNotifier {
     for (var interest in userModel.interest) {
       _selectedInterests.add(interest);
     }
-    for (var personality in userModel.personality_self) {
+    for (var personality in userModel.personality) {
       _selectedPersonalities.add(personality);
-    }
-    for (var relationship in userModel.personality_relationship) {
-      _selectedRelationship.add(relationship);
     }
     for (var purpose in userModel.purpose) {
       _selectedMeetingPurposes.add(purpose);
@@ -385,34 +382,18 @@ class ProfileViewModel with ChangeNotifier {
       logger.d('관심사 변경 됨');
     }
 
-    // MARK: - 대인관계
-    final selectedRelationshipSet = selectedRelationship.toSet();
-    final selectedRelationshipSetLength = selectedRelationshipSet.length;
-
-    for (String relationship in userModel.personality_relationship) {
-      selectedRelationshipSet.add(relationship);
-    }
-
-    if (selectedRelationshipSetLength != selectedRelationshipSet.length) {
-      anyChanged = true;
-      updatedData['personality_relationship'] = selectedRelationship;
-      updatedUserModel.personality_relationship =
-          selectedRelationship as List<dynamic>;
-      logger.d('대인관계 변경 됨');
-    }
-
     // MARK: - 성격
     final selectedPersonalitiesSet = selectedPersonalities.toSet();
     final selectedPersonalitiesSetLength = selectedPersonalitiesSet.length;
 
-    for (String personality in userModel.personality_self) {
+    for (String personality in userModel.personality) {
       selectedPersonalitiesSet.add(personality);
     }
 
     if (selectedPersonalitiesSetLength != selectedPersonalitiesSet.length) {
       anyChanged = true;
       updatedData['personality_self'] = selectedPersonalities;
-      updatedUserModel.personality_self =
+      updatedUserModel.personality =
           selectedPersonalities as List<dynamic>;
       logger.d('성격 변경 됨');
     }

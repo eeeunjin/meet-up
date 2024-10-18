@@ -374,16 +374,6 @@ class TicketBuy extends StatelessWidget {
                 },
               );
 
-              // ticketBuyViewModel에 selectedNum 만큼 MyTicketModel 생성
-              List<DocumentReference> myTicketReferences = [];
-              for (int i = 0; i < ticketBuyViewModel.selectedNum; i++) {
-                myTicketReferences.add(
-                  await ticketBuyViewModel.addMyTicketModel(
-                    uid: userViewModel.uid!,
-                  ),
-                );
-              }
-
               // GoodHistory Model 생성 및 DB에 저장
               final GoodHistoryModel goodHistoryModel = GoodHistoryModel(
                 gh_type: GoodHistoryType.ticket.name,
@@ -394,7 +384,6 @@ class TicketBuy extends StatelessWidget {
                 gh_change_coin_amount: -totalCoin,
                 gh_change_ticket_amount: ticketBuyViewModel.selectedNum *
                     ((ticketBuyViewModel.isFixed == false) ? 1 : 4),
-                gh_ticket_references: myTicketReferences,
                 gh_product_id: '',
                 gh_change_date: Timestamp.now(),
               );

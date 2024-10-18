@@ -783,9 +783,11 @@ class ChatScheduleCheck extends StatelessWidget {
                           onPressed: () async {
                             await chatRoomSchduleRegisterViewModel
                                 .deleteSchedule(
-                                    roomId: chatRoomViewModel.roomID,
-                                    scheduleTitle: chatRoomViewModel
-                                        .roomModel.room_schedule!['title']);
+                              roomId: chatRoomViewModel.roomID,
+                              scheduleTitle: chatRoomViewModel
+                                  .roomModel.room_schedule!['title'],
+                              type: 'owner',
+                            );
                             context.pop();
                             context.pop();
                             logger.d("일정 삭제 버튼이 눌렸습니다.");

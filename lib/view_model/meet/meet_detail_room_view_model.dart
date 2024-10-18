@@ -10,6 +10,7 @@ class MeetDetailRoomViewModel with ChangeNotifier {
   final UserRepository _userRepository = UserRepository();
   final RoomRepository _roomRepository = RoomRepository();
   RoomModel? currentRoomModel; // 현재 방 모델
+  List<UserModel>? currentRoomModelUserModels; // 현재 방 모델의 유저들
   bool? isMyRoom;
   bool? isChatRoom;
 
@@ -32,32 +33,16 @@ class MeetDetailRoomViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteRoom({required String myUid}) async {
-    logger.d("채팅 방 만들어지고, 채팅 방 삭제되는 로직도 들어와야 함");
-
-    // Room Collection 에서 해당 정보 삭제
-    try {
-      await _roomRepository.deleteRoomData(roomId: currentRoomModel!.roomId);
-
-      // 해당 유저의 myRoom Collection 에서 해당 정보 삭제
-      await _userRepository.deleteMyRoomData(
-          uid: myUid, roomId: currentRoomModel!.roomId);
-
-      logger.d("안전하게 방 정보가 삭제되었습니다.");
-    } catch (e) {
-      logger.e("방 삭제 중 에러가 발생하였습니다. $e");
-    }
-
-    return;
-  }
-
   List<bool> get roomRules => currentRoomModel?.room_rules.cast<bool>() ?? [];
 
   // MARK: - 상세정보 불러오면서 참여자 정보 가져오는 함수
   Future<List<UserModel>> getParticipantInfo() async {
     List<DocumentReference> docRefs = List.empty(growable: true);
-    // 방장 추가
-    docRefs.add(currentRoomModel!.room_owner_reference);
+
+    if (!currentRoomModel!.isOwnerExit) {
+      // 방장 추가
+      docRefs.add(currentRoomModel!.room_owner_reference);
+    }
 
     // 입장한 사람 추가
     for (DocumentReference docRef
@@ -72,10 +57,7 @@ class MeetDetailRoomViewModel with ChangeNotifier {
           .add(await _userRepository.readUserDocumentByDocRef(docRef: docRef));
     }
 
-    for (UserModel userModel in userModels) {
-      logger.d(
-          "userModel.nickname: ${userModel.nickname} / userModel.gender: ${userModel.gender}");
-    }
+    currentRoomModelUserModels = userModels;
 
     return userModels;
   }
@@ -91,8 +73,6 @@ class MeetDetailRoomViewModel with ChangeNotifier {
         womanCount += 1;
       }
     }
-
-    logger.d("성비: ${currentRoomModel!.room_gender_ratio}");
 
     switch (currentRoomModel!.room_gender_ratio) {
       case "남성 4명":

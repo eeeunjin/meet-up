@@ -179,6 +179,8 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
 
     ChatModel chatModel = ChatModel(
       uid: uid,
+      nickname: '',
+      profile_icon: '',
       content: '',
       date: Timestamp.now(),
       room_reference: roomId,
@@ -203,14 +205,34 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
   Future<void> deleteSchedule({
     required String roomId,
     required String scheduleTitle,
+    required String type,
+    String? nickname,
+    List<dynamic>? participants,
   }) async {
-    // RoomModel 업데이트
-    await _roomRepository.updateRoomDocument(
-      roomId: roomId,
-      data: {
+    Map<String, dynamic> data;
+
+    if (participants != null) {
+      if (type == 'owner') {
+        data = {
+          "isScheduleDecided": false,
+          "room_schedule": null,
+          "isRoomDeleted": true,
+          "isOwnerExit": true,
+        };
+      } else {
+        data = {
+          "room_participant_reference": participants,
+          "isScheduleDecided": false,
+          "room_schedule": null,
+          "isRoomDeleted": false,
+          "room_creation_date": Timestamp.now(),
+        };
+      }
+    } else {
+      data = {
         'room_schedule': null,
-      },
-    );
+      };
+    }
 
     // 기존의 스케줄 chat 삭제 (docId 'schedule_register')
     await _chatRepository.deleteChat(
@@ -221,22 +243,49 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
     // 알림 삭제 채팅이 존재했다면 삭제
     await _chatRepository.deleteChat(
       roomId,
-      "schedule_delete",
+      "schedule_delete_by_owner",
     );
 
     // ChatModel 추가
     ChatModel chatModel = ChatModel(
       uid: '',
+      nickname: nickname!,
+      profile_icon: '',
       content: scheduleTitle,
       date: Timestamp.now(),
       room_reference: roomId,
-      type: 'schedule_delete',
+      type: type == 'owner'
+          ? (participants != null)
+              ? 'schedule_delete_by_owner_out'
+              : 'schedule_delete_by_owner'
+          : 'schedule_delete_by_participant',
     );
 
     await _chatRepository.createChat(
       chatModel,
       roomId,
-      "schedule_delete",
+      (type == 'owner')
+          ? (participants != null)
+              ? 'schedule_delete_by_owner_out'
+              : 'schedule_delete_by_owner'
+          : 'schedule_delete_by_participant',
     );
+
+    // RoomModel 업데이트
+    await _roomRepository.updateRoomDocument(
+      roomId: roomId,
+      data: data,
+    );
+  }
+
+  // MARK: - 상태 초기화
+  void resetState() {
+    scheduleNameController.clear();
+    _selectedDate = DateTime.now();
+    _selectedTime = const TimeOfDay(hour: 19, minute: 30);
+    _isDatePanelExpanded = false;
+    _isTimePanelExpanded = false;
+    locationController.clear();
+    notifyListeners();
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -15,35 +16,35 @@ import 'package:provider/provider.dart';
 
 class BotNavBar extends StatelessWidget {
   const BotNavBar({super.key});
-
   @override
   Widget build(BuildContext context) {
-    final bottomNavViewModel =
-        Provider.of<BottomNavigationBarViewModel>(context);
-
-    return PopScope(
-        // 뒤로가기
-        canPop: true,
-        onPopInvoked: (didPop) {
-          // 로직구현
-        },
-        child: Scaffold(
-          resizeToAvoidBottomInset: false, // 키보드 픽셀 over 방지
-          body: IndexedStack(
-            index: bottomNavViewModel.currentIndex,
-            children: [
-              const MeetMain(),
-              const ChatMain(),
+    return Scaffold(
+      resizeToAvoidBottomInset: false, // 키보드 픽셀 over 방지
+      body: Selector<BottomNavigationBarViewModel, int>(
+        builder: (context, value, child) {
+          return IndexedStack(
+            index: value,
+            children: const [
+              MeetMain(),
+              ChatMain(),
               ScheduleMain(),
-              const ReflectMain(),
-              const ProfileMain(),
+              ReflectMain(),
+              ProfileMain(),
             ],
-          ),
-          bottomNavigationBar: _bot_nav(context),
-        ));
+          );
+        },
+        selector: (context, viewModel) => viewModel.currentIndex,
+      ),
+      bottomNavigationBar: Selector<BottomNavigationBarViewModel, bool>(
+        builder: (context, value, child) {
+          return value ? const SizedBox.shrink() : botNavBar(context);
+        },
+        selector: (context, viewModel) => viewModel.isHidden,
+      ),
+    );
   }
 
-  Widget _bot_nav(BuildContext context) {
+  Widget botNavBar(BuildContext context) {
     final bottomNavViewModel =
         Provider.of<BottomNavigationBarViewModel>(context);
 

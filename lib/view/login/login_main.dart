@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
@@ -54,10 +55,6 @@ class LoginMain extends StatelessWidget {
                   context.goNamed('signUpPhoneNum');
                 },
                 child: _signUpButton()),
-            SizedBox(
-              // 여백
-              height: 5.h,
-            ),
           ],
         ),
       ),

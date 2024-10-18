@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/main.dart';
 import 'package:meet_up/model/chat_room_model.dart';
+import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/color.dart';
@@ -15,7 +15,9 @@ import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/bot_nav_view_model.dart';
 import 'package:meet_up/view_model/chat/chat_room_meeting_review_view_model.dart';
+import 'package:meet_up/view_model/chat/chat_room_schedule_register_view_model.dart';
 import 'package:meet_up/view_model/chat/chat_room_view_model.dart';
+import 'package:meet_up/view_model/coin/ticket_buy_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/meet/meet_detail_room_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
@@ -41,6 +43,12 @@ class ChatRoom extends StatelessWidget {
           );
         }
 
+        if (!snapshot.hasData || snapshot.data!.data() == null) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
         if (snapshot.connectionState == ConnectionState.waiting) {
           if (chatRoomViewModel.userModels.isEmpty) {
             return const Center(
@@ -53,8 +61,46 @@ class ChatRoom extends StatelessWidget {
             RoomModel.fromJson(snapshot.data!.data() as Map<String, dynamic>));
         chatRoomViewModel.setRoomID(chatRoomViewModel.roomRef.id);
 
+        bool isTimeOver = chatRoomViewModel.roomModel.room_creation_date
+            .toDate()
+            .add(const Duration(days: 7))
+            .isBefore(DateTime.now());
+
+        if (isTimeOver &&
+            !chatRoomViewModel.roomModel.isRoomDeleted &&
+            !chatRoomViewModel.roomModel.isScheduleDecided) {
+          final chatModel = ChatModel(
+            uid: "",
+            nickname: "",
+            profile_icon: "",
+            content: "",
+            date: Timestamp.now(),
+            room_reference: chatRoomViewModel.roomID,
+            type: "time_over",
+          );
+
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            await chatRoomViewModel
+                .updateRoomData(roomId: chatRoomViewModel.roomID, data: {
+              "isRoomDeleted": true,
+            });
+            await chatRoomViewModel.createChatDocument(
+              chatModel,
+            );
+          });
+        }
+
+        bool isScheduleEnd =
+            chatRoomViewModel.roomModel.room_schedule != null &&
+                chatRoomViewModel.roomModel.isScheduleDecided &&
+                chatRoomViewModel.roomModel.room_schedule!["date"]
+                    .toDate()
+                    .isBefore(
+                      DateTime.now(),
+                    );
+
         return FutureBuilder<void>(
-          future: chatRoomViewModel.setUserModels(),
+          future: chatRoomViewModel.setUserModels(isScheduleEnd: isScheduleEnd),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return const Center(
@@ -350,6 +396,7 @@ class ChatRoom extends StatelessWidget {
         }
 
         final chatListDocs = snapshot.data!.docs;
+
         // chatListDocs의 정보를 ChatModel로 변환
         final chatModels = chatListDocs
             .map((chatDoc) =>
@@ -445,44 +492,46 @@ class ChatRoom extends StatelessWidget {
       case "chat":
         return _chat(context, isMyChat: isMyChat, chatModel: chatModel);
       case "enter":
-        return _enter(context, isMyChat: isMyChat, chatModel: chatModel);
+        return _enter(context, chatModel: chatModel);
       case "exit":
-        return _exit(context, isMyChat: isMyChat, chatModel: chatModel);
+        return _exit(context, chatModel: chatModel);
       case "schedule_write":
-        return _scheduleWrite(context,
-            isMyChat: isMyChat, chatModel: chatModel);
+        return _scheduleWrite(context, chatModel: chatModel);
       case "schedule_register":
         return _scheduleRegister(context,
             isMyChat: isMyChat, chatModel: chatModel);
-      case "schedule_delete":
-        return _scheduleDelete(context,
-            isMyChat: isMyChat, chatModel: chatModel);
+      case "schedule_delete_by_owner":
+        return _scheduleDeleteByOwner(context, chatModel: chatModel);
+      case "schedule_delete_by_owner_out":
+        return _scheduleDeleteByOut(context,
+            chatModel: chatModel, isOwner: true);
+      case "schedule_delete_by_participant":
+        return _scheduleDeleteByOut(context,
+            chatModel: chatModel, isOwner: false);
       case "schedule_decide":
-        return _scheduleDecide(context,
-            isMyChat: isMyChat, chatModel: chatModel);
+        return _scheduleDecide(context, chatModel: chatModel);
       case "schedule_alarm":
         return _scheduleAlarm(chatModel.content);
       case "review":
         return _review(context);
       case "diary":
         return _diary(context);
+      case "owner_exit":
+        return _ownerExit(context, chatModel: chatModel);
+      case "time_over":
+        return _timeOver(context, chatModel: chatModel);
+      case "schedule_end":
+        return _scheduleEnd(context, chatModel: chatModel);
       default:
         return Container();
     }
   }
 
-  // MAKR: - 채팅방 입장
+  // MARK: - 채팅방 입장
   Widget _enter(
     BuildContext context, {
-    required bool isMyChat,
     required ChatModel chatModel,
   }) {
-    final chatRoomViewModel =
-        Provider.of<ChatRoomViewModel>(context, listen: false);
-    final userModel = chatRoomViewModel.userModels
-        .where((element) => element.uid == chatModel.uid)
-        .first;
-
     return Center(
       child: Container(
         width: 344.w,
@@ -498,7 +547,7 @@ class ChatRoom extends StatelessWidget {
             ),
             SizedBox(width: 4.w),
             Text(
-              userModel.nickname + chatModel.content,
+              chatModel.nickname + chatModel.content,
               style: AppTextStyles.PR_M_11.copyWith(
                 color: UsedColor.text_4,
               ),
@@ -519,15 +568,10 @@ class ChatRoom extends StatelessWidget {
   // MARK: - 채팅방 퇴장
   Widget _exit(
     BuildContext context, {
-    required bool isMyChat,
     required ChatModel chatModel,
   }) {
-    final chatRoomViewModel =
+    final ChatRoomViewModel chatRoomViewModel =
         Provider.of<ChatRoomViewModel>(context, listen: false);
-    final userModel = chatRoomViewModel.userModels
-        .where((element) => element.uid == chatModel.uid)
-        .first;
-
     return Center(
       child: Container(
         width: 344.w,
@@ -543,7 +587,10 @@ class ChatRoom extends StatelessWidget {
             ),
             SizedBox(width: 4.w),
             Text(
-              userModel.nickname + chatModel.content,
+              chatRoomViewModel.roomModel.room_owner_reference.id ==
+                      chatModel.uid
+                  ? "${chatModel.nickname}(방장)${chatModel.content}"
+                  : chatModel.nickname + chatModel.content,
               style: AppTextStyles.PR_M_11.copyWith(
                 color: UsedColor.text_4,
               ),
@@ -598,8 +645,12 @@ class ChatRoom extends StatelessWidget {
     final sendTimeString =
         '${sendTime.hour > 12 ? '오후' : '오전'} $sendTimeHour:$sendTimeMinute';
     // 다른 사람의 채팅인 경우 해당 유저 정보 불러오기
+    final userExist = chatRoomViewModel.userModels
+        .where((element) => element.uid == chatModel.uid)
+        .isNotEmpty;
+
     UserModel? otherUser;
-    if (!isMyChat) {
+    if (!isMyChat && userExist) {
       otherUser = chatRoomViewModel.userModels
           .where((element) => element.uid == chatModel.uid)
           .first;
@@ -665,7 +716,7 @@ class ChatRoom extends StatelessWidget {
             Stack(
               children: [
                 Image.asset(
-                  otherUser!.profile_icon,
+                  userExist ? otherUser!.profile_icon : chatModel.profile_icon,
                   width: 45.h,
                   height: 45.h,
                 ),
@@ -697,7 +748,7 @@ class ChatRoom extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  otherUser.nickname,
+                  userExist ? otherUser!.nickname : chatModel.nickname,
                   style: AppTextStyles.PR_SB_13.copyWith(
                     color: UsedColor.charcoal_black,
                   ),
@@ -738,7 +789,7 @@ class ChatRoom extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    logger.d("[${otherUser!.nickname}]님에 대한 신고 버튼이 눌렸습니다.");
+                    logger.d("[${chatModel.nickname}]님에 대한 신고 버튼이 눌렸습니다.");
                   },
                   child: Image.asset(
                     ImagePath.chatRoomDeclarationButton,
@@ -763,7 +814,6 @@ class ChatRoom extends StatelessWidget {
   // MARK: - 일정 작성 가능 알림
   Widget _scheduleWrite(
     BuildContext context, {
-    required bool isMyChat,
     required ChatModel chatModel,
   }) {
     return Padding(
@@ -966,7 +1016,7 @@ class ChatRoom extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    logger.d("[${otherUser!.nickname}]님에 대한 신고 버튼이 눌렸습니다.");
+                    logger.d("[${chatModel.nickname}]님에 대한 신고 버튼이 눌렸습니다.");
                   },
                   child: Image.asset(
                     ImagePath.chatRoomDeclarationButton,
@@ -988,10 +1038,9 @@ class ChatRoom extends StatelessWidget {
     }
   }
 
-  // MARK: - 일정 삭제 알림
-  Widget _scheduleDelete(
+  // MARK: - 일정 삭제 알림 (방장 일정 삭제)
+  Widget _scheduleDeleteByOwner(
     BuildContext context, {
-    required bool isMyChat,
     required ChatModel chatModel,
   }) {
     // 일정 삭제 view 표시
@@ -1050,10 +1099,133 @@ class ChatRoom extends StatelessWidget {
     );
   }
 
+  // MARK: - 일정 파기 알림 (참가자, 방장 퇴장)
+  Widget _scheduleDeleteByOut(
+    BuildContext context, {
+    required ChatModel chatModel,
+    required bool isOwner,
+  }) {
+    // 일정 삭제 view 표시
+    return Padding(
+      padding: EdgeInsets.only(left: 28.w, right: 27.w),
+      child: Container(
+        width: 338.w,
+        height: 79.h,
+        padding: EdgeInsets.only(left: 13.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18.r),
+          color: UsedColor.image_card,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 12.67.h,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 20.w,
+                  height: 20.h,
+                  child: Image.asset(
+                    ImagePath.chatRoomScheduleWriteIcon,
+                  ),
+                ),
+                SizedBox(width: 6.w),
+                Text(
+                  '일정 파기 안내',
+                  style: AppTextStyles.PR_SB_14
+                      .copyWith(color: UsedColor.charcoal_black),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 3.h,
+            ),
+            Text(
+              isOwner
+                  ? "(${chatModel.nickname})(방장) 님이 채팅방을 나가셨습니다."
+                  : "(${chatModel.nickname}) 님이 채팅방을 나가셨습니다.",
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            ),
+            SizedBox(
+              height: 4.h,
+            ),
+            Text(
+              '이탈로 인해 등록된 일정이 파기됩니다.',
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  // MARK: - 방장 퇴장으로 인한 방 삭제 알림
+  Widget _ownerExit(
+    BuildContext context, {
+    required ChatModel chatModel,
+  }) {
+    return Padding(
+      padding: EdgeInsets.only(left: 28.w, right: 27.w),
+      child: Container(
+        width: 338.w,
+        height: 79.h,
+        padding: EdgeInsets.only(left: 13.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18.r),
+          color: UsedColor.image_card,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 12.67.h,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 20.w,
+                  height: 20.h,
+                  child: Image.asset(
+                    ImagePath.chatRoomScheduleWriteIcon,
+                  ),
+                ),
+                SizedBox(width: 6.w),
+                Text(
+                  '채팅방 삭제 안내',
+                  style: AppTextStyles.PR_SB_14
+                      .copyWith(color: UsedColor.charcoal_black),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 3.h,
+            ),
+            Text(
+              "(${chatModel.nickname})(방장) 님이 채팅방을 나가셨습니다.",
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            ),
+            SizedBox(
+              height: 4.h,
+            ),
+            Text(
+              '해당 채팅방은 자동으로 삭제될 예정입니다.',
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   // MARK: - 일정 확정 알림
   Widget _scheduleDecide(
     BuildContext context, {
-    required bool isMyChat,
     required ChatModel chatModel,
   }) {
     return Padding(
@@ -1335,9 +1507,8 @@ class ChatRoom extends StatelessWidget {
     final nickname = userViewModel.userModel!.nickname;
     return GestureDetector(
       onTap: () {
-        logger.d("상호평가 작성하기 버튼이 눌렸습니다.");
         chatRoomMeetingReviewViewModel.setUserModels(
-            chatRoomViewModel.userModels, userViewModel.uid!);
+            chatRoomViewModel.scheduleUserModels, userViewModel.uid!);
         context.goNamed('chatMeetingReview');
       },
       child: Padding(
@@ -1468,6 +1639,120 @@ class ChatRoom extends StatelessWidget {
     );
   }
 
+  // MARK: - 기한 만료로 인한 채팅방 삭제 알림
+  Widget _timeOver(BuildContext context, {required ChatModel chatModel}) {
+    return Padding(
+      padding: EdgeInsets.only(left: 28.w, right: 27.w),
+      child: Container(
+        width: 338.w,
+        height: 79.h,
+        padding: EdgeInsets.only(left: 13.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18.r),
+          color: UsedColor.image_card,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 12.67.h,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 20.w,
+                  height: 20.h,
+                  child: Image.asset(
+                    ImagePath.chatRoomScheduleWriteIcon,
+                  ),
+                ),
+                SizedBox(width: 6.w),
+                Text(
+                  '채팅방 삭제 안내',
+                  style: AppTextStyles.PR_SB_14
+                      .copyWith(color: UsedColor.charcoal_black),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 5.h,
+            ),
+            Text(
+              "해당 채팅 방은 기한 만료로 인해 삭제되었습니다.",
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            ),
+            SizedBox(
+              height: 4.h,
+            ),
+            Text(
+              '만남방 퇴장 시, 모든 인원의 만남권이 환불됩니다.',
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  // MARK: - 만남 완료 알림
+  Widget _scheduleEnd(BuildContext context, {required ChatModel chatModel}) {
+    return Padding(
+      padding: EdgeInsets.only(left: 28.w, right: 27.w),
+      child: Container(
+        width: 338.w,
+        height: 79.h,
+        padding: EdgeInsets.only(left: 13.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18.r),
+          color: UsedColor.image_card,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 12.67.h,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 20.w,
+                  height: 20.h,
+                  child: Image.asset(
+                    ImagePath.chatRoomScheduleWriteIcon,
+                  ),
+                ),
+                SizedBox(width: 6.w),
+                Text(
+                  '만남 완료 안내',
+                  style: AppTextStyles.PR_SB_14
+                      .copyWith(color: UsedColor.charcoal_black),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 5.h,
+            ),
+            Text(
+              "채팅 방은 하루 뒤 자동으로 삭제됩니다.",
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            ),
+            SizedBox(
+              height: 4.h,
+            ),
+            Text(
+              '만남이 즐거우셨나요? 만남 후기 작성을 잊지 마세요 :)',
+              style: AppTextStyles.PR_M_12.copyWith(color: UsedColor.text_4),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   // MARK: - 메시지 입력창
   Widget _typeMessageBox(BuildContext context) {
     return Consumer<ChatRoomViewModel>(
@@ -1481,11 +1766,19 @@ class ChatRoom extends StatelessWidget {
         // 방장인지 확인하는 변수
         final userViewModel =
             Provider.of<UserViewModel>(context, listen: false);
-        final isOwner = chatRoomViewModel.userModels[0].nickname ==
-            (userViewModel.userModel?.nickname ?? '');
+        final isOwner = chatRoomViewModel.roomModel.room_owner_reference.id ==
+            userViewModel.uid;
         double typeContainerWidth = chatRoomViewModel.startEdit ? 296.w : 357.w;
         double typeContainerWidthEnd =
             isOwner ? typeContainerWidth - 52.w : typeContainerWidth;
+
+        bool isScheduleEndAfterOneDay = chatRoomViewModel
+            .roomModel.room_schedule!["date"]
+            .toDate()
+            .add(const Duration(days: 1))
+            .isBefore(
+              DateTime.now(),
+            );
 
         return SizedBox(
           height:
@@ -1519,6 +1812,11 @@ class ChatRoom extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.only(top: 4.h),
                           child: TextField(
+                            enabled:
+                                chatRoomViewModel.roomModel.isRoomDeleted ||
+                                        isScheduleEndAfterOneDay
+                                    ? false
+                                    : true,
                             textAlignVertical: TextAlignVertical.top,
                             cursorColor: UsedColor.main,
                             // cursorHeight: 18.h,
@@ -1549,7 +1847,11 @@ class ChatRoom extends StatelessWidget {
                                         ? 10.h
                                         : 4.h,
                               ),
-                              hintText: '메시지를 입력해주세요',
+                              hintText:
+                                  chatRoomViewModel.roomModel.isRoomDeleted ||
+                                          isScheduleEndAfterOneDay
+                                      ? '메시지를 입력할 수 없습니다'
+                                      : '메시지를 입력해주세요',
                               hintStyle: AppTextStyles.PR_R_13
                                   .copyWith(color: UsedColor.text_3),
                               border: InputBorder.none,
@@ -1581,6 +1883,8 @@ class ChatRoom extends StatelessWidget {
 
                         final chatModel = ChatModel(
                           uid: userViewModel.uid!,
+                          nickname: userViewModel.userModel!.nickname,
+                          profile_icon: userViewModel.userModel!.profile_icon,
                           content: message,
                           date: Timestamp.now(),
                           room_reference: chatRoomViewModel.roomID,
@@ -1626,17 +1930,11 @@ class ChatRoom extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        for (var userModel in chatRoomViewModel.userModels) {
-          logger.d("참가자: ${userModel.nickname}");
-        }
-
         bool isScheduleExist =
             chatRoomViewModel.roomModel.room_schedule != null;
 
         if (isScheduleExist) {
           logger.d("일정이 이미 등록되어 있습니다.");
-        } else {
-          logger.d("등록된 일정이 아직 없습니다.");
         }
 
         if (chatRoomViewModel.userModels.length == 4 && !isScheduleExist) {
@@ -1662,95 +1960,364 @@ class ChatRoom extends StatelessWidget {
 
   // MARK: - 채팅방 나가기
   void _showOutRoomDialog(BuildContext context) {
-    logger.d("채팅방 나가기 다이얼로그 출력");
     final chatRoomViewModel =
         Provider.of<ChatRoomViewModel>(context, listen: false);
+    final chatRoomSchduleRegisterViewModel =
+        Provider.of<ChatRoomSchduleRegisterViewModel>(context, listen: false);
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final ticketBuyViewModel =
+        Provider.of<TicketBuyViewModel>(context, listen: false);
+
+    // 참여자인지 방장인지 구별하는 변수
+    final isOwner = chatRoomViewModel.userModels[0].nickname ==
+        userViewModel.userModel?.nickname;
+    // 스케줄이 확정되었는지 확인하는 변수
+    final isScheduleDecided = chatRoomViewModel.roomModel.isScheduleDecided;
+    // 방이 현재 삭제되었는지 나타내는 변수
+    bool isRoomDeleted = chatRoomViewModel.roomModel.isRoomDeleted;
+
+    // 확정 일정일 이후 나가는 경우
+    bool isScheduleEnd = chatRoomViewModel.roomModel.room_schedule != null &&
+        isScheduleDecided &&
+        chatRoomViewModel.roomModel.room_schedule!["date"].toDate().isBefore(
+              DateTime.now(),
+            );
+
+    // 방이 만들어지고 7일이 지난 경우
+    bool isTimeOver = chatRoomViewModel.roomModel.room_creation_date
+            .toDate()
+            .add(const Duration(days: 7))
+            .isBefore(DateTime.now()) &&
+        !isScheduleDecided;
+
+    // 상호 평가 작성 여부 확인
+    bool isReviewWritten = (chatRoomViewModel.roomModel.room_meeting_review
+            .where((element) => element.split("_").first == userViewModel.uid)
+            .length ==
+        3);
+
     showCupertinoDialog(
       context: context,
       builder: (context) => CupertinoAlertDialog(
-        title: Text(
-          "채팅방에서 나가시겠습니까?",
-          style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
-        ),
-        content: Container(
-          alignment: Alignment.bottomCenter,
-          height: 20.h,
-          child: Text(
-            "채팅방을 나가면 대화 내용이 전부 삭제됩니다.",
-            style: AppTextStyles.PR_R_12.copyWith(color: UsedColor.text_3),
-          ),
-        ),
+        title: isScheduleDecided && !isScheduleEnd
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "일정이 확정된 후 방을 나가시면",
+                    style: AppTextStyles.PR_M_13
+                        .copyWith(color: UsedColor.charcoal_black),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    "입장권 환불이 불가합니다.",
+                    style: AppTextStyles.PR_SB_13
+                        .copyWith(color: UsedColor.charcoal_black),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    "그래도 나가시겠습니까?",
+                    style: AppTextStyles.PR_M_13
+                        .copyWith(color: UsedColor.charcoal_black),
+                  ),
+                ],
+              )
+            : isScheduleDecided && isScheduleEnd && !isReviewWritten
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "상호 평가를 하지 않으셨네요!",
+                        style: AppTextStyles.PR_SB_13
+                            .copyWith(color: UsedColor.charcoal_black),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        "지금 상호평가를 진행하시면",
+                        style: AppTextStyles.PR_SB_13
+                            .copyWith(color: UsedColor.charcoal_black),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        "추가 포인트가 지급됩니다.",
+                        style: AppTextStyles.PR_SB_13
+                            .copyWith(color: UsedColor.charcoal_black),
+                      ),
+                    ],
+                  )
+                : Text(
+                    "채팅방에서 나가시겠습니까?",
+                    style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
+                  ),
+        content: isScheduleDecided && !isScheduleEnd
+            ? null
+            : isScheduleDecided && isScheduleEnd && !isReviewWritten
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 13.0.h,
+                      ),
+                      Text(
+                        "지금 채팅방을 나가시면",
+                        style: AppTextStyles.PR_R_12
+                            .copyWith(color: UsedColor.text_3),
+                      ),
+                      SizedBox(
+                        height: 4.0.h,
+                      ),
+                      Text(
+                        "추후 해당 만남에 대한 상호 평가는 불가능합니다.",
+                        style: AppTextStyles.PR_R_12
+                            .copyWith(color: UsedColor.text_3),
+                      ),
+                    ],
+                  )
+                : Container(
+                    alignment: Alignment.bottomCenter,
+                    height: 20.h,
+                    child: Text(
+                      "채팅방을 나가면 대화 내용이 전부 삭제됩니다.",
+                      style: AppTextStyles.PR_R_12
+                          .copyWith(color: UsedColor.text_3),
+                    ),
+                  ),
         actions: [
           CupertinoDialogAction(
+            onPressed: isScheduleDecided && isScheduleEnd && !isReviewWritten
+                ? () {
+                    final chatRoomMeetingReviewViewModel =
+                        Provider.of<ChatRoomMeetingReviewViewModel>(context,
+                            listen: false);
+                    context.pop();
+                    chatRoomMeetingReviewViewModel.setUserModels(
+                        chatRoomViewModel.scheduleUserModels,
+                        userViewModel.uid!);
+                    context.goNamed('chatMeetingReview');
+                  }
+                : () {
+                    context.pop();
+                  },
             child: Text(
-              "취소",
-              style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
+              isScheduleDecided && isScheduleEnd && !isReviewWritten
+                  ? "상호 평가"
+                  : "취소",
+              style: isScheduleDecided && isScheduleEnd && !isReviewWritten
+                  ? AppTextStyles.PR_SB_14.copyWith(color: UsedColor.button)
+                  : AppTextStyles.PR_M_14.copyWith(color: Colors.black),
             ),
-            onPressed: () {
-              context.pop();
-            },
           ),
           CupertinoDialogAction(
             child: Text(
               "나가기",
-              style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
+              style: AppTextStyles.PR_M_14.copyWith(color: Colors.black),
             ),
             onPressed: () async {
-              // 1. 나간 사람이 방장인 경우
-              // 2. 나간 사람이 참여자인 경우
-              // 참여자인지 방장인지 구별하는 변수
-              final isOnwer = chatRoomViewModel.userModels[0].nickname ==
-                  userViewModel.userModel?.nickname;
-
-              // room 정보 변경
-              // 방장이 나간 경우
-              if (isOnwer) {
-                // TODO: 방장이 나간 경우에 대한 함수 작성
-                // owner 정보 지우고, 방장이 나간 경우에 대한 변수 전달 필요
-                logger.e("방장이 나간 경우에 대한 함수가 없습니다.");
-                return;
-              }
-              // 참여자가 나간 경우
-              else {
-                var participantRefs = List.from(
-                  chatRoomViewModel.roomModel.room_participant_reference,
-                );
-                participantRefs.remove(FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(userViewModel.uid));
-
-                await chatRoomViewModel.updateRoomData(
-                  roomId: chatRoomViewModel.roomID,
-                  data: {"room_participant_reference": participantRefs},
-                );
-              }
-
-              // myRoom 정보 삭제
-              await chatRoomViewModel.deleteMyRoom(
-                uid: userViewModel.uid!,
-                roomId: chatRoomViewModel.roomID,
+              // 나간 인원의 참여자 정보를 삭제하여 저장한 변수
+              var participantRefs = List.from(
+                chatRoomViewModel.roomModel.room_participant_reference,
               );
+              participantRefs.remove(FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(userViewModel.uid));
 
-              // chatModel 추가
-              final chatModel = ChatModel(
+              // 채팅방 나가기 알림을 위한 chatModel 생성
+              final roomOutChatModel = ChatModel(
                 uid: userViewModel.uid!,
+                nickname: userViewModel.userModel!.nickname,
+                profile_icon: userViewModel.userModel!.profile_icon,
                 content: " 님이 채팅방을 나갔습니다.",
                 date: Timestamp.now(),
                 room_reference: chatRoomViewModel.roomID,
                 type: "exit",
               );
-              await chatRoomViewModel.createChatDocument(
-                  chatModel, userViewModel.userModel!.nickname);
 
-              // TODO: 만남권 소진 로직 추가 이후 작성
-              // Ticket 관련 로직 추가 (사용 가능 횟수 감소)
-              // 2-1) 나간 사람의 만남권 횟수가 남은 경우
-              // 2-2) 나간 사람의 만남권 횟수가 없는 경우
+              if (isOwner) {
+                // chatRooms/room doc/ChatModel 추가 (방장 퇴장 알림)
+                await chatRoomViewModel.createChatDocument(
+                  roomOutChatModel,
+                  userViewModel.userModel!.nickname,
+                );
 
-              // 채팅 방 나가기
-              while (context.canPop()) {
-                context.pop();
+                // users/user doc/MyRoomModel 삭제 (방장)
+                await chatRoomViewModel.deleteMyRoom(
+                  uid: userViewModel.uid!,
+                  roomId: chatRoomViewModel.roomID,
+                );
+
+                if (isScheduleDecided && !isScheduleEnd) {
+                  // chatRooms/room doc/ChatModel 추가 (일정 삭제 알림)
+                  await chatRoomSchduleRegisterViewModel.deleteSchedule(
+                    roomId: chatRoomViewModel.roomID,
+                    scheduleTitle:
+                        chatRoomViewModel.roomModel.room_schedule!["title"],
+                    type: "owner",
+                    nickname: userViewModel.userModel!.nickname,
+                    participants: participantRefs,
+                  );
+
+                  // users/user docs/myScheduleModel 삭제 (참여자 모두)
+                  for (var userModel in chatRoomViewModel.userModels) {
+                    await chatRoomViewModel.deleteMySchedule(
+                      uid: userModel.uid,
+                      scheduleId: chatRoomViewModel.roomID,
+                    );
+                  }
+                } else {
+                  // rooms/room docs/roomModel 참여자 정보 update
+                  chatRoomViewModel.updateRoomData(
+                    roomId: chatRoomViewModel.roomID,
+                    data: {
+                      "isRoomDeleted": true,
+                      "isOwnerExit": true,
+                    },
+                  );
+                }
+
+                // chatRooms/room doc/ChatModel 추가 (방장 퇴장으로 인한 방 삭제 알림)
+                if (!isScheduleEnd && !isTimeOver) {
+                  await chatRoomViewModel.createChatDocument(
+                    ChatModel(
+                      uid: "",
+                      nickname: userViewModel.userModel!.nickname,
+                      profile_icon: "",
+                      content: "",
+                      date: Timestamp.now(),
+                      room_reference: chatRoomViewModel.roomID,
+                      type: "owner_exit",
+                    ),
+                  );
+                }
+
+                if (isTimeOver) {
+                  // 만남권 환불
+                  await userViewModel.updateUserInfo(
+                    data: {"ticket": userViewModel.userModel!.ticket + 1},
+                  );
+
+                  final goodHistoryModel = GoodHistoryModel(
+                      gh_type: GoodHistoryType.ticket.name,
+                      gh_type_transaction:
+                          GoodHistoryTypeOfTransaction.refund.name,
+                      gh_uid: userViewModel.uid!,
+                      gh_result_coin: userViewModel.userModel!.coin,
+                      gh_result_ticket: userViewModel.userModel!.ticket,
+                      gh_change_coin_amount: 0,
+                      gh_change_ticket_amount: 1,
+                      gh_product_id: '',
+                      gh_change_date: Timestamp.now());
+
+                  await ticketBuyViewModel.createGoodHistory(
+                      goodHistoryModel: goodHistoryModel);
+                }
+
+                // 만남권 환불 x
+                // 채팅방 나가기
+                if (context.mounted) {
+                  while (context.canPop()) {
+                    context.pop();
+                  }
+                }
+              } else {
+                if (isScheduleDecided && !isScheduleEnd) {
+                  // users/user doc/MyRoomModel 삭제 (나간 참여자)
+                  await chatRoomViewModel.deleteMyRoom(
+                    uid: userViewModel.uid!,
+                    roomId: chatRoomViewModel.roomID,
+                  );
+
+                  // users/user docs/myScheduleModel 삭제 (참여자 모두)
+                  for (var userModel in chatRoomViewModel.userModels) {
+                    await chatRoomViewModel.deleteMySchedule(
+                      uid: userModel.uid,
+                      scheduleId: chatRoomViewModel.roomID,
+                    );
+                  }
+
+                  // chatRooms/room doc/ChatModel 추가 (나간 참여자)
+                  await chatRoomViewModel.createChatDocument(
+                    roomOutChatModel,
+                    userViewModel.userModel!.nickname,
+                  );
+
+                  // 일정 삭제 + chatRooms/room doc/ChatModel 추가 (일정 삭제 알림)
+                  await chatRoomSchduleRegisterViewModel.deleteSchedule(
+                    roomId: chatRoomViewModel.roomID,
+                    scheduleTitle:
+                        chatRoomViewModel.roomModel.room_schedule!["title"],
+                    type: "participant",
+                    nickname: userViewModel.userModel!.nickname,
+                    participants: participantRefs,
+                  );
+
+                  // 만남권 환불 x
+
+                  // 채팅방 나가기
+                  if (context.mounted) {
+                    while (context.canPop()) {
+                      context.pop();
+                    }
+                  }
+                } else {
+                  // isScheduleDecided && !isScheduleEnd => 처리 됨
+                  // isScheduleDecided && isScheduleEnd => 처리 됨 (만남권 환불이 없도록 처리)
+                  // !isScheduleDecided && !isScheduleEnd => 처리 됨 (만남권 환불이 있도록 처리)
+                  // !isScheduleDecided && isScheduleEnd => 스케줄이 지정 안됬는데 끝난 경우는 없음
+                  // rooms/RoomModel field update (나간 참여자 정보 삭제)
+                  await chatRoomViewModel.updateRoomData(
+                    roomId: chatRoomViewModel.roomID,
+                    data: {"room_participant_reference": participantRefs},
+                  );
+
+                  // users/user doc/MyRoomModel 삭제 (나간 참여자)
+                  await chatRoomViewModel.deleteMyRoom(
+                    uid: userViewModel.uid!,
+                    roomId: chatRoomViewModel.roomID,
+                  );
+
+                  // chatRooms/room doc/ChatModel 추가 (나간 참여자)
+                  await chatRoomViewModel.createChatDocument(
+                    roomOutChatModel,
+                    userViewModel.userModel!.nickname,
+                  );
+
+                  // 만남권 환불 (나간 참여자), goodHistory 추가
+                  if (!isScheduleEnd) {
+                    await userViewModel.updateUserInfo(
+                      data: {"ticket": userViewModel.userModel!.ticket + 1},
+                    );
+
+                    final goodHistoryModel = GoodHistoryModel(
+                        gh_type: GoodHistoryType.ticket.name,
+                        gh_type_transaction:
+                            GoodHistoryTypeOfTransaction.refund.name,
+                        gh_uid: userViewModel.uid!,
+                        gh_result_coin: userViewModel.userModel!.coin,
+                        gh_result_ticket: userViewModel.userModel!.ticket,
+                        gh_change_coin_amount: 0,
+                        gh_change_ticket_amount: 1,
+                        gh_product_id: '',
+                        gh_change_date: Timestamp.now());
+
+                    await ticketBuyViewModel.createGoodHistory(
+                        goodHistoryModel: goodHistoryModel);
+                  }
+
+                  // 채팅방 나가기
+                  if (context.mounted) {
+                    while (context.canPop()) {
+                      context.pop();
+                    }
+                  }
+                }
+              }
+
+              if (isScheduleEnd && !isRoomDeleted) {
+                // isRoomDeleted 변수 true로 변경
+                await chatRoomViewModel.updateRoomData(
+                  roomId: chatRoomViewModel.roomID,
+                  data: {"isRoomDeleted": true},
+                );
               }
             },
           ),
