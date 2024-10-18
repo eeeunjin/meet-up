@@ -29,7 +29,9 @@ import 'package:meet_up/view_model/meet/meet_keyword_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_manage_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_user_info_view_model.dart';
 import 'package:meet_up/view_model/profile/profile_view_model.dart';
+import 'package:meet_up/view_model/reflect/reflect_record_view_model.dart';
 import 'package:meet_up/view_model/reflect/reflect_view_model.dart';
+import 'package:meet_up/view_model/reflect/reflect_write_diary_view_model.dart';
 import 'package:meet_up/view_model/schedule/schedule_add_member_view_model.dart';
 import 'package:meet_up/view_model/schedule/schedule_add_personal_schdule_view_model.dart';
 import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
@@ -130,6 +132,9 @@ void main() async {
           ),
         ),
         ChangeNotifierProvider(create: (context) => ReflectViewModel()),
+        ChangeNotifierProvider(create: (context) => ReflectRecordViewModel()),
+        ChangeNotifierProvider(
+            create: (context) => ReflectWriteDiaryViewModel()),
       ],
       child: MyApp(),
     ),

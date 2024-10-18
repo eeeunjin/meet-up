@@ -12,8 +12,8 @@ import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/reflect/reflect_view_model.dart';
 import 'package:provider/provider.dart';
 
-class ReflectDiaryDetails extends StatelessWidget {
-  const ReflectDiaryDetails({super.key});
+class ReflectDiaryDetail extends StatelessWidget {
+  const ReflectDiaryDetail({super.key});
 
   @override
   Widget build(BuildContext context) {

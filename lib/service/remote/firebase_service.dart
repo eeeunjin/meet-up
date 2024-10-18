@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_up/main.dart';
 import 'package:meet_up/model/chat_room_model.dart';
+import 'package:meet_up/model/diary_model.dart';
 import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
@@ -301,6 +302,10 @@ class FirebaseCRUD {
           MeetingReviewModel meetingReview = data as MeetingReviewModel;
           await docRef.set(meetingReview.toJson());
           return true;
+        } else if (T == DiaryModel) {
+          DiaryModel diary = data as DiaryModel;
+          await docRef.set(diary.toJson());
+          return true;
         } else {
           // 지정하지 않은 모델인 경우 에러 반환
           throw Exception("Unsupported document type.");
@@ -311,7 +316,7 @@ class FirebaseCRUD {
       }
     } catch (err) {
       // 생성 작업 실패 시 에러 메시지와 함께 예외를 던지지 않고 false 반환
-      debugPrint("Error creating document: $err");
+      logger.e("Error creating document: ${err.toString()}");
       return false;
     }
   }

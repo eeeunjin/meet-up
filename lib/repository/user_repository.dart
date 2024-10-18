@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meet_up/main.dart';
+import 'package:meet_up/model/diary_model.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/service/remote/firebase_service.dart';
@@ -207,6 +208,20 @@ class UserRepository {
           .collection("mySchedule")
           .doc(data.room_name),
       data: data.toJson(),
+    );
+  }
+
+  // MARK: - MyDiary CRUD
+  Future<bool> createMyDiaryDocument({
+    required DiaryModel data,
+    required String uid,
+  }) async {
+    final myDiaryRef =
+        _firebaseRefs.colRefUser.doc(uid).collection("myDiary").doc();
+
+    return await _firebaseService.createDocument<DiaryModel>(
+      docRef: myDiaryRef,
+      data: data,
     );
   }
 

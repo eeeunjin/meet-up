@@ -122,7 +122,7 @@ class MeetMain extends StatelessWidget {
               _coinWidget(context),
               SizedBox(height: 15.h),
               _event(),
-              SizedBox(height: 64.h),
+              SizedBox(height: 50.h),
               _manageMeetList(context),
               SizedBox(height: 28.h),
               _searchMeetList(context),

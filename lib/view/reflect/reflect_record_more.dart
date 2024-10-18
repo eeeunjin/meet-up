@@ -5,8 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
-import 'package:meet_up/view_model/meet/header_widget.dart';
-import 'package:meet_up/view_model/reflect/reflect_view_model.dart';
+import 'package:meet_up/view_model/reflect/reflect_record_view_model.dart';
 import 'package:provider/provider.dart';
 
 class ReflectRecordMore extends StatelessWidget {
@@ -14,7 +13,8 @@ class ReflectRecordMore extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<ReflectViewModel>(context, listen: false);
+    final viewModel =
+        Provider.of<ReflectRecordViewModel>(context, listen: false);
 
     return Scaffold(
       body: Column(
@@ -40,7 +40,7 @@ class ReflectRecordMore extends StatelessWidget {
     );
   }
 
-  Widget _header(BuildContext context, ReflectViewModel viewModel) {
+  Widget _header(BuildContext context, ReflectRecordViewModel viewModel) {
     return Center(
       child: Column(
         children: [
@@ -87,7 +87,8 @@ class ReflectRecordMore extends StatelessWidget {
   }
 
 // MARK:-달력 팝업
-  void _showYearMonthPicker(BuildContext context, ReflectViewModel viewModel) {
+  void _showYearMonthPicker(
+      BuildContext context, ReflectRecordViewModel viewModel) {
     viewModel.initializeDisplayedDate();
 
     showDialog(
@@ -198,10 +199,10 @@ class ReflectRecordMore extends StatelessWidget {
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        final viewModel = Provider.of<ReflectViewModel>(context, listen: false);
+        final viewModel =
+            Provider.of<ReflectRecordViewModel>(context, listen: false);
 
         viewModel.resetSortOrder();
-        viewModel.resetAll();
 
         context.pop();
       },
@@ -215,7 +216,7 @@ class ReflectRecordMore extends StatelessWidget {
 
   // MARK:-버튼
   Widget _buttons(BuildContext context) {
-    return Consumer<ReflectViewModel>(
+    return Consumer<ReflectRecordViewModel>(
       builder: (context, viewModel, child) {
         double buttonWidth = viewModel.isSortedByRecent ? 54.w : 64.w;
 
@@ -276,7 +277,7 @@ class ReflectRecordMore extends StatelessWidget {
     );
   }
 
-  Widget _main(BuildContext context, ReflectViewModel viewModel) {
+  Widget _main(BuildContext context, ReflectRecordViewModel viewModel) {
     final filteredDiaryEntries = viewModel.filteredDiaryEntries; // 필터링된 일기 목록
 
     return SingleChildScrollView(
@@ -314,7 +315,7 @@ class ReflectRecordMore extends StatelessWidget {
   }
 
 // 작성된 일기가 없는 상태
-  Widget _emptyStateMode(ReflectViewModel viewModel) {
+  Widget _emptyStateMode(ReflectRecordViewModel viewModel) {
     return Center(
       child: Column(
         children: [
@@ -339,7 +340,7 @@ class ReflectRecordMore extends StatelessWidget {
 
   // MARK:-개별 일기 항목
   Widget _buildDiaryEntry(BuildContext context, Map<String, String> entry,
-      ReflectViewModel viewModel, int index) {
+      ReflectRecordViewModel viewModel, int index) {
     String title = viewModel.getLimitedTitle(entry['title'] ?? '');
 
     return GestureDetector(
@@ -440,7 +441,7 @@ class ReflectRecordMore extends StatelessWidget {
 
   //MARK:- 삭제 확인 팝업창
   void _showDeleteConfirmationDialog(
-      BuildContext context, int index, ReflectViewModel viewModel) {
+      BuildContext context, int index, ReflectRecordViewModel viewModel) {
     showDialog(
       context: context,
       builder: (BuildContext context) {

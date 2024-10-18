@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:meet_up/main.dart';
+import 'package:meet_up/model/diary_model.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/util/color.dart';
-import 'package:meet_up/view/reflect/reflect_select_diary_question.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/reflect/reflect_view_model.dart';
+import 'package:meet_up/view_model/reflect/reflect_write_diary_view_model.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
 class ReflectWriteDiary extends StatelessWidget {
@@ -15,23 +19,33 @@ class ReflectWriteDiary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        final reflectWriteDiaryViewModel =
+            Provider.of<ReflectWriteDiaryViewModel>(context, listen: false);
+        reflectWriteDiaryViewModel.resetState();
+        context.pop();
+        context.pop();
       },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                top: 58.h,
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                  top: 58.h,
+                ),
+                child: _header(context),
               ),
-              child: _header(context),
-            ),
-            Expanded(child: _main(context)),
-          ],
+              Expanded(child: _main(context)),
+            ],
+          ),
         ),
       ),
     );
@@ -53,11 +67,11 @@ class ReflectWriteDiary extends StatelessWidget {
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        final reflectWriteDiaryViewModel =
+            Provider.of<ReflectWriteDiaryViewModel>(context, listen: false);
+        reflectWriteDiaryViewModel.resetState();
         context.pop();
         context.pop();
-        final viewModel = Provider.of<ReflectViewModel>(context, listen: false);
-
-        viewModel.resetAll();
       },
       child: Image.asset(
         ImagePath.back,
@@ -68,9 +82,31 @@ class ReflectWriteDiary extends StatelessWidget {
   }
 
   Widget _main(BuildContext context) {
-    return Consumer<ReflectViewModel>(
+    return Consumer<ReflectWriteDiaryViewModel>(
       builder: (context, viewModel, child) {
-        final List<String> selectedQuestions = viewModel.getSelectedQuestions();
+        final selectedQuestions = viewModel.getSelectedQuestions();
+
+        final dateFormatter = DateFormat('yyyy.MM.dd. (E)', 'ko_KR');
+        final timeFormatter = DateFormat('a h:mm');
+
+        DateTime date;
+
+        if (viewModel.scheduleModel != null) {
+          date = viewModel.scheduleModel!.room_schedule!['date'].toDate();
+        } else {
+          date = DateTime.now();
+        }
+
+        final scheduleDate =
+            '${dateFormatter.format(date)} ${timeFormatter.format(date).replaceFirst('AM', '오전').replaceFirst('PM', '오후')}';
+
+        String title;
+
+        if (viewModel.scheduleModel != null) {
+          title = viewModel.scheduleModel!.room_schedule!['title'];
+        } else {
+          title = '';
+        }
 
         return SingleChildScrollView(
           child: Padding(
@@ -105,7 +141,7 @@ class ReflectWriteDiary extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '초보 클럽 모임',
+                                title,
                                 style: AppTextStyles.PR_SB_16.copyWith(
                                   color: UsedColor.charcoal_black,
                                 ),
@@ -114,19 +150,9 @@ class ReflectWriteDiary extends StatelessWidget {
                               Row(
                                 children: [
                                   Text(
-                                    '2024.02.07.(수) 오후 7:30',
+                                    scheduleDate,
                                     style: AppTextStyles.PR_M_14.copyWith(
                                       color: UsedColor.text_3,
-                                    ),
-                                  ),
-                                  SizedBox(width: 40.w),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Text(
-                                      '만남 상세 보기 >',
-                                      style: AppTextStyles.PR_M_13.copyWith(
-                                        color: UsedColor.text_4,
-                                      ),
                                     ),
                                   ),
                                 ],
@@ -150,8 +176,12 @@ class ReflectWriteDiary extends StatelessWidget {
                           left: 24.w,
                           right: 24.w,
                         ),
-                        child: _questionAnswerField(context,
-                            selectedQuestions[index], index, viewModel),
+                        child: _questionAnswerField(
+                          context,
+                          selectedQuestions.values.elementAt(index),
+                          selectedQuestions.keys.elementAt(index),
+                          viewModel,
+                        ),
                       );
                     }),
 
@@ -200,7 +230,7 @@ class ReflectWriteDiary extends StatelessWidget {
                         right: 24.w,
                         bottom: 24.h,
                       ),
-                      child: _bottom(viewModel),
+                      child: _bottom(context, viewModel),
                     ),
                   ],
                 ),
@@ -213,8 +243,18 @@ class ReflectWriteDiary extends StatelessWidget {
   }
 
 //MARK: - 질문 답변창
-  Widget _questionAnswerField(BuildContext context, String question, int index,
-      ReflectViewModel viewModel) {
+  Widget _questionAnswerField(
+    BuildContext context,
+    String question,
+    int index,
+    ReflectWriteDiaryViewModel viewModel,
+  ) {
+    logger.d(
+        'question: $question, index: $index, answer: ${viewModel.answers[index]}');
+    final TextEditingController controller = TextEditingController();
+    controller.text =
+        viewModel.answers[index] == null ? '' : viewModel.answers[index]!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -237,11 +277,14 @@ class ReflectWriteDiary extends StatelessWidget {
               child: TextField(
                 minLines: 1,
                 maxLines: 7,
+                controller: controller,
                 keyboardType: TextInputType.multiline,
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(150), // 최대 150자까지 입력 가능
                 ],
-                onChanged: (text) => viewModel.updateAnswer(index, text),
+                onChanged: (value) {
+                  viewModel.updateAnswer(index, value);
+                },
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.only(
@@ -279,7 +322,15 @@ class ReflectWriteDiary extends StatelessWidget {
   Widget _addQuestionButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.goNamed('reflectSelectDiaryQuestion');
+        final viewModel =
+            Provider.of<ReflectWriteDiaryViewModel>(context, listen: false);
+        viewModel.resetSelectedImages();
+        viewModel.setAddQuestion(true);
+        if (viewModel.isFromDiaryMore) {
+          context.goNamed('reflectSelectDiaryQuestion_diaryMore_add');
+        } else {
+          context.goNamed('reflectSelectDiaryQuestion_add');
+        }
       },
       child: Center(
         child: Image.asset(
@@ -292,7 +343,7 @@ class ReflectWriteDiary extends StatelessWidget {
   }
 
 //MARK: - 별점
-  Widget _ratingSection(ReflectViewModel viewModel) {
+  Widget _ratingSection(ReflectWriteDiaryViewModel viewModel) {
     final List<String> ratingQuestions = [
       '나는 어땠나요?',
       '상대는 어땠나요?',
@@ -320,8 +371,8 @@ class ReflectWriteDiary extends StatelessWidget {
     );
   }
 
-  Widget _ratingSectionBlock(int blockIndex, ReflectViewModel viewModel,
-      List<String> ratingQuestions) {
+  Widget _ratingSectionBlock(int blockIndex,
+      ReflectWriteDiaryViewModel viewModel, List<String> ratingQuestions) {
     int startIndex = blockIndex * 3;
     int endIndex = (blockIndex * 3 + 3) > ratingQuestions.length
         ? ratingQuestions.length
@@ -329,7 +380,7 @@ class ReflectWriteDiary extends StatelessWidget {
 
     return Container(
       width: 292.w,
-      height: 124.h,
+      height: 130.h,
       padding: EdgeInsets.only(
         top: 12.h,
         bottom: 12.h,
@@ -355,7 +406,7 @@ class ReflectWriteDiary extends StatelessWidget {
   }
 
   Widget _ratingQuestion(
-      String question, int index, ReflectViewModel viewModel) {
+      String question, int index, ReflectWriteDiaryViewModel viewModel) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -394,7 +445,7 @@ class ReflectWriteDiary extends StatelessWidget {
   }
 
 //MARK: - 별점 총점
-  Widget _totalRatingBlock(ReflectViewModel viewModel) {
+  Widget _totalRatingBlock(ReflectWriteDiaryViewModel viewModel) {
     int totalRating = viewModel.calculateTotalRating().round(); // 반올림하여 정수로 변환
 
     return Container(
@@ -456,9 +507,44 @@ class ReflectWriteDiary extends StatelessWidget {
   }
 
 //MARK: - bottom
-  Widget _bottom(ReflectViewModel viewModel) {
+  Widget _bottom(BuildContext context, ReflectWriteDiaryViewModel viewModel) {
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final reflectViewModel =
+        Provider.of<ReflectViewModel>(context, listen: false);
     return GestureDetector(
-      onTap: viewModel.canSubmit ? () {} : null,
+      onTap: viewModel.canSubmit
+          ? () async {
+              final schedule = viewModel.scheduleModel!;
+              DiaryModel diary = DiaryModel(
+                scheduleDocId: schedule.room_name,
+                isPersonalSchedule: schedule.room_category == "",
+                title: schedule.room_schedule!["title"],
+                date: schedule.room_schedule!["date"],
+                reviews: viewModel.answers.map((key, value) {
+                  return MapEntry(key.toString(), value);
+                }),
+                meetingScores: viewModel.ratings,
+              );
+
+              await viewModel.createDiary(
+                uid: userViewModel.uid!,
+                diary: diary,
+              );
+
+              // 스케줄 업데이트
+              var updatedSchedule = schedule;
+              updatedSchedule.roomId = "diary";
+
+              await viewModel.updateScheduleModel(
+                uid: userViewModel.uid!,
+                data: updatedSchedule,
+              );
+
+              context.pop();
+              context.pop();
+              reflectViewModel.resetSortOrder();
+            }
+          : null,
       child: Container(
         width: 292.w,
         height: 50.h,

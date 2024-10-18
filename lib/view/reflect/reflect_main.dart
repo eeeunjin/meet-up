@@ -1,12 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
-import 'package:meet_up/view/reflect/reflect_select_diary_question.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/reflect/reflect_view_model.dart';
+import 'package:meet_up/view_model/reflect/reflect_write_diary_view_model.dart';
+import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
 class ReflectMain extends StatelessWidget {
@@ -14,59 +19,88 @@ class ReflectMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<ReflectViewModel>(context);
+    final reflectViewModel =
+        Provider.of<ReflectViewModel>(context, listen: false);
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
 
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: 58.h,
-            ),
-            child: _header(context),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Container(
-                padding: EdgeInsets.only(
-                  left: 27.w,
-                  right: 26.w,
-                  bottom: 28.h,
+    return StreamBuilder<QuerySnapshot<Object?>>(
+        stream: reflectViewModel.getMyScheduleStream(uid: userViewModel.uid!),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          List<RoomModel> mySchedules = snapshot.data?.docs.map(
+                (e) {
+                  return RoomModel.fromJson(e.data() as Map<String, dynamic>);
+                },
+              ).toList() ??
+              [];
+
+          if (mySchedules.isNotEmpty) {
+            reflectViewModel.setAvailableEntries(mySchedules);
+          }
+
+          return Scaffold(
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: 58.h,
+                  ),
+                  child: _header(context),
                 ),
-                color: UsedColor.bg_color,
-                child: Column(
-                  children: [
-                    SizedBox(height: 28.h),
-                    _myRecordSection(context),
-                    SizedBox(height: 12.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                Expanded(
+                  child: Container(
+                    color: UsedColor.bg_color,
+                    padding: EdgeInsets.only(
+                      left: 27.w,
+                      right: 26.w,
+                      bottom: 28.h,
+                    ),
+                    child: Column(
                       children: [
-                        Image.asset(
-                          ImagePath.reflectDiary,
-                          width: 28.w,
-                          height: 28.h,
+                        SizedBox(height: 28.h),
+                        _myRecordSection(context),
+                        SizedBox(height: 12.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 28.w,
+                              height: 28.h,
+                              child: Image.asset(
+                                ImagePath.reflectDiary,
+                              ),
+                            ),
+                            SizedBox(width: 5.w),
+                            Text(
+                              '일기를 작성하면 등급을 올릴 수 있어요!',
+                              style: AppTextStyles.PR_M_13.copyWith(
+                                color: UsedColor.text_4,
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(width: 5.w),
-                        Text(
-                          '일기를 작성하면 등급을 올릴 수 있어요!',
-                          style: AppTextStyles.PR_M_13.copyWith(
-                            color: UsedColor.text_4,
-                          ),
-                        ),
+                        SizedBox(height: 12.h),
+                        _diaryListContainer(context, reflectViewModel),
                       ],
                     ),
-                    SizedBox(height: 12.h),
-                    _diaryListContainer(context, viewModel),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
+        });
   }
 
   Widget _header(BuildContext context) {
@@ -99,27 +133,27 @@ class ReflectMain extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(29.r),
+        borderRadius: BorderRadius.circular(25.r),
       ),
       child: Row(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                '나의 기록',
-                style: AppTextStyles.PR_SB_20.copyWith(
-                  color: UsedColor.charcoal_black,
+              SizedBox(
+                height: 10.h,
+              ),
+              SizedBox(
+                height: 24.h,
+                width: 74.w,
+                child: Text(
+                  '나의 기록',
+                  style: AppTextStyles.PR_SB_20.copyWith(
+                    color: UsedColor.charcoal_black,
+                  ),
                 ),
               ),
-              SizedBox(height: 5.h),
-              Text(
-                '00개 작성',
-                style: AppTextStyles.PR_M_14.copyWith(
-                  color: UsedColor.text_3,
-                ),
-              ),
-              SizedBox(height: 16.h),
+              SizedBox(height: 35.h),
               GestureDetector(
                 onTap: () {
                   context.goNamed('reflectRecordMore');
@@ -144,12 +178,15 @@ class ReflectMain extends StatelessWidget {
     );
   }
 
-  Widget _diaryListContainer(BuildContext context, ReflectViewModel viewModel) {
+  Widget _diaryListContainer(
+    BuildContext context,
+    ReflectViewModel viewModel,
+  ) {
     return Container(
       width: 340.w,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(29.r),
+        borderRadius: BorderRadius.circular(20.r),
       ),
       child: Column(
         children: [
@@ -194,38 +231,58 @@ class ReflectMain extends StatelessWidget {
     );
   }
 
-  Widget _diaryList(BuildContext context, ReflectViewModel viewModel) {
+  Widget _diaryList(
+    BuildContext context,
+    ReflectViewModel viewModel,
+  ) {
     final diaryEntries = viewModel.availableEntries;
 
-    return Column(
-      children: diaryEntries.asMap().entries.map((entry) {
-        int index = entry.key;
-        var data = entry.value;
-        bool isLast = index == diaryEntries.length - 1;
+    return diaryEntries.isEmpty
+        ? Container()
+        : Column(
+            children: diaryEntries.asMap().entries.map((entry) {
+              int index = entry.key;
+              var data = entry.value;
+              bool isLast = index == diaryEntries.length - 1;
+              if (index > 3) {
+                return const SizedBox.shrink();
+              }
 
-        return Column(
-          children: [
-            _diaryEntry(
-              context: context,
-              title: data['title']!,
-              date: data['date']!,
-            ),
-            if (!isLast)
-              Divider(
-                height: 0.h,
-                thickness: 0.3.h,
-                color: UsedColor.line,
-              ),
-          ],
-        );
-      }).toList(),
-    );
+              String scheduleDate = "";
+              if (data.room_schedule!['date'] != null) {
+                final dateFormatter = DateFormat('yyyy.MM.dd. (E)', 'ko_KR');
+                final timeFormatter = DateFormat('a h:mm');
+
+                DateTime date = data.room_schedule!['date'].toDate();
+                scheduleDate =
+                    '${dateFormatter.format(date)} ${timeFormatter.format(date).replaceFirst('AM', '오전').replaceFirst('PM', '오후')}';
+              }
+
+              return Column(
+                children: [
+                  _diaryEntry(
+                    context: context,
+                    title: data.room_schedule!['title']!,
+                    date: scheduleDate,
+                    schedule: data,
+                  ),
+                  if (!isLast)
+                    Divider(
+                      height: 0.h,
+                      thickness: 0.3.h,
+                      color: UsedColor.line,
+                    ),
+                ],
+              );
+            }).toList(),
+          );
   }
 
   Widget _diaryEntry({
     required BuildContext context,
     required String title,
     required String date,
+    required RoomModel schedule,
   }) {
     return Padding(
       padding: EdgeInsets.only(
@@ -249,21 +306,32 @@ class ReflectMain extends StatelessWidget {
               SizedBox(height: 8.h),
               Text(
                 date,
-                style: AppTextStyles.PR_SB_14.copyWith(
+                style: AppTextStyles.PR_M_14.copyWith(
                   color: UsedColor.text_3,
                 ),
               ),
             ],
           ),
-          _buildWriteDiaryButton(context),
+          _buildWriteDiaryButton(
+            context,
+            schedule,
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildWriteDiaryButton(BuildContext context) {
+  Widget _buildWriteDiaryButton(
+    BuildContext context,
+    RoomModel schedule,
+  ) {
     return GestureDetector(
       onTap: () {
+        final ReflectWriteDiaryViewModel viewModel =
+            Provider.of<ReflectWriteDiaryViewModel>(context, listen: false);
+        viewModel.resetState();
+        viewModel.setIsFromDiaryMore(false);
+        viewModel.setScheduleModel(schedule);
         context.goNamed(
           'reflectSelectDiaryQuestion',
         );
@@ -279,7 +347,7 @@ class ReflectMain extends StatelessWidget {
         child: Center(
           child: Text(
             '일기 쓰기',
-            style: AppTextStyles.SU_R_12.copyWith(
+            style: AppTextStyles.SU_M_12.copyWith(
               color: UsedColor.charcoal_black,
             ),
           ),

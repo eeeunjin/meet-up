@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
-import 'package:meet_up/view/reflect/reflect_select_diary_question.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/reflect/reflect_view_model.dart';
+import 'package:meet_up/view_model/reflect/reflect_write_diary_view_model.dart';
 import 'package:provider/provider.dart';
 
 class ReflectDiaryMore extends StatelessWidget {
@@ -15,6 +17,7 @@ class ReflectDiaryMore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<ReflectViewModel>(context);
+    final availableEntries = viewModel.availableEntries;
 
     return Scaffold(
       body: Column(
@@ -23,18 +26,20 @@ class ReflectDiaryMore extends StatelessWidget {
             padding: EdgeInsets.only(top: 58.h),
             child: _header(context),
           ),
-          Expanded(
-            child: Container(
-              color: UsedColor.bg_color,
-              padding: EdgeInsets.only(
-                top: 18.h,
-                left: 20.w,
-                right: 20.w,
-                bottom: 52.h,
-              ),
-              child: _main(context, viewModel),
-            ),
-          ),
+          availableEntries.isEmpty
+              ? _emptyStateMode()
+              : Expanded(
+                  child: Container(
+                    color: UsedColor.bg_color,
+                    padding: EdgeInsets.only(
+                      top: 18.h,
+                      left: 20.w,
+                      right: 20.w,
+                      bottom: 52.h,
+                    ),
+                    child: _main(context, viewModel),
+                  ),
+                ),
         ],
       ),
     );
@@ -46,6 +51,11 @@ class ReflectDiaryMore extends StatelessWidget {
         children: [
           header(title: '작성 가능한 일기', back: _back(context)),
           SizedBox(height: 17.h),
+          Divider(
+            thickness: 0.3.h,
+            height: 0.h,
+            color: UsedColor.line,
+          ),
         ],
       ),
     );
@@ -57,7 +67,6 @@ class ReflectDiaryMore extends StatelessWidget {
         final viewModel = Provider.of<ReflectViewModel>(context, listen: false);
 
         viewModel.resetSortOrder();
-        viewModel.resetAll();
 
         context.pop();
       },
@@ -91,9 +100,24 @@ class ReflectDiaryMore extends StatelessWidget {
               var data = entry.value;
               bool isLast = index == availableEntries.length - 1;
 
+              String scheduleDate = "";
+              if (data.room_schedule!['date'] != null) {
+                final dateFormatter = DateFormat('yyyy.MM.dd. (E)', 'ko_KR');
+                final timeFormatter = DateFormat('a h:mm');
+
+                DateTime date = data.room_schedule!['date'].toDate();
+                scheduleDate =
+                    '${dateFormatter.format(date)} ${timeFormatter.format(date).replaceFirst('AM', '오전').replaceFirst('PM', '오후')}';
+              }
+
               return Column(
                 children: [
-                  _diaryEntryContainer(context, data['title']!, data['date']!),
+                  _diaryEntryContainer(
+                    context,
+                    scheduleDate,
+                    data.room_schedule!["title"],
+                    data,
+                  ),
                   if (!isLast) SizedBox(height: 20.h),
                 ],
               );
@@ -105,39 +129,45 @@ class ReflectDiaryMore extends StatelessWidget {
   }
 
   Widget _emptyStateMode() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(height: 229.h),
-          Image.asset(
-            ImagePath.reflectNoneDiary,
-            width: 50.w,
-            height: 50.h,
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            '작성 가능한 일기가 없습니다.',
-            style: AppTextStyles.PR_R_17.copyWith(
-              color: UsedColor.text_2,
+    return Expanded(
+      child: Container(
+        color: UsedColor.bg_color,
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 229.h),
+            Image.asset(
+              ImagePath.reflectNoneDiary,
+              width: 50.w,
+              height: 50.h,
             ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            '만남을 가진 후 일기를 작성해 보세요!',
-            style: AppTextStyles.PR_R_16.copyWith(
-              color: UsedColor.text_5,
+            SizedBox(height: 16.h),
+            Text(
+              '작성 가능한 일기가 없습니다.',
+              style: AppTextStyles.PR_R_17.copyWith(
+                color: UsedColor.text_2,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+            SizedBox(height: 8.h),
+            Text(
+              '만남을 가진 후 일기를 작성해 보세요!',
+              style: AppTextStyles.PR_R_16.copyWith(
+                color: UsedColor.text_5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }
 
   // MARK:-일기 항목
-  Widget _diaryEntryContainer(BuildContext context, String title, String date) {
+  Widget _diaryEntryContainer(
+      BuildContext context, String title, String date, RoomModel schedule) {
     return Container(
       width: 353.w,
       height: 88.h,
@@ -146,7 +176,7 @@ class ReflectDiaryMore extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.r),
       ),
-      child: _diaryEntry(context, title, date),
+      child: _diaryEntry(context, title, date, schedule),
     );
   }
 
@@ -184,7 +214,8 @@ class ReflectDiaryMore extends StatelessWidget {
   }
 
   // MARK:-개별 일기 항목
-  Widget _diaryEntry(BuildContext context, String title, String date) {
+  Widget _diaryEntry(
+      BuildContext context, String title, String date, RoomModel schedule) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -206,17 +237,22 @@ class ReflectDiaryMore extends StatelessWidget {
             ),
           ],
         ),
-        _buildWriteDiaryButton(context),
+        _buildWriteDiaryButton(context, schedule),
       ],
     );
   }
 
   // MARK:-일기 쓰기 버튼
-  Widget _buildWriteDiaryButton(BuildContext context) {
+  Widget _buildWriteDiaryButton(BuildContext context, RoomModel schedule) {
     return GestureDetector(
       onTap: () {
+        final ReflectWriteDiaryViewModel viewModel =
+            Provider.of<ReflectWriteDiaryViewModel>(context, listen: false);
+        viewModel.resetState();
+        viewModel.setIsFromDiaryMore(true);
+        viewModel.setScheduleModel(schedule);
         context.goNamed(
-          'reflectSelectDiaryQuestion',
+          'reflectSelectDiaryQuestion_diaryMore',
         );
       },
       child: Container(

@@ -1772,13 +1772,17 @@ class ChatRoom extends StatelessWidget {
         double typeContainerWidthEnd =
             isOwner ? typeContainerWidth - 52.w : typeContainerWidth;
 
-        bool isScheduleEndAfterOneDay = chatRoomViewModel
-            .roomModel.room_schedule!["date"]
-            .toDate()
-            .add(const Duration(days: 1))
-            .isBefore(
-              DateTime.now(),
-            );
+        bool isScheduleEndAfterOneDay = false;
+
+        if (chatRoomViewModel.roomModel.room_schedule != null) {
+          isScheduleEndAfterOneDay = chatRoomViewModel
+              .roomModel.room_schedule!["date"]
+              .toDate()
+              .add(const Duration(days: 1))
+              .isBefore(
+                DateTime.now(),
+              );
+        }
 
         return SizedBox(
           height:
