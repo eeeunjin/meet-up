@@ -166,7 +166,6 @@ class MeetManageMain extends StatelessWidget {
             child: CoinWidget(
               coinAmount: userViewModel.userModel?.coin ?? -1,
               ticketAmount: userViewModel.userModel?.ticket ?? -1,
-              isFixed: userViewModel.userModel?.isFixedTicket ?? false,
             ),
           ),
         ),

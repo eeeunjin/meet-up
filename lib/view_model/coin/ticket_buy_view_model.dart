@@ -14,7 +14,6 @@ class TicketBuyViewModel with ChangeNotifier {
 
   void setTicketKind(bool isFixed) {
     _isFixed = isFixed;
-    logger.d('ticket kind: ${isFixed == true ? '정기권' : '단일권'}');
     notifyListeners();
   }
 

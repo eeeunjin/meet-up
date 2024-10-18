@@ -135,7 +135,7 @@ class CoinBuy extends StatelessWidget {
                 width: 12.w,
               ),
               Text(
-                coinAmount == CoinAmount.oneThousand ? "(단일권 1매)" : "(정기권 1매)",
+                coinAmount == CoinAmount.oneThousand ? "(단일권 1매)" : "(단일권 4매)",
                 style: AppTextStyles.SU_R_12.copyWith(
                     color: coinBuyViewModel.coinAmount == coinAmount
                         ? Colors.white

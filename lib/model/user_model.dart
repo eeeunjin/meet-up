@@ -18,8 +18,6 @@ class UserModel {
   // 재화 정보
   int coin;
   int ticket;
-  bool isFixedTicket;
-  Timestamp fixed_ticket_end_date;
 
   // 등급 정보
   String rank;
@@ -47,8 +45,6 @@ class UserModel {
     required this.accepted_policies,
     required this.coin,
     required this.ticket,
-    required this.isFixedTicket,
-    required this.fixed_ticket_end_date,
     required this.rank,
     required this.notification_settings,
     required this.uid,
@@ -70,8 +66,6 @@ class UserModel {
           accepted_policies: json["accepted_policies"]! as List<dynamic>,
           coin: json["coin"]! as int,
           ticket: json["ticket"]! as int,
-          isFixedTicket: json["isFixedTicket"]! as bool,
-          fixed_ticket_end_date: json["fixed_ticket_end_date"]! as Timestamp,
           rank: json["rank"]! as String,
           notification_settings:
               json["notification_settings"]! as List<dynamic>,
@@ -93,8 +87,6 @@ class UserModel {
       'accepted_policies': accepted_policies,
       'coin': coin,
       'ticket': ticket,
-      'isFixedTicket': isFixedTicket,
-      'fixed_ticket_end_date': fixed_ticket_end_date,
       'rank': rank,
       'notification_settings': notification_settings,
       'uid': uid,

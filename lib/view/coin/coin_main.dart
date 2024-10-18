@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -221,23 +219,6 @@ class CoinMain extends StatelessWidget {
                                   .copyWith(color: UsedColor.charcoal_black),
                             ),
                             SizedBox(width: 12.w),
-                            //MARK: - 정기권 혜택 적용 여부 컨테이너
-                            if (userViewModel.userModel?.isFixedTicket ?? false)
-                              Container(
-                                width: 96.w,
-                                height: 16.h,
-                                decoration: BoxDecoration(
-                                  color: UsedColor.image_card,
-                                  borderRadius: BorderRadius.circular(25.r),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    '정기권 혜택 적용 중',
-                                    style: AppTextStyles.SU_R_11
-                                        .copyWith(color: UsedColor.violet),
-                                  ),
-                                ),
-                              ),
                           ],
                         ),
                       ],

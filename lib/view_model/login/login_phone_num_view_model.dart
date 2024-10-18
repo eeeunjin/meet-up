@@ -145,8 +145,6 @@ class LoginPhoneNumViewModel with ChangeNotifier {
       accepted_policies: [false, false],
       coin: 0,
       ticket: 0,
-      isFixedTicket: false,
-      fixed_ticket_end_date: Timestamp.now(),
       rank: 'Novice',
       notification_settings: [true, true, true, true, true],
       uid: uid,

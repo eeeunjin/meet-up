@@ -172,7 +172,7 @@ class ProfileMain extends StatelessWidget {
                 children: [
                   // 수정 버튼
                   Padding(
-                    padding: EdgeInsets.only(left: 156.w, bottom: 8.h),
+                    padding: EdgeInsets.only(left: 156.w, bottom: 1.h),
                     child: GestureDetector(
                       onTap: () {
                         // 수정 페이지
@@ -194,6 +194,17 @@ class ProfileMain extends StatelessWidget {
                       ),
                     ),
                   ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 24.0.w),
+                    child: Text(
+                      userViewModel.userModel!.rank,
+                      style: AppTextStyles.PR_M_13
+                          .copyWith(color: UsedColor.text_5),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 4.0.h,
+                  ),
                   // 사용자 닉네임
                   Padding(
                     padding: EdgeInsets.only(left: 24.0.w, bottom: 3.h),
@@ -203,33 +214,15 @@ class ProfileMain extends StatelessWidget {
                           .copyWith(color: UsedColor.charcoal_black),
                     ),
                   ),
-                  // 정기권 혜택 적용 중
-                  Padding(
-                    padding: EdgeInsets.only(left: 24.0.w),
-                    child: Container(
-                      width: 93.w,
-                      height: 14.h,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(7.r),
-                          color: UsedColor.image_card),
-                      child: Center(
-                        child: Text(
-                          '정기권 혜택 적용 중',
-                          style: AppTextStyles.PR_R_10
-                              .copyWith(color: UsedColor.violet),
-                        ),
-                      ),
-                    ),
-                  ),
                   // Novice 혜택 보러가기
                   GestureDetector(
                     onTap: () {
                       context.goNamed('rankMain');
                     },
                     child: Padding(
-                      padding: EdgeInsets.only(top: 24.0.h, left: 24.h),
+                      padding: EdgeInsets.only(top: 24.0.h, left: 24.w),
                       child: Text(
-                        'Novice 혜택 보러가기 >',
+                        '등급 혜택 보러가기 >',
                         style: AppTextStyles.PR_R_12
                             .copyWith(color: UsedColor.text_5),
                       ),

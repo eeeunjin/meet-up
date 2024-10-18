@@ -8,13 +8,11 @@ import 'package:meet_up/util/image.dart';
 class CoinWidget extends StatelessWidget {
   final int coinAmount;
   final int ticketAmount;
-  final bool isFixed;
 
   const CoinWidget({
     super.key,
     required this.coinAmount,
     required this.ticketAmount,
-    required this.isFixed,
   });
 
   @override
@@ -46,23 +44,6 @@ class CoinWidget extends StatelessWidget {
             ticketAmount.toString(),
             style: AppTextStyles.PR_R_11.copyWith(color: UsedColor.coin),
           ),
-          if (isFixed) SizedBox(width: 3.w),
-          // 정기권 여부
-          if (isFixed)
-            Container(
-              width: 30.w,
-              height: 10.h,
-              decoration: BoxDecoration(
-                  color: UsedColor.charcoal_black,
-                  borderRadius: BorderRadius.circular(13.41.r),
-                  border: Border.all(width: 0.69.w, color: UsedColor.coin)),
-              child: Center(
-                child: Text(
-                  '정기권',
-                  style: AppTextStyles.SU_R_7.copyWith(color: UsedColor.coin),
-                ),
-              ),
-            ),
         ],
       ),
     );

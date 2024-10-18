@@ -117,6 +117,22 @@ class TicketBuy extends StatelessWidget {
     final ticketBuyViewModel = Provider.of<TicketBuyViewModel>(context);
     return GestureDetector(
       onTap: () {
+        // MVP: 정기권 제외
+        if (isFixed == true) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                '정기권은 현재 판매하지 않습니다.',
+                style: AppTextStyles.PR_R_16.copyWith(color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
+              backgroundColor: UsedColor.button,
+              duration: const Duration(seconds: 1),
+            ),
+          );
+          return;
+        }
+
         ticketBuyViewModel.setTicketKind(isFixed);
         showModalBottomSheet(
           context: context,
@@ -163,7 +179,9 @@ class TicketBuy extends StatelessWidget {
                     style: AppTextStyles.PR_M_18.copyWith(
                         color: ticketBuyViewModel.isFixed == isFixed
                             ? Colors.white
-                            : UsedColor.charcoal_black),
+                            : isFixed
+                                ? UsedColor.text_5
+                                : UsedColor.charcoal_black),
                   ),
                   const Spacer(),
                   Text(
