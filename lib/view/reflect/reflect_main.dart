@@ -145,7 +145,7 @@ class ReflectMain extends StatelessWidget {
               ),
               SizedBox(
                 height: 24.h,
-                width: 74.w,
+                width: 80.w,
                 child: Text(
                   '나의 기록',
                   style: AppTextStyles.PR_SB_20.copyWith(
@@ -220,11 +220,12 @@ class ReflectMain extends StatelessWidget {
               ],
             ),
           ),
-          Divider(
-            height: 0.h,
-            thickness: 0.3.h,
-            color: UsedColor.line,
-          ),
+          if (viewModel.availableEntries.isNotEmpty)
+            Divider(
+              height: 0.h,
+              thickness: 0.3.h,
+              color: UsedColor.line,
+            ),
           _diaryList(context, viewModel),
         ],
       ),
@@ -238,7 +239,7 @@ class ReflectMain extends StatelessWidget {
     final diaryEntries = viewModel.availableEntries;
 
     return diaryEntries.isEmpty
-        ? Container()
+        ? const SizedBox.shrink()
         : Column(
             children: diaryEntries.asMap().entries.map((entry) {
               int index = entry.key;
@@ -337,7 +338,7 @@ class ReflectMain extends StatelessWidget {
         );
       },
       child: Container(
-        width: 77.w,
+        width: 80.w,
         height: 24.h,
         decoration: BoxDecoration(
           color: UsedColor.image_card,
