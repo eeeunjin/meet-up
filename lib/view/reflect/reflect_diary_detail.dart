@@ -1,15 +1,17 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:ffi';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:meet_up/model/diary_model.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/util/color.dart';
-import 'package:meet_up/view/reflect/reflect_select_diary_question.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
-import 'package:meet_up/view_model/reflect/reflect_view_model.dart';
+import 'package:meet_up/view_model/reflect/reflect_record_view_model.dart';
 import 'package:provider/provider.dart';
 
 class ReflectDiaryDetail extends StatelessWidget {
@@ -60,13 +62,26 @@ class ReflectDiaryDetail extends StatelessWidget {
   }
 
   Widget _main(BuildContext context) {
-    const String meetingTitle = '초보 클럽 모임';
-    const String meetingDate = '2024.02.07.(수) 오후 7:30';
-    final List<String> selectedQuestions = [
+    final reflectRecordViewModel =
+        Provider.of<ReflectRecordViewModel>(context, listen: false);
+    DiaryModel selectedDiary = reflectRecordViewModel.selectedDiary!;
+    String meetingTitle = selectedDiary.title;
+    DateFormat dateFormatter = DateFormat('yyyy.MM.dd.(E)', 'ko_KR');
+    DateFormat timeFormatter = DateFormat('a hh:mm', 'ko_KR');
+    DateTime dirayDate = selectedDiary.date.toDate();
+    // AM/PM 한국어로 변환
+    String meetingDate =
+        '${dateFormatter.format(dirayDate)} ${timeFormatter.format(dirayDate).replaceFirst('AM', '오전').replaceFirst('PM', '오후')}';
+
+    final questions = [
       '어떤 만남이었는지 설명한다면?',
+      '해당 만남에서 좋았던 점은?',
+      '해당 만남에서 아쉬웠던 점은?',
+      '해당 만남을 통해 새로 알게 된 점은?',
+      '해당 만남을 한 줄로 표현한다면?'
     ];
-    const String answer =
-        '즐겁고 보람찬 만남\n스트레이 키즈 노래 안 틀어 준 만남\n스트레이 키즈 노래 안 틀어 준 만남\n스트레이 키즈 노래 안 틀어 준 만남\n스트레이 키즈 노래 안 틀어 준 만남\n스트레이 키즈 노래 안 틀어 준 만남\n스트레이 키즈 노래 안 틀어 준 만남\n';
+    final indexes =
+        selectedDiary.reviews.keys.map((e) => int.parse(e)).toList();
 
     return SingleChildScrollView(
       child: Padding(
@@ -93,38 +108,35 @@ class ReflectDiaryDetail extends StatelessWidget {
                     left: 24.w,
                     right: 24.w,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Text(
+                        meetingTitle,
+                        style: AppTextStyles.PR_SB_16.copyWith(
+                          color: UsedColor.charcoal_black,
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            meetingTitle,
-                            style: AppTextStyles.PR_SB_16.copyWith(
-                              color: UsedColor.charcoal_black,
+                            meetingDate,
+                            style: AppTextStyles.PR_M_14.copyWith(
+                              color: UsedColor.text_3,
                             ),
                           ),
-                          SizedBox(height: 8.h),
-                          Row(
-                            children: [
-                              Text(
-                                meetingDate,
-                                style: AppTextStyles.PR_M_14.copyWith(
-                                  color: UsedColor.text_3,
-                                ),
+                          GestureDetector(
+                            onTap: () {},
+                            child: Text(
+                              selectedDiary.isPersonalSchedule
+                                  ? "개인 일정"
+                                  : '그로윗 일정',
+                              style: AppTextStyles.PR_SB_13.copyWith(
+                                color: UsedColor.text_2,
                               ),
-                              SizedBox(width: 40.w),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Text(
-                                  '만남 상세 보기 >',
-                                  style: AppTextStyles.PR_M_13.copyWith(
-                                    color: UsedColor.text_4,
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ],
                       ),
@@ -137,19 +149,23 @@ class ReflectDiaryDetail extends StatelessWidget {
                   color: UsedColor.b_line,
                 ),
                 SizedBox(height: 24.h),
-                ...List.generate(selectedQuestions.length, (index) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      left: 24.w,
-                      right: 24.w,
-                    ),
-                    child: _questionAnswerField(
-                      context,
-                      selectedQuestions[index],
-                      answer,
-                    ),
-                  );
-                }),
+                ...List.from(indexes).map(
+                  (index) {
+                    final question = questions[index];
+                    final answer = selectedDiary.reviews[index.toString()]!;
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        left: 24.w,
+                        right: 24.w,
+                      ),
+                      child: _questionAnswerField(
+                        context,
+                        question,
+                        answer,
+                      ),
+                    );
+                  },
+                ),
                 Center(
                   child: Text(
                     '만남을 되돌아 볼까요?',
@@ -165,7 +181,7 @@ class ReflectDiaryDetail extends StatelessWidget {
                     left: 24.w,
                     right: 24.w,
                   ),
-                  child: _ratingSection(),
+                  child: _ratingSection(selectedDiary),
                 ),
                 SizedBox(height: 24.h),
               ],
@@ -179,6 +195,8 @@ class ReflectDiaryDetail extends StatelessWidget {
   //MARK: - 질문 답변창
   Widget _questionAnswerField(
       BuildContext context, String question, String answer) {
+    final TextEditingController controller = TextEditingController();
+    controller.text = answer;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -192,25 +210,30 @@ class ReflectDiaryDetail extends StatelessWidget {
         ),
         SizedBox(height: 20.h),
         Container(
-          width: 292.w,
-          height: 172.h,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16.r),
           ),
-          child: Padding(
-            padding: EdgeInsets.only(
-              top: 18.h,
-              bottom: 18.h,
-              left: 17.w,
-              right: 17.w,
-            ),
-            child: Text(
-              answer,
-              style: AppTextStyles.PR_R_13.copyWith(
-                color: UsedColor.text_5,
-                height: 4.h,
+          child: TextField(
+            readOnly: true,
+            minLines: 1,
+            maxLines: 7,
+            controller: controller,
+            keyboardType: TextInputType.multiline,
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(150), // 최대 150자까지 입력 가능
+            ],
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(
+                top: 18.h,
+                bottom: 18.h,
+                left: 17.w,
+                right: 18.w,
               ),
+            ),
+            style: AppTextStyles.PR_R_13.copyWith(
+              color: UsedColor.text_5,
             ),
           ),
         ),
@@ -220,16 +243,20 @@ class ReflectDiaryDetail extends StatelessWidget {
   }
 
   //MARK: - 별점 섹션
-  Widget _ratingSection() {
+  Widget _ratingSection(DiaryModel diary) {
+    final meetingRating = diary.meetingScores;
     final List<Map<String, int>> ratingData = [
-      {'나는 어땠나요?': 4},
-      {'상대는 어땠나요?': 4},
-      {'우리는 어땠나요?': 3},
-      {'재미있었나요?': 5},
-      {'유익했나요?': 5},
-      {'목적을 달성했나요?': 4},
+      {'나는 어땠나요?': meetingRating[0]},
+      {'상대는 어땠나요?': meetingRating[1]},
+      {'우리는 어땠나요?': meetingRating[2]},
+      {'재미있었나요?': meetingRating[3]},
+      {'유익했나요?': meetingRating[4]},
+      {'목적을 달성했나요?': meetingRating[5]},
     ];
-    const totalRating = 4.5;
+    int totalratingSum = ratingData
+        .map((ratingItem) => ratingItem.values.first)
+        .reduce((value, element) => value + element);
+    int totalratingMean = (totalratingSum / ratingData.length).round();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -249,7 +276,7 @@ class ReflectDiaryDetail extends StatelessWidget {
             );
           },
         ),
-        _totalRatingBlock(totalRating),
+        _totalRatingBlock(totalratingMean),
       ],
     );
   }
@@ -257,7 +284,7 @@ class ReflectDiaryDetail extends StatelessWidget {
   Widget _ratingSectionBlock(List<Map<String, int>> ratingBlock) {
     return Container(
       width: 292.w,
-      height: 124.h,
+      height: 130.h,
       padding: EdgeInsets.only(
         top: 12.h,
         bottom: 12.h,
@@ -317,7 +344,7 @@ class ReflectDiaryDetail extends StatelessWidget {
   }
 
   //MARK: - 별점 총점
-  Widget _totalRatingBlock(double totalRating) {
+  Widget _totalRatingBlock(int totalRating) {
     return Container(
       width: 292.w,
       height: 83.h,
@@ -338,7 +365,7 @@ class ReflectDiaryDetail extends StatelessWidget {
                 return Padding(
                   padding: EdgeInsets.only(right: index != 4 ? 9.w : 0),
                   child: Image.asset(
-                    index < totalRating.round()
+                    index < totalRating
                         ? ImagePath.starSelected
                         : ImagePath.star,
                     width: 22.w,

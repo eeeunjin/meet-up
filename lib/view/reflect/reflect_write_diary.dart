@@ -516,6 +516,7 @@ class ReflectWriteDiary extends StatelessWidget {
           ? () async {
               final schedule = viewModel.scheduleModel!;
               DiaryModel diary = DiaryModel(
+                diaryDocId: "",
                 scheduleDocId: schedule.room_name,
                 isPersonalSchedule: schedule.room_category == "",
                 title: schedule.room_schedule!["title"],

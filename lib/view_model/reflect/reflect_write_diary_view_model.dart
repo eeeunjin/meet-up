@@ -149,6 +149,19 @@ class ReflectWriteDiaryViewModel with ChangeNotifier {
     );
   }
 
+  // ScheduleModel 업데이트
+  Future<void> updateScheduleModelbyMapData({
+    required String uid,
+    required String scheduleId,
+    required Map<String, dynamic> data,
+  }) async {
+    await _userRepository.updateMyScheduleDocumentByMapData(
+      data: data,
+      scheduleId: scheduleId,
+      uid: uid,
+    );
+  }
+
   // 상태 초기화
   void resetState() {
     _scheduleModel = null;

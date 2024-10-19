@@ -358,6 +358,7 @@ class FirebaseCRUD {
     required Map<String, dynamic> data,
   }) async {
     try {
+      logger.d(docRef.toString());
       // data<json 정보>를 update() 메서드에 전달
       await docRef.update(data);
       return true;
