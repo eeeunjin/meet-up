@@ -10,8 +10,7 @@ class UserModel {
   String gender;
   Map<String, dynamic> region;
   String job;
-  List<dynamic> personality_relationship;
-  List<dynamic> personality_self;
+  List<dynamic> personality;
   List<dynamic> interest;
   List<dynamic> purpose;
   String uid;
@@ -19,8 +18,6 @@ class UserModel {
   // 재화 정보
   int coin;
   int ticket;
-  bool isFixedTicket;
-  Timestamp fixed_ticket_end_date;
 
   // 등급 정보
   String rank;
@@ -41,16 +38,13 @@ class UserModel {
     required this.gender,
     required this.region,
     required this.job,
-    required this.personality_relationship,
-    required this.personality_self,
+    required this.personality,
     required this.interest,
     required this.purpose,
     required this.phone_number,
     required this.accepted_policies,
     required this.coin,
     required this.ticket,
-    required this.isFixedTicket,
-    required this.fixed_ticket_end_date,
     required this.rank,
     required this.notification_settings,
     required this.uid,
@@ -65,17 +59,13 @@ class UserModel {
           gender: json['gender']! as String,
           region: json['region']! as Map<String, dynamic>,
           job: json['job']! as String,
-          personality_relationship:
-              json["personality_relationship"]! as List<dynamic>,
-          personality_self: json["personality_self"]! as List<dynamic>,
+          personality: json["personality"]! as List<dynamic>,
           interest: json["interest"]! as List<dynamic>,
           purpose: json["purpose"]! as List<dynamic>,
           phone_number: json["phone_number"]! as String,
           accepted_policies: json["accepted_policies"]! as List<dynamic>,
           coin: json["coin"]! as int,
           ticket: json["ticket"]! as int,
-          isFixedTicket: json["isFixedTicket"]! as bool,
-          fixed_ticket_end_date: json["fixed_ticket_end_date"]! as Timestamp,
           rank: json["rank"]! as String,
           notification_settings:
               json["notification_settings"]! as List<dynamic>,
@@ -90,16 +80,13 @@ class UserModel {
       'gender': gender,
       'region': region,
       'job': job,
-      'personality_relationship': personality_relationship,
-      'personality_self': personality_self,
+      'personality': personality,
       'interest': interest,
       'purpose': purpose,
       'phone_number': phone_number,
       'accepted_policies': accepted_policies,
       'coin': coin,
       'ticket': ticket,
-      'isFixedTicket': isFixedTicket,
-      'fixed_ticket_end_date': fixed_ticket_end_date,
       'rank': rank,
       'notification_settings': notification_settings,
       'uid': uid,

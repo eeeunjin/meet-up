@@ -172,7 +172,7 @@ class ProfileMain extends StatelessWidget {
                 children: [
                   // 수정 버튼
                   Padding(
-                    padding: EdgeInsets.only(left: 156.w, bottom: 8.h),
+                    padding: EdgeInsets.only(left: 156.w, bottom: 1.h),
                     child: GestureDetector(
                       onTap: () {
                         // 수정 페이지
@@ -194,6 +194,17 @@ class ProfileMain extends StatelessWidget {
                       ),
                     ),
                   ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 24.0.w),
+                    child: Text(
+                      userViewModel.userModel!.rank,
+                      style: AppTextStyles.PR_M_13
+                          .copyWith(color: UsedColor.text_5),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 4.0.h,
+                  ),
                   // 사용자 닉네임
                   Padding(
                     padding: EdgeInsets.only(left: 24.0.w, bottom: 3.h),
@@ -203,33 +214,15 @@ class ProfileMain extends StatelessWidget {
                           .copyWith(color: UsedColor.charcoal_black),
                     ),
                   ),
-                  // 정기권 혜택 적용 중
-                  Padding(
-                    padding: EdgeInsets.only(left: 24.0.w),
-                    child: Container(
-                      width: 93.w,
-                      height: 14.h,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(7.r),
-                          color: UsedColor.image_card),
-                      child: Center(
-                        child: Text(
-                          '정기권 혜택 적용 중',
-                          style: AppTextStyles.PR_R_10
-                              .copyWith(color: UsedColor.violet),
-                        ),
-                      ),
-                    ),
-                  ),
                   // Novice 혜택 보러가기
                   GestureDetector(
                     onTap: () {
                       context.goNamed('rankMain');
                     },
                     child: Padding(
-                      padding: EdgeInsets.only(top: 24.0.h, left: 24.h),
+                      padding: EdgeInsets.only(top: 24.0.h, left: 24.w),
                       child: Text(
-                        'Novice 혜택 보러가기 >',
+                        '등급 혜택 보러가기 >',
                         style: AppTextStyles.PR_R_12
                             .copyWith(color: UsedColor.text_5),
                       ),
@@ -348,61 +341,66 @@ class ProfileMain extends StatelessWidget {
 
 //MARK: - 만남 후기
   Widget _review(BuildContext context) {
-    return Container(
-      width: 340.w,
-      height: 95.h,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22.r),
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(left: 24.w, top: 20.h),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      '만남 후기',
-                      style: AppTextStyles.PR_SB_18
-                          .copyWith(color: UsedColor.charcoal_black),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 2.0.h, left: 7.w),
-                      child: Container(
-                        width: 16.w,
-                        height: 16.h,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: UsedColor.main),
-                        // 후기 알림 수
-                        child: Center(
-                            child: Text(
-                          '3',
-                          style: AppTextStyles.SU_SB_10
-                              .copyWith(color: Colors.white),
-                        )),
+    return GestureDetector(
+      onTap: () {
+        context.goNamed('profileMeetingReview');
+      },
+      child: Container(
+        width: 340.w,
+        height: 95.h,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(22.r),
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(left: 24.w, top: 20.h),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        '만남 후기',
+                        style: AppTextStyles.PR_SB_18
+                            .copyWith(color: UsedColor.charcoal_black),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16.h),
-                Text(
-                  '상대방에게 받은 만남 후기를 확인해보세요',
-                  style:
-                      AppTextStyles.PR_R_12.copyWith(color: UsedColor.text_5),
-                )
-              ],
-            ),
-            SizedBox(width: 35.w),
-            Image.asset(
-              ImagePath.profileReviewIcon,
-              width: 56.w,
-              height: 56.h,
-            )
-          ],
+                      Padding(
+                        padding: EdgeInsets.only(top: 2.0.h, left: 7.w),
+                        child: Container(
+                          width: 16.w,
+                          height: 16.h,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: UsedColor.main),
+                          // 후기 알림 수
+                          child: Center(
+                              child: Text(
+                            '3',
+                            style: AppTextStyles.SU_SB_10
+                                .copyWith(color: Colors.white),
+                          )),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16.h),
+                  Text(
+                    '상대방에게 받은 만남 후기를 확인해보세요',
+                    style:
+                        AppTextStyles.PR_R_12.copyWith(color: UsedColor.text_5),
+                  )
+                ],
+              ),
+              SizedBox(width: 35.w),
+              Image.asset(
+                ImagePath.profileReviewIcon,
+                width: 56.w,
+                height: 56.h,
+              )
+            ],
+          ),
         ),
       ),
     );

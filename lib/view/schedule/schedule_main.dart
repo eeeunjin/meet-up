@@ -263,7 +263,7 @@ class ScheduleMain extends StatelessWidget {
         child: Center(
           child: Text(
             '일정이 없습니다.',
-            style: AppTextStyles.PR_R_16.copyWith(
+            style: AppTextStyles.PR_R_15.copyWith(
               color: UsedColor.text_2,
             ),
           ),
@@ -611,7 +611,7 @@ class ScheduleMain extends StatelessWidget {
         child: Center(
           child: Text(
             '일정이 없습니다.',
-            style: AppTextStyles.PR_R_16.copyWith(
+            style: AppTextStyles.PR_R_15.copyWith(
               color: UsedColor.text_2,
             ),
           ),

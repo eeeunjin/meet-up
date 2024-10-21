@@ -39,8 +39,6 @@ class UserViewModel with ChangeNotifier {
       }
     });
 
-    logger.d("[updateUserInfo] 유저 정보 업데이트 완료");
-
     notifyListeners();
   }
 

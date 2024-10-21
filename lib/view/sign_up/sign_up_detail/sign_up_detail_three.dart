@@ -84,16 +84,27 @@ class SignUpDetailThree extends StatelessWidget {
     return Column(
       children: [
         SizedBox(height: 48.h),
-        _relationship(context),
-        SizedBox(height: 55.h),
-        _lifestyle(context),
+        _personality(context),
       ],
     );
   }
 
-  Widget _relationship(BuildContext context) {
+  Widget _personality(BuildContext context) {
     final viewModel = Provider.of<SignUpDetailViewModel>(context, listen: true);
-    List<String> options = ["사교적인", "소극적인", "유머러스한", "조용한", "친절한", "자신감 있는"];
+    List<String> options = [
+      "사교적인",
+      "내향적인",
+      "유머러스한",
+      "조용한",
+      "친절한",
+      "열정적인",
+      "활발한",
+      "책임감 있는",
+      "신중한",
+      "독립적인",
+      "낙천적인",
+      "호기심 많은"
+    ];
 
     return Padding(
       padding: EdgeInsets.only(left: 25.0.w),
@@ -116,68 +127,10 @@ class SignUpDetailThree extends StatelessWidget {
             runSpacing: 7.h,
             children: options.map((option) {
               bool isSelected =
-                  viewModel.selectedRelationshipKeywords.contains(option);
+                  viewModel.selectedPersonalityKeywords.contains(option);
               return GestureDetector(
                 onTap: () {
-                  viewModel.selectRelationshipKeyword(option);
-                },
-                child: Container(
-                  width: 110.w,
-                  height: 36.h,
-                  decoration: BoxDecoration(
-                    color: isSelected ? UsedColor.button : Colors.white,
-                    borderRadius: BorderRadius.circular(14.r),
-                    border: Border.all(
-                      color: isSelected ? UsedColor.button : UsedColor.b_line,
-                      width: 2.5.w,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      option,
-                      style: AppTextStyles.PR_SB_15.copyWith(
-                        color: isSelected ? Colors.white : Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _lifestyle(BuildContext context) {
-    final viewModel = Provider.of<SignUpDetailViewModel>(context, listen: true);
-    List<String> options = ["계획적인", "즉흥적인", "창의적인", "안정적인", "낙관적인", "열정적인"];
-
-    return Padding(
-      padding: EdgeInsets.only(left: 25.0.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "스스로의 삶 속 성격을 선택해주세요.",
-            style: AppTextStyles.PR_B_22.copyWith(color: Colors.black),
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            "나를 가장 잘 표현하는 키워드 3가지를 선택해주세요.",
-            style: AppTextStyles.SU_R_12.copyWith(color: UsedColor.text_4),
-          ),
-          SizedBox(height: 24.h),
-          // 6개 중 3개 선택
-          Wrap(
-            spacing: 7.w,
-            runSpacing: 7.h,
-            children: options.map((option) {
-              bool isSelected =
-                  viewModel.selectedLifestyleKeywords.contains(option);
-              return GestureDetector(
-                onTap: () {
-                  viewModel.selectLifestyleKeyword(option);
+                  viewModel.selectPersonalityKeyword(option);
                 },
                 child: Container(
                   width: 110.w,
@@ -212,19 +165,20 @@ class SignUpDetailThree extends StatelessWidget {
         builder: (context, viewModel, child) {
       return NextButton(
         onTap: () async {
-          if (!viewModel.areBothSectionsCompleted) return;
+          if (!viewModel.areThreePersonalityKeywordsSelected) return;
           context.goNamed('signUpDetailFour');
         },
         text: '다음',
         height: 56.h,
         fontSize: 20.sp,
-        enable: viewModel.areBothSectionsCompleted,
-        backgroundColor: viewModel.areBothSectionsCompleted
+        enable: viewModel.areThreePersonalityKeywordsSelected,
+        backgroundColor: viewModel.areThreePersonalityKeywordsSelected
             ? UsedColor.button
             : UsedColor.grey1,
         textStyle: TextStyle(
-          color:
-              viewModel.areBothSectionsCompleted ? Colors.white : Colors.black,
+          color: viewModel.areThreePersonalityKeywordsSelected
+              ? Colors.white
+              : Colors.black,
           fontSize: 18.sp,
         ),
       );

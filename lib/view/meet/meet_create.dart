@@ -1,11 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:meet_up/main.dart';
+import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/repository/room_repository.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
+import 'package:meet_up/view_model/bot_nav_view_model.dart';
+import 'package:meet_up/view_model/coin/ticket_buy_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/meet/meet_create_view_model.dart';
@@ -19,6 +24,12 @@ class MeetCreate extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
+      onPopInvoked: (didPop) {
+        final viewModel =
+            Provider.of<MeetCreateViewModel>(context, listen: false);
+        viewModel.backClearSelection();
+        context.pop();
+      },
       child: GestureDetector(
         onTap: () {
           FocusManager.instance.primaryFocus?.unfocus();
@@ -101,17 +112,11 @@ class MeetCreate extends StatelessWidget {
         _naming(context),
         SizedBox(height: 31.h),
         _divider(),
-        SizedBox(height: 33.h),
         _category(context),
-        SizedBox(height: 33.h),
         _divider(),
-        SizedBox(height: 33.h),
         _location(context),
-        SizedBox(height: 33.h),
         _divider(),
-        SizedBox(height: 33.h),
         _keyword(context),
-        SizedBox(height: 33.h),
         _divider(),
         SizedBox(height: 32.31.h),
         _detail(context),
@@ -202,7 +207,7 @@ class MeetCreate extends StatelessWidget {
     );
   }
 
-  // MARK - 카테고리
+  // MARK: - 카테고리
   Widget _category(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w),
@@ -234,16 +239,21 @@ class MeetCreate extends StatelessWidget {
           ),
           _selectedCategory(context),
           const Spacer(),
-          Padding(
-            padding: EdgeInsets.only(right: 26.0.w),
-            child: GestureDetector(
-              onTap: () {
-                context.goNamed('meetCategory');
-              },
-              child: SizedBox(
-                  width: 9.w,
-                  height: 17.h,
-                  child: Image.asset(ImagePath.nextArrow)),
+          GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+              context.goNamed('meetCategory');
+            },
+            child: Container(
+              width: 66.w,
+              height: 83.h,
+              alignment: Alignment.center,
+              color: Colors.transparent,
+              child: Image.asset(
+                ImagePath.nextArrow,
+                width: 9.w,
+                height: 17.h,
+              ),
             ),
           ),
         ],
@@ -269,7 +279,7 @@ class MeetCreate extends StatelessWidget {
     );
   }
 
-  // MARK - 지역
+  // MARK: - 지역
   Widget _location(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w),
@@ -297,12 +307,16 @@ class MeetCreate extends StatelessWidget {
           SizedBox(width: 41.w),
           _selectedLocation(context),
           const Spacer(),
-          Padding(
-            padding: EdgeInsets.only(right: 26.0.w),
-            child: GestureDetector(
-              onTap: () {
-                context.goNamed('meetLocation');
-              },
+          GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+              context.goNamed('meetLocation');
+            },
+            child: Container(
+              width: 66.w,
+              height: 83.h,
+              alignment: Alignment.center,
+              color: Colors.transparent,
               child: Image.asset(
                 ImagePath.nextArrow,
                 width: 9.w,
@@ -362,16 +376,21 @@ class MeetCreate extends StatelessWidget {
           // 선택한 키워드 보이도록
           _selectedKeywords(context),
           const Spacer(),
-          Padding(
-            padding: EdgeInsets.only(right: 26.0.w),
-            child: GestureDetector(
-              onTap: () {
-                context.goNamed('meetKeyWord');
-              },
-              child: SizedBox(
-                  width: 9.w,
-                  height: 17.w,
-                  child: Image.asset(ImagePath.nextArrow)),
+          GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+              context.goNamed('meetKeyWord');
+            },
+            child: Container(
+              width: 66.w,
+              height: 83.h,
+              alignment: Alignment.center,
+              color: Colors.transparent,
+              child: Image.asset(
+                ImagePath.nextArrow,
+                width: 9.w,
+                height: 17.h,
+              ),
             ),
           ),
         ],
@@ -382,14 +401,13 @@ class MeetCreate extends StatelessWidget {
   Widget _selectedKeywords(BuildContext context) {
     return Consumer<MeetCreateViewModel>(
       builder: (context, viewModel, child) {
-        logger.d("${viewModel.selectedKeywords}");
         List<String> keywords = viewModel.selectedKeywords;
         String resultString = '';
         for (String keyword in keywords) {
           resultString += '#$keyword ';
         }
         return SizedBox(
-          width: 200.w,
+          width: 190.w,
           child: Text(
             resultString,
             style: AppTextStyles.PR_R_15.copyWith(color: UsedColor.text_5),
@@ -787,6 +805,11 @@ class MeetCreate extends StatelessWidget {
 
   // MARK: - 바텀시트
   void _checkBottomSheet(BuildContext context) {
+    final ticketBuyViewModel =
+        Provider.of<TicketBuyViewModel>(context, listen: false);
+    final bottomNavigationBarViewModel =
+        Provider.of<BottomNavigationBarViewModel>(context, listen: false);
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -818,15 +841,26 @@ class MeetCreate extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 // title
                 Padding(
                   padding: EdgeInsets.only(top: 51.h, left: 38.w, right: 31.w),
                   child: Row(
                     children: [
-                      Text(
-                        '만남방 개설 전 \n안내사항을 확인해주세요!',
-                        style: AppTextStyles.PR_SB_22,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '만남방 개설 전',
+                            style: AppTextStyles.PR_SB_22,
+                          ),
+                          SizedBox(
+                            height: 7.0.h,
+                          ),
+                          Text(
+                            '안내사항을 확인해주세요!',
+                            style: AppTextStyles.PR_SB_22,
+                          ),
+                        ],
                       ),
                       const Spacer(),
                       GestureDetector(
@@ -842,7 +876,7 @@ class MeetCreate extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 33.h),
+                SizedBox(height: 40.h),
                 // 개별 체크
                 Padding(
                   padding: EdgeInsets.only(left: 38.w),
@@ -854,25 +888,37 @@ class MeetCreate extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 5.h),
-                          child: Icon(
-                            Icons.check,
-                            color: viewModel.individualAgreement1
-                                ? UsedColor.violet
-                                : UsedColor.text_5,
-                            size: 20.w,
-                          ),
+                        Icon(
+                          Icons.check,
+                          color: viewModel.individualAgreement1
+                              ? UsedColor.violet
+                              : UsedColor.text_5,
+                          size: 20.w,
                         ),
                         SizedBox(
                           width: 17.w,
                         ),
-                        Text(
-                          '방장이 만남방 이탈 혹은 삭제시 만남방과 \n채팅방은 완전히 삭제됩니다.',
-                          style: AppTextStyles.PR_R_17.copyWith(
-                              color: viewModel.individualAgreement1
-                                  ? Colors.black
-                                  : UsedColor.text_4),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '방장이 만남방 이탈 혹은 삭제시 만남방과',
+                              style: AppTextStyles.PR_R_17.copyWith(
+                                  color: viewModel.individualAgreement1
+                                      ? Colors.black
+                                      : UsedColor.text_4),
+                            ),
+                            SizedBox(
+                              height: 4.0.h,
+                            ),
+                            Text(
+                              '채팅방은 완전히 삭제됩니다.',
+                              style: AppTextStyles.PR_R_17.copyWith(
+                                  color: viewModel.individualAgreement1
+                                      ? Colors.black
+                                      : UsedColor.text_4),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -889,25 +935,47 @@ class MeetCreate extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 5.h),
-                          child: Icon(
-                            Icons.check,
-                            color: viewModel.individualAgreement2
-                                ? UsedColor.violet
-                                : UsedColor.text_5,
-                            size: 20.w,
-                          ),
+                        Icon(
+                          Icons.check,
+                          color: viewModel.individualAgreement2
+                              ? UsedColor.violet
+                              : UsedColor.text_5,
+                          size: 20.w,
                         ),
                         SizedBox(
                           width: 17.w,
                         ),
-                        Text(
-                          '만남방 개설 후, 7일 이내에 일정 등록이\n되지 않으면 만남방이 삭제되고, 만남권은\n환불됩니다.',
-                          style: AppTextStyles.PR_R_17.copyWith(
-                              color: viewModel.individualAgreement2
-                                  ? Colors.black
-                                  : UsedColor.text_4),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '만남방 개설 후, 7일 이내에 일정 등록이',
+                              style: AppTextStyles.PR_R_17.copyWith(
+                                  color: viewModel.individualAgreement2
+                                      ? Colors.black
+                                      : UsedColor.text_4),
+                            ),
+                            SizedBox(
+                              height: 4.0.h,
+                            ),
+                            Text(
+                              '되지 않으면 만남방이 삭제되고, 만남권은',
+                              style: AppTextStyles.PR_R_17.copyWith(
+                                  color: viewModel.individualAgreement2
+                                      ? Colors.black
+                                      : UsedColor.text_4),
+                            ),
+                            SizedBox(
+                              height: 4.0.h,
+                            ),
+                            Text(
+                              '환불됩니다.',
+                              style: AppTextStyles.PR_R_17.copyWith(
+                                  color: viewModel.individualAgreement2
+                                      ? Colors.black
+                                      : UsedColor.text_4),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -924,41 +992,79 @@ class MeetCreate extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 5.h),
-                          child: Icon(
-                            Icons.check,
-                            color: viewModel.individualAgreement3
-                                ? UsedColor.violet
-                                : UsedColor.text_5,
-                            size: 20.w,
-                          ),
+                        Icon(
+                          Icons.check,
+                          color: viewModel.individualAgreement3
+                              ? UsedColor.violet
+                              : UsedColor.text_5,
+                          size: 20.w,
                         ),
                         SizedBox(
                           width: 17.w,
                         ),
-                        Text(
-                          '만남방 개설 시, 방장이 이탈 혹은\n방 삭제 시 만남권은 환불되지 않습니다.',
-                          style: AppTextStyles.PR_R_17.copyWith(
-                              color: viewModel.individualAgreement3
-                                  ? Colors.black
-                                  : UsedColor.text_4),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '만남방 개설 시, 방장이 이탈 혹은',
+                              style: AppTextStyles.PR_R_17.copyWith(
+                                  color: viewModel.individualAgreement3
+                                      ? Colors.black
+                                      : UsedColor.text_4),
+                            ),
+                            SizedBox(
+                              height: 4.0.h,
+                            ),
+                            Text(
+                              '방 삭제 시 만남권은 환불되지 않습니다.',
+                              style: AppTextStyles.PR_R_17.copyWith(
+                                  color: viewModel.individualAgreement3
+                                      ? Colors.black
+                                      : UsedColor.text_4),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
                 ),
+                const Spacer(),
                 Padding(
-                  padding: EdgeInsets.only(
-                      left: 33.w, right: 51.w, top: 57.h, bottom: 10.h),
+                  padding: EdgeInsets.only(left: 33.w, right: 33.w),
                   child: NextButton(
                     onTap: () async {
+                      // 방 만들기 로직
                       await viewModel.createRoom(uid: userViewModel.uid!);
+
+                      // 만남권 소진 로직
+                      await userViewModel.updateUserInfo(data: {
+                        'ticket': userViewModel.userModel!.ticket - 1
+                      });
+
+                      // 영수증 발급 로직
+                      final goodHistoryModel = GoodHistoryModel(
+                          gh_type: GoodHistoryType.ticket.name,
+                          gh_type_transaction:
+                              GoodHistoryTypeOfTransaction.use.name,
+                          gh_uid: userViewModel.uid!,
+                          gh_result_coin: userViewModel.userModel!.coin,
+                          gh_result_ticket: userViewModel.userModel!.ticket,
+                          gh_change_coin_amount: 0,
+                          gh_change_ticket_amount: -1,
+                          gh_product_id: '',
+                          gh_change_date: Timestamp.now());
+
+                      await ticketBuyViewModel.createGoodHistory(
+                          goodHistoryModel: goodHistoryModel);
+
+                      // meetCreateViewModel 초기화
+                      viewModel.backClearSelection();
+
+                      // 첫 화면으로 이동 후, 채팅 탭으로 이동
                       while (context.canPop()) {
                         context.pop();
-                        viewModel.backClearSelection(); // 내용 초기화
-                        debugPrint("완료");
                       }
+                      bottomNavigationBarViewModel.changeIndex(1);
                     },
                     height: 56.h,
                     text: '동의하고 시작하기',
@@ -973,6 +1079,7 @@ class MeetCreate extends StatelessWidget {
                     ),
                   ),
                 ),
+                SizedBox(height: 56.h),
               ],
             ),
           );

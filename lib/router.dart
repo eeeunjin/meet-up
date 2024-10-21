@@ -31,14 +31,15 @@ import 'package:meet_up/view/meet/meet_detail_room.dart';
 import 'package:meet_up/view/meet/meet_user_info.dart';
 import 'package:meet_up/view/profile/profile_edit.dart';
 import 'package:meet_up/view/profile/profile_main.dart';
+import 'package:meet_up/view/profile/profile_meeting_review.dart';
 import 'package:meet_up/view/profile/profile_notification.dart';
 import 'package:meet_up/view/profile/rank_main.dart';
-import 'package:meet_up/view/reflect/reflect_diary_details.dart';
+import 'package:meet_up/view/reflect/reflect_write_diary.dart';
 import 'package:meet_up/view/reflect/reflect_diary_more.dart';
-import 'package:meet_up/view/reflect/reflect_diary_view.dart';
+import 'package:meet_up/view/reflect/reflect_diary_detail.dart';
 import 'package:meet_up/view/reflect/reflect_main.dart';
 import 'package:meet_up/view/reflect/reflect_record_more.dart';
-import 'package:meet_up/view/reflect/reflect_writing_diary.dart';
+import 'package:meet_up/view/reflect/reflect_select_diary_question.dart';
 import 'package:meet_up/view/schedule/add_member_personal.dart';
 import 'package:meet_up/view/schedule/add_personal_schedule.dart';
 import 'package:meet_up/view/schedule/edit_personal_schedule.dart';
@@ -410,34 +411,70 @@ final router = GoRouter(
           parentNavigatorKey: shellNavkey,
           routes: [
             GoRoute(
-              path: 'reflectRecordMore',
-              name: 'reflectRecordMore',
-              parentNavigatorKey: rootNavkey,
-              builder: (context, state) => const ReflectRecordMore(),
-            ),
+                path: 'reflectRecordMore',
+                name: 'reflectRecordMore',
+                parentNavigatorKey: rootNavkey,
+                builder: (context, state) => const ReflectRecordMore(),
+                routes: [
+                  GoRoute(
+                    path: 'reflectDiaryDetails',
+                    name: 'reflectDiaryDetails',
+                    parentNavigatorKey: rootNavkey,
+                    builder: (context, state) => const ReflectDiaryDetail(),
+                  ),
+                ]),
             GoRoute(
               path: 'reflectDiaryMore',
               name: 'reflectDiaryMore',
               parentNavigatorKey: rootNavkey,
               builder: (context, state) => const ReflectDiaryMore(),
-            ),
-            GoRoute(
-              path: 'reflectDiaryView',
-              name: 'reflectDiaryView',
-              parentNavigatorKey: rootNavkey,
-              builder: (context, state) => const ReflectDiaryView(),
-            ),
-            GoRoute(
-              path: 'reflectWritingDiary',
-              name: 'reflectWritingDiary',
-              parentNavigatorKey: rootNavkey,
-              builder: (context, state) => const ReflectWritingDiary(),
               routes: [
                 GoRoute(
-                  path: 'reflectDiaryDetails',
-                  name: 'reflectDiaryDetails',
+                  path: 'reflectSelectDiaryQuestion',
+                  name: 'reflectSelectDiaryQuestion_diaryMore',
                   parentNavigatorKey: rootNavkey,
-                  builder: (context, state) => const ReflectDiaryDetails(),
+                  builder: (context, state) =>
+                      const ReflectSelectDiaryQuestion(),
+                  routes: [
+                    GoRoute(
+                      path: 'reflectWriteDiary',
+                      name: 'reflectWriteDiary_diaryMore',
+                      parentNavigatorKey: rootNavkey,
+                      builder: (context, state) => const ReflectWriteDiary(),
+                      routes: [
+                        GoRoute(
+                          path: 'reflectSelectDiaryQuestion',
+                          name: 'reflectSelectDiaryQuestion_diaryMore_add',
+                          parentNavigatorKey: rootNavkey,
+                          builder: (context, state) =>
+                              const ReflectSelectDiaryQuestion(),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            GoRoute(
+              path: 'reflectSelectDiaryQuestion',
+              name: 'reflectSelectDiaryQuestion',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) => const ReflectSelectDiaryQuestion(),
+              routes: [
+                GoRoute(
+                  path: 'reflectWriteDiary',
+                  name: 'reflectWriteDiary',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) => const ReflectWriteDiary(),
+                  routes: [
+                    GoRoute(
+                      path: 'reflectSelectDiaryQuestion',
+                      name: 'reflectSelectDiaryQuestion_add',
+                      parentNavigatorKey: rootNavkey,
+                      builder: (context, state) =>
+                          const ReflectSelectDiaryQuestion(),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -460,6 +497,12 @@ final router = GoRouter(
               name: 'profileNoticationMain',
               parentNavigatorKey: rootNavkey,
               builder: (context, state) => const ProfileNotification(),
+            ),
+            GoRoute(
+              path: 'profileMeetingReview',
+              name: 'profileMeetingReview',
+              parentNavigatorKey: rootNavkey,
+              builder: (context, state) => const ProfileMeetingReview(),
             ),
             GoRoute(
               path: 'settingMain',
@@ -604,7 +647,6 @@ final router = GoRouter(
       parentNavigatorKey: rootNavkey,
       pageBuilder: (context, state) {
         // logger.d("GoRoute Path Location: ${state.fullPath}");
-        logger.d("여기는 오나");
         if (LoginFunc.isLogined) {
           // logger.d("로그인 상태 확인: 로그인 상태입니다.");
           return const NoTransitionPage(child: BotNavBar());

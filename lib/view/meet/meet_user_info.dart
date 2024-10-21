@@ -149,24 +149,6 @@ class MeetUserInfo extends StatelessWidget {
                           color: UsedColor.charcoal_black,
                         ),
                       ),
-                      SizedBox(height: 10.h),
-                      if (!user.isFixedTicket)
-                        Container(
-                          height: 20.h,
-                          width: 104.w,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: UsedColor.image_card,
-                            borderRadius: BorderRadius.circular(9.r),
-                          ),
-                          child: Text(
-                            '정기권 혜택 적용중',
-                            style: AppTextStyles.SU_M_12.copyWith(
-                              color: UsedColor.violet,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
                     ],
                   ),
                 ],
@@ -282,7 +264,7 @@ class MeetUserInfo extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              for (var trait in user.personality_self) ...[
+              for (var trait in user.personality) ...[
                 _personalityChip(trait),
                 SizedBox(
                   width: 8.0.w,

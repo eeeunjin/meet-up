@@ -94,6 +94,13 @@ class MeetManageMain extends StatelessWidget {
         } else {
           // 정렬
           var docs = snapshot.data!.docs;
+          var myRoomDatas = docs.map((e) {
+            var data = RoomModel.fromJson(e.data() as Map<String, dynamic>);
+            data.roomId = e.id;
+            return data;
+          }).toList();
+          myRoomDatas.removeWhere((element) => element.isRoomDeleted);
+
           return Container(
             color: UsedColor.bg_color,
             child: SingleChildScrollView(
@@ -103,18 +110,18 @@ class MeetManageMain extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 31.h),
-                    _title(context, docs),
-                    if (docs.isEmpty) ...[
+                    _title(context, myRoomDatas),
+                    if (myRoomDatas.isEmpty) ...[
                       SizedBox(
                         height: 293.h,
                       ),
                       _emptyRoom(),
                     ],
-                    if (docs.isNotEmpty) ...[
+                    if (myRoomDatas.isNotEmpty) ...[
                       SizedBox(height: 30.h),
                       Padding(
                         padding: EdgeInsets.only(right: 19.0.w),
-                        child: _rooms(context, docs),
+                        child: _rooms(context, myRoomDatas),
                       ),
                     ],
                   ],
@@ -129,7 +136,7 @@ class MeetManageMain extends StatelessWidget {
 
   Widget _title(
     BuildContext context,
-    List<QueryDocumentSnapshot<Object?>> docs,
+    List<RoomModel> myRoomDatas,
   ) {
     final userViewModel = Provider.of<UserViewModel>(context);
     return Row(
@@ -145,7 +152,7 @@ class MeetManageMain extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(top: 2.0.h),
           child: Text(
-            '${docs.length} 개',
+            '${myRoomDatas.length} 개',
             style: AppTextStyles.SU_SB_16.copyWith(color: UsedColor.text_3),
           ),
         ),
@@ -159,7 +166,6 @@ class MeetManageMain extends StatelessWidget {
             child: CoinWidget(
               coinAmount: userViewModel.userModel?.coin ?? -1,
               ticketAmount: userViewModel.userModel?.ticket ?? -1,
-              isFixed: userViewModel.userModel?.isFixedTicket ?? false,
             ),
           ),
         ),
@@ -169,22 +175,20 @@ class MeetManageMain extends StatelessWidget {
 
   Widget _rooms(
     BuildContext context,
-    List<QueryDocumentSnapshot<Object?>> docs,
+    List<RoomModel> myRoomDatas,
   ) {
     final meetDetailRoomViewModel =
         Provider.of<MeetDetailRoomViewModel>(context, listen: false);
 
     // 날짜로 그룹화
-    Map<String, List<DocumentSnapshot>> groupedByDate = {};
-    for (var doc in docs) {
-      var data = doc.data() as Map<String, dynamic>;
-      var timestamp = data['room_creation_date'] as Timestamp?;
-      if (timestamp != null) {
-        var date = timestamp.toDate();
-        String formattedDate = DateFormat('yyyy.MM.dd').format(date);
-        groupedByDate[formattedDate] ??= [];
-        groupedByDate[formattedDate]!.add(doc);
-      }
+    Map<String, List<RoomModel>> groupedByDate = {};
+    for (var myRoomData in myRoomDatas) {
+      // 삭제된 방은 나의 방에 출력하지 않도록 함
+      var timestamp = myRoomData.room_creation_date;
+      var date = timestamp.toDate();
+      String formattedDate = DateFormat('yyyy.MM.dd').format(date);
+      groupedByDate[formattedDate] ??= [];
+      groupedByDate[formattedDate]!.add(myRoomData);
     }
     // MARK: - 방 리스트
     // 그룹화된 데이터를 기반으로 위젯 구성
@@ -203,16 +207,11 @@ class MeetManageMain extends StatelessWidget {
             ),
             Column(
               children: rooms.map((room) {
-                var roomData = room.data() as Map<String, dynamic>;
-                var roomModel = RoomModel.fromJson(roomData);
-                roomModel.roomId = room.id;
-                logger.d("${roomModel.room_name}의 room id는 [${room.id}] 입니다 ~");
-
                 // 개별 컨테이너
                 return GestureDetector(
                   onTap: () {
                     meetDetailRoomViewModel.setCurrentRoomModel(
-                        roomModel: roomModel);
+                        roomModel: room);
                     meetDetailRoomViewModel.setIsMyRoom(isMyRoom: true);
                     meetDetailRoomViewModel.setIsChatRoom(isChatRoom: false);
                     context.goNamed('meetDetailRoom_manage');
@@ -235,7 +234,7 @@ class MeetManageMain extends StatelessWidget {
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text(roomModel.room_name,
+                              Text(room.room_name,
                                   style: AppTextStyles.PR_SB_16),
                               SizedBox(width: 10.w),
                               Padding(
@@ -259,9 +258,9 @@ class MeetManageMain extends StatelessWidget {
                           SizedBox(height: 10.h),
                           // detail
                           Text(
-                            roomModel.room_description.split('\n').length > 1
-                                ? "${roomModel.room_description.split('\n').first}..."
-                                : roomModel.room_description,
+                            room.room_description.split('\n').length > 1
+                                ? "${room.room_description.split('\n').first}..."
+                                : room.room_description,
                             style: AppTextStyles.PR_R_12
                                 .copyWith(color: UsedColor.text_5),
                             overflow: TextOverflow.ellipsis,

@@ -14,7 +14,6 @@ class TicketBuyViewModel with ChangeNotifier {
 
   void setTicketKind(bool isFixed) {
     _isFixed = isFixed;
-    logger.d('ticket kind: ${isFixed == true ? '정기권' : '단일권'}');
     notifyListeners();
   }
 
@@ -26,7 +25,6 @@ class TicketBuyViewModel with ChangeNotifier {
   Future<void> createGoodHistory(
       {required GoodHistoryModel goodHistoryModel}) async {
     await _goodHistoryRepository.createGoodHistory(goodHistoryModel);
-    logger.d('[TicketBuyViewModel] good history created');
   }
 
   void resetState() {

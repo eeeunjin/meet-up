@@ -279,4 +279,8 @@ class ImagePath {
 
   static String get reflectArrowLeft => 'assets/images/reflectArrowLeft.png';
   static String get reflectArrowRight => 'assets/images/reflectArrowRight.png';
+
+  static String get reflectNoneDiaryRecord =>
+      'assets/images/reflectNoneDiary2.png';
+  static String get reflectNoneDiary => 'assets/images/reflectNoneDiary1.png';
 }

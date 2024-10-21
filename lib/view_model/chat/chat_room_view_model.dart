@@ -32,6 +32,10 @@ class ChatRoomViewModel with ChangeNotifier {
   final List<UserModel> _userModels = [];
   List<UserModel> get userModels => _userModels;
 
+  // 스케쥴에 참가한 인원 정보
+  final List<UserModel> _scheduleUserModels = [];
+  List<UserModel> get scheduleUserModels => _scheduleUserModels;
+
   // 방 owner UID
   UserModel get ownerUID => _userModels[0];
 
@@ -67,9 +71,12 @@ class ChatRoomViewModel with ChangeNotifier {
     _roomModel = value;
   }
 
-  Future<void> setUserModels() async {
+  Future<void> setUserModels({required bool isScheduleEnd}) async {
     final userRefs = List.from(roomModel.room_participant_reference);
-    userRefs.insert(0, roomModel.room_owner_reference);
+
+    if (!roomModel.isOwnerExit) {
+      userRefs.insert(0, roomModel.room_owner_reference);
+    }
 
     List<UserModel> newUserModels = [];
 
@@ -81,6 +88,22 @@ class ChatRoomViewModel with ChangeNotifier {
 
     _userModels.clear();
     _userModels.addAll(newUserModels);
+
+    if (isScheduleEnd) {
+      final scheduleUserRefIds = List.from(
+          roomModel.room_schedule!["participants_agree_selected_schedule"]);
+
+      List<UserModel> newScheduleUserModels = [];
+
+      for (String userRefId in scheduleUserRefIds) {
+        UserModel userModel =
+            await _userRepository.readUserDocument(uid: userRefId);
+        newScheduleUserModels.add(userModel);
+      }
+
+      _scheduleUserModels.clear();
+      _scheduleUserModels.addAll(newScheduleUserModels);
+    }
   }
 
   void setStartEdit(bool value) {
@@ -169,12 +192,16 @@ class ChatRoomViewModel with ChangeNotifier {
         return '일정을 확인해주세요.';
       case "schedule_delete_by_owner":
         return '기존 일정이 삭제되었습니다.';
+      case "schedule_delete_by_owner_out":
+        return '방장 퇴장으로 인해 방이 삭제되었습니다.';
       case "schedule_delete_by_participant":
-        return '기존 일정이 파기되었습니다.';  
+        return '기존 일정이 파기되었습니다.';
       case "schedule_decide":
         return '일정이 확정되었습니다.';
       case "owner_exit":
         return '방장이 퇴장하여 방이 삭제되었습니다.';
+      case "time_over":
+        return '방의 기한이 만료되어 방이 삭제되었습니다.';
       default:
         return 'Error Message';
     }
@@ -211,8 +238,12 @@ class ChatRoomViewModel with ChangeNotifier {
   // 상태 초기화 함수
   void resetState() {
     _roomID = '';
+    _roomModel = null;
+    _roomRef = null;
+    _userModels.clear();
     _messageController.clear();
     _startEdit = false;
     _lineNum = 1;
+    _moreOptionClicked = false;
   }
 }

@@ -1,33 +1,43 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/util/color.dart';
-import 'package:meet_up/view/reflect/reflect_diary_details.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
-import 'package:meet_up/view_model/reflect/reflect_view_model.dart';
+import 'package:meet_up/view_model/reflect/reflect_write_diary_view_model.dart';
 import 'package:provider/provider.dart';
 
-class ReflectWritingDiary extends StatelessWidget {
-  const ReflectWritingDiary({super.key});
+class ReflectSelectDiaryQuestion extends StatelessWidget {
+  const ReflectSelectDiaryQuestion({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: 58.h,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        final reflectWriteDiaryViewModel =
+            Provider.of<ReflectWriteDiaryViewModel>(context, listen: false);
+        if (!reflectWriteDiaryViewModel.addQeustion) {
+          reflectWriteDiaryViewModel.resetState();
+        }
+        reflectWriteDiaryViewModel.resetSelectedImages();
+        reflectWriteDiaryViewModel.setAddQuestion(false);
+        context.pop();
+      },
+      child: Scaffold(
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                top: 58.h,
+              ),
+              child: _header(context),
             ),
-            child: _header(context),
-          ),
-          Expanded(child: _main(context)),
-        ],
+            Expanded(child: _main(context)),
+          ],
+        ),
       ),
     );
   }
@@ -36,7 +46,10 @@ class ReflectWritingDiary extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          header(title: '일기 쓰기', back: _back(context)),
+          header(
+            title: '일기 쓰기',
+            back: _back(context),
+          ),
         ],
       ),
     );
@@ -45,7 +58,13 @@ class ReflectWritingDiary extends StatelessWidget {
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.read<ReflectViewModel>().reset();
+        final reflectWriteDiaryViewModel =
+            Provider.of<ReflectWriteDiaryViewModel>(context, listen: false);
+        if (!reflectWriteDiaryViewModel.addQeustion) {
+          reflectWriteDiaryViewModel.resetState();
+        }
+        reflectWriteDiaryViewModel.setAddQuestion(false);
+        reflectWriteDiaryViewModel.resetSelectedImages();
         context.pop();
       },
       child: Image.asset(
@@ -57,7 +76,7 @@ class ReflectWritingDiary extends StatelessWidget {
   }
 
   Widget _main(BuildContext context) {
-    return Consumer<ReflectViewModel>(
+    return Consumer<ReflectWriteDiaryViewModel>(
       builder: (context, viewModel, child) {
         return SingleChildScrollView(
           child: Padding(
@@ -110,8 +129,9 @@ class ReflectWritingDiary extends StatelessWidget {
       },
     );
   }
+
 //MARK: - 이미지 선택
-  Widget _selectOptions(ReflectViewModel viewModel) {
+  Widget _selectOptions(ReflectWriteDiaryViewModel viewModel) {
     final List<String> imagePaths = [
       ImagePath.reflect1,
       ImagePath.reflect2,
@@ -160,13 +180,25 @@ class ReflectWritingDiary extends StatelessWidget {
       }),
     );
   }
+
 //MARK: - bottom
-  Widget _bottom(BuildContext context, ReflectViewModel viewModel) {
+  Widget _bottom(BuildContext context, ReflectWriteDiaryViewModel viewModel) {
     return GestureDetector(
       onTap: viewModel.selectedImages.isNotEmpty
           ? () {
               viewModel.markAsCompleted();
-              context.goNamed('reflectDiaryDetails');
+
+              if (viewModel.addQeustion) {
+                viewModel.setAddQuestion(false);
+                viewModel.resetSelectedImages();
+                context.pop();
+              } else {
+                if (viewModel.isFromDiaryMore) {
+                  context.goNamed('reflectWriteDiary_diaryMore');
+                } else {
+                  context.goNamed('reflectWriteDiary');
+                }
+              }
             }
           : null,
       child: Container(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:meet_up/main.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
@@ -466,7 +465,7 @@ class EditPersonalSchedule extends StatelessWidget {
 
 //MARK: - 저장
   Widget _bottom(BuildContext context) {
-    final scheduleMainViewModel = Provider.of<ScheduleMainViewModel>(context);
+    final _ = Provider.of<ScheduleMainViewModel>(context);
     return Consumer<ScheduleAddPersonalScheduleViewModel>(
         builder: (context, viewModel, child) {
       bool canModify = viewModel.allCheckCompleted && viewModel.isChanged;
