@@ -98,9 +98,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ScheduleMainViewModel()),
         ChangeNotifierProvider(
           create: (context) => ScheduleAddPersonalScheduleViewModel(
-            init: currentDate,
-            start: oneMonthAgo,
-            end: twoYearsLater,
+            init: DateTime.now(),
           ),
         ),
         ChangeNotifierProvider(

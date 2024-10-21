@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meet_up/view_model/schedule/schedule_add_personal_schdule_view_model.dart';
-import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:provider/provider.dart';
 
 class PersonalScheduleDatePicker extends StatelessWidget {
@@ -14,7 +13,8 @@ class PersonalScheduleDatePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
+    final viewModel =
+        Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
 
     return ChangeNotifierProvider<ScheduleAddPersonalScheduleViewModel>.value(
       value: viewModel,

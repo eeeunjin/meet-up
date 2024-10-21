@@ -11,14 +11,21 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
   final FirebaseRefs _firebaseRefs = FirebaseRefs();
   final UserRepository _userRepository = UserRepository();
 
+  // MARK: - 날짜
+  DateTime _selectedDate;
+  DateTime get selectedDate => _selectedDate;
+
+  // 선택 날짜 초기화
+  TimeOfDay _selectedTime;
+  TimeOfDay get selectedTime => _selectedTime;
+
+  final DateTime _start = DateTime.now(); // Start is set to today
+  final DateTime _end = DateTime.now().add(const Duration(days: 14));
+
   // 타임 피커 초기화
   ScheduleAddPersonalScheduleViewModel({
     required DateTime init,
-    required DateTime start,
-    required DateTime end,
   })  : _selectedDate = init,
-        _start = start,
-        _end = end,
         _selectedTime = const TimeOfDay(hour: 19, minute: 30);
 
   // MARK: - 일정
@@ -29,16 +36,9 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
     return namingController.text.trim().isNotEmpty;
   }
 
-  // MARK: - 날짜
-  DateTime _selectedDate;
-  DateTime get selectedDate => _selectedDate;
-
   // DatePicker
   bool _isDatePanelExpanded = false;
   bool get isDatePanelExpanded => _isDatePanelExpanded;
-
-  final DateTime _start;
-  final DateTime _end;
 
   DateTime get start => _start;
   DateTime get end => _end;
@@ -88,20 +88,25 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
   }
 
   List<int> getMonthList() {
-    if (selectedDate.year == end.year) {
-      return List<int>.generate(end.month, (index) => index + 1);
-    } else {
-      return List<int>.generate(12, (index) => index + 1);
+    if (_start.year == _end.year) {
+      return List<int>.generate(
+          _end.month - _start.month + 1, (index) => _start.month + index);
     }
+    return [];
   }
 
   List<int> getDayList() {
-    DateTime lastDateOfMonth =
-        DateTime(selectedDate.year, selectedDate.month + 1, 0);
-    if (selectedDate.year == end.year && selectedDate.month == end.month) {
-      return List<int>.generate(end.day, (index) => index + 1);
+    if (_selectedDate.year == _start.year &&
+        _selectedDate.month == _start.month) {
+      // Show days from today onward
+      return List<int>.generate(
+          _end.difference(_start).inDays + 1, (index) => _start.day + index);
+    } else if (_selectedDate.year == _end.year &&
+        _selectedDate.month == _end.month) {
+      // Show days up to the _end date
+      return List<int>.generate(_end.day, (index) => index + 1);
     }
-    return List<int>.generate(lastDateOfMonth.day, (index) => index + 1);
+    return [];
   }
 
   // 요일 계산 메서드
@@ -120,11 +125,6 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
   bool _isTimePanelExpanded = false;
 
   bool get isTimePanelExpanded => _isTimePanelExpanded;
-
-  // 선택된 시간 초기화
-  TimeOfDay _selectedTime;
-
-  TimeOfDay get selectedTime => _selectedTime;
 
   // ExpansionPanel 토글
   void toggleTimePanel() {
