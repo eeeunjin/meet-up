@@ -101,6 +101,8 @@ void main() async {
         ChangeNotifierProvider(
           create: (context) => ScheduleAddPersonalScheduleViewModel(
             init: DateTime.now(),
+            start: DateTime.now(),
+            end: DateTime.now().add(const Duration(days: 14)),
           ),
         ),
         ChangeNotifierProvider(
