@@ -393,8 +393,7 @@ class ProfileViewModel with ChangeNotifier {
     if (selectedPersonalitiesSetLength != selectedPersonalitiesSet.length) {
       anyChanged = true;
       updatedData['personality_self'] = selectedPersonalities;
-      updatedUserModel.personality =
-          selectedPersonalities as List<dynamic>;
+      updatedUserModel.personality = selectedPersonalities as List<dynamic>;
       logger.d('성격 변경 됨');
     }
 
