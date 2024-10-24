@@ -122,6 +122,56 @@ class ImagePath {
   static String get profileTicketIcon => 'assets/images/ticket_profile.png';
   static String get profileReviewIcon =>
       'assets/images/profile_review_icon.png';
+  static String get profileCheckBoxSelected =>
+      'assets/images/profile_check.png';
+  static String get profileCheckBox => 'assets/images/profile_uncheck.png';
+  static String get profileChip1Uncheck =>
+      'assets/images/profile_pos_chip1.png';
+  static String get profileChip1Check =>
+      'assets/images/profile_pos_chip1-1.png';
+  static String get profileChip2Uncheck =>
+      'assets/images/profile_pos_chip2.png';
+  static String get profileChip2Check =>
+      'assets/images/profile_pos_chip2-1.png';
+  static String get profileChip3Uncheck =>
+      'assets/images/profile_pos_chip3.png';
+  static String get profileChip3Check =>
+      'assets/images/profile_pos_chip3-1.png';
+  static String get profileChip4Uncheck =>
+      'assets/images/profile_pos_chip4.png';
+  static String get profileChip4Check =>
+      'assets/images/profile_pos_chip4-1.png';
+  static String get profileChip5Uncheck =>
+      'assets/images/profile_pos_chip5.png';
+  static String get profileChip5Check =>
+      'assets/images/profile_pos_chip5-1.png';
+  static String get profileChip6Uncheck =>
+      'assets/images/profile_pos_chip6.png';
+  static String get profileChip6Check =>
+      'assets/images/profile_pos_chip6-1.png';
+  static String get profileChip7Uncheck =>
+      'assets/images/profile_neg_chip1.png';
+  static String get profileChipCheck => 'assets/images/profile_neg_chip1-1.png';
+  static String get profileChip8Uncheck =>
+      'assets/images/profile_neg_chip2.png';
+  static String get profileChip8Check =>
+      'assets/images/profile_neg_chip2-1.png';
+  static String get profileChip9Uncheck =>
+      'assets/images/profile_neg_chip3.png';
+  static String get profileChip9Check =>
+      'assets/images/profile_neg_chip3-1.png';
+  static String get profileChip10Uncheck =>
+      'assets/images/profile_neg_chip4.png';
+  static String get profileChip10Check =>
+      'assets/images/profile_neg_chip4-1.png';
+  static String get profileChip11Uncheck =>
+      'assets/images/profile_neg_chip5.png';
+  static String get profileChip11Check =>
+      'assets/images/profile_neg_chip5-1.png';
+  static String get profileChip12Uncheck =>
+      'assets/images/profile_neg_chip6.png';
+  static String get profileChip12Check =>
+      'assets/images/profile_neg_chip6-1.png';
 
   // MARK: - schedule
   static String get backCross => 'assets/images/backcross.png';

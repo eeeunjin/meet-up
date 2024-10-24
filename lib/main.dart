@@ -28,6 +28,7 @@ import 'package:meet_up/view_model/meet/meet_filter_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_keyword_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_manage_view_model.dart';
 import 'package:meet_up/view_model/meet/meet_user_info_view_model.dart';
+import 'package:meet_up/view_model/profile/profile_review_view_model.dart';
 import 'package:meet_up/view_model/profile/profile_view_model.dart';
 import 'package:meet_up/view_model/reflect/reflect_record_view_model.dart';
 import 'package:meet_up/view_model/reflect/reflect_view_model.dart';
@@ -124,6 +125,7 @@ void main() async {
             create: (context) => CoinTicketPurchaseHistoryViewModel()),
         ChangeNotifierProvider(create: (context) => SettingViewModel()),
         ChangeNotifierProvider(create: (context) => ProfileViewModel()),
+        ChangeNotifierProvider(create: (context) => ProfileReviewViewModel()),
         ChangeNotifierProvider(
           create: (context) => ChatViewModel(
             init: DateTime.now(),

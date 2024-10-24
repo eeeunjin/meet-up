@@ -32,6 +32,7 @@ import 'package:meet_up/view/meet/meet_user_info.dart';
 import 'package:meet_up/view/profile/profile_edit.dart';
 import 'package:meet_up/view/profile/profile_main.dart';
 import 'package:meet_up/view/profile/profile_meeting_review.dart';
+import 'package:meet_up/view/profile/profile_meeting_review_detail.dart';
 import 'package:meet_up/view/profile/profile_notification.dart';
 import 'package:meet_up/view/profile/rank_main.dart';
 import 'package:meet_up/view/reflect/reflect_write_diary.dart';
@@ -503,6 +504,15 @@ final router = GoRouter(
               name: 'profileMeetingReview',
               parentNavigatorKey: rootNavkey,
               builder: (context, state) => const ProfileMeetingReview(),
+              routes: [
+                GoRoute(
+                  path: 'profileMeetingReviewDetail',
+                  name: 'profileMeetingReviewDetail',
+                  parentNavigatorKey: rootNavkey,
+                  builder: (context, state) =>
+                      const ProfileMeetingReviewDetail(),
+                ),
+              ],
             ),
             GoRoute(
               path: 'settingMain',
