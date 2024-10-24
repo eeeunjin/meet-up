@@ -29,22 +29,32 @@ class ChatScheduleRegister extends StatelessWidget {
         chatRoomSchduleRegisterViewModel.resetState();
         context.pop();
       },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false, // 채팅 overflow 방지
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: 58.h),
-              child: _header(context),
-            ),
-            _main(context),
-            const Spacer(),
-            Padding(
-              padding: EdgeInsets.only(left: 33.0.w, right: 33.w, bottom: 56.h),
-              child: _bottom(context),
-            ),
-          ],
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+          final chatRoomSchduleRegisterViewModel =
+              Provider.of<ChatRoomSchduleRegisterViewModel>(context,
+                  listen: false);
+          chatRoomSchduleRegisterViewModel.pannelClose();
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: false, // 채팅 overflow 방지
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 58.h),
+                child: _header(context),
+              ),
+              _main(context),
+              const Spacer(),
+              Padding(
+                padding:
+                    EdgeInsets.only(left: 33.0.w, right: 33.w, bottom: 56.h),
+                child: _bottom(context),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -145,7 +155,8 @@ class ChatScheduleRegister extends StatelessWidget {
               height: 19.h,
               child: TextField(
                 controller: viewModel.scheduleNameController,
-                onChanged: (value) => viewModel.notify(),
+                onTap: () => viewModel.pannelClose(),
+                onChanged: (value) => viewModel.pannelClose(),
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
@@ -219,10 +230,8 @@ class ChatScheduleRegister extends StatelessWidget {
                     border: Border.all(width: 1.w, color: UsedColor.b_line),
                   ),
                   // 데이트 피커 넣기
-                  child: Center(
-                    child: ScheduleDatePicker(
-                      onChangeListener: (DateTime dt) {},
-                    ),
+                  child: const Center(
+                    child: ScheduleDatePicker(),
                   ),
                 ),
               ),
@@ -270,7 +279,7 @@ class ChatScheduleRegister extends StatelessWidget {
                     SizedBox(width: 22.w),
                     // 선택된 시간
                     Text(
-                      viewModel.formatTime(viewModel.selectedTime),
+                      viewModel.formatTime(),
                       style: AppTextStyles.PR_R_16
                           .copyWith(color: UsedColor.text_1),
                     ),
@@ -291,11 +300,7 @@ class ChatScheduleRegister extends StatelessWidget {
                     border: Border.all(width: 1.w, color: UsedColor.b_line),
                   ),
                   // 타임 피커 넣기
-                  child: ScheduleTimePicker(
-                    onTimeChanged: (TimeOfDay time) {
-                      viewModel.updateTime(time);
-                    },
-                  ),
+                  child: const ScheduleTimePicker(),
                 ),
               ),
             ),
@@ -333,7 +338,8 @@ class ChatScheduleRegister extends StatelessWidget {
               height: 19.h,
               child: TextField(
                 controller: viewModel.locationController,
-                onChanged: (value) => viewModel.notify(),
+                onTap: () => viewModel.pannelClose(),
+                onChanged: (value) => viewModel.pannelClose(),
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,

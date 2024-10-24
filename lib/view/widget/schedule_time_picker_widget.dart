@@ -4,11 +4,8 @@ import 'package:meet_up/view_model/chat/chat_room_schedule_register_view_model.d
 import 'package:provider/provider.dart';
 
 class ScheduleTimePicker extends StatelessWidget {
-  final Function(TimeOfDay) onTimeChanged;
-
   const ScheduleTimePicker({
     super.key,
-    required this.onTimeChanged,
   });
 
   @override
@@ -35,10 +32,10 @@ class ScheduleTimePicker extends StatelessWidget {
               width: 50.w,
               child: _TimePicker(
                 items: List<int>.generate(24, (index) => index),
-                initialItem: viewModel.selectedTime.hour,
+                initialItem: viewModel.selectedDate.hour,
                 onChanged: (int hour) {
                   viewModel.updateTime(TimeOfDay(
-                      hour: hour, minute: viewModel.selectedTime.minute));
+                      hour: hour, minute: viewModel.selectedDate.minute));
                 },
                 type: 'hour',
               ),
@@ -48,10 +45,10 @@ class ScheduleTimePicker extends StatelessWidget {
               width: 50.w,
               child: _TimePicker(
                 items: List<int>.generate(12, (index) => index * 5),
-                initialItem: viewModel.selectedTime.minute ~/ 5,
+                initialItem: viewModel.selectedDate.minute ~/ 5,
                 onChanged: (int minute) {
                   viewModel.updateTime(TimeOfDay(
-                      hour: viewModel.selectedTime.hour, minute: minute * 5));
+                      hour: viewModel.selectedDate.hour, minute: minute * 5));
                 },
                 type: 'minute',
               ),
@@ -101,7 +98,10 @@ class _TimePicker extends StatelessWidget {
 
   Widget _buildItem(
       BuildContext context, int index, int initialItem, String type) {
-    int distanceFromCenter = (initialItem - index).abs();
+    int distanceFromCenter = ((type == "minute")
+            ? initialItem - items[index] ~/ 5
+            : initialItem - items[index])
+        .abs();
 
     double scale = 1.0;
     double fontSize = 20.sp;

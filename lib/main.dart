@@ -69,10 +69,6 @@ void main() async {
     birthDate60YearsAgo =
         DateTime(currentDate.year - 60, currentDate.month, currentDate.day - 1);
   }
-  DateTime oneMonthAgo = currentDate.subtract(const Duration(days: 30));
-  DateTime twoYearsLater =
-      DateTime(currentDate.year + 2, currentDate.month, currentDate.day);
-
   runApp(
     MultiProvider(
       providers: [
@@ -100,8 +96,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ScheduleMainViewModel()),
         ChangeNotifierProvider(
           create: (context) => ScheduleAddPersonalScheduleViewModel(
-            init: DateTime.now(),
-            start: DateTime.now(),
+            start: DateTime.now().add(const Duration(days: 1)),
             end: DateTime.now().add(const Duration(days: 14)),
           ),
         ),
@@ -111,9 +106,8 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ChatRoomViewModel()),
         ChangeNotifierProvider(
             create: (context) => ChatRoomSchduleRegisterViewModel(
-                  init: currentDate,
-                  start: oneMonthAgo,
-                  end: twoYearsLater,
+                  start: DateTime.now().add(const Duration(days: 1)),
+                  end: DateTime.now().add(const Duration(days: 14)),
                 )),
         ChangeNotifierProvider(
             create: ((context) => ChatRoomMeetingReviewViewModel())),

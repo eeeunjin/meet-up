@@ -12,13 +12,15 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
 
   // MARK: - Initializer
   ChatRoomSchduleRegisterViewModel({
-    required DateTime init,
     required DateTime start,
     required DateTime end,
-  })  : _selectedDate = init,
-        _start = start,
-        _end = end,
-        _selectedTime = const TimeOfDay(hour: 19, minute: 30);
+  }) {
+    DateTime startFormatted =
+        DateTime(start.year, start.month, start.day, 0, 0);
+    _selectedDate = startFormatted;
+    _start = startFormatted;
+    _end = end;
+  }
 
   // MARK: - 일정 등록
   TextEditingController scheduleNameController = TextEditingController();
@@ -28,49 +30,51 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
   bool _isDatePanelExpanded = false;
   bool get isDatePanelExpanded => _isDatePanelExpanded;
 
-  DateTime _selectedDate;
-  DateTime get selectedDate => _selectedDate; // 선택된 날짜
+  DateTime? _selectedDate;
+  DateTime get selectedDate => _selectedDate!; // 선택된 날짜
 
-  final DateTime _start;
-  final DateTime _end;
+  DateTime? _start;
+  DateTime? _end;
 
-  DateTime get start => _start;
-  DateTime get end => _end;
-
-  set selectedDate(DateTime newValue) {
-    if (_selectedDate != newValue) {
-      _selectedDate = newValue;
-      notifyListeners();
-    }
-  }
-
-  void updateDate(DateTime date) {
-    if (_selectedDate != date) {
-      _selectedDate = date;
-      notifyListeners();
-    }
-  }
+  DateTime get start => _start!;
+  DateTime get end => _end!;
 
   // 연도 업데이트
   void updateYear(int year) {
-    if (_selectedDate.year != year) {
-      _selectedDate = DateTime(year, _selectedDate.month, _selectedDate.day);
-      notifyListeners();
+    if (_selectedDate!.year != year) {
+      _selectedDate = DateTime(year, _selectedDate!.month, _selectedDate!.day,
+          _selectedDate!.hour, _selectedDate!.minute);
+      if (_selectedDate!.year == start.year) {
+        updateMonth(start.month);
+      } else {
+        updateMonth(1);
+      }
     }
   }
 
   // 월 업데이트
   void updateMonth(int month) {
-    if (_selectedDate.month != month) {
-      _selectedDate = DateTime(_selectedDate.year, month, _selectedDate.day);
-      notifyListeners();
+    if (_selectedDate!.month != month) {
+      _selectedDate = DateTime(_selectedDate!.year, month, _selectedDate!.day,
+          _selectedDate!.hour, _selectedDate!.minute);
+
+      if (_selectedDate!.month == start.month) {
+        updateDay(start.day, month);
+      } else {
+        updateDay(1, month);
+      }
     }
   }
 
   // 일 업데이트
-  void updateDay(int day) {
-    if (_selectedDate.day != day) {
-      _selectedDate = DateTime(_selectedDate.year, _selectedDate.month, day);
+  void updateDay(int day, [int? month]) {
+    if (_selectedDate!.day != day) {
+      _selectedDate = DateTime(
+          _selectedDate!.year,
+          month ?? _selectedDate!.month,
+          day,
+          _selectedDate!.hour,
+          _selectedDate!.minute);
       notifyListeners();
     }
   }
@@ -82,19 +86,36 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
 
   List<int> getMonthList() {
     if (selectedDate.year == end.year) {
-      return List<int>.generate(end.month, (index) => index + 1);
+      List<int> months = List<int>.generate(end.month, (index) => index + 1);
+      // 연도가 넘어가지 않은 경우
+      if (start.year == end.year) {
+        months.removeWhere((element) => element < start.month);
+      }
+      return months;
     } else {
-      return List<int>.generate(12, (index) => index + 1);
+      // 연도가 넘어간 경우
+      List<int> months = List<int>.generate(12, (index) => index + 1);
+      months.removeWhere((element) => element < start.month);
+      return months;
     }
   }
 
   List<int> getDayList() {
-    DateTime lastDateOfMonth =
-        DateTime(selectedDate.year, selectedDate.month + 1, 0);
-    if (selectedDate.year == end.year && selectedDate.month == end.month) {
-      return List<int>.generate(end.day, (index) => index + 1);
+    if (selectedDate.month == end.month) {
+      List<int> days = List<int>.generate(end.day, (index) => index + 1);
+      // 연도가 넘어가지 않은 경우
+      if (start.month == end.month) {
+        days.removeWhere((element) => element < start.day);
+      }
+      return days;
+    } else {
+      int maxDay = DateTime(selectedDate.year, selectedDate.month + 1, 0).day;
+      // 연도가 넘어간 경우
+      List<int> days = List<int>.generate(maxDay, (index) => index + 1);
+      days.removeWhere((element) => element < start.day);
+
+      return days;
     }
-    return List<int>.generate(lastDateOfMonth.day, (index) => index + 1);
   }
 
   // 요일 계산 메서드
@@ -105,6 +126,9 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
 
   // ExpansionPanel 토글
   void toggleDatePanel() {
+    if (_isTimePanelExpanded) {
+      _isTimePanelExpanded = !_isTimePanelExpanded;
+    }
     _isDatePanelExpanded = !_isDatePanelExpanded; // 상태 반전
     notifyListeners();
   }
@@ -113,34 +137,40 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
   bool _isTimePanelExpanded = false;
 
   // 선택된 시간 초기화
-  TimeOfDay _selectedTime;
-
   bool get isTimePanelExpanded => _isTimePanelExpanded;
-  TimeOfDay get selectedTime => _selectedTime;
 
   // ExpansionPanel 토글
   void toggleTimePanel() {
+    if (_isDatePanelExpanded) {
+      _isDatePanelExpanded = !_isDatePanelExpanded;
+    }
     _isTimePanelExpanded = !_isTimePanelExpanded;
     notifyListeners();
   }
 
   void updateTime(TimeOfDay newTime) {
-    if (_selectedTime != newTime) {
-      _selectedTime = newTime;
+    final hour = _selectedDate!.hour;
+    final minute = _selectedDate!.minute;
+    final TimeOfDay selectedTime = TimeOfDay(hour: hour, minute: minute);
+    if (selectedTime != newTime) {
+      DateTime newDateTime = DateTime(
+        _selectedDate!.year,
+        _selectedDate!.month,
+        _selectedDate!.day,
+        newTime.hour,
+        newTime.minute,
+      );
+      _selectedDate = newDateTime;
       notifyListeners();
     }
   }
 
-  // String getFormattedTime() {
-  //   final period = _selectedTime.period == DayPeriod.am ? '오전' : '오후';
-  //   final hour = _selectedTime.hourOfPeriod.toString().padLeft(2, '0');
-  //   final minute = _selectedTime.minute.toString().padLeft(2, '0');
-  //   return '$period $hour:$minute';
-  // }
-
-  String formatTime(TimeOfDay time) {
-    final hour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
-    final period = time.period == DayPeriod.am ? '오전' : '오후';
+  String formatTime() {
+    final time = selectedDate;
+    final period = time.hour < 12 ? '오전' : '오후';
+    final hour = (period == '오전' ? time.hour : time.hour - 12)
+        .toString()
+        .padLeft(2, '0');
     final minute = time.minute.toString().padLeft(2, '0');
     return '$period $hour:$minute';
   }
@@ -152,7 +182,9 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
   // MARK: - check
   bool get allCheckCompleted => namingCompleted && locationCompleted;
 
-  void notify() {
+  void pannelClose() {
+    _isDatePanelExpanded = false;
+    _isTimePanelExpanded = false;
     notifyListeners();
   }
 
@@ -169,8 +201,8 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
           selectedDate.year,
           selectedDate.month,
           selectedDate.day,
-          selectedTime.hour,
-          selectedTime.minute,
+          selectedDate.hour,
+          selectedDate.minute,
         ),
       ),
       location: locationController.text,
@@ -281,8 +313,7 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
   // MARK: - 상태 초기화
   void resetState() {
     scheduleNameController.clear();
-    _selectedDate = DateTime.now();
-    _selectedTime = const TimeOfDay(hour: 19, minute: 30);
+    _selectedDate = _start;
     _isDatePanelExpanded = false;
     _isTimePanelExpanded = false;
     locationController.clear();

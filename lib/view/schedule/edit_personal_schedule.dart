@@ -19,17 +19,37 @@ class EditPersonalSchedule extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false, // 채팅 overflow 방지
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 58.h),
-            child: _header(context),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        // 정보 초기화
+        final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(
+            context,
+            listen: false);
+        viewModel.clearAllState();
+        context.pop(context);
+      },
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+          final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(
+              context,
+              listen: false);
+          viewModel.pannelClose();
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: false, // 채팅 overflow 방지
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 58.h),
+                child: _header(context),
+              ),
+              _main(context),
+            ],
           ),
-          _main(context),
-        ],
+        ),
       ),
     );
   }
@@ -61,7 +81,6 @@ class EditPersonalSchedule extends StatelessWidget {
             context,
             listen: false);
         viewModel.clearAllState();
-
         context.pop(context);
       },
       child: Image.asset(
@@ -152,7 +171,8 @@ class EditPersonalSchedule extends StatelessWidget {
               height: 19.h,
               child: TextField(
                 controller: viewModel.namingController,
-                onChanged: (value) => viewModel.notify(),
+                onTap: () => viewModel.pannelClose(),
+                onChanged: (value) => viewModel.pannelClose(),
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
@@ -181,6 +201,7 @@ class EditPersonalSchedule extends StatelessWidget {
         elevation: 0.h,
         expandedHeaderPadding: EdgeInsets.zero, // 헤더 주변 기본 패딩 제거
         expansionCallback: (int index, bool isExpanded) {
+          FocusScope.of(context).unfocus();
           viewModel.toggleDatePanel();
         },
         children: [
@@ -225,10 +246,8 @@ class EditPersonalSchedule extends StatelessWidget {
                     border: Border.all(width: 1.w, color: UsedColor.b_line),
                   ),
                   // 데이트 피커 넣기
-                  child: Center(
-                    child: PersonalScheduleDatePicker(
-                      onChangeListener: (DateTime dt) {},
-                    ),
+                  child: const Center(
+                    child: PersonalScheduleDatePicker(),
                   ),
                 ),
               ),
@@ -244,8 +263,8 @@ class EditPersonalSchedule extends StatelessWidget {
 
   // MARK: - 시간
   Widget _time(BuildContext context) {
-    final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(context,
-        listen: false);
+    final viewModel =
+        Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
 
     // Mark - ExpansionPanel 사용
     return Theme(
@@ -254,6 +273,7 @@ class EditPersonalSchedule extends StatelessWidget {
         elevation: 0.h,
         expandedHeaderPadding: EdgeInsets.zero, // 헤더 주변 기본 패딩 제거
         expansionCallback: (int index, bool isExpanded) {
+          FocusScope.of(context).unfocus();
           viewModel.toggleTimePanel();
         },
         children: [
@@ -277,7 +297,7 @@ class EditPersonalSchedule extends StatelessWidget {
                     SizedBox(width: 22.w),
                     // 선택된 시간
                     Text(
-                      viewModel.formatTime(viewModel.selectedTime),
+                      viewModel.formatSelectedTime(),
                       style: AppTextStyles.PR_R_16
                           .copyWith(color: UsedColor.text_1),
                     ),
@@ -298,11 +318,7 @@ class EditPersonalSchedule extends StatelessWidget {
                     border: Border.all(width: 1.w, color: UsedColor.b_line),
                   ),
                   // 타임 피커 넣기
-                  child: PersonalScheduleTimePicker(
-                    onTimeChanged: (TimeOfDay time) {
-                      viewModel.updateTime(time);
-                    },
-                  ),
+                  child: const PersonalScheduleTimePicker(),
                 ),
               ),
             ),
@@ -341,7 +357,8 @@ class EditPersonalSchedule extends StatelessWidget {
               height: 19.h,
               child: TextField(
                 controller: viewModel.locationTextController,
-                onChanged: (value) => viewModel.notify(),
+                onTap: () => viewModel.pannelClose(),
+                onChanged: (value) => viewModel.pannelClose(),
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
@@ -384,7 +401,8 @@ class EditPersonalSchedule extends StatelessWidget {
               height: 19.h,
               child: TextField(
                 controller: viewModel.detailTextController,
-                onChanged: (value) => viewModel.notify(),
+                onTap: () => viewModel.pannelClose(),
+                onChanged: (value) => viewModel.pannelClose(),
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
@@ -422,6 +440,10 @@ class EditPersonalSchedule extends StatelessWidget {
           // 참여자 선택 힌트 텍스트
           GestureDetector(
               onTap: () {
+                final ScheduleAddPersonalScheduleViewModel viewModel =
+                    Provider.of<ScheduleAddPersonalScheduleViewModel>(context,
+                        listen: false);
+                viewModel.pannelClose();
                 // 참여자 선택 페이지로 이동
                 context.goNamed('editMemberPersonal');
               },
@@ -487,6 +509,7 @@ class EditPersonalSchedule extends StatelessWidget {
 
             scheduleMainViewModel.selectSchedule(selectedSchedule, 'personal');
 
+            viewModel.pannelClose();
             context.pop();
           },
           height: 56.h,

@@ -1,20 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/view_model/schedule/schedule_add_personal_schdule_view_model.dart';
 import 'package:provider/provider.dart';
 
 class PersonalScheduleDatePicker extends StatelessWidget {
-  final Function(DateTime dt) onChangeListener;
-
-  const PersonalScheduleDatePicker({
-    super.key,
-    required this.onChangeListener,
-  });
+  const PersonalScheduleDatePicker({super.key});
 
   @override
   Widget build(BuildContext context) {
     final viewModel =
         Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
+    FixedExtentScrollController yearScrollController =
+        FixedExtentScrollController();
+    FixedExtentScrollController monthScrollController =
+        FixedExtentScrollController();
+    FixedExtentScrollController dayScrollController =
+        FixedExtentScrollController();
+
+    if (viewModel.originalRoomModel != null) {
+      logger.d(viewModel
+          .getMonthList()
+          .indexWhere((element) => element == viewModel.selectedDate.month));
+
+      yearScrollController = FixedExtentScrollController(
+          initialItem: viewModel
+              .getYearList()
+              .indexWhere((element) => element == viewModel.selectedDate.year));
+      monthScrollController = FixedExtentScrollController(
+          initialItem: viewModel.getMonthList().indexWhere(
+              (element) => element == viewModel.selectedDate.month));
+      dayScrollController = FixedExtentScrollController(
+          initialItem: viewModel
+              .getDayList()
+              .indexWhere((element) => element == viewModel.selectedDate.day));
+    }
 
     return ChangeNotifierProvider<ScheduleAddPersonalScheduleViewModel>.value(
       value: viewModel,
@@ -41,14 +61,13 @@ class PersonalScheduleDatePicker extends StatelessWidget {
                       alignment: Alignment.centerRight,
                       child: _CustomPicker(
                         items: viewModel.getYearList(),
-                        initialItem:
-                            viewModel.selectedDate.year - viewModel.start.year,
+                        scrollController: yearScrollController,
+                        initialItem: viewModel.selectedDate.year,
                         onChanged: (int v) {
-                          viewModel.updateYear(viewModel.start.year + v);
-                          onChangeListener(DateTime(
-                              viewModel.start.year + v,
-                              viewModel.selectedDate.month,
-                              viewModel.selectedDate.day));
+                          viewModel
+                              .updateYear(viewModel.getYearList().elementAt(v));
+                          monthScrollController.jumpToItem(0);
+                          dayScrollController.jumpToItem(0);
                         },
                         type: '년',
                       ),
@@ -59,13 +78,12 @@ class PersonalScheduleDatePicker extends StatelessWidget {
                     width: 50.w,
                     child: _CustomPicker(
                       items: viewModel.getMonthList(),
-                      initialItem: viewModel.selectedDate.month - 1,
+                      scrollController: monthScrollController,
+                      initialItem: viewModel.selectedDate.month,
                       onChanged: (int v) {
-                        viewModel.updateMonth(v + 1);
-                        onChangeListener(DateTime(viewModel.selectedDate.year,
-                            v + 1, viewModel.selectedDate.day));
-                        onChangeListener(DateTime(viewModel.selectedDate.year,
-                            viewModel.selectedDate.month, v + 1));
+                        viewModel
+                            .updateMonth(viewModel.getMonthList().elementAt(v));
+                        dayScrollController.jumpToItem(0);
                       },
                       type: '월',
                     ),
@@ -77,9 +95,11 @@ class PersonalScheduleDatePicker extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: _CustomPicker(
                         items: viewModel.getDayList(),
-                        initialItem: viewModel.selectedDate.day - 1,
+                        scrollController: dayScrollController,
+                        initialItem: viewModel.selectedDate.day,
                         onChanged: (int v) {
-                          viewModel.updateDay(v + 1);
+                          viewModel
+                              .updateDay(viewModel.getDayList().elementAt(v));
                         },
                         type: '일',
                       ),
@@ -100,6 +120,7 @@ class _CustomPicker extends StatelessWidget {
   final int initialItem;
   final Function(int) onChanged;
   final String type;
+  final FixedExtentScrollController scrollController;
 
   const _CustomPicker({
     required this.items,
@@ -107,13 +128,11 @@ class _CustomPicker extends StatelessWidget {
     required this.onChanged,
     super.key,
     required this.type,
+    required this.scrollController,
   });
 
   @override
   Widget build(BuildContext context) {
-    FixedExtentScrollController scrollController =
-        FixedExtentScrollController(initialItem: initialItem);
-
     return SizedBox(
       height: 113.h,
       child: ListWheelScrollView.useDelegate(
@@ -133,7 +152,7 @@ class _CustomPicker extends StatelessWidget {
 
   Widget _buildItem(
       BuildContext context, int index, int initialItem, String type) {
-    int distanceFromCenter = (initialItem - index).abs();
+    int distanceFromCenter = (initialItem - items[index]).abs();
 
     double scale = 1.0;
     final double baseHeight = 24.h;

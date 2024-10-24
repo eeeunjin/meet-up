@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:meet_up/main.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/repository/user_repository.dart';
 import 'package:meet_up/service/remote/firebase_service.dart';
@@ -20,63 +19,66 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
 
   // 타임 피커 초기화
   ScheduleAddPersonalScheduleViewModel({
-    required DateTime init,
     required DateTime start,
     required DateTime end,
-  })  : _selectedDate = init,
-        _start = start,
-        _end = end,
-        _selectedTime = const TimeOfDay(hour: 19, minute: 30);
+  }) {
+    DateTime startFormatted =
+        DateTime(start.year, start.month, start.day, 0, 0);
+    _selectedDate = startFormatted;
+    _start = startFormatted;
+    _end = end;
+  }
 
   // MARK: - 날짜
-  DateTime _selectedDate;
-  DateTime get selectedDate => _selectedDate;
+  DateTime? _selectedDate;
+  DateTime get selectedDate => _selectedDate!;
 
   // DatePicker
   bool _isDatePanelExpanded = false;
   bool get isDatePanelExpanded => _isDatePanelExpanded;
 
-  final DateTime _start;
-  final DateTime _end;
+  DateTime? _start;
+  DateTime? _end;
 
-  DateTime get start => _start;
-  DateTime get end => _end;
-
-  set selectedDate(DateTime newValue) {
-    if (_selectedDate != newValue) {
-      _selectedDate = newValue;
-      notifyListeners();
-    }
-  }
-
-  // date 업데이트
-  void updateDate(DateTime date) {
-    if (_selectedDate != date) {
-      _selectedDate = date;
-      notifyListeners();
-    }
-  }
+  DateTime get start => _start!;
+  DateTime get end => _end!;
 
   // year 업데이트
   void updateYear(int year) {
-    if (_selectedDate.year != year) {
-      _selectedDate = DateTime(year, _selectedDate.month, _selectedDate.day);
-      notifyListeners();
+    if (_selectedDate!.year != year) {
+      _selectedDate = DateTime(year, _selectedDate!.month, _selectedDate!.day,
+          _selectedDate!.hour, _selectedDate!.minute);
+      if (_selectedDate!.year == start.year) {
+        updateMonth(start.month);
+      } else {
+        updateMonth(1);
+      }
     }
   }
 
   // month 업데이트
   void updateMonth(int month) {
-    if (_selectedDate.month != month) {
-      _selectedDate = DateTime(_selectedDate.year, month, _selectedDate.day);
-      notifyListeners();
+    if (_selectedDate!.month != month) {
+      _selectedDate = DateTime(_selectedDate!.year, month, _selectedDate!.day,
+          _selectedDate!.hour, _selectedDate!.minute);
+
+      if (_selectedDate!.month == start.month) {
+        updateDay(start.day, month);
+      } else {
+        updateDay(1, month);
+      }
     }
   }
 
   // day 업데이트
-  void updateDay(int day) {
-    if (_selectedDate.day != day) {
-      _selectedDate = DateTime(_selectedDate.year, _selectedDate.month, day);
+  void updateDay(int day, [int? month]) {
+    if (_selectedDate!.day != day) {
+      _selectedDate = DateTime(
+          _selectedDate!.year,
+          month ?? _selectedDate!.month,
+          day,
+          _selectedDate!.hour,
+          _selectedDate!.minute);
       notifyListeners();
     }
   }
@@ -88,35 +90,36 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
 
   List<int> getMonthList() {
     if (selectedDate.year == end.year) {
-      return List<int>.generate(end.month, (index) => index + 1);
+      List<int> months = List<int>.generate(end.month, (index) => index + 1);
+      // 연도가 넘어가지 않은 경우
+      if (start.year == end.year) {
+        months.removeWhere((element) => element < start.month);
+      }
+      return months;
     } else {
-      return List<int>.generate(12, (index) => index + 1);
+      // 연도가 넘어간 경우
+      List<int> months = List<int>.generate(12, (index) => index + 1);
+      months.removeWhere((element) => element < start.month);
+      return months;
     }
   }
 
   List<int> getDayList() {
-    // 오늘 날짜부터 14일 이후까지만 일자 리스트를 반환
-    DateTime now = DateTime.now();
-    DateTime lastDate = end.isBefore(now.add(const Duration(days: 14)))
-        ? end
-        : now.add(const Duration(days: 14));
+    if (selectedDate.month == end.month) {
+      List<int> days = List<int>.generate(end.day, (index) => index + 1);
+      // 연도가 넘어가지 않은 경우
+      if (start.month == end.month) {
+        days.removeWhere((element) => element < start.day);
+      }
+      return days;
+    } else {
+      int maxDay = DateTime(selectedDate.year, selectedDate.month + 1, 0).day;
+      // 연도가 넘어간 경우
+      List<int> days = List<int>.generate(maxDay, (index) => index + 1);
+      days.removeWhere((element) => element < start.day);
 
-    if (_selectedDate.isAfter(lastDate)) {
-      _selectedDate = lastDate;
+      return days;
     }
-
-    // 선택된 달에 맞춰 마지막 날짜 계산
-    DateTime lastDateOfMonth =
-        DateTime(selectedDate.year, selectedDate.month + 1, 0);
-    int maxDay = lastDateOfMonth.day;
-
-    // 선택된 달이 마지막 날짜 범위 내에 있을 경우
-    if (selectedDate.year == lastDate.year &&
-        selectedDate.month == lastDate.month) {
-      maxDay = lastDate.day;
-    }
-
-    return List<int>.generate(maxDay, (index) => index + 1);
   }
 
   // 요일 계산 메서드
@@ -127,6 +130,9 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
 
   // ExpansionPanel 토글
   void toggleDatePanel() {
+    if (_isTimePanelExpanded) {
+      _isTimePanelExpanded = !_isTimePanelExpanded;
+    }
     _isDatePanelExpanded = !_isDatePanelExpanded; // 상태 반전
     notifyListeners();
   }
@@ -136,27 +142,38 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
 
   bool get isTimePanelExpanded => _isTimePanelExpanded;
 
-  // 선택된 시간 초기화
-  TimeOfDay _selectedTime;
-
-  TimeOfDay get selectedTime => _selectedTime;
-
   // ExpansionPanel 토글
   void toggleTimePanel() {
+    if (_isDatePanelExpanded) {
+      _isDatePanelExpanded = !_isDatePanelExpanded;
+    }
     _isTimePanelExpanded = !_isTimePanelExpanded;
     notifyListeners();
   }
 
   void updateTime(TimeOfDay newTime) {
-    if (_selectedTime != newTime) {
-      _selectedTime = newTime;
+    final hour = _selectedDate!.hour;
+    final minute = _selectedDate!.minute;
+    final TimeOfDay selectedTime = TimeOfDay(hour: hour, minute: minute);
+    if (selectedTime != newTime) {
+      DateTime newDateTime = DateTime(
+        _selectedDate!.year,
+        _selectedDate!.month,
+        _selectedDate!.day,
+        newTime.hour,
+        newTime.minute,
+      );
+      _selectedDate = newDateTime;
       notifyListeners();
     }
   }
 
-  String formatTime(TimeOfDay time) {
-    final hour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
-    final period = time.period == DayPeriod.am ? '오전' : '오후';
+  String formatSelectedTime() {
+    final time = selectedDate;
+    final period = time.hour < 12 ? '오전' : '오후';
+    final hour = (period == '오전' ? time.hour : time.hour - 12)
+        .toString()
+        .padLeft(2, '0');
     final minute = time.minute.toString().padLeft(2, '0');
     return '$period $hour:$minute';
   }
@@ -210,27 +227,25 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
   // MARK: - 상태 초기화
   void clearAllState() {
     namingController.clear();
-    _selectedDate = DateTime.now();
-    _selectedTime = const TimeOfDay(hour: 19, minute: 30);
+    _selectedDate = start;
     locationTextController.clear();
     detailTextController.clear();
     _selectedMembers.clear();
     _originalRoomModel = null;
+    _isDatePanelExpanded = false;
+    _isTimePanelExpanded = false;
   }
 
   // MARK: - 개인 일정 저장
   Future<void> savePersonalSchedule({required String myUID}) async {
     // 개인 일정 저장
-    logger.d(
-        '일정: ${namingController.text}\n날짜: $_selectedDate\n시간: $_selectedTime\n장소: ${locationTextController.text}\n설명: ${detailTextController.text}\n참여 인원: $_selectedMembers');
-
-    // _selectedDate, _selectedTime -> Timestamp
+    // _selectedDate!, _selectedTime -> Timestamp
     final date = DateTime(
-      _selectedDate.year,
-      _selectedDate.month,
-      _selectedDate.day,
-      _selectedTime.hour,
-      _selectedTime.minute,
+      _selectedDate!.year,
+      _selectedDate!.month,
+      _selectedDate!.day,
+      _selectedDate!.hour,
+      _selectedDate!.minute,
     );
 
     Timestamp dateByTimestamp = Timestamp.fromDate(date);
@@ -271,6 +286,7 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
   // MARK: - 개인 일정 수정
   // 수정 시, 기존 데이터 불러오기
   RoomModel? _originalRoomModel;
+  RoomModel? get originalRoomModel => _originalRoomModel;
 
   List<String> get originalMembers {
     return List.from(_originalRoomModel!.room_participant_reference);
@@ -280,7 +296,6 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
     _originalRoomModel = roomModel;
     namingController.text = roomModel.room_schedule!["title"] as String;
     _selectedDate = (roomModel.room_schedule!["date"] as Timestamp).toDate();
-    _selectedTime = TimeOfDay.fromDateTime(_selectedDate);
     locationTextController.text =
         roomModel.room_schedule!["location"] as String;
     detailTextController.text = roomModel.room_description;
@@ -291,11 +306,8 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
   bool get isChanged {
     bool isNameChanged = namingController.text !=
         _originalRoomModel!.room_schedule!["title"] as String;
-    bool isDateChanged = _selectedDate !=
+    bool isDateChanged = _selectedDate! !=
         (_originalRoomModel!.room_schedule!["date"] as Timestamp).toDate();
-    bool isTimeChanged = _selectedTime !=
-        TimeOfDay.fromDateTime(
-            (_originalRoomModel!.room_schedule!["date"] as Timestamp).toDate());
     bool isLocationChanged = locationTextController.text !=
         _originalRoomModel!.room_schedule!["location"] as String;
     bool isDetailChanged =
@@ -308,7 +320,6 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
         ? false
         : isNameChanged ||
             isDateChanged ||
-            isTimeChanged ||
             isLocationChanged ||
             isDetailChanged ||
             isMembersChanged;
@@ -318,11 +329,11 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
       {required String myUID, required String myScheduleId}) async {
     // 개인 일정 저장
     final date = DateTime(
-      _selectedDate.year,
-      _selectedDate.month,
-      _selectedDate.day,
-      _selectedTime.hour,
-      _selectedTime.minute,
+      _selectedDate!.year,
+      _selectedDate!.month,
+      _selectedDate!.day,
+      _selectedDate!.hour,
+      _selectedDate!.minute,
     );
 
     Timestamp dateByTimestamp = Timestamp.fromDate(date);
@@ -362,7 +373,9 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
     return roomModel;
   }
 
-  void notify() {
+  void pannelClose() {
+    _isDatePanelExpanded = false;
+    _isTimePanelExpanded = false;
     notifyListeners();
   }
 }

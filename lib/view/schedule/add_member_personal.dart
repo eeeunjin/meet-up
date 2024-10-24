@@ -20,21 +20,32 @@ class AddMemberPersonal extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = Provider.of<ScheduleAddMemberViewModel>(context);
 
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: 58.h,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        // 정보 초기화
+        final viewModel =
+            Provider.of<ScheduleAddMemberViewModel>(context, listen: false);
+        viewModel.memberClearSelection();
+        FocusScope.of(context).unfocus();
+        context.pop();
+      },
+      child: Scaffold(
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                top: 58.h,
+              ),
+              child: _header(context),
             ),
-            child: _header(context),
-          ),
-          SizedBox(height: 63.h),
-          _main(context, viewModel),
-          const Spacer(),
-          _bottom(context),
-        ],
+            SizedBox(height: 63.h),
+            _main(context, viewModel),
+            const Spacer(),
+            _bottom(context),
+          ],
+        ),
       ),
     );
   }
@@ -65,6 +76,7 @@ class AddMemberPersonal extends StatelessWidget {
         final viewModel =
             Provider.of<ScheduleAddMemberViewModel>(context, listen: false);
         viewModel.memberClearSelection();
+        FocusScope.of(context).unfocus();
         context.pop();
       },
       child: Image.asset(
@@ -254,9 +266,10 @@ class AddMemberPersonal extends StatelessWidget {
   Widget _bottom(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w, right: 33.w, bottom: 56.h),
-      child: Consumer2<ScheduleAddMemberViewModel, ScheduleAddPersonalScheduleViewModel>(
-          builder: (context, scheduleAddMemberViewModel, scheduleAddPersonalScheduleViewModel,
-              child) {
+      child: Consumer2<ScheduleAddMemberViewModel,
+              ScheduleAddPersonalScheduleViewModel>(
+          builder: (context, scheduleAddMemberViewModel,
+              scheduleAddPersonalScheduleViewModel, child) {
         return NextButton(
           onTap: () async {
             if (scheduleAddMemberViewModel.memberCheckCompleted) {
