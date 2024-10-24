@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
-import 'package:meet_up/model/diary_model.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/util/color.dart';
-import 'package:meet_up/view_model/chat/chat_room_meeting_review_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
-import 'package:meet_up/view_model/reflect/reflect_record_view_model.dart';
-import 'package:provider/provider.dart';
 
 class ProfileMeetingReviewDetail extends StatelessWidget {
   const ProfileMeetingReviewDetail({super.key});
@@ -25,9 +19,7 @@ class ProfileMeetingReviewDetail extends StatelessWidget {
         body: Column(
           children: [
             Padding(
-              padding: EdgeInsets.only(
-                top: 58.h,
-              ),
+              padding: EdgeInsets.only(top: 58.h),
               child: _header(context),
             ),
             Expanded(child: _main(context)),
@@ -41,10 +33,7 @@ class ProfileMeetingReviewDetail extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          header(title: '만남 후기', back: _back(context)),
-          SizedBox(
-            height: 16.h,
-          ),
+          header(back: _back(context), title: '만남 후기'),
         ],
       ),
     );
@@ -55,50 +44,45 @@ class ProfileMeetingReviewDetail extends StatelessWidget {
       onTap: () {
         context.pop();
       },
-      child: Image.asset(
-        ImagePath.close,
-        width: 40.w,
-        height: 40.h,
+      child: SizedBox(
+        width: 30.w,
+        height: 30.h,
+        child: Image.asset(
+          ImagePath.close,
+        ),
       ),
     );
   }
 
   Widget _main(BuildContext context) {
     return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.only(
-          top: 20.h,
-          left: 28.w,
-          right: 27.w,
-          bottom: 18.h,
-        ),
-        child: Center(
-          child: Container(
-            width: 338.w,
-            decoration: BoxDecoration(
-              color: UsedColor.image_card,
-              borderRadius: BorderRadius.circular(29.r),
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: 41.h,
-                bottom: 23.h,
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: 12.h,
+            left: 27.w,
+            right: 26.w,
+            bottom: 28.h,
+          ),
+          child: Center(
+            child: Container(
+              width: 340.w,
+              height: 708.h,
+              decoration: BoxDecoration(
+                color: UsedColor.image_card,
+                borderRadius: BorderRadius.circular(29.r),
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _profileSection(),
-                  SizedBox(height: 24.h),
-                  Divider(
-                    color: UsedColor.b_line,
-                    thickness: 0.75.w,
-                  ),
-                  SizedBox(height: 24.h),
-                  _ratingSection(),
-                  SizedBox(height: 28.h),
-                  _featuresGrid(),
-                  SizedBox(height: 28.h),
-                  _bottomTextField(),
+                  SizedBox(height: 23.h),
+                  _userInfo("닉네임 1", "초보 클밍 모임", ""),
+                  Divider(thickness: 0.75.h, color: UsedColor.b_line),
+                  _ratingSection(context),
+                  _feedbackSection(context),
+                  _commentSection(context),
                 ],
               ),
             ),
@@ -108,35 +92,38 @@ class ProfileMeetingReviewDetail extends StatelessWidget {
     );
   }
 
-  Widget _profileSection() {
+  Widget _userInfo(String nickname, String group, String profileImage) {
     return Column(
       children: [
-        Image.asset(
-          ImagePath.cogySelect,
-          width: 80.w,
+        SizedBox(
           height: 80.h,
+          width: 80.w,
+          // child: Image.asset(profileImage),
+          child: Image.asset(ImagePath.aengmuSelect),
         ),
         SizedBox(height: 8.h),
         Text(
-          '닉네임1',
+          nickname,
           style: AppTextStyles.PR_B_24.copyWith(
             color: UsedColor.charcoal_black,
           ),
         ),
         SizedBox(height: 8.h),
         Text(
-          '초보 클밍 모임',
+          group,
           style: AppTextStyles.PR_M_15.copyWith(
             color: UsedColor.text_3,
           ),
         ),
+        SizedBox(height: 12.h),
       ],
     );
   }
 
-  Widget _ratingSection() {
+  Widget _ratingSection(BuildContext context) {
     return Column(
       children: [
+        SizedBox(height: 20.h),
         Text(
           '총점',
           style: AppTextStyles.PR_SB_15.copyWith(
@@ -148,27 +135,21 @@ class ProfileMeetingReviewDetail extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(5, (index) {
             return Padding(
-              padding: EdgeInsets.only(right: 13.89.w),
+              padding: EdgeInsets.symmetric(horizontal: 7.w),
               child: Image.asset(
-                index < 4 ? ImagePath.starSelected : ImagePath.star, // 별 이미지
-                width: 32.w, // 별 크기 설정
-                height: 32.h,
+                index < 4 ? ImagePath.starSelected : ImagePath.star,
+                width: 33.w,
+                height: 33.h,
               ),
             );
           }),
         ),
-        SizedBox(height: 28.h),
-        Text(
-          '이런 점이 좋았어요!',
-          style: AppTextStyles.PR_SB_15.copyWith(
-            color: UsedColor.charcoal_black,
-          ),
-        ),
+        SizedBox(height: 40.h),
       ],
     );
   }
 
-  Widget _featuresGrid() {
+  Widget _feedbackSection(BuildContext context) {
     final List<String> positiveLabels = [
       '시간 준수',
       '빠른 응답',
@@ -176,6 +157,15 @@ class ProfileMeetingReviewDetail extends StatelessWidget {
       '원활한 소통',
       '공통 관심사',
       '좋은 인상',
+    ];
+
+    final List<String> images = [
+      'chatReview7',
+      'chatReview8',
+      'chatReview9',
+      'chatReview10',
+      'chatReview11',
+      'chatReview12'
     ];
 
     final List<String> negativeLabels = [
@@ -187,112 +177,79 @@ class ProfileMeetingReviewDetail extends StatelessWidget {
       '불순한 목적',
     ];
 
-    final List<String> labels = [
-      ...positiveLabels,
-      ...negativeLabels
-    ]; // 두 리스트 결합
-
-    // 예시 이미지 리스트
-    final List<String> images = [
-      ImagePath.chatReview1Selected,
-      ImagePath.chatReview2,
-      ImagePath.chatReview3Selected,
-      ImagePath.chatReview4,
-      ImagePath.chatReview5Selected,
-      ImagePath.chatReview6Selected,
-    ];
-    // final List<String> images = [
-    //   ImagePath.chatReview1,
-    //   ImagePath.chatReview2,
-    //   ImagePath.chatReview3,
-    //   ImagePath.chatReview4,
-    //   ImagePath.chatReview5,
-    //   ImagePath.chatReview6,
-    //   ImagePath.chatReview7,
-    //   ImagePath.chatReview8,
-    //   ImagePath.chatReview9,
-    //   ImagePath.chatReview10,
-    //   ImagePath.chatReview11,
-    //   ImagePath.chatReview12,
-    // ];
-    // final List<String> imageSelected = [
-    //   ImagePath.chatReview1Selected,
-    //   ImagePath.chatReview2Selected,
-    //   ImagePath.chatReview3Selected,
-    //   ImagePath.chatReview4Selected,
-    //   ImagePath.chatReview5Selected,
-    //   ImagePath.chatReview6Selected,
-    //   ImagePath.chatReview7Selected,
-    //   ImagePath.chatReview8Selected,
-    //   ImagePath.chatReview9Selected,
-    //   ImagePath.chatReview10Selected,
-    //   ImagePath.chatReview11Selected,
-    //   ImagePath.chatReview12Selected,
-    // ];
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 1,
-        crossAxisSpacing: 24.w,
-        mainAxisSpacing: 12.h,
-      ),
-      itemCount: positiveLabels.length,
-      itemBuilder: (context, index) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
+    return Column(
+      children: [
+        Text(
+          "이런 점이 좋았어요!",
+          style: AppTextStyles.PR_SB_15.copyWith(
+            color: UsedColor.charcoal_black,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: 58.w,
-              height: 58.h,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-              ),
-              child: SizedBox(
-                width: 33.w,
-                height: 33.h,
-                child: Image.asset(
-                  images[index],
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-            SizedBox(height: 7.h),
-            Text(
-              positiveLabels[index],
-              style: AppTextStyles.PR_M_12.copyWith(
-                color: UsedColor.text_2,
-              ),
-              textAlign: TextAlign.center,
-            ),
+            for (int i = 0; i < 3; i++) ...[
+              _imageChip(images[i], positiveLabels[i]),
+              if (i != 2) SizedBox(width: 24.w),
+            ],
           ],
-        );
-      },
+        ),
+        SizedBox(
+          height: 11.89.h,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (int i = 3; i < 6; i++) ...[
+              _imageChip(images[i], positiveLabels[i]),
+              if (i != 5) SizedBox(width: 24.w),
+            ],
+          ],
+        ),
+        SizedBox(height: 40.h),
+      ],
     );
   }
 
-  Widget _bottomTextField() {
+  Widget _imageChip(String imageName, String label) {
+    return Align(
+      alignment: Alignment.center,
+      child: Column(
+        children: [
+          Container(
+            width: 58.w,
+            height: 58.h,
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+                shape: BoxShape.circle, color: UsedColor.button),
+            child: SizedBox(
+              width: 33.w,
+              height: 33.h,
+              child: Image.asset(ImagePath.chatReviewSelected(imageName)),
+            ),
+          ),
+          SizedBox(height: 7.h),
+          Text(
+            label,
+            style: AppTextStyles.PR_M_12.copyWith(
+              color: UsedColor.text_2,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _commentSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: '사용자',
-                style: AppTextStyles.PR_B_15.copyWith(
-                  color: UsedColor.charcoal_black,
-                ),
-              ),
-              TextSpan(
-                text: '님은 이런 사람이었어요!',
-                style: AppTextStyles.PR_SB_15.copyWith(
-                  color: UsedColor.charcoal_black,
-                ),
-              ),
-            ],
+        Text(
+          '사용자님은 이런 사람이었어요!',
+          style: AppTextStyles.PR_SB_15.copyWith(
+            color: UsedColor.charcoal_black,
           ),
         ),
         SizedBox(height: 16.h),
@@ -303,16 +260,18 @@ class ProfileMeetingReviewDetail extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(18.r),
           ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 15.h),
-            child: TextFormField(
-                maxLines: 5,
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                ),
-                style: AppTextStyles.PR_R_13.copyWith(
-                  color: UsedColor.text_2,
-                )),
+          child: TextField(
+            minLines: 3,
+            maxLines: null,
+            enabled: false,
+            style: AppTextStyles.PR_R_13.copyWith(
+              color: UsedColor.text_5,
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(
+                  vertical: 14.h, horizontal: 16.w), // content padding 설정
+            ),
           ),
         ),
       ],

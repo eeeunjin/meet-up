@@ -28,10 +28,9 @@ class ProfileMeetingReview extends StatelessWidget {
             child: Container(
               color: UsedColor.bg_color,
               padding: EdgeInsets.only(
-                top: 12.h,
+                top: 27.h,
                 left: 28.w,
                 right: 28.w,
-                // bottom: 87.h,
               ),
               child: _main(context, viewModel),
             ),
@@ -48,6 +47,11 @@ class ProfileMeetingReview extends StatelessWidget {
           header(title: '만남 후기', back: _back(context)),
           SizedBox(
             height: 16.h,
+          ),
+          Divider(
+            thickness: 0.3.h,
+            height: 0.h,
+            color: UsedColor.line,
           ),
         ],
       ),
@@ -68,26 +72,13 @@ class ProfileMeetingReview extends StatelessWidget {
   }
 }
 
+// MARK:- 메인
 Widget _main(BuildContext context, ProfileReviewViewModel viewModel) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      _unreadReviewButton(),
-      SizedBox(height: 16.h), // 버튼 간격
-      Align(
-        alignment: Alignment.centerRight,
-        child: viewModel.isEditing
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  _closeButton(context, viewModel),
-                  SizedBox(width: 8.w),
-                  _selectAllButton(context, viewModel),
-                ],
-              )
-            : _editButton(context, viewModel),
-      ),
-      SizedBox(height: 24.h),
+      _unreadReviewButton(context),
+      SizedBox(height: 25.h),
       _groupedReviewList(context, viewModel),
       const Spacer(),
       if (viewModel.isEditing && viewModel.selectedReviews.containsValue(true))
@@ -199,35 +190,45 @@ Widget _deleteButton(BuildContext context, ProfileReviewViewModel viewModel) {
   );
 }
 
-// MARK:- 읽지 않은 후기 버튼
-Widget _unreadReviewButton() {
-  return Container(
-    width: 125.w,
-    height: 30.h,
-    padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 7.h),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12.r),
-    ),
-    child: Row(
-      children: [
-        Text(
-          '읽지 않은 후기',
-          style: AppTextStyles.PR_R_12.copyWith(
-            color: UsedColor.charcoal_black,
-          ),
+// MARK:- 부제
+Widget _unreadReviewButton(BuildContext context) {
+  ProfileReviewViewModel viewModel =
+      Provider.of<ProfileReviewViewModel>(context);
+  return Row(
+    crossAxisAlignment: CrossAxisAlignment.end,
+    children: [
+      Text(
+        '받은 후기',
+        style: AppTextStyles.PR_SB_20.copyWith(
+          color: UsedColor.charcoal_black,
         ),
-        SizedBox(width: 8.w),
-        CircleAvatar(
-          radius: 8.r,
-          backgroundColor: UsedColor.violet,
-          child: Text(
-            '1',
-            style: AppTextStyles.PR_R_10.copyWith(color: Colors.white),
-          ),
+      ),
+      SizedBox(width: 5.w),
+      Container(
+        width: 16.w,
+        height: 16.h,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: UsedColor.violet,
+          borderRadius: BorderRadius.circular(8.r),
         ),
-      ],
-    ),
+        child: Text(
+          '1',
+          style: AppTextStyles.PR_R_10.copyWith(color: Colors.white),
+        ),
+      ),
+      const Spacer(),
+      viewModel.isEditing
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                _closeButton(context, viewModel),
+                SizedBox(width: 8.w),
+                _selectAllButton(context, viewModel),
+              ],
+            )
+          : _editButton(context, viewModel),
+    ],
   );
 }
 
@@ -263,10 +264,13 @@ Widget _groupedReviewList(
           // 날짜 표시
           Padding(
             padding: EdgeInsets.only(left: 6.h),
-            child: Text(
-              date,
-              style: AppTextStyles.PR_R_12.copyWith(
-                color: UsedColor.charcoal_black,
+            child: SizedBox(
+              height: 14.h,
+              child: Text(
+                date,
+                style: AppTextStyles.PR_R_12.copyWith(
+                  color: UsedColor.charcoal_black,
+                ),
               ),
             ),
           ),

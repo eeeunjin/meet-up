@@ -193,7 +193,6 @@ class ChatMeetingReview extends StatelessWidget {
       child: Column(
         children: [
           header(back: _back(context), title: '만남 후기 보내기'),
-          // SizedBox(height: 21.h),
         ],
       ),
     );
