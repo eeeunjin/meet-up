@@ -480,6 +480,9 @@ class ChatMeetingReview extends StatelessWidget {
                           myUID,
                           otherUID,
                           chatRoomViewModel.roomName,
+                          viewModel.userModels![viewModel.currentPage].nickname,
+                          viewModel
+                              .userModels![viewModel.currentPage].profile_icon,
                         );
 
                         // 유저에게 코인 지급

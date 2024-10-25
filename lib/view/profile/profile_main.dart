@@ -367,22 +367,6 @@ class ProfileMain extends StatelessWidget {
                         style: AppTextStyles.PR_SB_18
                             .copyWith(color: UsedColor.charcoal_black),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 2.0.h, left: 7.w),
-                        child: Container(
-                          width: 16.w,
-                          height: 16.h,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle, color: UsedColor.main),
-                          // 후기 알림 수
-                          child: Center(
-                              child: Text(
-                            '3',
-                            style: AppTextStyles.SU_SB_10
-                                .copyWith(color: Colors.white),
-                          )),
-                        ),
-                      ),
                     ],
                   ),
                   SizedBox(height: 16.h),

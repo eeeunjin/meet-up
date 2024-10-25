@@ -134,7 +134,7 @@ class ReflectDiaryDetail extends StatelessWidget {
                                   ? "개인 일정"
                                   : '그로윗 일정',
                               style: AppTextStyles.PR_SB_13.copyWith(
-                                color: UsedColor.text_2,
+                                color: UsedColor.text_5,
                               ),
                             ),
                           ),

@@ -133,9 +133,13 @@ class UserRepository {
     required MeetingReviewModel data,
     required String uid,
   }) async {
+    final meetingReviewRef =
+        _firebaseRefs.colRefUser.doc(uid).collection("meetingReviews").doc();
+
+    data.meetingReviewDocId = meetingReviewRef.id;
+
     return await _firebaseService.createDocument<MeetingReviewModel>(
-      docRef:
-          _firebaseRefs.colRefUser.doc(uid).collection("meetingReviews").doc(),
+      docRef: meetingReviewRef,
       data: data,
     );
   }
@@ -161,6 +165,31 @@ class UserRepository {
             .doc(uid)
             .collection("meetingReviews")
             .doc(meetingReviewId));
+  }
+
+  Future<bool> updateMeetingReviewModel({
+    required String uid,
+    required String meetingReviewId,
+    required Map<String, dynamic> data,
+  }) async {
+    return await _firebaseService.updateDocument(
+      docRef: _firebaseRefs.colRefUser
+          .doc(uid)
+          .collection("meetingReviews")
+          .doc(meetingReviewId),
+      data: data,
+    );
+  }
+
+  Future<bool> deleteMeetingReviewModel({
+    required String uid,
+    required String meetingReviewId,
+  }) async {
+    DocumentReference meetingReviewDocumentReference = _firebaseRefs.colRefUser
+        .doc(uid)
+        .collection("meetingReviews")
+        .doc(meetingReviewId);
+    return _firebaseService.deleteDocument(docRef: meetingReviewDocumentReference);
   }
 
   // MARK: - MySchedule CRUD

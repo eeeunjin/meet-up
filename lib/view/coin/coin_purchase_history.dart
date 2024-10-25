@@ -124,6 +124,10 @@ class CoinPurchaseHistory extends StatelessWidget {
                   // 날짜로 그룹화
                   Map<String, List<GoodHistoryModel>> groupedByDate = {};
                   for (var gh in snapshot.data as List<GoodHistoryModel>) {
+                    if (gh.gh_type != 'coin' &&
+                        gh.gh_type_transaction != 'purchase') {
+                      continue;
+                    }
                     var timestamp = gh.gh_change_date;
                     var date = timestamp.toDate();
                     String formattedDate =
@@ -179,9 +183,6 @@ class CoinPurchaseHistory extends StatelessWidget {
                                       case 'purchase':
                                         transactionTitle =
                                             '단일권 ${goodHistoryModel.gh_change_ticket_amount}개 구매';
-                                      case 'refund':
-                                        transactionTitle =
-                                            '단일권 ${goodHistoryModel.gh_change_ticket_amount}개 환불';
                                       default:
                                         logger.e("[코인 내역] 오류");
                                         transactionTitle = '오류';

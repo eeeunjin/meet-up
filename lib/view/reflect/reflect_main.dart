@@ -245,7 +245,7 @@ class ReflectMain extends StatelessWidget {
               int index = entry.key;
               var data = entry.value;
               bool isLast = index == diaryEntries.length - 1;
-              if (index > 3) {
+              if (index > 2) {
                 return const SizedBox.shrink();
               }
 
