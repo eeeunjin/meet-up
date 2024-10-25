@@ -114,8 +114,8 @@ class ReflectDiaryMore extends StatelessWidget {
                 children: [
                   _diaryEntryContainer(
                     context,
-                    scheduleDate,
                     data.room_schedule!["title"],
+                    scheduleDate,
                     data,
                   ),
                   if (!isLast) SizedBox(height: 20.h),

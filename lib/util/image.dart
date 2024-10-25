@@ -126,52 +126,53 @@ class ImagePath {
       'assets/images/profile_check.png';
   static String get profileCheckBox => 'assets/images/profile_uncheck.png';
   static String get profileChip1Uncheck =>
-      'assets/images/profile_pos_chip1.png';
+      'assets/images/profile_meeting_review_chip1.png';
   static String get profileChip1Check =>
-      'assets/images/profile_pos_chip1-1.png';
+      'assets/images/profile_meeting_review_chip1-1.png';
   static String get profileChip2Uncheck =>
-      'assets/images/profile_pos_chip2.png';
+      'assets/images/profile_meeting_review_chip2.png';
   static String get profileChip2Check =>
-      'assets/images/profile_pos_chip2-1.png';
+      'assets/images/profile_meeting_review_chip2-1.png';
   static String get profileChip3Uncheck =>
-      'assets/images/profile_pos_chip3.png';
+      'assets/images/profile_meeting_review_chip3.png';
   static String get profileChip3Check =>
-      'assets/images/profile_pos_chip3-1.png';
+      'assets/images/profile_meeting_review_chip3-1.png';
   static String get profileChip4Uncheck =>
-      'assets/images/profile_pos_chip4.png';
+      'assets/images/profile_meeting_review_chip4.png';
   static String get profileChip4Check =>
-      'assets/images/profile_pos_chip4-1.png';
+      'assets/images/profile_meeting_review_chip4-1.png';
   static String get profileChip5Uncheck =>
-      'assets/images/profile_pos_chip5.png';
+      'assets/images/profile_meeting_review_chip5.png';
   static String get profileChip5Check =>
-      'assets/images/profile_pos_chip5-1.png';
+      'assets/images/profile_meeting_review_chip5-1.png';
   static String get profileChip6Uncheck =>
-      'assets/images/profile_pos_chip6.png';
+      'assets/images/profile_meeting_review_chip6.png';
   static String get profileChip6Check =>
-      'assets/images/profile_pos_chip6-1.png';
+      'assets/images/profile_meeting_review_chip6-1.png';
   static String get profileChip7Uncheck =>
-      'assets/images/profile_neg_chip1.png';
-  static String get profileChipCheck => 'assets/images/profile_neg_chip1-1.png';
+      'assets/images/profile_meeting_review_chip7.png';
+  static String get profileChip7Check =>
+      'assets/images/profile_meeting_review_chip7-1.png';
   static String get profileChip8Uncheck =>
-      'assets/images/profile_neg_chip2.png';
+      'assets/images/profile_meeting_review_chip8.png';
   static String get profileChip8Check =>
-      'assets/images/profile_neg_chip2-1.png';
+      'assets/images/profile_meeting_review_chip8-1.png';
   static String get profileChip9Uncheck =>
-      'assets/images/profile_neg_chip3.png';
+      'assets/images/profile_meeting_review_chip9.png';
   static String get profileChip9Check =>
-      'assets/images/profile_neg_chip3-1.png';
+      'assets/images/profile_meeting_review_chip9-1.png';
   static String get profileChip10Uncheck =>
-      'assets/images/profile_neg_chip4.png';
+      'assets/images/profile_meeting_review_chip10.png';
   static String get profileChip10Check =>
-      'assets/images/profile_neg_chip4-1.png';
+      'assets/images/profile_meeting_review_chip10-1.png';
   static String get profileChip11Uncheck =>
-      'assets/images/profile_neg_chip5.png';
+      'assets/images/profile_meeting_review_chip11.png';
   static String get profileChip11Check =>
-      'assets/images/profile_neg_chip5-1.png';
+      'assets/images/profile_meeting_review_chip11-1.png';
   static String get profileChip12Uncheck =>
-      'assets/images/profile_neg_chip6.png';
+      'assets/images/profile_meeting_review_chip12.png';
   static String get profileChip12Check =>
-      'assets/images/profile_neg_chip6-1.png';
+      'assets/images/profile_meeting_review_chip12-1.png';
 
   // MARK: - schedule
   static String get backCross => 'assets/images/backcross.png';
@@ -243,42 +244,42 @@ class ImagePath {
   static String get chatNotification10 =>
       'assets/images/chat_notification_10.png';
 
-  static String get chatReview1 => 'assets/images/chat_review1.png';
+  static String get chatReview1 => 'assets/images/chatReview1.png';
   static String get chatReview1Selected =>
-      'assets/images/chat_review1_selected.png';
-  static String get chatReview2 => 'assets/images/chat_review2.png';
+      'assets/images/chatReview1_selected.png';
+  static String get chatReview2 => 'assets/images/chatReview2.png';
   static String get chatReview2Selected =>
-      'assets/images/chat_review2_selected.png';
-  static String get chatReview3 => 'assets/images/chat_review3.png';
+      'assets/images/chatReview2_selected.png';
+  static String get chatReview3 => 'assets/images/chatReview3.png';
   static String get chatReview3Selected =>
-      'assets/images/chat_review3_selected.png';
-  static String get chatReview4 => 'assets/images/chat_review4.png';
+      'assets/images/chatReview3_selected.png';
+  static String get chatReview4 => 'assets/images/chatReview4.png';
   static String get chatReview4Selected =>
-      'assets/images/chat_review4_selected.png';
-  static String get chatReview5 => 'assets/images/chat_review5.png';
+      'assets/images/chatReview4_selected.png';
+  static String get chatReview5 => 'assets/images/chatReview5.png';
   static String get chatReview5Selected =>
-      'assets/images/chat_review5_selected.png';
-  static String get chatReview6 => 'assets/images/chat_review6.png';
+      'assets/images/chatReview5_selected.png';
+  static String get chatReview6 => 'assets/images/chatReview6.png';
   static String get chatReview6Selected =>
-      'assets/images/chat_review6_selected.png';
-  static String get chatReview7 => 'assets/images/chat_review7.png';
+      'assets/images/chatReview6_selected.png';
+  static String get chatReview7 => 'assets/images/chatReview7.png';
   static String get chatReview7Selected =>
-      'assets/images/chat_review7_selected.png';
-  static String get chatReview8 => 'assets/images/chat_review8.png';
+      'assets/images/chatReview7_selected.png';
+  static String get chatReview8 => 'assets/images/chatReview8.png';
   static String get chatReview8Selected =>
-      'assets/images/chat_review8_selected.png';
-  static String get chatReview9 => 'assets/images/chat_review9.png';
+      'assets/images/chatReview8_selected.png';
+  static String get chatReview9 => 'assets/images/chatReview9.png';
   static String get chatReview9Selected =>
-      'assets/images/chat_review9_selected.png';
-  static String get chatReview10 => 'assets/images/chat_review10.png';
+      'assets/images/chatReview9_selected.png';
+  static String get chatReview10 => 'assets/images/chatReview10.png';
   static String get chatReview10Selected =>
-      'assets/images/chat_review10_selected.png';
-  static String get chatReview11 => 'assets/images/chat_review11.png';
+      'assets/images/chatReview10_selected.png';
+  static String get chatReview11 => 'assets/images/chatReview11.png';
   static String get chatReview11Selected =>
-      'assets/images/chat_review11_selected.png';
-  static String get chatReview12 => 'assets/images/chat_review12.png';
+      'assets/images/chatReview11_selected.png';
+  static String get chatReview12 => 'assets/images/chatReview12.png';
   static String get chatReview12Selected =>
-      'assets/images/chat_review12_selected.png';
+      'assets/images/chatReview12_selected.png';
 
   static String chatReview(String name) => 'assets/images/$name.png';
   static String chatReviewSelected(String name) =>

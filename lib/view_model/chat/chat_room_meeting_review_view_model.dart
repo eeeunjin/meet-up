@@ -132,7 +132,13 @@ class ChatRoomMeetingReviewViewModel with ChangeNotifier {
 
   // 만남 후기 데이터를 서버로 전송
   Future<void> sendMeetingReview(
-      String roomId, String myUID, String otherUID, String roomName) async {
+    String roomId,
+    String myUID,
+    String otherUID,
+    String roomName,
+    String nickname,
+    String profileIcon,
+  ) async {
     final roomMeetingReviewData = "${myUID}_$otherUID";
     final data = {
       "room_meeting_review": FieldValue.arrayUnion([roomMeetingReviewData])
@@ -143,13 +149,17 @@ class ChatRoomMeetingReviewViewModel with ChangeNotifier {
 
     // user Model 하위에 meetingReview model 추가
     MeetingReviewModel meetingReviewModel = MeetingReviewModel(
+      meetingReviewDocId: '',
       senderUID: myUID,
+      senderNickname: nickname,
+      senderProfileIcon: profileIcon,
       roomTitle: roomName,
       rating: _rating,
       chosenChips:
           selectedChips.keys.where((key) => selectedChips[key]!).toList(),
       comment: _comment,
       date: Timestamp.now(),
+      isNew: true,
     );
 
     await _userRepository.createMeetingReviewDocument(

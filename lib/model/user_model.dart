@@ -122,40 +122,56 @@ class MyRoomModel {
 }
 
 class MeetingReviewModel {
+  String meetingReviewDocId;
   String senderUID;
+  String senderNickname;
+  String senderProfileIcon;
   String roomTitle;
   int rating;
   List<dynamic> chosenChips;
   String comment;
   Timestamp date;
+  bool isNew;
 
   MeetingReviewModel({
+    required this.meetingReviewDocId,
     required this.senderUID,
+    required this.senderNickname,
+    required this.senderProfileIcon,
     required this.roomTitle,
     required this.rating,
     required this.chosenChips,
     required this.comment,
     required this.date,
+    required this.isNew,
   });
 
   MeetingReviewModel.fromJson(Map<String, Object?> json)
       : this(
+          meetingReviewDocId: json["meetingReviewDocId"]! as String,
           senderUID: json["senderUID"]! as String,
+          senderNickname: json["senderNickname"]! as String,
+          senderProfileIcon: json["senderProfileIcon"]! as String,
           roomTitle: json["roomTitle"]! as String,
           rating: json["rating"]! as int,
           chosenChips: json["chosenChips"]! as List<dynamic>,
           comment: json["comment"]! as String,
           date: json["date"]! as Timestamp,
+          isNew: json["isNew"]! as bool,
         );
 
   Map<String, Object?> toJson() {
     return {
+      "meetingReviewDocId": meetingReviewDocId,
       "senderUID": senderUID,
+      "senderNickname": senderNickname,
+      "senderProfileIcon": senderProfileIcon,
       "roomTitle": roomTitle,
       "rating": rating,
       "chosenChips": chosenChips,
       "comment": comment,
       "date": date,
+      "isNew": isNew,
     };
   }
 }

@@ -382,7 +382,7 @@ class ReflectRecordMore extends StatelessWidget {
     );
   }
 
-// 작성된 일기가 없는 상태
+  // 작성된 일기가 없는 상태
   Widget _emptyStateMode(ReflectRecordViewModel viewModel) {
     return Center(
       child: Column(
