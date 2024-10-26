@@ -124,6 +124,8 @@ class ProfileMain extends StatelessWidget {
 
   Widget _profileBox(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context);
+    final profileVieWModel =
+        Provider.of<ProfileViewModel>(context, listen: false);
     final profileIcon = userViewModel.userModel?.profile_icon ?? 'fedro_1';
     final profileIconName = profileIcon.split('/').last.split('_').first;
     String path = '';
@@ -197,7 +199,7 @@ class ProfileMain extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 24.0.w),
                     child: Text(
-                      userViewModel.userModel!.rank,
+                      profileVieWModel.getRank(userViewModel.userModel!.rank),
                       style: AppTextStyles.PR_M_13
                           .copyWith(color: UsedColor.text_5),
                     ),
@@ -217,7 +219,11 @@ class ProfileMain extends StatelessWidget {
                   // Novice 혜택 보러가기
                   GestureDetector(
                     onTap: () {
-                      context.goNamed('rankMain');
+                      final profileViewModel =
+                          Provider.of<ProfileViewModel>(context, listen: false);
+                      profileViewModel.selectRank(profileViewModel
+                          .getRank(userViewModel.userModel!.rank));
+                      context.goNamed('profileRankMain');
                     },
                     child: Padding(
                       padding: EdgeInsets.only(top: 24.0.h, left: 24.w),

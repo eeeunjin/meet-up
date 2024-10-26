@@ -144,7 +144,7 @@ class SignUpPhoneNumViewModel with ChangeNotifier {
       accepted_policies: [false, false],
       coin: 0,
       ticket: 0,
-      rank: 'Novice',
+      rank: 0,
       notification_settings: [true, true, true, true, true],
       uid: uid,
     );

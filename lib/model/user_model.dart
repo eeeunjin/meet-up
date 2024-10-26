@@ -20,7 +20,7 @@ class UserModel {
   int ticket;
 
   // 등급 정보
-  String rank;
+  int rank;
 
   // 가입 전화번호
   String phone_number;
@@ -66,7 +66,7 @@ class UserModel {
           accepted_policies: json["accepted_policies"]! as List<dynamic>,
           coin: json["coin"]! as int,
           ticket: json["ticket"]! as int,
-          rank: json["rank"]! as String,
+          rank: json["rank"]! as int,
           notification_settings:
               json["notification_settings"]! as List<dynamic>,
           uid: json["uid"]! as String,

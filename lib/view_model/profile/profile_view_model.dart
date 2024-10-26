@@ -11,13 +11,26 @@ class ProfileViewModel with ChangeNotifier {
   final UserRepository _userRepository = UserRepository();
 
   // MARK: - 등급
-  String _selectedRank = '용감한 햄스터';
-
+  String _selectedRank = '';
   String get selectedRank => _selectedRank;
 
   void selectRank(String rank) {
     _selectedRank = rank;
     notifyListeners();
+  }
+
+  String getRank(int score) {
+    if (score < 10) {
+      return '수줍은';
+    } else if (score < 30) {
+      return '용감한';
+    } else if (score < 60) {
+      return '활발한';
+    } else if (score < 100) {
+      return '적극적인';
+    } else {
+      return '전설적인';
+    }
   }
 
   Map<String, List<String>> get rankBenefits {

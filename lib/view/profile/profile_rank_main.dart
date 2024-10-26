@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/util/color.dart';
@@ -10,8 +9,8 @@ import 'package:meet_up/view_model/profile/profile_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 
-class RankMain extends StatelessWidget {
-  const RankMain({super.key});
+class ProfileRankMain extends StatelessWidget {
+  const ProfileRankMain({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +87,7 @@ class RankMain extends StatelessWidget {
 
   //MARK: - 프로필 랭크 박스
   Widget _profileRankBox(BuildContext context) {
+    final profileViewModel = Provider.of<ProfileViewModel>(context, listen: false);
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     final profileIcon = userViewModel.userModel?.profile_icon ?? 'fedro_1';
     final profileIconName = profileIcon.split('/').last.split('_').first;
@@ -141,7 +141,7 @@ class RankMain extends StatelessWidget {
                   children: [
                     // 사용자 등급
                     Text(
-                      '용감한',
+                      profileViewModel.getRank(userViewModel.userModel!.rank),
                       style: AppTextStyles.PR_M_13
                           .copyWith(color: UsedColor.text_5),
                     ),
@@ -235,7 +235,6 @@ class RankMain extends StatelessWidget {
               children: [
                 _rankTier(
                   context: context,
-                  viewModel: viewModel,
                   rank: '전설적인',
                   imagePathOn: ImagePath.rankMasterOn,
                   imagePathOff: ImagePath.rankMasterOff,
@@ -245,7 +244,6 @@ class RankMain extends StatelessWidget {
                 SizedBox(width: 20.w),
                 _rankTier(
                   context: context,
-                  viewModel: viewModel,
                   rank: '적극적인',
                   imagePathOn: ImagePath.rankAdvancedOn,
                   imagePathOff: ImagePath.rankAdvancedOff,
@@ -255,7 +253,6 @@ class RankMain extends StatelessWidget {
                 SizedBox(width: 20.w),
                 _rankTier(
                   context: context,
-                  viewModel: viewModel,
                   rank: '활발한',
                   imagePathOn: ImagePath.rankIntermediateOn,
                   imagePathOff: ImagePath.rankIntermediateOff,
@@ -265,7 +262,6 @@ class RankMain extends StatelessWidget {
                 SizedBox(width: 20.w),
                 _rankTier(
                   context: context,
-                  viewModel: viewModel,
                   rank: '용감한',
                   imagePathOn: ImagePath.rankNoviceOn,
                   imagePathOff: ImagePath.rankNoviceOff,
@@ -275,7 +271,6 @@ class RankMain extends StatelessWidget {
                 SizedBox(width: 20.w),
                 _rankTier(
                   context: context,
-                  viewModel: viewModel,
                   rank: '수줍은',
                   imagePathOn: ImagePath.rankBeginnerOn,
                   imagePathOff: ImagePath.rankBeginnerOff,
@@ -499,13 +494,13 @@ class RankMain extends StatelessWidget {
   // MARK: - 랭크 티어 위젯
   Widget _rankTier({
     required BuildContext context,
-    required ProfileViewModel viewModel,
     required String rank,
     required String imagePathOn,
     required String imagePathOff,
     required double width,
     required double height,
   }) {
+    final viewModel = Provider.of<ProfileViewModel>(context, listen: false);
     final isSelected = viewModel.selectedRank == rank;
     final imagePath = isSelected ? imagePathOn : imagePathOff;
 
