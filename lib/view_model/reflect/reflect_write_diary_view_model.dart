@@ -113,8 +113,6 @@ class ReflectWriteDiaryViewModel with ChangeNotifier {
 
   // 모든 질문에 답변이 입력되었는지 확인
   bool allQuestionsAnswered() {
-    logger.d(
-        "answers: ${answers.values.length} / completedSelection: ${completedSelection.length} / 빈 값이 없나: ${answers.values.where((element) => element.isEmpty).isEmpty}");
     return completedSelection.isNotEmpty &&
         answers.values.length == completedSelection.length &&
         answers.values.where((element) => element.isEmpty).isEmpty;

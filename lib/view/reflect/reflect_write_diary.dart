@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,9 +6,12 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:meet_up/main.dart';
 import 'package:meet_up/model/diary_model.dart';
+import 'package:meet_up/model/good_history_model.dart';
+import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/util/color.dart';
+import 'package:meet_up/view_model/coin/ticket_buy_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/reflect/reflect_view_model.dart';
 import 'package:meet_up/view_model/reflect/reflect_write_diary_view_model.dart';
@@ -249,8 +253,6 @@ class ReflectWriteDiary extends StatelessWidget {
     int index,
     ReflectWriteDiaryViewModel viewModel,
   ) {
-    logger.d(
-        'question: $question, index: $index, answer: ${viewModel.answers[index]}');
     final TextEditingController controller = TextEditingController();
     controller.text =
         viewModel.answers[index] == null ? '' : viewModel.answers[index]!;
@@ -511,6 +513,9 @@ class ReflectWriteDiary extends StatelessWidget {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     final reflectViewModel =
         Provider.of<ReflectViewModel>(context, listen: false);
+    final ticketBuyViewModel =
+        Provider.of<TicketBuyViewModel>(context, listen: false);
+
     return GestureDetector(
       onTap: viewModel.canSubmit
           ? () async {
@@ -534,12 +539,97 @@ class ReflectWriteDiary extends StatelessWidget {
 
               // 스케줄 업데이트
               var updatedSchedule = schedule;
+              // 스케줄의 roomId를 diary로 변경하면 더 이상 일정에서는 보이지 않음
               updatedSchedule.roomId = "diary";
 
               await viewModel.updateScheduleModel(
                 uid: userViewModel.uid!,
                 data: updatedSchedule,
               );
+
+              bool isFirstDiaryToday = false;
+
+              try {
+                final myMissionModel = await userViewModel.readMyMissionModel(
+                  uid: userViewModel.uid!,
+                  type: MyMissionType.dailyReview,
+                );
+                if (myMissionModel.date.toDate().year == DateTime.now().year &&
+                    myMissionModel.date.toDate().month ==
+                        DateTime.now().month &&
+                    myMissionModel.date.toDate().day == DateTime.now().day) {
+                  logger.d("오늘 이미 일기를 쓴 경우");
+                } else {
+                  // 오늘 일기를 처음 쓰는 경우
+                  logger.d("오늘 일기를 처음 쓰는 경우");
+                  await userViewModel.updateMyMissionModel(
+                    uid: userViewModel.uid!,
+                    docId: MyMissionType.dailyReview.name,
+                    data: {'date': Timestamp.now()},
+                  );
+                  isFirstDiaryToday = true;
+                }
+              } catch (e) {
+                // 처음으로 일기를 쓰는 경우
+                logger.d("처음으로 일기를 쓰는 경우");
+                MyMissonModel myMissonModel =
+                    MyMissonModel(date: Timestamp.now());
+                await userViewModel.createMyMissionModel(
+                  uid: userViewModel.uid!,
+                  docId: MyMissionType.dailyReview.name,
+                  data: myMissonModel,
+                );
+                isFirstDiaryToday = true;
+              }
+
+              if (isFirstDiaryToday) {
+                logger.d("[DaliyReview 미션 달성] 코인 및 등급 점수 지급");
+                // 일기 미션을 달성한 경우
+                // 코인 영수증 생성
+                final goodHistoryModel = GoodHistoryModel(
+                  gh_type: GoodHistoryType.coin.name,
+                  gh_type_transaction: GoodHistoryTypeOfTransaction.obtain.name,
+                  gh_uid: userViewModel.uid!,
+                  gh_result_coin: userViewModel.userModel!.coin + 20,
+                  gh_result_ticket: userViewModel.userModel!.ticket,
+                  gh_change_coin_amount: 20,
+                  gh_change_ticket_amount: 0,
+                  gh_product_id: '',
+                  gh_change_date: Timestamp.now(),
+                );
+
+                await ticketBuyViewModel.createGoodHistory(
+                  goodHistoryModel: goodHistoryModel,
+                );
+
+                // 유저에게 코인 지급
+                await userViewModel.updateUserInfo(
+                  data: {
+                    'coin': userViewModel.userModel!.coin + 20,
+                  },
+                );
+
+                // 등급 점수 추가 기록 생성
+                final myRankHistoryModel = MyRankHistoryModel(
+                  rank: userViewModel.userModel!.rank + 2,
+                  changeAmount: 2,
+                  changeType: ChangeType.rankUpDiary.name,
+                  date: Timestamp.now(),
+                );
+
+                // 등급 점수 추가
+                await userViewModel.createMyRankHistoryModel(
+                  uid: userViewModel.uid!,
+                  data: myRankHistoryModel,
+                );
+
+                // 유저 등급 점수 업데이트
+                await userViewModel.updateUserInfo(
+                  data: {
+                    'rank': userViewModel.userModel!.rank + 2,
+                  },
+                );
+              }
 
               context.pop();
               context.pop();

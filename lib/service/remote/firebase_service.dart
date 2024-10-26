@@ -306,6 +306,14 @@ class FirebaseCRUD {
           DiaryModel diary = data as DiaryModel;
           await docRef.set(diary.toJson());
           return true;
+        } else if (T == MyRankHistoryModel) {
+          MyRankHistoryModel myRankHistory = data as MyRankHistoryModel;
+          await docRef.set(myRankHistory.toJson());
+          return true;
+        } else if (T == MyMissonModel) {
+          MyMissonModel myMission = data as MyMissonModel;
+          await docRef.set(myMission.toJson());
+          return true;
         } else {
           // 지정하지 않은 모델인 경우 에러 반환
           throw Exception("Unsupported document type.");
@@ -338,6 +346,8 @@ class FirebaseCRUD {
           return MyRoomModel.fromJson(data) as T;
         } else if (T == RoomModel) {
           return RoomModel.fromJson(data) as T;
+        } else if (T == MyMissonModel) {
+          return MyMissonModel.fromJson(data) as T;
         } else {
           // 지정한 모델이 아닌 경우 에러 코드 반환
           throw Exception("Unsupported document type.");
@@ -358,7 +368,6 @@ class FirebaseCRUD {
     required Map<String, dynamic> data,
   }) async {
     try {
-      logger.d(docRef.toString());
       // data<json 정보>를 update() 메서드에 전달
       await docRef.update(data);
       return true;

@@ -36,10 +36,47 @@ class UserViewModel with ChangeNotifier {
         userModel!.coin = value;
       } else if (key == "ticket") {
         userModel!.ticket = value;
+      } else if (key == "rank_archive") {
+        userModel!.rank_archive = value;
       }
     });
 
     notifyListeners();
+  }
+
+  Future<void> updateMyMissionModel(
+      {required String uid,
+      required docId,
+      required Map<String, dynamic> data}) async {
+    await _userRepository.updateMyMissionDocument(
+      uid: uid,
+      missionId: docId,
+      data: data,
+    );
+  }
+
+  // Create
+  // MyRankHistoryModel 생성
+  Future<void> createMyRankHistoryModel(
+      {required String uid, required MyRankHistoryModel data}) async {
+    await _userRepository.createMyRankHistoryDocument(data: data, uid: uid);
+  }
+
+  // MyMissionModel 생성
+  Future<void> createMyMissionModel(
+      {required String uid,
+      required docId,
+      required MyMissonModel data}) async {
+    await _userRepository.createMyMissionDocument(
+        data: data, docId: docId, uid: uid);
+  }
+
+  // Read
+  // MyMissionModel 불러오기
+  Future<MyMissonModel> readMyMissionModel(
+      {required String uid, required MyMissionType type}) async {
+    return await _userRepository.readMyMissionDocument(
+        uid: uid, missionId: type.name);
   }
 
   // MARK: - 로그인 & 회원가입 & 로그아웃 & 탈퇴

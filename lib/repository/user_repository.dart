@@ -189,7 +189,8 @@ class UserRepository {
         .doc(uid)
         .collection("meetingReviews")
         .doc(meetingReviewId);
-    return _firebaseService.deleteDocument(docRef: meetingReviewDocumentReference);
+    return _firebaseService.deleteDocument(
+        docRef: meetingReviewDocumentReference);
   }
 
   // MARK: - MySchedule CRUD
@@ -282,6 +283,68 @@ class UserRepository {
       {required String uid}) {
     return _firebaseService.readCollectionStream<DiaryModel>(
       colRef: _firebaseRefs.colRefUser.doc(uid).collection("myDiary"),
+    );
+  }
+
+  // MARK: - MyRankHistory CRUD
+  Future<bool> createMyRankHistoryDocument({
+    required MyRankHistoryModel data,
+    required String uid,
+  }) async {
+    final myRankHistoryRef =
+        _firebaseRefs.colRefUser.doc(uid).collection("myRankHistory").doc();
+
+    return await _firebaseService.createDocument<MyRankHistoryModel>(
+      docRef: myRankHistoryRef,
+      data: data,
+    );
+  }
+
+  Stream<QuerySnapshot<Object?>> readMyRankHistoryCollectionStream(
+      {required String uid}) {
+    return _firebaseService.readCollectionStream<MyRankHistoryModel>(
+      colRef: _firebaseRefs.colRefUser.doc(uid).collection("myRankHistory"),
+    );
+  }
+
+  // MARK: - MyMissonModel CRUD
+  Future<bool> createMyMissionDocument({
+    required MyMissonModel data,
+    required String docId,
+    required String uid,
+  }) async {
+    final myMissionRef =
+        _firebaseRefs.colRefUser.doc(uid).collection("myMission").doc(docId);
+
+    return await _firebaseService.createDocument<MyMissonModel>(
+      docRef: myMissionRef,
+      data: data,
+    );
+  }
+
+  Future<MyMissonModel> readMyMissionDocument({
+    required String uid,
+    required String missionId,
+  }) async {
+    return await _firebaseService.readDocument<MyMissonModel>(
+      docRef: _firebaseRefs.colRefUser
+          .doc(uid)
+          .collection("myMission")
+          .doc(missionId),
+    );
+  }
+
+  Future<bool> updateMyMissionDocument({
+    required String uid,
+    required String missionId,
+    required Map<String, dynamic> data,
+  }) async {
+    return await _firebaseService.updateDocument(
+      docRef: _firebaseRefs.colRefUser
+          .doc(uid)
+          .collection("myMission")
+          .doc(missionId),
+      data: data,
     );
   }
 

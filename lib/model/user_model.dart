@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, constant_identifier_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -21,6 +21,7 @@ class UserModel {
 
   // 등급 정보
   int rank;
+  List<dynamic> rank_archive;
 
   // 가입 전화번호
   String phone_number;
@@ -46,6 +47,7 @@ class UserModel {
     required this.coin,
     required this.ticket,
     required this.rank,
+    required this.rank_archive,
     required this.notification_settings,
     required this.uid,
   });
@@ -67,6 +69,7 @@ class UserModel {
           coin: json["coin"]! as int,
           ticket: json["ticket"]! as int,
           rank: json["rank"]! as int,
+          rank_archive: json["rank_archive"]! as List<dynamic>,
           notification_settings:
               json["notification_settings"]! as List<dynamic>,
           uid: json["uid"]! as String,
@@ -88,6 +91,7 @@ class UserModel {
       'coin': coin,
       'ticket': ticket,
       'rank': rank,
+      'rank_archive': rank_archive,
       'notification_settings': notification_settings,
       'uid': uid,
     };
@@ -172,6 +176,66 @@ class MeetingReviewModel {
       "comment": comment,
       "date": date,
       "isNew": isNew,
+    };
+  }
+}
+
+enum ChangeType {
+  rankUpReview,
+  rankUpDiary,
+  rankDown,
+}
+
+class MyRankHistoryModel {
+  int rank; // 랭크 점수
+  int changeAmount; // 변화량
+  String changeType; // 변화 타입
+  Timestamp date; // 날짜
+
+  MyRankHistoryModel({
+    required this.rank,
+    required this.changeAmount,
+    required this.changeType,
+    required this.date,
+  });
+
+  MyRankHistoryModel.fromJson(Map<String, Object?> json)
+      : this(
+          rank: json["rank"]! as int,
+          changeAmount: json["changeAmount"]! as int,
+          changeType: json["changeType"]! as String,
+          date: json["date"]! as Timestamp,
+        );
+
+  Map<String, Object?> toJson() {
+    return {
+      "rank": rank,
+      "changeAmount": changeAmount,
+      "changeType": changeType,
+      "date": date,
+    };
+  }
+}
+
+enum MyMissionType {
+  dailyReview,
+}
+
+class MyMissonModel {
+  Timestamp date;
+
+  MyMissonModel({
+    required this.date,
+  });
+
+  MyMissonModel.fromJson(Map<String, Object?> json)
+      : this(
+          date: json["date"]! as Timestamp,
+        );
+
+  Map<String, Object?> toJson() {
+    return {
+      "date": date,
     };
   }
 }

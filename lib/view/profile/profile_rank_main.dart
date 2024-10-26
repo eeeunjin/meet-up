@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
+import 'package:meet_up/view_model/coin/ticket_buy_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/profile/profile_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
@@ -87,8 +90,11 @@ class ProfileRankMain extends StatelessWidget {
 
   //MARK: - 프로필 랭크 박스
   Widget _profileRankBox(BuildContext context) {
-    final profileViewModel = Provider.of<ProfileViewModel>(context, listen: false);
-    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final profileViewModel =
+        Provider.of<ProfileViewModel>(context, listen: true);
+    final userViewModel = Provider.of<UserViewModel>(context);
+    final ticketBuyViewModel =
+        Provider.of<TicketBuyViewModel>(context, listen: false);
     final profileIcon = userViewModel.userModel?.profile_icon ?? 'fedro_1';
     final profileIconName = profileIcon.split('/').last.split('_').first;
     String path = '';
@@ -104,6 +110,20 @@ class ProfileRankMain extends StatelessWidget {
       case "aengmu":
         path = ImagePath.aengmuSelect;
     }
+    final restScore =
+        profileViewModel.getRestScore(userViewModel.userModel!.rank);
+    String restScoreString = "다음 등급까지 $restScore점 남았습니다.";
+    if (restScore == -1) {
+      restScoreString = "가장 높은 등급 입니다.";
+    }
+
+    // 등급 최초 달성 보상 가능 여부
+    bool isSelectedRankLessThanMyRank =
+        profileViewModel.isSelectedRankLessThan(userViewModel.userModel!.rank);
+    bool isInRankArchive = userViewModel.userModel!.rank_archive
+        .contains(profileViewModel.selectedRank);
+    bool canGetRankArchiveBenefit =
+        isSelectedRankLessThanMyRank && !isInRankArchive;
 
     return Container(
       width: 337.w,
@@ -154,7 +174,7 @@ class ProfileRankMain extends StatelessWidget {
                     ),
                     SizedBox(height: 16.h),
                     Text(
-                      '활발한 햄스터까지 -점 남았습니다.',
+                      restScoreString,
                       style: AppTextStyles.PR_R_10
                           .copyWith(color: UsedColor.text_3),
                     )
@@ -175,22 +195,69 @@ class ProfileRankMain extends StatelessWidget {
             padding: EdgeInsets.only(left: 25.0.w, bottom: 19.h, top: 8.h),
             child: GestureDetector(
               // 혜택 받기 버튼 -> 만남권 지급 다이얼로그
-              onTap: () {
-                benefitDialog(context);
+              onTap: () async {
+                if (canGetRankArchiveBenefit) {
+                  int ticketNum = 1;
+                  if (profileViewModel.selectedRank == '전설적인') {
+                    ticketNum = 2;
+                  }
+
+                  final gh = GoodHistoryModel(
+                    gh_type: GoodHistoryType.ticket.name,
+                    gh_type_transaction:
+                        GoodHistoryTypeOfTransaction.obtain.name,
+                    gh_uid: userViewModel.uid!,
+                    gh_result_coin: userViewModel.userModel!.coin,
+                    gh_result_ticket:
+                        userViewModel.userModel!.ticket + ticketNum,
+                    gh_change_coin_amount: 0,
+                    gh_change_ticket_amount: ticketNum,
+                    gh_product_id: '',
+                    gh_change_date: Timestamp.now(),
+                  );
+
+                  await ticketBuyViewModel.createGoodHistory(
+                      goodHistoryModel: gh);
+
+                  List<dynamic> rankArchive =
+                      List.from(userViewModel.userModel!.rank_archive);
+                  rankArchive.add(profileViewModel.selectedRank);
+
+                  // 유저 정보 (티켓 개수, 등급 달성 정보)
+                  final changedUserInfo = {
+                    'rank_archive': rankArchive,
+                    'ticket': userViewModel.userModel!.ticket + ticketNum,
+                  };
+
+                  await userViewModel.updateUserInfo(data: changedUserInfo);
+
+                  benefitDialog(context);
+                } else {
+                  return;
+                }
               },
               child: Container(
                 width: 288.w,
                 height: 40.h,
                 decoration: BoxDecoration(
-                  color: UsedColor.image_card,
+                  color: canGetRankArchiveBenefit
+                      ? UsedColor.image_card
+                      : UsedColor.button_g,
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 child: Center(
                   child: Text(
-                    '혜택 받기',
-                    style:
-                        AppTextStyles.PR_M_13.copyWith(color: UsedColor.violet),
-                  ),
+                      canGetRankArchiveBenefit
+                          ? '혜택 받기'
+                          : isInRankArchive
+                              ? '이미 받은 혜택'
+                              : '등급 미달성',
+                      style: canGetRankArchiveBenefit
+                          ? AppTextStyles.PR_M_13
+                              .copyWith(color: UsedColor.violet)
+                          : AppTextStyles.PR_M_13.copyWith(
+                              color: UsedColor.text_2,
+                            )),
                 ),
               ),
             ),
@@ -523,6 +590,9 @@ class ProfileRankMain extends StatelessWidget {
 
   // MARK: 만남권 지급 다이얼로그
   void benefitDialog(BuildContext context) {
+    final ProfileViewModel profileViewModel =
+        Provider.of<ProfileViewModel>(context, listen: false);
+
     showGeneralDialog(
         context: context,
         pageBuilder: (BuildContext buildContext, Animation animation,
@@ -541,7 +611,7 @@ class ProfileRankMain extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 21.0.h),
                     child: Text(
-                      '만남권 1개가 지급되었습니다.',
+                      '만남권 ${profileViewModel.selectedRank == "전설적인" ? "2" : "1"}개가 지급되었습니다.',
                       style: AppTextStyles.PR_M_13.copyWith(
                         color: UsedColor.charcoal_black,
                         decoration: TextDecoration.none, // 밑줄 제거

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -145,6 +144,7 @@ class SignUpPhoneNumViewModel with ChangeNotifier {
       coin: 0,
       ticket: 0,
       rank: 0,
+      rank_archive: [],
       notification_settings: [true, true, true, true, true],
       uid: uid,
     );

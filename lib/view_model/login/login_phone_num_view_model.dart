@@ -145,6 +145,7 @@ class LoginPhoneNumViewModel with ChangeNotifier {
       coin: 0,
       ticket: 0,
       rank: 0,
+      rank_archive: [],
       notification_settings: [true, true, true, true, true],
       uid: uid,
     );

@@ -13,11 +13,6 @@ class CoinTicketPurchaseHistoryViewModel with ChangeNotifier {
     // type을 넣었지만 내부 함수에서 type 제한을 풀어둠 (readAllGoodHistories)
     final ghList = await _goodHistoryRepository.readAllGoodHistories(uid, type);
 
-    for (GoodHistoryModel gh in ghList) {
-      logger.d(
-          "[${gh.gh_change_date.toDate().month}월 ${gh.gh_change_date.toDate().day}일, ${gh.gh_change_date.toDate().hour}:${gh.gh_change_date.toDate().minute}] ${gh.gh_uid} 님이 ${gh.gh_change_coin_amount} 코인을 구매하여 ${gh.gh_result_coin} 코인이 되었습니다.");
-    }
-
     return ghList;
   }
 }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/image.dart';
@@ -28,6 +29,7 @@ class ChatMeetingReview extends StatelessWidget {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     final userModels = chatRoomMeetingReviewViewModel.userModels!;
     final roomModel = chatRoomViewModel.roomModel;
+
     final firstMemberReview = roomModel.room_meeting_review
         .contains("${userViewModel.uid!}_${userModels[0].uid}");
     final secondMemberReview = roomModel.room_meeting_review
@@ -505,6 +507,26 @@ class ChatMeetingReview extends StatelessWidget {
 
                         await ticketBuyViewModel.createGoodHistory(
                           goodHistoryModel: goodHistoryModel,
+                        );
+
+                        // 등급 점수 상향
+                        final myRankHistoryModel = MyRankHistoryModel(
+                          rank: userViewModel.userModel!.rank + 2,
+                          changeAmount: 2,
+                          changeType: ChangeType.rankUpReview.name,
+                          date: Timestamp.now(),
+                        );
+
+                        await userViewModel.createMyRankHistoryModel(
+                          uid: userViewModel.uid!,
+                          data: myRankHistoryModel,
+                        );
+
+                        // 실제 유저 등급 점수 상향
+                        await userViewModel.updateUserInfo(
+                          data: {
+                            'rank': userViewModel.userModel!.rank + 2,
+                          },
                         );
                       }
                     : () {},

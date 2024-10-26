@@ -1508,7 +1508,9 @@ class ChatRoom extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         chatRoomMeetingReviewViewModel.setUserModels(
-            chatRoomViewModel.scheduleUserModels, userViewModel.uid!);
+          chatRoomViewModel.scheduleUserModels,
+          userViewModel.uid!,
+        );
         context.goNamed('chatMeetingReview');
       },
       child: Padding(
@@ -1578,7 +1580,6 @@ class ChatRoom extends StatelessWidget {
   Widget _diary(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        logger.d("성찰 일기 작성하기 버튼이 눌렸습니다.");
         context.pop();
         Provider.of<BottomNavigationBarViewModel>(context, listen: false)
             .changeIndex(3);

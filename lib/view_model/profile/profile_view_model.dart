@@ -33,6 +33,37 @@ class ProfileViewModel with ChangeNotifier {
     }
   }
 
+  int getRestScore(int score) {
+    if (score < 10) {
+      return 10 - score;
+    } else if (score < 30) {
+      return 30 - score;
+    } else if (score < 60) {
+      return 60 - score;
+    } else if (score < 100) {
+      return 100 - score;
+    } else {
+      return -1;
+    }
+  }
+
+  bool isSelectedRankLessThan(int score) {
+    switch (selectedRank) {
+      case '수줍은':
+        return score >= 0;
+      case '용감한':
+        return score >= 10;
+      case '활발한':
+        return score >= 30;
+      case '적극적인':
+        return score >= 60;
+      case '전설적인':
+        return score >= 100;
+      default:
+        return false;
+    }
+  }
+
   Map<String, List<String>> get rankBenefits {
     return {
       '수줍은': ['추가 할인 0%'],
