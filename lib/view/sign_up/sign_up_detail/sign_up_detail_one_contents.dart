@@ -155,10 +155,7 @@ class SignUpDetailOneContents extends StatelessWidget {
   }
 
   Widget _dateOfBirth(BuildContext context, SignUpDetailViewModel viewModel) {
-    final DateTime startDate = DateTime(1950);
-    final DateTime endDate = DateTime(2050);
-    final DateTime initialDate = viewModel.selectedDate;
-
+    
     void onDateChange(DateTime newDate) {
       viewModel.updateDate(newDate);
     }

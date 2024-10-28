@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:meet_up/main.dart';
 import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/repository/good_history_repository.dart';
 

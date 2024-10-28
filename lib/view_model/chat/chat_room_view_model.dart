@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meet_up/model/chat_room_model.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
@@ -114,33 +113,6 @@ class ChatRoomViewModel with ChangeNotifier {
   void setMoreOptionClicked(bool value) {
     _moreOptionClicked = value;
     notifyListeners();
-  }
-
-  void setLineNum(int value) {
-    _lineNum = value;
-    notifyListeners();
-  }
-
-  // 최대 길이를 지정해서 텍스트와 폰트 스타일을 받아와 텍스트 줄 수를 계산하는 함수
-  int calculateLineCount(String text, double maxWidth, TextStyle style) {
-    final TextPainter textPainter = TextPainter(
-      text: TextSpan(text: text, style: style),
-      textDirection: TextDirection.ltr,
-      maxLines: null,
-    )..layout(maxWidth: maxWidth);
-
-    return textPainter.computeLineMetrics().length;
-  }
-
-  // 텍스트와 폰트 스타일을 받아와 텍스트 너비를 계산하는 함수
-  double calculateTextWidth(String text, TextStyle style) {
-    final TextPainter textPainter = TextPainter(
-      text: TextSpan(text: text, style: style),
-      textDirection: TextDirection.ltr,
-      maxLines: 1,
-    )..layout();
-
-    return (textPainter.width + 2.w).toDouble();
   }
 
   // 스크롤 뷰의 가장 하단으로 움직이는 함수

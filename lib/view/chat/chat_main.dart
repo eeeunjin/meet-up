@@ -1,12 +1,7 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:meet_up/main.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/color.dart';
@@ -69,8 +64,6 @@ class ChatMain extends StatelessWidget {
   Widget _main(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     final chatViewModel = Provider.of<ChatViewModel>(context, listen: false);
-    final chatRoomViewModel =
-        Provider.of<ChatRoomViewModel>(context, listen: false);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 25.w),
       child: Column(
@@ -187,9 +180,6 @@ class ChatMain extends StatelessWidget {
     final chatViewModel = Provider.of<ChatViewModel>(context, listen: false);
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
 
-    // 테스트 메세지 카운트
-    // final newMessageCount =
-    //     Random().nextInt(18) + 1;
     // 테스트 최근 메세지
     final recentMessage = roomModel.recentMessage.replaceAll("\n", " ");
     // 만료 여부
@@ -202,7 +192,6 @@ class ChatMain extends StatelessWidget {
     bool isScheduleDecided = roomModel.isScheduleDecided;
     // 만남 일정
     bool isOwnerExit = roomModel.isOwnerExit;
-    bool isRoomDeleted = roomModel.isRoomDeleted;
     bool isRoomEnd = isScheduleDecided &&
         roomModel.room_schedule!["date"].toDate().isBefore(DateTime.now());
 

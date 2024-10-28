@@ -8,7 +8,6 @@ import 'package:meet_up/model/chat_room_model.dart';
 import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/model/user_model.dart';
-import 'package:meet_up/repository/room_repository.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';

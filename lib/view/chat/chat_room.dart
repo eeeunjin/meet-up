@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -616,56 +614,34 @@ class ChatRoom extends StatelessWidget {
   }) {
     final chatRoomViewModel =
         Provider.of<ChatRoomViewModel>(context, listen: false);
-    // 채팅 라인 수에 맞춘 높이 계산
-    final lineNum = chatRoomViewModel.calculateLineCount(
-        chatModel.content, 240.w, AppTextStyles.PR_R_12);
 
-    final height = ((isMyChat) ? 30.h : 51.h) + (lineNum - 1) * 14.h;
-    final chatBoxHeight = isMyChat ? 0.h : 30.h + (lineNum - 1) * 14.h;
-
-    // 채팅 길이에 맞춘 너비 계산
-    // 1. 채팅 내용을 줄바꿈으로 나누기
-    final contentSplited = chatModel.content.split('\n');
-    // 2. 채팅 내용 중 가장 긴 너비 계산
-    var limitWidth = 198.w;
-    var maxWidth = 0.w;
-    for (var content in contentSplited) {
-      final width =
-          chatRoomViewModel.calculateTextWidth(content, AppTextStyles.PR_R_12);
-      if (width > maxWidth) maxWidth = width;
-    }
-    if (maxWidth > limitWidth) maxWidth = limitWidth;
-    // 3. 채팅 박스 너비 계산
-    final chatBoxWidth = maxWidth + 28.w;
-    // 4. 채팅 보낸 시간 계산
+    // 1. 채팅 보낸 시간 계산
     final sendTime = chatModel.date.toDate();
     final sendTimeHour = sendTime.hour % 12;
     final sendTimeMinute =
         sendTime.minute < 10 ? "0${sendTime.minute}" : sendTime.minute;
     final sendTimeString =
         '${sendTime.hour > 12 ? '오후' : '오전'} $sendTimeHour:$sendTimeMinute';
-    // 다른 사람의 채팅인 경우 해당 유저 정보 불러오기
+    // 2. 다른 사람의 채팅인 경우 해당 유저 정보 불러오기
     final userExist = chatRoomViewModel.userModels
         .where((element) => element.uid == chatModel.uid)
         .isNotEmpty;
-
     UserModel? otherUser;
     if (!isMyChat && userExist) {
       otherUser = chatRoomViewModel.userModels
           .where((element) => element.uid == chatModel.uid)
           .first;
     }
-
-    // 5. 방장의 채팅인지 확인하는 변수
+    // 3. 방장의 채팅인지 확인하는 변수
     bool isOwnerChat = chatModel.uid == chatRoomViewModel.userModels[0].uid;
 
     if (isMyChat) {
       return SizedBox(
         width: 393.w,
-        height: height,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               sendTimeString,
@@ -674,22 +650,24 @@ class ChatRoom extends StatelessWidget {
             SizedBox(
               width: 4.w,
             ),
-            Container(
-              width: chatBoxWidth,
-              height: height,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14.r),
-                color: UsedColor.main,
-              ),
-              child: Center(
+            IntrinsicWidth(
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: 221.w,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(14.r),
+                  color: UsedColor.main,
+                ),
+                alignment: Alignment.centerRight,
                 child: Padding(
-                  padding: EdgeInsets.only(
-                    left: 12.w,
-                    right: 12.w,
-                    top: 8.h,
-                    bottom: 8.h,
+                  padding: EdgeInsets.symmetric(
+                    vertical: 8.h,
+                    horizontal: 12.w,
                   ),
                   child: Text(
+                    textAlign: TextAlign.start,
+                    textDirection: TextDirection.ltr,
                     chatModel.content,
                     style: AppTextStyles.PR_R_12.copyWith(
                       color: Colors.white,
@@ -698,20 +676,20 @@ class ChatRoom extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(width: 28.w),
+            SizedBox(width: 18.w),
           ],
         ),
       );
     } else {
       return SizedBox(
         width: 393.w,
-        height: height,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
-              width: 28.h,
+              width: 18.w,
             ),
             Stack(
               children: [
@@ -756,52 +734,56 @@ class ChatRoom extends StatelessWidget {
                 SizedBox(
                   height: 4.h,
                 ),
-                Container(
-                  width: chatBoxWidth,
-                  height: chatBoxHeight,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14.r),
-                    color: UsedColor.chat,
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        left: 12.w,
-                        right: 12.w,
-                        top: 8.h,
-                        bottom: 8.h,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Container(
+                      constraints: BoxConstraints(
+                        maxWidth: 221.w,
                       ),
-                      child: Text(
-                        chatModel.content,
-                        style: AppTextStyles.PR_R_12.copyWith(
-                          color: UsedColor.charcoal_black,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14.r),
+                        color: UsedColor.chat,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 8.h,
+                          horizontal: 12.w,
+                        ),
+                        child: Text(
+                          chatModel.content,
+                          style: AppTextStyles.PR_R_12.copyWith(
+                            color: UsedColor.charcoal_black,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(width: 4.w),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    logger.d("[${chatModel.nickname}]님에 대한 신고 버튼이 눌렸습니다.");
-                  },
-                  child: Image.asset(
-                    ImagePath.chatRoomDeclarationButton,
-                    height: 19.h,
-                    width: 19.h,
-                  ),
-                ),
-                Text(
-                  sendTimeString,
-                  style: AppTextStyles.PR_M_10.copyWith(
-                    color: UsedColor.text_3,
-                  ),
+                    SizedBox(width: 4.w),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            logger.d(
+                                "[${chatModel.nickname}]님에 대한 신고 버튼이 눌렸습니다.");
+                          },
+                          child: Image.asset(
+                            ImagePath.chatRoomDeclarationButton,
+                            height: 19.h,
+                            width: 19.h,
+                          ),
+                        ),
+                        Text(
+                          sendTimeString,
+                          style: AppTextStyles.PR_M_10.copyWith(
+                            color: UsedColor.text_3,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -1758,12 +1740,6 @@ class ChatRoom extends StatelessWidget {
   Widget _typeMessageBox(BuildContext context) {
     return Consumer<ChatRoomViewModel>(
       builder: (context, chatRoomViewModel, child) {
-        var additionalHeight =
-            ((chatRoomViewModel.lineNum > 5 ? 5 : chatRoomViewModel.lineNum) -
-                    1) *
-                12.h;
-        if (chatRoomViewModel.lineNum == 0) additionalHeight = 0;
-
         // 방장인지 확인하는 변수
         final userViewModel =
             Provider.of<UserViewModel>(context, listen: false);
@@ -1785,9 +1761,10 @@ class ChatRoom extends StatelessWidget {
               );
         }
 
-        return SizedBox(
-          height:
-              (chatRoomViewModel.startEdit ? 70.h : 106.h) + additionalHeight,
+        return Container(
+          constraints: BoxConstraints(
+            minHeight: (chatRoomViewModel.startEdit ? 70.h : 106.h),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -1796,8 +1773,8 @@ class ChatRoom extends StatelessWidget {
                 height: 0.h,
                 color: UsedColor.line,
               ),
-              SizedBox(height: 16.h),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   if (isOwner) ...[
                     SizedBox(width: 18.w),
@@ -1805,65 +1782,55 @@ class ChatRoom extends StatelessWidget {
                   ],
                   Padding(
                     padding: EdgeInsets.only(
-                        left: isOwner ? 12.w : 16.w, right: 16.w),
-                    child: Container(
+                      top: 16.h,
+                      bottom: 16.h,
+                      left: isOwner ? 12.w : 16.w,
+                      right: 16.w,
+                    ),
+                    // MARK: - TextField Container
+                    child: SizedBox(
                       width: typeContainerWidthEnd,
-                      height: 38.h + additionalHeight,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(19.r),
-                        color: UsedColor.bg_color,
-                      ),
                       child: Center(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 4.h),
-                          child: TextField(
-                            enabled:
+                        child: TextField(
+                          enabled: chatRoomViewModel.roomModel.isRoomDeleted ||
+                                  isScheduleEndAfterOneDay
+                              ? false
+                              : true,
+                          controller: chatRoomViewModel.messageController,
+                          maxLines: 5,
+                          minLines: 1,
+                          onTap: () {
+                            chatRoomViewModel.setStartEdit(true);
+                          },
+                          onEditingComplete: () {
+                            // 키보드에서 완료 누를 때 키보드 내려가지 않도록 막기
+                          },
+                          onChanged: (value) {},
+                          decoration: InputDecoration(
+                            isDense: true,
+                            filled: true,
+                            fillColor: UsedColor.bg_color,
+                            contentPadding: EdgeInsets.only(
+                              top: 12.h,
+                              bottom: 12.h,
+                              left: 22.w,
+                              right: 22.w,
+                            ),
+                            hintText:
                                 chatRoomViewModel.roomModel.isRoomDeleted ||
                                         isScheduleEndAfterOneDay
-                                    ? false
-                                    : true,
-                            textAlignVertical: TextAlignVertical.top,
-                            cursorColor: UsedColor.main,
-                            // cursorHeight: 18.h,
-                            controller: chatRoomViewModel.messageController,
-                            maxLines: null,
-                            onTap: () {
-                              chatRoomViewModel.setStartEdit(true);
-                            },
-                            onEditingComplete: () {
-                              // 키보드에서 완료 누를 때 키보드 내려가지 않도록 막기
-                            },
-                            onChanged: (value) {
-                              final lineNum =
-                                  chatRoomViewModel.calculateLineCount(
-                                      value, 240.w, AppTextStyles.PR_R_13);
-                              chatRoomViewModel.setLineNum(lineNum);
-                            },
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.only(
-                                left: 22.w,
-                                right: 22.w,
-                                bottom: (chatRoomViewModel.lineNum == 1 ||
-                                        chatRoomViewModel.lineNum == 0)
-                                    ? (Platform.isAndroid)
-                                        ? 22.h
-                                        : 16.h
-                                    : (Platform.isAndroid)
-                                        ? 10.h
-                                        : 4.h,
-                              ),
-                              hintText:
-                                  chatRoomViewModel.roomModel.isRoomDeleted ||
-                                          isScheduleEndAfterOneDay
-                                      ? '메시지를 입력할 수 없습니다'
-                                      : '메시지를 입력해주세요',
-                              hintStyle: AppTextStyles.PR_R_13
-                                  .copyWith(color: UsedColor.text_3),
-                              border: InputBorder.none,
-                            ),
-                            style: AppTextStyles.PR_R_13
+                                    ? '메시지를 입력할 수 없습니다'
+                                    : '메시지를 입력해주세요',
+                            hintStyle: AppTextStyles.PR_R_13
                                 .copyWith(color: UsedColor.text_3),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(19.r),
+                              borderSide: BorderSide.none,
+                            ),
                           ),
+                          cursorColor: UsedColor.main,
+                          style: AppTextStyles.PR_R_13
+                              .copyWith(color: UsedColor.text_3),
                         ),
                       ),
                     ),
@@ -1878,9 +1845,7 @@ class ChatRoom extends StatelessWidget {
                         if (message.isEmpty) return;
 
                         // 메시지가 존재하는 경우 전송
-                        logger.d(message);
                         chatRoomViewModel.messageController.clear();
-                        chatRoomViewModel.setLineNum(0);
 
                         // DB에 채팅 데이터 저장
                         final userViewModel =

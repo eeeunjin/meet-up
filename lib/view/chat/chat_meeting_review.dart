@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:meet_up/main.dart';
 import 'package:meet_up/model/good_history_model.dart';
 import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/image.dart';

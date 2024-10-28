@@ -5,7 +5,6 @@ import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
-import 'package:meet_up/view/widget/notification_toggle.dart';
 
 class SettingNotification extends StatelessWidget {
   const SettingNotification({super.key});

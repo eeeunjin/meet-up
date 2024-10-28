@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/loginFunc.dart';
-import 'package:meet_up/main.dart';
 import 'package:meet_up/view/chat/chat_main.dart';
 import 'package:meet_up/view/chat/chat_meeting_review.dart';
 import 'package:meet_up/view/chat/chat_notification_onboarding.dart';
