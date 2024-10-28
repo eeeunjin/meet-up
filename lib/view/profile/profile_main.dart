@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/main.dart';
+import 'package:meet_up/model/user_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
@@ -13,25 +15,51 @@ import 'package:provider/provider.dart';
 class ProfileMain extends StatelessWidget {
   const ProfileMain({super.key});
 
+  // MARK: - 빌드
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: 58.h,
-            ),
-            child: _header(context),
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+
+    return StreamBuilder<DocumentSnapshot>(
+      stream:
+          userViewModel.readUserModelDocumentStream(uid: userViewModel.uid!),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        final data = snapshot.data!.data() as Map<String, dynamic>;
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          userViewModel.setUserModelNotify();
+        });
+        userViewModel.setUserModel(userModel: UserModel.fromJson(data));
+
+        return Scaffold(
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                  top: 58.h,
+                ),
+                child: _header(context),
+              ),
+              Expanded(child: _main(context)),
+            ],
           ),
-          Expanded(child: _main(context)),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  // header
+  // MARK: - 헤더
   Widget _header(BuildContext context) {
     return Center(
       child: Column(
@@ -50,6 +78,7 @@ class ProfileMain extends StatelessWidget {
     );
   }
 
+  // MARK: - 메인
   Widget _main(BuildContext context) {
     return Container(
       color: UsedColor.bg_color,
@@ -70,6 +99,7 @@ class ProfileMain extends StatelessWidget {
     );
   }
 
+  // MARK: - 상단 버튼
   Widget _topButtons(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(right: 27.0.w),
@@ -122,8 +152,9 @@ class ProfileMain extends StatelessWidget {
     );
   }
 
+  // MARK: - 프로필 박스
   Widget _profileBox(BuildContext context) {
-    final userViewModel = Provider.of<UserViewModel>(context);
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     final profileVieWModel =
         Provider.of<ProfileViewModel>(context, listen: false);
     final profileIcon = userViewModel.userModel?.profile_icon ?? 'fedro_1';
@@ -199,7 +230,8 @@ class ProfileMain extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 24.0.w),
                     child: Text(
-                      profileVieWModel.getRank(userViewModel.userModel!.rank),
+                      profileVieWModel
+                          .getRank(userViewModel.userModel?.rank ?? 0),
                       style: AppTextStyles.PR_M_13
                           .copyWith(color: UsedColor.text_5),
                     ),
@@ -222,7 +254,7 @@ class ProfileMain extends StatelessWidget {
                       final profileViewModel =
                           Provider.of<ProfileViewModel>(context, listen: false);
                       profileViewModel.selectRank(profileViewModel
-                          .getRank(userViewModel.userModel!.rank));
+                          .getRank(userViewModel.userModel?.rank ?? 0));
                       context.goNamed('profileRankMain');
                     },
                     child: Padding(
@@ -243,9 +275,9 @@ class ProfileMain extends StatelessWidget {
     );
   }
 
-  //MARK: - 코인,티켓 박스
+  // MARK: - 코인,티켓 박스
   Widget _coinAndTicketBox(BuildContext context) {
-    final userViewModel = Provider.of<UserViewModel>(context);
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     return GestureDetector(
       onTap: () {
         context.goNamed('coinMainFromProfileMain');
@@ -345,7 +377,7 @@ class ProfileMain extends StatelessWidget {
     );
   }
 
-//MARK: - 만남 후기
+  // MARK: - 만남 후기
   Widget _review(BuildContext context) {
     return GestureDetector(
       onTap: () {

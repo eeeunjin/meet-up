@@ -25,9 +25,9 @@ class UserRepository {
         colRef: _firebaseRefs.colRefUser);
   }
 
-  Stream<QuerySnapshot<Object?>> readUserCollectionStream() {
-    return _firebaseService.readCollectionStream<UserModel>(
-        colRef: _firebaseRefs.colRefUser);
+  Stream<DocumentSnapshot> readUserDocumentStream({required String uid}) {
+    return _firebaseService.readDocumentStream(
+        docRef: _firebaseRefs.colRefUser.doc(uid));
   }
 
   Future<UserModel> readUserDocument({required String uid}) async {

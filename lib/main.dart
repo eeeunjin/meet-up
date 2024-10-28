@@ -231,61 +231,40 @@ class MyApp extends StatelessWidget {
       logger.e("Purchase error: $error");
     });
 
-    return Selector<UserViewModel, bool>(
-        builder: (context, value, child) {
-          logger.d("[main.dart] rebuilded");
-          logger.d("[main.dart] isLogined: ${LoginFunc.isLogined}");
-          // 자동 로그인 된 경우
-          final userViewModel =
-              Provider.of<UserViewModel>(context, listen: false);
-          if (LoginFunc.isLogined) {
-            userViewModel.uid = LoginFunc.uid;
-            return FutureBuilder<void>(
-              future: userViewModel.loadUserModel(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return const Center(child: CircularProgressIndicator());
-                } else {
-                  return ScreenUtilInit(
-                    designSize: const Size(393, 852), // 화면 크기 설정
-                    minTextAdapt: true,
-                    builder: (_, context) => MaterialApp.router(
-                      // Go Router 설정
-                      routerConfig: router,
-                      // routeInformationParser: router.routeInformationParser,
-                      // routerDelegate: router.routerDelegate,
-                      theme: ThemeData(
-                        // themedata 설정
-                        scaffoldBackgroundColor: Colors.white,
-                      ),
-                      debugShowCheckedModeBanner: false, // Debug 배너 없애기
-                    ),
-                  );
-                }
-              },
-            );
-          }
-          // 자동 로그인 안된 경우
-          else {
-            return ScreenUtilInit(
-              designSize: const Size(393, 852), // 화면 크기 설정
-              // minTextAdapt: true,
-              builder: (_, context) => MaterialApp.router(
-                // Go Router 설정
-                routerConfig: router,
-                // routeInformationParser: router.routeInformationParser,
-                // routerDelegate: router.routerDelegate,
-                theme: ThemeData(
-                  // themedata 설정
-                  scaffoldBackgroundColor: Colors.white,
-                ),
-                debugShowCheckedModeBanner: false, // Debug 배너 없애기
-              ),
-            );
-          }
-        },
-        selector: (_, userViewModel) => userViewModel.rebuild);
+    // 자동 로그인 된 경우
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+
+    if (LoginFunc.isLogined) {
+      userViewModel.setUid(uid: LoginFunc.uid!);
+      return ScreenUtilInit(
+        designSize: const Size(393, 852), // 화면 크기 설정
+        minTextAdapt: true,
+        builder: (_, context) => MaterialApp.router(
+          // Go Router 설정
+          routerConfig: router,
+          theme: ThemeData(
+            // themedata 설정
+            scaffoldBackgroundColor: Colors.white,
+          ),
+          debugShowCheckedModeBanner: false, // Debug 배너 없애기
+        ),
+      );
+    }
+    // 자동 로그인 안된 경우
+    else {
+      return ScreenUtilInit(
+        designSize: const Size(393, 852), // 화면 크기 설정
+        // minTextAdapt: true,
+        builder: (_, context) => MaterialApp.router(
+          // Go Router 설정
+          routerConfig: router,
+          theme: ThemeData(
+            // themedata 설정
+            scaffoldBackgroundColor: Colors.white,
+          ),
+          debugShowCheckedModeBanner: false, // Debug 배너 없애기
+        ),
+      );
+    }
   }
 }

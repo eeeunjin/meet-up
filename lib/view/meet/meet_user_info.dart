@@ -7,6 +7,7 @@ import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/meet/meet_user_info_view_model.dart';
+import 'package:meet_up/view_model/profile/profile_view_model.dart';
 import 'package:provider/provider.dart';
 
 class MeetUserInfo extends StatelessWidget {
@@ -105,9 +106,11 @@ class MeetUserInfo extends StatelessWidget {
   }
 
   Widget _profile(BuildContext context, UserModel user) {
+    final profileViewModel =
+        Provider.of<ProfileViewModel>(context, listen: false);
     return Container(
-      width: 340.w,
-      height: 227.h,
+      width: 337.w,
+      height: 176.h,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.r),
@@ -115,10 +118,10 @@ class MeetUserInfo extends StatelessWidget {
       child: Stack(
         children: [
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 27.0.h),
+              SizedBox(height: 28.0.h),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(width: 23.0.w),
                   Container(
@@ -139,10 +142,18 @@ class MeetUserInfo extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(width: 21.w),
+                  SizedBox(width: 24.w),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SizedBox(height: 32.h),
+                      Text(
+                        profileViewModel.getRank(user.rank),
+                        style: AppTextStyles.PR_M_16.copyWith(
+                          color: UsedColor.text_5,
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
                       Text(
                         user.nickname,
                         style: AppTextStyles.PR_SB_18.copyWith(
@@ -152,21 +163,6 @@ class MeetUserInfo extends StatelessWidget {
                     ],
                   ),
                 ],
-              ),
-              SizedBox(height: 25.h),
-              Divider(
-                thickness: 1.5.h,
-                height: 1.0.h,
-                color: UsedColor.bg_color,
-              ),
-              SizedBox(height: 17.h),
-              Center(
-                child: Text(
-                  '${user.rank} 등급',
-                  style: AppTextStyles.PR_M_16.copyWith(
-                    color: UsedColor.text_1,
-                  ),
-                ),
               ),
             ],
           ),

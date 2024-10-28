@@ -230,6 +230,7 @@ class ProfileRankMain extends StatelessWidget {
                   };
 
                   await userViewModel.updateUserInfo(data: changedUserInfo);
+                  
 
                   benefitDialog(context);
                 } else {

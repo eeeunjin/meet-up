@@ -230,7 +230,7 @@ class ScheduleMain extends StatelessWidget {
         Provider.of<ScheduleMainViewModel>(context, listen: false);
     final botNavViewModel =
         Provider.of<BottomNavigationBarViewModel>(context, listen: false);
-
+  
     if (scheduleMainViewModel.selectedMeetUpScheduleDetail == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         botNavViewModel.setIsHidden(false);
