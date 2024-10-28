@@ -174,7 +174,7 @@ class MeetCreate extends StatelessWidget {
           // text field
           Container(
             alignment: Alignment.center,
-            width: 209.w,
+            width: 190.w,
             height: 19.h,
             child: TextField(
               maxLength: 16,
@@ -194,13 +194,13 @@ class MeetCreate extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          Padding(
-            padding: EdgeInsets.only(right: 26.w),
-            child: Text(
-              viewModel.namingCount,
-              style: AppTextStyles.PR_SB_11
-                  .copyWith(color: UsedColor.text_3), // 임의 색상
-            ),
+          Text(
+            viewModel.namingCount,
+            style: AppTextStyles.PR_SB_11
+                .copyWith(color: UsedColor.text_3), // 임의 색상
+          ),
+          SizedBox(
+            width: 26.w,
           ),
         ],
       ),
