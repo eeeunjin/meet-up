@@ -309,7 +309,7 @@ class MeetMain extends StatelessWidget {
   Widget _coinWidget(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context);
     return Padding(
-      padding: EdgeInsets.only(right: 3.0.h),
+      padding: EdgeInsets.only(right: 8.0.h),
       child: GestureDetector(
         onTap: () {
           context.goNamed('coinMainFromMeetMain');
