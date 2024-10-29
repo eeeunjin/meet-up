@@ -241,6 +241,7 @@ class MyApp extends StatelessWidget {
         minTextAdapt: true,
         builder: (_, context) => MaterialApp.router(
           // Go Router 설정
+          themeMode: ThemeMode.light,
           routerConfig: router,
           theme: ThemeData(
             // themedata 설정
@@ -257,6 +258,7 @@ class MyApp extends StatelessWidget {
         // minTextAdapt: true,
         builder: (_, context) => MaterialApp.router(
           // Go Router 설정
+          themeMode: ThemeMode.light,
           routerConfig: router,
           theme: ThemeData(
             // themedata 설정

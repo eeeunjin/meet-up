@@ -114,20 +114,26 @@ class MeetMain extends StatelessWidget {
     return Container(
       color: UsedColor.bg_color,
       child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(left: 20.0.w, right: 20.w),
-          child: Column(
-            children: [
-              SizedBox(height: 15.h),
-              _coinWidget(context),
-              SizedBox(height: 15.h),
-              _event(),
-              SizedBox(height: 50.h),
-              _manageMeetList(context),
-              SizedBox(height: 28.h),
-              _searchMeetList(context),
-            ],
-          ),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: SizedBox(height: 15.h),
+            ),
+            _coinWidget(context),
+            SizedBox(height: 15.h),
+            _event(),
+            SizedBox(height: 50.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: _manageMeetList(context),
+            ),
+            SizedBox(height: 28.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: _searchMeetList(context),
+            ),
+          ],
         ),
       ),
     );
@@ -294,7 +300,7 @@ class MeetMain extends StatelessWidget {
   // MARK: - 이벤트 배너
   Widget _event() {
     return SizedBox(
-      width: 354.w,
+      width: double.infinity,
       height: 120.h,
       child: Image.asset(ImagePath.eventImage1),
     );
