@@ -300,7 +300,7 @@ class MeetMain extends StatelessWidget {
   // MARK: - 이벤트 배너
   Widget _event() {
     return SizedBox(
-      width: double.infinity,
+      width: 381.h,
       height: 120.h,
       child: Image.asset(ImagePath.eventImage1),
     );
