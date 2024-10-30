@@ -6,6 +6,8 @@ import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
+import 'package:meet_up/view_model/setting/setting_view_model.dart';
+import 'package:provider/provider.dart';
 
 class SettingNotification extends StatelessWidget {
   const SettingNotification({super.key});
@@ -142,14 +144,20 @@ class SettingNotification extends StatelessWidget {
             ),
             child: Column(
               children: [
-                NotificationToggle(
-                  text: '수신함',
-                  initialValue: false,
-                  onChanged: (bool value) {},
+                Consumer<SettingViewModel>(
+                  builder: (context, viewModel, child) {
+                    return NotificationToggle(
+                      text: '수신함',
+                      initialValue: viewModel.isNotificationEnabled,
+                      onChanged: (bool value) {
+                        viewModel.toggleNotification(value);
+                      },
+                    );
+                  },
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );

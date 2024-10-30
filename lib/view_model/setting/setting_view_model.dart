@@ -8,4 +8,12 @@ class SettingViewModel extends ChangeNotifier {
     }
     return phoneNumber;
   }
+
+  // MARK: - 푸쉬 알림 토글
+  bool isNotificationEnabled = false;
+
+  void toggleNotification(bool value) {
+    isNotificationEnabled = value;
+    notifyListeners();
+  }
 }
