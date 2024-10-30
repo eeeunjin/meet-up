@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -274,12 +275,11 @@ class NotificationToggle extends StatelessWidget {
         SizedBox(
           width: 56.w,
           height: 24.h,
-          child: Switch(
+          child: CupertinoSwitch(
             value: initialValue,
             onChanged: onChanged,
             activeColor: UsedColor.grey1,
-            inactiveThumbColor: Colors.white,
-            inactiveTrackColor: UsedColor.grey1,
+            trackColor: UsedColor.grey1,
           ),
         ),
       ],
