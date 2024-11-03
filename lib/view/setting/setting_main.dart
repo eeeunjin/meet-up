@@ -112,7 +112,7 @@ class SettingMain extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 4.h),
+        SizedBox(height: 10.h),
         // MARK: - 알림 설정
         // GestureDetector(
         //   onTap: () {

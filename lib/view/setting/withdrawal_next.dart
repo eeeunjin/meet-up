@@ -169,11 +169,14 @@ class WithdrawalNext extends StatelessWidget {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     return NextButton(
       onTap: () async {
-        // 탈퇴 로직
-        await userViewModel.deleteUser();
+        withdrawalSnackBar(context);
+        // // 탈퇴 로직
+        // await userViewModel.deleteUser();
 
-        // 탈퇴 로직 & withdrawalDialog 띄우기
-        withdrawalDialog(context, userViewModel);
+        // // 탈퇴 로직 & withdrawalDialog 띄우기
+        // withdrawalDialog(context, userViewModel);
+
+        
       },
       height: 56.h,
       text: '탈퇴하기',
@@ -282,6 +285,20 @@ class WithdrawalNext extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  // MARK: - 탈퇴 제한 스낵바
+  void withdrawalSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          '탈퇴 기능이 제한되었습니다.',
+          style: AppTextStyles.PR_R_14.copyWith(color: Colors.white),
+        ),
+        backgroundColor: UsedColor.main,
+        duration: const Duration(seconds: 2),
+      ),
     );
   }
 }

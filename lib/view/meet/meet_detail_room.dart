@@ -48,16 +48,16 @@ class MeetDetailRoom extends StatelessWidget {
                 ),
                 child: _header(context),
               ),
-              if (!meetDetailRoomViewModel.isMyRoom!)
-                Positioned(
-                  right: 24.w,
-                  top: 61.h,
-                  child: Image.asset(
-                    ImagePath.reportIcon,
-                    width: 29.w,
-                    height: 29.h,
-                  ),
-                ),
+              // if (!meetDetailRoomViewModel.isMyRoom!)
+              //   Positioned(
+              //     right: 24.w,
+              //     top: 61.h,
+              //     child: Image.asset(
+              //       ImagePath.reportIcon,
+              //       width: 29.w,
+              //       height: 29.h,
+              //     ),
+              //   ),
             ],
           ),
           Expanded(

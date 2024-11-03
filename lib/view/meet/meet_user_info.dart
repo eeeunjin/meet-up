@@ -166,31 +166,31 @@ class MeetUserInfo extends StatelessWidget {
               ),
             ],
           ),
-          Positioned(
-            top: 19.0.h,
-            right: 19.w,
-            child: Container(
-              width: 27.w,
-              height: 27.h,
-              decoration: BoxDecoration(
-                color: UsedColor.main,
-                shape: BoxShape.circle,
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(
-                  top: 4.0.h,
-                  right: 4.0.w,
-                  left: 5.0.w,
-                  bottom: 5.0.h,
-                ),
-                child: Image.asset(
-                  ImagePath.infoIcon1,
-                  height: 18.h,
-                  width: 18.w,
-                ),
-              ),
-            ),
-          ),
+          // Positioned(
+          //   top: 19.0.h,
+          //   right: 19.w,
+          //   child: Container(
+          //     width: 27.w,
+          //     height: 27.h,
+          //     decoration: BoxDecoration(
+          //       color: UsedColor.main,
+          //       shape: BoxShape.circle,
+          //     ),
+          //     child: Padding(
+          //       padding: EdgeInsets.only(
+          //         top: 4.0.h,
+          //         right: 4.0.w,
+          //         left: 5.0.w,
+          //         bottom: 5.0.h,
+          //       ),
+          //       child: Image.asset(
+          //         ImagePath.infoIcon1,
+          //         height: 18.h,
+          //         width: 18.w,
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

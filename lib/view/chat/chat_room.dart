@@ -343,11 +343,11 @@ class ChatRoom extends StatelessWidget {
             SizedBox(
               width: 12.w,
             ),
-            // Image.asset(
-            //   ImagePath.chatRoomNoticeImage,
-            //   width: 20.w,
-            //   height: 20.h,
-            // ),
+            Image.asset(
+              ImagePath.chatRoomNoticeImage,
+              width: 20.w,
+              height: 20.h,
+            ),
             SizedBox(
               width: 6.14.w,
             ),
@@ -764,17 +764,17 @@ class ChatRoom extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            logger.d(
-                                "[${chatModel.nickname}]님에 대한 신고 버튼이 눌렸습니다.");
-                          },
-                          // child: Image.asset(
-                          //   ImagePath.chatRoomDeclarationButton,
-                          //   height: 19.h,
-                          //   width: 19.h,
-                          // ),
-                        ),
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     logger.d(
+                        //         "[${chatModel.nickname}]님에 대한 신고 버튼이 눌렸습니다.");
+                        //   },
+                        //   child: Image.asset(
+                        //     ImagePath.chatRoomDeclarationButton,
+                        //     height: 19.h,
+                        //     width: 19.h,
+                        //   ),
+                        // ),
                         Text(
                           sendTimeString,
                           style: AppTextStyles.PR_M_10.copyWith(
