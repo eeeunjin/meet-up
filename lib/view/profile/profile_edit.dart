@@ -542,7 +542,6 @@ class ProfileEdit extends StatelessWidget {
 
           if (updatedUserModel != null) {
             logger.d('updatedUserModel: ${updatedUserModel.toJson()}');
-            userViewModel.setUserModel(userModel: updatedUserModel);
             context.pop();
           } else {
             logger.e('변경된 사항이 없습니다.');

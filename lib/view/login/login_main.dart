@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
@@ -14,6 +13,7 @@ class LoginMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -23,14 +23,14 @@ class LoginMain extends StatelessWidget {
               height: 163.h,
             ),
             Center(
-              child: Icon(
-                Icons.cloud_outlined,
-                color: UsedColor.Button_01,
-                size: 190.h,
+              child: Image.asset(
+                'assets/images/logo.png',
+                width: 190.w,
+                height: 190.h,
               ),
             ),
             SizedBox(
-              height: 180.h,
+              height: 210.h,
             ),
             GestureDetector(
               onTap: () {
@@ -63,8 +63,8 @@ class LoginMain extends StatelessWidget {
 
   Widget _loginButton() {
     return Container(
-      width: 286.w,
-      height: 56.64.h,
+      width: 287.w,
+      height: 56.h,
       decoration: BoxDecoration(
         borderRadius: BorderRadiusDirectional.circular(19.r),
         color: UsedColor.button,
@@ -80,8 +80,8 @@ class LoginMain extends StatelessWidget {
 
   Widget _signUpButton() {
     return Container(
-      width: 286.w,
-      height: 56.64.h,
+      width: 287.w,
+      height: 56.h,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadiusDirectional.circular(19.r),

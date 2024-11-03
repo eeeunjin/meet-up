@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meet_up/loginFunc.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/model/policy_model.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
@@ -179,8 +180,6 @@ Widget SignUpDetailSix(BuildContext context) {
                     while (context.canPop()) {
                       context.pop();
                     }
-                    // 유저 모델 불러오기
-                    await userViewModel.loadUserModel();
                   }
                 }
                 // 로그인으로 넘어온 경우
@@ -194,13 +193,13 @@ Widget SignUpDetailSix(BuildContext context) {
                     while (context.canPop()) {
                       context.pop();
                     }
-                    // 유저 모델 불러오기
-                    await userViewModel.loadUserModel();
                   }
                 }
               } else {
                 debugPrint("필수 항목이 체크되지 않아 시작 불가");
               }
+
+              logger.d(LoginFunc.uid!);
             },
             child: Container(
               width: 327.w,

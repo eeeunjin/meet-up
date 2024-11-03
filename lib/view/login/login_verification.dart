@@ -368,8 +368,6 @@ class LoginVerification extends StatelessWidget {
                   while (context.canPop()) {
                     context.pop();
                   }
-                  // 유저 모델 불러오기
-                  await userViewModel.loadUserModel();
                   FocusManager.instance.primaryFocus?.unfocus();
                 }
 

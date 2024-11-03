@@ -385,7 +385,6 @@ class SignUpVerification extends StatelessWidget {
                           context.pop();
                         }
                       }
-                      await userViewModel.loadUserModel();
                     },
                     context: context,
                     title: "가입된 계정이 있습니다.",

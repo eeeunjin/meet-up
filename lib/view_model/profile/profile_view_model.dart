@@ -66,7 +66,7 @@ class ProfileViewModel with ChangeNotifier {
 
   Map<String, List<String>> get rankBenefits {
     return {
-      '수줍은': ['추가 할인 0%'],
+      '수줍은': ['추가 할인 0%', '최초 달성 시, 만남권 1개 지급'],
       '용감한': ['추가 할인 2%', '최초 달성 시, 만남권 1개 지급'],
       '활발한': ['추가 할인 4%', '최초 달성 시, 만남권 1개 지급'],
       '적극적인': ['추가 할인 6%', '최초 달성 시, 만남권 1개 지급'],

@@ -174,6 +174,9 @@ class ImagePath {
   static String get profileChip12Check =>
       'assets/images/profile_meeting_review_chip12-1.png';
 
+  static String get profileNotification =>
+      'assets/images/profile_notification.png';
+
   // MARK: - schedule
   static String get backCross => 'assets/images/backcross.png';
   static String get scheduleIcon1 => 'assets/images/schedule_icon_1.png';

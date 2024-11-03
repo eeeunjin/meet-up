@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_up/loginFunc.dart';
 import 'package:meet_up/main.dart';
@@ -12,50 +13,26 @@ class UserViewModel with ChangeNotifier {
 
   // 유저 정보 (사용자)
   UserModel? userModel;
-  String? uid;
-  bool rebuild = false;
+  String? _uid;
+  String? get uid => _uid;
+
+  bool rebuildPrevent = false;
+
+  void setUid({required String uid}) {
+    _uid = uid;
+  }
 
   void setUserModel({required UserModel userModel}) {
     this.userModel = userModel;
-    notifyListeners();
   }
 
-  void setUserModelWithRebuild({required UserModel? userModel}) {
-    this.userModel = userModel;
-    rebuild = !rebuild;
+  void setUserModelNotify() {
     notifyListeners();
   }
 
   // MAKR: - 유저 정보 CRUD
-  // Update
-  Future<void> updateUserInfo({required Map<String, dynamic> data}) async {
-    await _userRepository.updateUserDocument(uid: uid!, data: data);
 
-    data.forEach((key, value) {
-      if (key == "coin") {
-        userModel!.coin = value;
-      } else if (key == "ticket") {
-        userModel!.ticket = value;
-      } else if (key == "rank_archive") {
-        userModel!.rank_archive = value;
-      }
-    });
-
-    notifyListeners();
-  }
-
-  Future<void> updateMyMissionModel(
-      {required String uid,
-      required docId,
-      required Map<String, dynamic> data}) async {
-    await _userRepository.updateMyMissionDocument(
-      uid: uid,
-      missionId: docId,
-      data: data,
-    );
-  }
-
-  // Create
+  // MARK: - Create
   // MyRankHistoryModel 생성
   Future<void> createMyRankHistoryModel(
       {required String uid, required MyRankHistoryModel data}) async {
@@ -71,7 +48,12 @@ class UserViewModel with ChangeNotifier {
         data: data, docId: docId, uid: uid);
   }
 
-  // Read
+  // MARK: - Read
+  // User 정보 불러오기
+  Stream<DocumentSnapshot> readUserModelDocumentStream({required String uid}) {
+    return _userRepository.readUserDocumentStream(uid: uid);
+  }
+
   // MyMissionModel 불러오기
   Future<MyMissonModel> readMyMissionModel(
       {required String uid, required MyMissionType type}) async {
@@ -79,23 +61,25 @@ class UserViewModel with ChangeNotifier {
         uid: uid, missionId: type.name);
   }
 
-  // MARK: - 로그인 & 회원가입 & 로그아웃 & 탈퇴
-
-  // MARK: - 내 정보
-  // 로그인이 된 경우, 유저 정보를 불러오는 함수
-  Future<void> loadUserModel() async {
-    // 처음 한번만 불러오도록 함
-    if (userModel != null) return;
-
-    // uid가 null이 아닌 경우 사용자 정보를 저장
-    if (uid != null) {
-      setUserModelWithRebuild(
-          userModel: await _userRepository.readUserDocument(uid: uid!));
-    } else {
-      debugPrint("Error: uid value is null");
-    }
+  // MARK: - Update
+  Future<void> updateUserInfo({required Map<String, dynamic> data}) async {
+    await _userRepository.updateUserDocument(uid: uid!, data: data);
   }
 
+  Future<void> updateMyMissionModel(
+      {required String uid,
+      required docId,
+      required Map<String, dynamic> data}) async {
+    await _userRepository.updateMyMissionDocument(
+      uid: uid,
+      missionId: docId,
+      data: data,
+    );
+  }
+
+  // MARK: - Delete
+
+  // MARK: - 로그인 & 회원가입 & 로그아웃 & 탈퇴
   // 로그인 & 회원가입 시, 로그인 정보 및 uid 저장
   Future<void> login({required String? uid}) async {
     try {
@@ -107,7 +91,7 @@ class UserViewModel with ChangeNotifier {
         value: uid,
       );
       LoginFunc.uid = uid;
-      this.uid = uid;
+      _uid = uid;
       // login 함수 호출 후, loadUserModel 함수를 호출 하기 때문에 notify는 하지 않음
     } catch (e) {
       Exception("Error: $e");
@@ -121,8 +105,7 @@ class UserViewModel with ChangeNotifier {
       // firebase secure storage에 uid 값 삭제
       await LoginFunc.storage.delete(key: "uid");
       LoginFunc.isLogined = false;
-      uid = null;
-      setUserModelWithRebuild(userModel: null);
+      _uid = null;
     } catch (e) {
       LoginFunc.isLogined = true;
       logger.e("[logout] Error: $e");

@@ -171,6 +171,13 @@ class FirebaseCRUD {
     }
   }
 
+  // Document 단위로 Stream 데이터를 가져오는 함수
+  Stream<DocumentSnapshot> readDocumentStream({
+    required DocumentReference docRef,
+  }) {
+    return docRef.snapshots();
+  }
+
   /// 쿼리로 stream snapshots을 불러오는 함수
   Stream<QuerySnapshot<Object?>> readCollectionStreamByQuery<T>({
     required String uid,

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -372,6 +373,7 @@ class TicketBuy extends StatelessWidget {
               // 유저 코인이 결제 코인보다 적은 경우
               if (totalCoin > (userViewModel.userModel?.coin ?? -1)) {
                 logger.e("유저의 코인이 부족합니다.");
+                _showNotEnoughCoinDialog(context, from);
                 return;
               }
 
@@ -438,6 +440,77 @@ class TicketBuy extends StatelessWidget {
                 ),
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // MARK: - 코인 부족 알림
+  void _showNotEnoughCoinDialog(
+    BuildContext context,
+    String from,
+  ) {
+    showCupertinoDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: Column(
+          children: [
+            Text(
+              "재화 부족",
+              style: AppTextStyles.PR_SB_15
+                  .copyWith(color: UsedColor.charcoal_black),
+            ),
+            SizedBox(
+              height: 8.h,
+            ),
+          ],
+        ),
+        content: Column(
+          children: [
+            Text(
+              "보유하신 코인이 부족합니다.",
+              style: AppTextStyles.PR_R_13
+                  .copyWith(color: UsedColor.charcoal_black),
+            ),
+            Text(
+              "코인 충전 페이지로 이동하시겠습니까?",
+              style: AppTextStyles.PR_R_13
+                  .copyWith(color: UsedColor.charcoal_black),
+            ),
+          ],
+        ),
+        actions: [
+          CupertinoDialogAction(
+            child: Text(
+              "취소",
+              style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
+            ),
+            onPressed: () {
+              context.pop();
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text(
+              "확인",
+              style: AppTextStyles.PR_M_13.copyWith(color: Colors.black),
+            ),
+            onPressed: () {
+              context.pop();
+              context.pop();
+              context.pop();
+              switch (from) {
+                case 'MeetMain':
+                  context.goNamed('coinBuyFromMeetMain');
+                  break;
+                case 'MeetManageMain':
+                  context.goNamed('coinBuyFromMeetManageMain');
+                  break;
+                case 'ProfileMain':
+                  context.goNamed('coinBuyFromProfileMain');
+                  break;
+              }
+            },
           ),
         ],
       ),
