@@ -114,30 +114,30 @@ class SettingMain extends StatelessWidget {
         ),
         SizedBox(height: 4.h),
         // MARK: - 알림 설정
-        GestureDetector(
-          onTap: () {
-            context.goNamed('settingNotification');
-          },
-          child: SizedBox(
-            height: 48.h,
-            child: Row(
-              children: [
-                Image.asset(
-                  ImagePath.setIcon2,
-                  width: 24.w,
-                  height: 24.h,
-                ),
-                SizedBox(width: 16.w),
-                Text(
-                  '알림 설정',
-                  style: AppTextStyles.PR_R_16
-                      .copyWith(color: UsedColor.charcoal_black),
-                )
-              ],
-            ),
-          ),
-        ),
-        SizedBox(height: 12.h),
+        // GestureDetector(
+        //   onTap: () {
+        //     context.goNamed('settingNotification');
+        //   },
+        //   child: SizedBox(
+        //     height: 48.h,
+        //     child: Row(
+        //       children: [
+        //         Image.asset(
+        //           ImagePath.setIcon2,
+        //           width: 24.w,
+        //           height: 24.h,
+        //         ),
+        //         SizedBox(width: 16.w),
+        //         Text(
+        //           '알림 설정',
+        //           style: AppTextStyles.PR_R_16
+        //               .copyWith(color: UsedColor.charcoal_black),
+        //         )
+        //       ],
+        //     ),
+        //   ),
+        // ),
+        // SizedBox(height: 12.h),
       ],
     );
   }
