@@ -1,3 +1,5 @@
+import 'package:meet_up/view/profile/profile_notification.dart';
+
 class ImagePath {
   static String get back => 'assets/images/back.png';
   static String get close => 'assets/images/close.png';
