@@ -52,7 +52,7 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   await initializeFirebase();
-  await LoginFunc.autoLogin();
+  // await LoginFunc.autoLogin();
   await initializeDateFormatting('ko_KR', null);
 
   DateTime currentDate = DateTime.now();
