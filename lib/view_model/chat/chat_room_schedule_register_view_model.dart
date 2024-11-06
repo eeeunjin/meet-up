@@ -281,7 +281,7 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
     // ChatModel 추가
     ChatModel chatModel = ChatModel(
       uid: '',
-      nickname: nickname!,
+      nickname: nickname ?? '',
       profile_icon: '',
       content: scheduleTitle,
       date: Timestamp.now(),

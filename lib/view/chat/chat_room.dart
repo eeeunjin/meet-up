@@ -1046,13 +1046,13 @@ class ChatRoom extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // SizedBox(
-                //   width: 20.w,
-                //   height: 20.h,
-                //   // child: Image.asset(
-                //   //   ImagePath.chatRoomDeleteScheduleIcon,
-                //   // ),
-                // ),
+                SizedBox(
+                  width: 20.w,
+                  height: 20.h,
+                  child: Image.asset(
+                    ImagePath.chatRoomDeleteScheduleIcon,
+                  ),
+                ),
                 SizedBox(width: 6.w),
                 Text(
                   '일정 삭제',
@@ -1062,7 +1062,7 @@ class ChatRoom extends StatelessWidget {
               ],
             ),
             SizedBox(
-              height: 3.h,
+              height: 6.h,
             ),
             Text(
               "방장이 '${chatModel.content}' 일정을 삭제했습니다.",
