@@ -266,11 +266,14 @@ class ChatRoomSchduleRegisterViewModel with ChangeNotifier {
       };
     }
 
-    // 기존의 스케줄 chat 삭제 (docId 'schedule_register')
-    await _chatRepository.deleteChat(
+    // 기존의 스케줄 chat 삭제
+    final List<String> docIds = ['schedule_register', 'diary', 'review', 'schedule_end'];
+    for (String docId in docIds) {
+      await _chatRepository.deleteChat(
       roomId,
-      'schedule_register',
-    );
+      docId,
+      );
+    }
 
     // 알림 삭제 채팅이 존재했다면 삭제
     await _chatRepository.deleteChat(

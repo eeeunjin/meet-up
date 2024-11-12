@@ -138,7 +138,7 @@ async function handleScheduleDecided(roomId, afterSchedule, after) {
   var afterFourHours = afterSchedule.date.toDate();
   afterFourHours.setSeconds(afterFourHours.getSeconds() + 1);
 
-  await chatRef.add({
+  await chatRef.doc("review").set({
     "uid": "",
     "nickname": "",
     "profile_icon": "",
@@ -149,7 +149,7 @@ async function handleScheduleDecided(roomId, afterSchedule, after) {
   });
 
   afterFourHours.setSeconds(afterFourHours.getSeconds() + 1);
-  await chatRef.add({
+  await chatRef.doc("diary").set({
     "uid": "",
     "nickname": "",
     "profile_icon": "",
@@ -160,7 +160,7 @@ async function handleScheduleDecided(roomId, afterSchedule, after) {
   });
 
   afterFourHours.setSeconds(afterFourHours.getSeconds() + 1);
-  await chatRef.add({
+  await chatRef.doc("schedule_end").set({
     "uid": "",
     "nickname": "",
     "profile_icon": "",

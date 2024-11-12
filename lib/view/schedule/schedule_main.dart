@@ -142,7 +142,7 @@ class ScheduleMain extends StatelessWidget {
         return Row(
           children: [
             _selectedPart(
-              title: '밋업 만남',
+              title: '그로윗 만남',
               isSelected: viewModel.selectedPart == SelectedPart.meetUp,
               onTap: () => viewModel.selectMeetUp(),
             ),

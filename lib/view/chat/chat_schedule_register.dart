@@ -371,6 +371,7 @@ class ChatScheduleRegister extends StatelessWidget {
           uid: chatRoomViewModel.roomModel.room_owner_reference.id,
           nickname: chatRoomViewModel.userModels[0].nickname,
         );
+        chatRoomScheduleHostViewModel.resetState();
         context.pop();
       },
       enable: chatRoomScheduleHostViewModel.allCheckCompleted,
