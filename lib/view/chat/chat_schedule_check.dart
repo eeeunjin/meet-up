@@ -781,6 +781,8 @@ class ChatScheduleCheck extends StatelessWidget {
                               overlayColor:
                                   MaterialStatePropertyAll(Colors.transparent)),
                           onPressed: () async {
+                            context.pop();
+                            context.pop();
                             await chatRoomSchduleRegisterViewModel
                                 .deleteSchedule(
                               roomId: chatRoomViewModel.roomID,
@@ -788,8 +790,6 @@ class ChatScheduleCheck extends StatelessWidget {
                                   .roomModel.room_schedule!['title'],
                               type: 'owner',
                             );
-                            context.pop();
-                            context.pop();
                             logger.d("일정 삭제 버튼이 눌렸습니다.");
                           },
                           child: Text(

@@ -1940,7 +1940,7 @@ class ChatRoom extends StatelessWidget {
 
     // 참여자인지 방장인지 구별하는 변수
     final isOwner = chatRoomViewModel.userModels[0].nickname ==
-        userViewModel.userModel?.nickname;
+        userViewModel.userModel?.nickname && !chatRoomViewModel.roomModel.isOwnerExit ;
     // 스케줄이 확정되었는지 확인하는 변수
     final isScheduleDecided = chatRoomViewModel.roomModel.isScheduleDecided;
     // 방이 현재 삭제되었는지 나타내는 변수
@@ -2116,6 +2116,14 @@ class ChatRoom extends StatelessWidget {
                 );
 
                 if (isScheduleDecided && !isScheduleEnd) {
+                  // users/user docs/myScheduleModel 삭제 (참여자 모두)
+                  for (var userModel in chatRoomViewModel.userModels) {
+                    await chatRoomViewModel.deleteMySchedule(
+                      uid: userModel.uid,
+                      scheduleId: chatRoomViewModel.roomID,
+                    );
+                  }
+
                   // chatRooms/room doc/ChatModel 추가 (일정 삭제 알림)
                   await chatRoomSchduleRegisterViewModel.deleteSchedule(
                     roomId: chatRoomViewModel.roomID,
@@ -2125,14 +2133,6 @@ class ChatRoom extends StatelessWidget {
                     nickname: userViewModel.userModel!.nickname,
                     participants: participantRefs,
                   );
-
-                  // users/user docs/myScheduleModel 삭제 (참여자 모두)
-                  for (var userModel in chatRoomViewModel.userModels) {
-                    await chatRoomViewModel.deleteMySchedule(
-                      uid: userModel.uid,
-                      scheduleId: chatRoomViewModel.roomID,
-                    );
-                  }
                 } else {
                   // rooms/room docs/roomModel 참여자 정보 update
                   chatRoomViewModel.updateRoomData(

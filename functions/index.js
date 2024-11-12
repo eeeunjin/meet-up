@@ -10,198 +10,174 @@ const {
 initializeApp();
 const db = getFirestore();
 
-exports.sendScheduleMessage =
-  onDocumentUpdated("rooms/{roomId}", async (event) => {
-    // 불러온 데이터의 docID
-    const roomId = event.params.roomId;
-    // 변경 전 데이터와 변경 후 데이터
-    const before = event.data.before.data();
-    const after = event.data.after.data();
+// MARK: - sendScheduleMessage
+exports.sendScheduleMessage = onDocumentUpdated("rooms/{roomId}", async (event) => {
+  const roomId = event.params.roomId;
+  const before = event.data.before.data();
+  const after = event.data.after.data();
 
-    // 채팅방 참여자가 2명에서 3명으로 변경되었을 때 (방장 포함 4명이 한 방에 들어온 경우)
-    // 채팅방에 스케줄 확정 알림을 위한 채팅 문서를 추가합니다.
-    if (before.room_participant_reference.length === 2 &&
-      after.room_participant_reference.length === 3) {
-      const chatRoomId = event.params.roomId;
-      const chatRoomRef = db.collection("chatRooms").doc(chatRoomId);
-      const chatRef = chatRoomRef.collection("chats");
-      const roomRef = db.collection("rooms").doc(chatRoomId);
+  if (before.room_participant_reference.length === 2 && after.room_participant_reference.length === 3) {
+    await handleParticipantChange(roomId);
+  }
 
-      await chatRef.add({
-        "uid": "",
-        "nickname": "",
-        "profile_icon": "",
-        "content": "",
-        "date": Timestamp.now(),
-        "room_reference": chatRoomId,
-        "type": "schedule_write",
-      });
-
-      // room 정보 중, recent message 값을 업데이트
-      await roomRef.update({
-        "recentMessage": "일정 등록이 가능합니다 !",
-      });
-
-      console.log("일정 추가 가능 채팅이 추가되었습니다.");
+  const beforeScheduleExist = (before.room_schedule != null);
+  if (beforeScheduleExist) {
+    const afterScheduleExist = (after.room_schedule != null);
+    if (!afterScheduleExist) {
+      await handleScheduleDeleted(roomId);
+      return;
     }
 
-    // 4명의 인원이 일정을 확정한 경우 & 확정된 일정이 삭제된 경우
-    // 1. 채팅방에 스케줄 확정 알림을 위한 채팅 문서를 추가
-    // 2. roomModel의 isScheduleDecided 값을 true로 변경
-    const beforeScheduleExist = (before.room_schedule != null);
-    if (beforeScheduleExist) {
-      const afterScheduleExist = (after.room_schedule != null);
-      if (!afterScheduleExist) {
-        // TODO: 일정이 삭제된 경우에 대한 경우 처리
-        // roomModel의 isScheduleDecided 값을 false로 변경
-        // room 정보 중, recent message 값을 업데이트
-        // 해당 채팅방의 스케줄 관련 채팅 문서를 삭제
-        // 해당 채팅방의 3,2,1일전 알림 채팅 문서를 삭제
-        // 해당 채팅방의 상호평가 알림 채팅 문서를 삭제
-        // 해당 채팅방의 일기쓰기 알림 채팅 문서를 삭제
-        // 유저들의 schedule document 삭제
+    const beforeSchedule = before.room_schedule;
+    const beforeAgree = beforeSchedule.participants_agree_selected_schedule;
+    const afterSchedule = after.room_schedule;
+    const afterAgree = afterSchedule.participants_agree_selected_schedule;
 
-        return;
-      }
-
-      const beforeSchedule = before.room_schedule;
-      const beforeAgree = beforeSchedule.participants_agree_selected_schedule;
-      const afterSchedule = after.room_schedule;
-      const afterAgree = afterSchedule.participants_agree_selected_schedule;
-
-      const isAllScheduleDecided = (beforeAgree.length === 3 &&
-        afterAgree.length == 4);
-
-      // 4명의 인원이 모두 일정을 확정한 경우
-      if (isAllScheduleDecided) {
-        const chatRoomId = event.params.roomId;
-        const chatRoomRef = db.collection("chatRooms").doc(chatRoomId);
-        const chatRef = chatRoomRef.collection("chats");
-        const roomRef = db.collection("rooms").doc(chatRoomId);
-
-        // 일정 확정 알림 문구 추가
-        await chatRef.add({
-          "uid": "",
-          "nickname": "",
-          "profile_icon": "",
-          "content": "",
-          "date": Timestamp.now(),
-          "room_reference": chatRoomId,
-          "type": "schedule_decide",
-        });
-
-        // 해당 채팅 방의 최근 메세지 업데이트
-        await roomRef.update({
-          "recentMessage": "일정이 확정되었습니다 !",
-        });
-
-        // roomModel의 isScheduleDecided 값을 true로 변경 -> 일정을 삭제할 수 없도록 하기 위한 변수
-        await roomRef.update({
-          "isScheduleDecided": true,
-        });
-
-        // 3일 전 자정
-        var threeDaysBefore = afterSchedule.date.toDate();
-        threeDaysBefore.setDate(threeDaysBefore.getDate() - 3);
-        threeDaysBefore.setHours(0, 0, 0, 0);
-        // 2일 전 날짜
-        var twoDaysBefore = afterSchedule.date.toDate();
-        twoDaysBefore.setDate(twoDaysBefore.getDate() - 2);
-        twoDaysBefore.setHours(0, 0, 0, 0);
-        // 1일 전 날짜
-        var oneDayBefore = afterSchedule.date.toDate();
-        oneDayBefore.setDate(oneDayBefore.getDate() - 1);
-        oneDayBefore.setHours(0, 0, 0, 0);
-
-        // 설정된 만남 일자 기준 3일전 2일전 1일전이 현재 시간보다 이후인 경우 document에 추가
-        if (threeDaysBefore > Timestamp.now().toDate()) {
-          await chatRef.add({
-            "uid": "",
-            "nickname": "",
-            "profile_icon": "",
-            "content": "three",
-            "date": Timestamp.fromDate(threeDaysBefore),
-            "room_reference": chatRoomId,
-            "type": "schedule_alarm",
-          });
-        }
-        if (twoDaysBefore > Timestamp.now().toDate()) {
-          await chatRef.add({
-            "uid": "",
-            "nickname": "",
-            "profile_icon": "",
-            "content": "two",
-            "date": Timestamp.fromDate(twoDaysBefore),
-            "room_reference": chatRoomId,
-            "type": "schedule_alarm",
-          });
-        }
-        if (oneDayBefore > Timestamp.now().toDate()) {
-          await chatRef.add({
-            "uid": "",
-            "nickname": "",
-            "profile_icon": "",
-            "content": "one",
-            "date": Timestamp.fromDate(oneDayBefore),
-            "room_reference": chatRoomId,
-            "type": "schedule_alarm",
-          });
-        }
-
-        // 상호 평가 & 일기 알림 일자 계산 (만남 일자 시간 4시간 이후)
-        var afterFourHours = afterSchedule.date.toDate();
-        afterFourHours.setSeconds(afterFourHours.getSeconds() + 1);
-
-        // 상호 평가 알림 추가
-        await chatRef.add({
-          "uid": "",
-          "nickname": "",
-          "profile_icon": "",
-          "content": "",
-          "date": Timestamp.fromDate(afterFourHours),
-          "room_reference": chatRoomId,
-          "type": "review",
-        });
-
-        afterFourHours.setSeconds(afterFourHours.getSeconds() + 1);
-        // 일기 쓰기 알림 추가
-        await chatRef.add({
-          "uid": "",
-          "nickname": "",
-          "profile_icon": "",
-          "content": "",
-          "date": Timestamp.fromDate(afterFourHours),
-          "room_reference": chatRoomId,
-          "type": "diary",
-        });
-
-        afterFourHours.setSeconds(afterFourHours.getSeconds() + 1);
-        // 일정 종료 알림 추가
-        await chatRef.add({
-          "uid": "",
-          "nickname": "",
-          "profile_icon": "",
-          "content": "",
-          "date": Timestamp.fromDate(afterFourHours),
-          "room_reference": chatRoomId,
-          "type": "schedule_end",
-        });
-
-        // 각자 인원들에게 일정 관련 알림 추가
-        var userUIDs = afterSchedule.participants_agree_selected_schedule;
-        for (uid of userUIDs) {
-          var userRef = db.collection("users").doc(uid);
-          var myScheduleRef = userRef.collection("mySchedule").doc(roomId);
-
-          // roomScheduleData에 after data를 복사
-          var roomScheduleData = after;
-
-          // room_name 필드에 myScheduleRef의 docID를 추가
-          roomScheduleData["room_name"] = myScheduleRef.id;
-
-          // myScheduleRef에 after data를 document로 추가 (RoomModel 자체를 Schedule 정보로 사용)
-          await myScheduleRef.set(roomScheduleData);
-        }
-      }
+    const isAllScheduleDecided = (beforeAgree.length === 3 && afterAgree.length == 4);
+    if (isAllScheduleDecided) {
+      await handleScheduleDecided(roomId, afterSchedule, after);
     }
+  }
+});
+
+// MARK: - handleParticipantChange
+// 일정 등록 가능 채팅 추가
+async function handleParticipantChange(roomId) {
+  const chatRoomRef = db.collection("chatRooms").doc(roomId);
+  const chatRef = chatRoomRef.collection("chats");
+  const roomRef = db.collection("rooms").doc(roomId);
+
+  await chatRef.add({
+    "uid": "",
+    "nickname": "",
+    "profile_icon": "",
+    "content": "",
+    "date": Timestamp.now(),
+    "room_reference": roomId,
+    "type": "schedule_write",
   });
+
+  await roomRef.update({
+    "recentMessage": "일정 등록이 가능합니다 !",
+  });
+
+  console.log("일정 추가 가능 채팅이 추가되었습니다.");
+}
+
+// MARK: - handleScheduleDecided
+// 일정 확정 시, review, diary, schedule_end 채팅 추가
+async function handleScheduleDecided(roomId, afterSchedule, after) {
+  const chatRoomRef = db.collection("chatRooms").doc(roomId);
+  const chatRef = chatRoomRef.collection("chats");
+  const roomRef = db.collection("rooms").doc(roomId);
+
+  await chatRef.add({
+    "uid": "",
+    "nickname": "",
+    "profile_icon": "",
+    "content": "",
+    "date": Timestamp.now(),
+    "room_reference": roomId,
+    "type": "schedule_decide",
+  });
+
+  await roomRef.update({
+    "recentMessage": "일정이 확정되었습니다 !",
+  });
+
+  await roomRef.update({
+    "isScheduleDecided": true,
+  });
+
+  var threeDaysBefore = afterSchedule.date.toDate();
+  threeDaysBefore.setDate(threeDaysBefore.getDate() - 3);
+  threeDaysBefore.setHours(0, 0, 0, 0);
+
+  var twoDaysBefore = afterSchedule.date.toDate();
+  twoDaysBefore.setDate(twoDaysBefore.getDate() - 2);
+  twoDaysBefore.setHours(0, 0, 0, 0);
+
+  var oneDayBefore = afterSchedule.date.toDate();
+  oneDayBefore.setDate(oneDayBefore.getDate() - 1);
+  oneDayBefore.setHours(0, 0, 0, 0);
+
+  if (threeDaysBefore > Timestamp.now().toDate()) {
+    await chatRef.add({
+      "uid": "",
+      "nickname": "",
+      "profile_icon": "",
+      "content": "three",
+      "date": Timestamp.fromDate(threeDaysBefore),
+      "room_reference": roomId,
+      "type": "schedule_alarm",
+    });
+  }
+  if (twoDaysBefore > Timestamp.now().toDate()) {
+    await chatRef.add({
+      "uid": "",
+      "nickname": "",
+      "profile_icon": "",
+      "content": "two",
+      "date": Timestamp.fromDate(twoDaysBefore),
+      "room_reference": roomId,
+      "type": "schedule_alarm",
+    });
+  }
+  if (oneDayBefore > Timestamp.now().toDate()) {
+    await chatRef.add({
+      "uid": "",
+      "nickname": "",
+      "profile_icon": "",
+      "content": "one",
+      "date": Timestamp.fromDate(oneDayBefore),
+      "room_reference": roomId,
+      "type": "schedule_alarm",
+    });
+  }
+
+  var afterFourHours = afterSchedule.date.toDate();
+  afterFourHours.setSeconds(afterFourHours.getSeconds() + 1);
+
+  await chatRef.add({
+    "uid": "",
+    "nickname": "",
+    "profile_icon": "",
+    "content": "",
+    "date": Timestamp.fromDate(afterFourHours),
+    "room_reference": roomId,
+    "type": "review",
+  });
+
+  afterFourHours.setSeconds(afterFourHours.getSeconds() + 1);
+  await chatRef.add({
+    "uid": "",
+    "nickname": "",
+    "profile_icon": "",
+    "content": "",
+    "date": Timestamp.fromDate(afterFourHours),
+    "room_reference": roomId,
+    "type": "diary",
+  });
+
+  afterFourHours.setSeconds(afterFourHours.getSeconds() + 1);
+  await chatRef.add({
+    "uid": "",
+    "nickname": "",
+    "profile_icon": "",
+    "content": "",
+    "date": Timestamp.fromDate(afterFourHours),
+    "room_reference": roomId,
+    "type": "schedule_end",
+  });
+
+  var userUIDs = afterSchedule.participants_agree_selected_schedule;
+  for (uid of userUIDs) {
+    var userRef = db.collection("users").doc(uid);
+    var myScheduleRef = userRef.collection("mySchedule").doc(roomId);
+
+    var roomScheduleData = after;
+    roomScheduleData["room_name"] = myScheduleRef.id;
+
+    await myScheduleRef.set(roomScheduleData);
+  }
+}
