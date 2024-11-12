@@ -21,19 +21,31 @@ class MeetBrowseMain extends StatelessWidget {
   // MARK: - 빌드
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: 58.h,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        final viewModel =
+            Provider.of<MeetBrowseViewModel>(context, listen: false);
+        final meetFilterViewModel =
+            Provider.of<MeetFilterViewModel>(context, listen: false);
+        viewModel.resetState();
+        meetFilterViewModel.clearAllFilters();
+        context.pop();
+      },
+      child: Scaffold(
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                top: 58.h,
+              ),
+              child: _header(context),
             ),
-            child: _header(context),
-          ),
-          Expanded(child: _main(context)),
-          // _main(context),
-        ],
+            Expanded(child: _main(context)),
+            // _main(context),
+          ],
+        ),
       ),
     );
   }
@@ -56,6 +68,12 @@ class MeetBrowseMain extends StatelessWidget {
   Widget _back(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        final viewModel =
+            Provider.of<MeetBrowseViewModel>(context, listen: false);
+        final meetFilterViewModel =
+            Provider.of<MeetFilterViewModel>(context, listen: false);
+        viewModel.resetState();
+        meetFilterViewModel.clearAllFilters();
         context.pop();
       },
       child: Image.asset(

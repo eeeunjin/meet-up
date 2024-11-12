@@ -125,6 +125,10 @@ class MeetFilterViewModel with ChangeNotifier {
         _selectedDistrictInAreaPage.isNotEmpty;
   }
 
+  bool get isAreaSelected {
+    return _selectedProvince.isNotEmpty && _selectedDistrict.isNotEmpty;
+  }
+
   void saveAreaFilterInfo() {
     _selectedProvince = _selectedProvinceInAreaPage;
     _selectedDistrict = _selectedDistrictInAreaPage;
@@ -192,7 +196,7 @@ class MeetFilterViewModel with ChangeNotifier {
     bool categoriesCompleted =
         isSelectedCategory || isCategorySelectionComplete;
 
-    bool areaCompleted = isAreaSelectionComplete;
+    bool areaCompleted = isAreaSelected;
 
     bool ageCompleted = selectedAge.isNotEmpty;
 

@@ -235,13 +235,10 @@ class MeetKeyWord extends StatelessWidget {
               Provider.of<MeetKeywordViewModel>(context, listen: false)
                   .removeKeyword(keyword);
             },
-            child: Padding(
-              padding: EdgeInsets.only(right: 11.0.w),
-              child: Image.asset(
-                ImagePath.closeIcon,
-                width: 7.w,
-                height: 7.h,
-              ),
+            child: Image.asset(
+              ImagePath.closeIcon,
+              width: 7.w,
+              height: 7.h,
             ),
           ),
         ],

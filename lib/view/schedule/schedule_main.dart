@@ -13,7 +13,7 @@ import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view_model/bot_nav_view_model.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
-import 'package:meet_up/view_model/schedule/schedule_add_personal_schdule_view_model.dart';
+import 'package:meet_up/view_model/schedule/schedule_add_personal_view_model.dart';
 import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
@@ -230,7 +230,7 @@ class ScheduleMain extends StatelessWidget {
         Provider.of<ScheduleMainViewModel>(context, listen: false);
     final botNavViewModel =
         Provider.of<BottomNavigationBarViewModel>(context, listen: false);
-  
+
     if (scheduleMainViewModel.selectedMeetUpScheduleDetail == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         botNavViewModel.setIsHidden(false);
@@ -688,8 +688,7 @@ class ScheduleMain extends StatelessWidget {
                     onTap: () {
                       // 편집
                       final scheduleAddPersonalScheduleViewModel =
-                          Provider.of<ScheduleAddPersonalScheduleViewModel>(
-                              context,
+                          Provider.of<ScheduleAddPersonalViewModel>(context,
                               listen: false);
                       scheduleAddPersonalScheduleViewModel.loadExistingData(
                           viewModel.selectedPersonalScheduleDetail!);

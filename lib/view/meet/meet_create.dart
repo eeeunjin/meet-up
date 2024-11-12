@@ -661,7 +661,7 @@ class MeetCreate extends StatelessWidget {
                       : viewModel.selectMen4(),
                   child: Image.asset(
                     userViewModel.userModel?.gender == 'female'
-                        ? ImagePath.grW4Blur
+                        ? ImagePath.grM4Blur
                         : viewModel.roomGenderRatio == RoomGenderRatio.manOnly
                             ? ImagePath.grM4
                             : ImagePath.grM4Empty,

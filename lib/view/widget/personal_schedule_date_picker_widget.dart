@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meet_up/main.dart';
-import 'package:meet_up/view_model/schedule/schedule_add_personal_schdule_view_model.dart';
+import 'package:meet_up/view_model/schedule/schedule_add_personal_view_model.dart';
 import 'package:provider/provider.dart';
 
 class PersonalScheduleDatePicker extends StatelessWidget {
@@ -9,8 +9,7 @@ class PersonalScheduleDatePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel =
-        Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
+    final viewModel = Provider.of<ScheduleAddPersonalViewModel>(context);
     FixedExtentScrollController yearScrollController =
         FixedExtentScrollController();
     FixedExtentScrollController monthScrollController =
@@ -36,9 +35,9 @@ class PersonalScheduleDatePicker extends StatelessWidget {
               .indexWhere((element) => element == viewModel.selectedDate.day));
     }
 
-    return ChangeNotifierProvider<ScheduleAddPersonalScheduleViewModel>.value(
+    return ChangeNotifierProvider<ScheduleAddPersonalViewModel>.value(
       value: viewModel,
-      child: Consumer<ScheduleAddPersonalScheduleViewModel>(
+      child: Consumer<ScheduleAddPersonalViewModel>(
         builder: (context, viewModel, child) {
           return Stack(
             children: [

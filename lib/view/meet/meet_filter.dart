@@ -35,7 +35,7 @@ class MeetFilterMain extends StatelessWidget {
     );
   }
 
-// header
+  // MARK: - Header
   Widget _header(BuildContext context) {
     return Center(
       child: Column(
@@ -50,6 +50,7 @@ class MeetFilterMain extends StatelessWidget {
     );
   }
 
+  // MARK: - Back Button
   Widget _back(BuildContext context) {
     final meetFilterViewModel =
         Provider.of<MeetFilterViewModel>(context, listen: false);
@@ -66,6 +67,7 @@ class MeetFilterMain extends StatelessWidget {
     );
   }
 
+  // MARK: - Divider
   Widget _divider() {
     return Divider(
       thickness: 0.91.h,
@@ -74,6 +76,7 @@ class MeetFilterMain extends StatelessWidget {
     );
   }
 
+  // MARK: - Main Content
   Widget _main(BuildContext context) {
     return Container(
       color: Colors.white,
@@ -104,11 +107,11 @@ class MeetFilterMain extends StatelessWidget {
     );
   }
 
+  // MARK: - Main Category
   Widget _mainCategory(BuildContext context) {
     final viewModel = Provider.of<MeetFilterViewModel>(context, listen: true);
     List<String> options = ['취미', '운동', '공부/학업', '휴식/친목', '기타'];
 
-    // 메인 카테고리
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -118,7 +121,6 @@ class MeetFilterMain extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  // 파란 동그라미
                   Container(
                     width: 8.w,
                     height: 8.w,
@@ -177,7 +179,6 @@ class MeetFilterMain extends StatelessWidget {
         SizedBox(height: 33.h),
         _divider(),
         SizedBox(height: 33.h),
-        // 상세 카테고리
         Padding(
           padding: EdgeInsets.only(left: 33.w),
           child: Column(
@@ -185,7 +186,6 @@ class MeetFilterMain extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  // 파란 동그라미
                   Container(
                     width: 8.w,
                     height: 8.w,
@@ -216,7 +216,6 @@ class MeetFilterMain extends StatelessWidget {
                   ],
                 )
               else
-                // 선택된 각 메인 카테고리에 대해 상세 카테고리 리스트를 표시
                 ...viewModel.selectedMainCategories.map(
                   (mainCategory) => _subCategoryList(context, mainCategory),
                 ),
@@ -227,6 +226,7 @@ class MeetFilterMain extends StatelessWidget {
     );
   }
 
+  // MARK: - Sub Category List
   Widget _subCategoryList(BuildContext context, String mainCategory) {
     final viewModel = Provider.of<MeetFilterViewModel>(context, listen: true);
     if (mainCategory == '기타') {
@@ -290,6 +290,7 @@ class MeetFilterMain extends StatelessWidget {
     );
   }
 
+  // MARK: - Area
   Widget _area(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -334,6 +335,7 @@ class MeetFilterMain extends StatelessWidget {
     );
   }
 
+  // MARK: - Selected Location
   Widget _selectedLocation(BuildContext context) {
     return Consumer<MeetFilterViewModel>(
       builder: (context, viewModel, child) {
@@ -358,6 +360,7 @@ class MeetFilterMain extends StatelessWidget {
     );
   }
 
+  // MARK: - Age
   Widget _age(BuildContext context) {
     List<String> options = ['20대', '30대', '40대', '50대'];
 
@@ -425,6 +428,7 @@ class MeetFilterMain extends StatelessWidget {
     );
   }
 
+  // MARK: - Gender Ratio
   Widget _genderRatio(BuildContext context) {
     final viewModel = Provider.of<MeetFilterViewModel>(context, listen: true);
 
@@ -447,7 +451,6 @@ class MeetFilterMain extends StatelessWidget {
                 SizedBox(
                   width: 13.85.w,
                 ),
-                // title
                 Container(
                   alignment: Alignment.center,
                   child: Text(
@@ -509,7 +512,7 @@ class MeetFilterMain extends StatelessWidget {
     );
   }
 
-  // MARK: - 세부 규칙 위젯
+  // MARK: - Detailed Rules
   Widget _detailedRules(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 27.0.w),
@@ -565,7 +568,7 @@ class MeetFilterMain extends StatelessWidget {
                                 Icons.check,
                                 color: isSelected
                                     ? UsedColor.violet
-                                    : UsedColor.text_5, // 색상 값을 조절하세요
+                                    : UsedColor.text_5,
                               ),
                             ],
                           ),
@@ -582,7 +585,7 @@ class MeetFilterMain extends StatelessWidget {
     );
   }
 
-// MARK: - bottom
+  // MARK: - Bottom
   Widget _bottom(BuildContext context) {
     return Consumer2<MeetFilterViewModel, MeetBrowseViewModel>(
       builder: (context, meetFilterViewModel, meetBrowseViewModel, child) {

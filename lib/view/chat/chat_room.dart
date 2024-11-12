@@ -172,7 +172,6 @@ class ChatRoom extends StatelessWidget {
                                       ),
                                     ),
                                     onTap: () {
-                                      logger.d("방 세부 정보 보기 버튼 눌림");
                                       // 키보드 내리기
                                       chatRoomViewModel.setStartEdit(false);
                                       FocusManager.instance.primaryFocus
@@ -200,7 +199,6 @@ class ChatRoom extends StatelessWidget {
                                       ),
                                     ),
                                     onTap: () {
-                                      logger.d("방 나가기 버튼 눌림");
                                       // 키보드 내리기
                                       chatRoomViewModel.setStartEdit(false);
                                       FocusManager.instance.primaryFocus
@@ -328,7 +326,6 @@ class ChatRoom extends StatelessWidget {
   Widget _chatNotification(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        logger.d("채팅 시 주의 사항 버튼이 눌렸습니다.");
         context.goNamed('chat_room_onboarding');
       },
       child: Container(
@@ -896,9 +893,11 @@ class ChatRoom extends StatelessWidget {
     // 2. 다른 사람의 채팅인 경우 해당 유저 정보 불러오기
     UserModel? otherUser;
     if (!isMyChat) {
-      otherUser = chatRoomViewModel.userModels
-          .where((element) => element.uid == chatModel.uid)
-          .first;
+      final userModels = chatRoomViewModel.userModels
+          .where((element) => element.uid == chatModel.uid);
+      if (userModels.isNotEmpty) {
+        otherUser = userModels.first;
+      }
     }
 
     // 3. 방장의 채팅인지 확인하는 변수
@@ -938,12 +937,14 @@ class ChatRoom extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              width: 28.h,
+              width: 18.h,
             ),
             Stack(
               children: [
                 Image.asset(
-                  otherUser!.profile_icon,
+                  otherUser != null
+                      ? otherUser.profile_icon
+                      : ImagePath.aengmuSelect,
                   width: 45.h,
                   height: 45.h,
                 ),
@@ -975,7 +976,7 @@ class ChatRoom extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  otherUser.nickname,
+                  otherUser != null ? otherUser.nickname : "방장",
                   style: AppTextStyles.PR_SB_13.copyWith(
                     color: UsedColor.charcoal_black,
                   ),
@@ -996,16 +997,16 @@ class ChatRoom extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    logger.d("[${chatModel.nickname}]님에 대한 신고 버튼이 눌렸습니다.");
-                  },
-                  // child: Image.asset(
-                  //   ImagePath.chatRoomDeclarationButton,
-                  //   height: 19.h,
-                  //   width: 19.h,
-                  // ),
-                ),
+                // GestureDetector(
+                //   onTap: () {
+                //     logger.d("[${chatModel.nickname}]님에 대한 신고 버튼이 눌렸습니다.");
+                //   },
+                //   child: Image.asset(
+                //     ImagePath.chatRoomDeclarationButton,
+                //     height: 19.h,
+                //     width: 19.h,
+                //   ),
+                // ),
                 Text(
                   sendTimeString,
                   style: AppTextStyles.PR_M_10.copyWith(
@@ -1347,7 +1348,6 @@ class ChatRoom extends StatelessWidget {
               ),
               child: GestureDetector(
                 onTap: () {
-                  logger.d("일정 확인하기 버튼이 눌렸습니다.");
                   context.goNamed('chatScheduleCheck');
                 },
                 child: Text(

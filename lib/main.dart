@@ -34,7 +34,7 @@ import 'package:meet_up/view_model/reflect/reflect_record_view_model.dart';
 import 'package:meet_up/view_model/reflect/reflect_view_model.dart';
 import 'package:meet_up/view_model/reflect/reflect_write_diary_view_model.dart';
 import 'package:meet_up/view_model/schedule/schedule_add_member_view_model.dart';
-import 'package:meet_up/view_model/schedule/schedule_add_personal_schdule_view_model.dart';
+import 'package:meet_up/view_model/schedule/schedule_add_personal_view_model.dart';
 import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:meet_up/view_model/setting/setting_view_model.dart';
 import 'package:meet_up/view_model/sign_up/sign_up_detail_view_model.dart';
@@ -96,7 +96,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => MeetFilterViewModel()),
         ChangeNotifierProvider(create: (context) => ScheduleMainViewModel()),
         ChangeNotifierProvider(
-          create: (context) => ScheduleAddPersonalScheduleViewModel(
+          create: (context) => ScheduleAddPersonalViewModel(
             start: DateTime.now().add(const Duration(days: 1)),
             end: DateTime.now().add(const Duration(days: 14)),
           ),

@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/model/room_model.dart';
 import 'package:meet_up/repository/user_repository.dart';
 import 'package:meet_up/service/remote/firebase_service.dart';
 
-class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
+class ScheduleAddPersonalViewModel with ChangeNotifier {
   // MARK: - 일정
   TextEditingController namingController = TextEditingController();
 
@@ -18,7 +19,7 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
   final UserRepository _userRepository = UserRepository();
 
   // 타임 피커 초기화
-  ScheduleAddPersonalScheduleViewModel({
+  ScheduleAddPersonalViewModel({
     required DateTime start,
     required DateTime end,
   }) {
@@ -193,23 +194,11 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
   }
 
   // MARK: - 참여 인원
-  void addMembers(String member) {
-    if (!_selectedMembers.contains(member)) {
-      _selectedMembers.add(member);
-      notifyListeners();
-    }
-  }
-
-  void removeParticipant(String member) {
-    _selectedMembers.remove(member);
-    notifyListeners();
-  }
-
-  // add members
   List<String> _selectedMembers = [];
   List<String> get selectedMembers => _selectedMembers;
 
   set selectedMembers(List<String> members) {
+    logger.d(members);
     _selectedMembers = members;
     notifyListeners();
   }
@@ -325,7 +314,7 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
             isMembersChanged;
   }
 
-  Future<RoomModel> updatePersonalSchedule(
+  Future<void> updatePersonalSchedule(
       {required String myUID, required String myScheduleId}) async {
     // 개인 일정 저장
     final date = DateTime(
@@ -370,7 +359,7 @@ class ScheduleAddPersonalScheduleViewModel with ChangeNotifier {
 
     await _userRepository.updateMyScheduleDocument(data: roomModel, uid: myUID);
 
-    return roomModel;
+    return;
   }
 
   void pannelClose() {

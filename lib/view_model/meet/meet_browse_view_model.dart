@@ -269,4 +269,13 @@ class MeetBrowseViewModel with ChangeNotifier {
       debugPrint(userModel.gender);
     }
   }
+
+  // MARK: - Reset State
+  void resetState() {
+    selectedFilters.clear();
+    searchTextEditingControlller.clear();
+    isFilterApplied = false;
+    notifyListeners();
+  }
+
 }

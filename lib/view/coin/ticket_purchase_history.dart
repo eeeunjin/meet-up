@@ -38,7 +38,7 @@ class TicketPurchaseHistory extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          header(back: _back(context), title: '코인 이용 내역'),
+          header(back: _back(context), title: '만남권 이용 내역'),
           SizedBox(
             height: 16.h,
           ),

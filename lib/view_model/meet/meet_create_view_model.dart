@@ -470,6 +470,10 @@ class MeetCreateViewModel with ChangeNotifier {
     _selectedDistrictInAreaPage = '';
     _selectedProvinceNotifier.value = '';
     _selectedDistrictNotifier.value = '';
+    _individualAgreement1 = false;
+    _individualAgreement2 = false;
+    _individualAgreement3 = false;
+    _allAgreed = false;
     notifyListeners();
   }
 

@@ -214,7 +214,7 @@ class ProfileEdit extends StatelessWidget {
         return 0;
       }
       final today = DateTime.now();
-      int age = today.year - birthDate.year;
+      int age = today.year - birthDate.year + 1;
       if (today.month < birthDate.month ||
           (today.month == birthDate.month && today.day < birthDate.day)) {
         age--;
@@ -222,7 +222,7 @@ class ProfileEdit extends StatelessWidget {
       return age;
     }
 
-    final int age = calculateAge(birthDate) + 2;
+    final int age = calculateAge(birthDate);
 
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w, right: 32.w),
@@ -235,7 +235,6 @@ class ProfileEdit extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
           Text(
-            // TODO : 나이 변경 로직 으로 나이 계산해서 표시하기
             '$age',
             style: AppTextStyles.PR_R_16.copyWith(color: UsedColor.text_3),
           ),

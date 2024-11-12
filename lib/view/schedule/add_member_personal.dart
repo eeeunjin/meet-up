@@ -10,7 +10,7 @@ import 'package:meet_up/util/image.dart';
 import 'package:meet_up/view/widget/next_button.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view_model/schedule/schedule_add_member_view_model.dart';
-import 'package:meet_up/view_model/schedule/schedule_add_personal_schdule_view_model.dart';
+import 'package:meet_up/view_model/schedule/schedule_add_personal_view_model.dart';
 import 'package:provider/provider.dart';
 
 class AddMemberPersonal extends StatelessWidget {
@@ -249,13 +249,10 @@ class AddMemberPersonal extends StatelessWidget {
               Provider.of<ScheduleAddMemberViewModel>(context, listen: false)
                   .removeKeyword(member);
             },
-            child: Padding(
-              padding: EdgeInsets.only(right: 11.0.w),
-              child: Image.asset(
-                ImagePath.closeIcon,
-                width: 7.w,
-                height: 7.h,
-              ),
+            child: Image.asset(
+              ImagePath.closeIcon,
+              width: 7.w,
+              height: 7.h,
             ),
           ),
         ],
@@ -266,10 +263,10 @@ class AddMemberPersonal extends StatelessWidget {
   Widget _bottom(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 33.0.w, right: 33.w, bottom: 56.h),
-      child: Consumer2<ScheduleAddMemberViewModel,
-              ScheduleAddPersonalScheduleViewModel>(
-          builder: (context, scheduleAddMemberViewModel,
-              scheduleAddPersonalScheduleViewModel, child) {
+      child:
+          Consumer2<ScheduleAddMemberViewModel, ScheduleAddPersonalViewModel>(
+              builder: (context, scheduleAddMemberViewModel,
+                  scheduleAddPersonalScheduleViewModel, child) {
         return NextButton(
           onTap: () async {
             if (scheduleAddMemberViewModel.memberCheckCompleted) {

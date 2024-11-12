@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:meet_up/main.dart';
 import 'package:meet_up/util/color.dart';
 import 'package:meet_up/util/font.dart';
 import 'package:meet_up/util/image.dart';
@@ -9,7 +10,7 @@ import 'package:meet_up/view/widget/personal_schedule_date_picker_widget.dart';
 import 'package:meet_up/view/widget/personal_schedule_time_picker_widget.dart';
 import 'package:meet_up/view_model/meet/header_widget.dart';
 import 'package:meet_up/view/widget/next_button.dart';
-import 'package:meet_up/view_model/schedule/schedule_add_personal_schdule_view_model.dart';
+import 'package:meet_up/view_model/schedule/schedule_add_personal_view_model.dart';
 import 'package:meet_up/view_model/schedule/schedule_main_view_model.dart';
 import 'package:meet_up/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
@@ -23,18 +24,16 @@ class EditPersonalSchedule extends StatelessWidget {
       canPop: false,
       onPopInvoked: (didPop) {
         // 정보 초기화
-        final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(
-            context,
-            listen: false);
+        final viewModel =
+            Provider.of<ScheduleAddPersonalViewModel>(context, listen: false);
         viewModel.clearAllState();
         context.pop(context);
       },
       child: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
-          final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(
-              context,
-              listen: false);
+          final viewModel =
+              Provider.of<ScheduleAddPersonalViewModel>(context, listen: false);
           viewModel.pannelClose();
         },
         child: Scaffold(
@@ -77,9 +76,8 @@ class EditPersonalSchedule extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // 정보 초기화
-        final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(
-            context,
-            listen: false);
+        final viewModel =
+            Provider.of<ScheduleAddPersonalViewModel>(context, listen: false);
         viewModel.clearAllState();
         context.pop(context);
       },
@@ -146,8 +144,7 @@ class EditPersonalSchedule extends StatelessWidget {
 
   //MARK: - 일정
   Widget _naming(BuildContext context) {
-    final viewModel =
-        Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
+    final viewModel = Provider.of<ScheduleAddPersonalViewModel>(context);
 
     return Padding(
       padding: EdgeInsets.only(left: 23.0.w),
@@ -191,8 +188,8 @@ class EditPersonalSchedule extends StatelessWidget {
 
   //MARK: - 날짜
   Widget _date(BuildContext context) {
-    final viewModel = Provider.of<ScheduleAddPersonalScheduleViewModel>(context,
-        listen: false);
+    final viewModel =
+        Provider.of<ScheduleAddPersonalViewModel>(context, listen: false);
 
     // ExpansionPanel 사용
     return Theme(
@@ -252,9 +249,8 @@ class EditPersonalSchedule extends StatelessWidget {
                 ),
               ),
             ),
-            isExpanded:
-                Provider.of<ScheduleAddPersonalScheduleViewModel>(context)
-                    .isDatePanelExpanded,
+            isExpanded: Provider.of<ScheduleAddPersonalViewModel>(context)
+                .isDatePanelExpanded,
           ),
         ],
       ),
@@ -263,8 +259,7 @@ class EditPersonalSchedule extends StatelessWidget {
 
   // MARK: - 시간
   Widget _time(BuildContext context) {
-    final viewModel =
-        Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
+    final viewModel = Provider.of<ScheduleAddPersonalViewModel>(context);
 
     // Mark - ExpansionPanel 사용
     return Theme(
@@ -322,9 +317,8 @@ class EditPersonalSchedule extends StatelessWidget {
                 ),
               ),
             ),
-            isExpanded:
-                Provider.of<ScheduleAddPersonalScheduleViewModel>(context)
-                    .isTimePanelExpanded,
+            isExpanded: Provider.of<ScheduleAddPersonalViewModel>(context)
+                .isTimePanelExpanded,
           ),
         ],
       ),
@@ -333,8 +327,7 @@ class EditPersonalSchedule extends StatelessWidget {
 
   //MARK: - 장소
   Widget _location(BuildContext context) {
-    final viewModel =
-        Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
+    final viewModel = Provider.of<ScheduleAddPersonalViewModel>(context);
     return Padding(
       padding: EdgeInsets.only(left: 21.0.w),
       child: Row(
@@ -377,8 +370,7 @@ class EditPersonalSchedule extends StatelessWidget {
 
   //MARK: - 설명
   Widget _detail(BuildContext context) {
-    final viewModel =
-        Provider.of<ScheduleAddPersonalScheduleViewModel>(context);
+    final viewModel = Provider.of<ScheduleAddPersonalViewModel>(context);
     return Padding(
       padding: EdgeInsets.only(left: 21.0.w),
       child: Row(
@@ -440,8 +432,8 @@ class EditPersonalSchedule extends StatelessWidget {
           // 참여자 선택 힌트 텍스트
           GestureDetector(
               onTap: () {
-                final ScheduleAddPersonalScheduleViewModel viewModel =
-                    Provider.of<ScheduleAddPersonalScheduleViewModel>(context,
+                final ScheduleAddPersonalViewModel viewModel =
+                    Provider.of<ScheduleAddPersonalViewModel>(context,
                         listen: false);
                 viewModel.pannelClose();
                 // 참여자 선택 페이지로 이동
@@ -454,7 +446,7 @@ class EditPersonalSchedule extends StatelessWidget {
   }
 
   Widget _selectedMembers(BuildContext context) {
-    return Consumer<ScheduleAddPersonalScheduleViewModel>(
+    return Consumer<ScheduleAddPersonalViewModel>(
         builder: (context, viewModel, child) {
       List<String> participants = viewModel.selectedMembers;
 
@@ -488,7 +480,7 @@ class EditPersonalSchedule extends StatelessWidget {
 //MARK: - 저장
   Widget _bottom(BuildContext context) {
     final _ = Provider.of<ScheduleMainViewModel>(context);
-    return Consumer<ScheduleAddPersonalScheduleViewModel>(
+    return Consumer<ScheduleAddPersonalViewModel>(
         builder: (context, viewModel, child) {
       bool canModify = viewModel.allCheckCompleted && viewModel.isChanged;
       return Padding(
@@ -502,14 +494,15 @@ class EditPersonalSchedule extends StatelessWidget {
             final scheduleMainViewModel =
                 Provider.of<ScheduleMainViewModel>(context, listen: false);
 
-            final selectedSchedule = await viewModel.updatePersonalSchedule(
+            await viewModel.updatePersonalSchedule(
                 myUID: userVieWModel.uid!,
                 myScheduleId: scheduleMainViewModel
                     .selectedPersonalScheduleDetail!.room_name);
 
-            scheduleMainViewModel.selectSchedule(selectedSchedule, 'personal');
+            scheduleMainViewModel.resetScheduleSelection('personal');
 
             viewModel.pannelClose();
+            viewModel.clearAllState();
             context.pop();
           },
           height: 56.h,

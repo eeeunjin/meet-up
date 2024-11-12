@@ -74,7 +74,7 @@ class ProfileMeetingReview extends StatelessWidget {
                         ),
                         child: _main(context),
                       ),
-                      if (profileReviewViewModel.selectedEditReviews.isNotEmpty)
+                      if (profileReviewViewModel.selectedEditReviews.isNotEmpty && reviews.isNotEmpty)
                         Positioned(
                           bottom: 0,
                           child: Container(
